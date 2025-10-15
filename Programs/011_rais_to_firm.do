@@ -542,7 +542,7 @@ save "$rais_aux/worker_estab_`i'.dta", replace
 restore
 	
 collapse ///
-(firstnm) PIS identificad_8 year white_prop male_prop avg_tenure no_hs_c prop_nhs hs_c prop_hs sup_c prop_sup total_below_30 prop_below_30 total_30_40 prop_30_40 total_above_40 prop_above_40 ///
+(firstnm) identificad_8 year white_prop male_prop avg_tenure no_hs_c prop_nhs hs_c prop_hs sup_c prop_sup total_below_30 prop_below_30 total_30_40 prop_30_40 total_above_40 prop_above_40 ///
  leave_c leaves safety_c safety fixed_count fixed_prop qui_count quits lay_count layoffs separations turnover firm_emp_jan retention pub_firm ///
  hired_count hiring l_firm_emp firm_emp lr_sal~50_10 lr_sal~90_10 salcontr_p10 salcontr_p50 salcontr_p90 ///
  municipio clascnae20 natjuridica /// // take the first non missing observation within estab for observations that are the same for the whole estab

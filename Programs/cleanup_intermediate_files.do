@@ -97,3 +97,4 @@ safe_delete "$rais_aux/worker_panel_chunked_temp.dta"
 
 di "Cleanup completed!"
 di "You can now check available disk space with: df -h"
+

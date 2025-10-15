@@ -133,7 +133,6 @@ forvalues i=2008/2016{
 	gen r_remdezr_h = remdezr_h/`deflator'
 	gen lr_remdezr = log(remdezr/`deflator')
 	gen r_remdezr = remdezr/`deflator'
-
 	* OPTIMIZED: More efficient percentile calculation
 	tempfile temp_data
 	save `temp_data'
@@ -172,8 +171,12 @@ forvalues i=2008/2016{
 	save `employment'
 	restore
 	
-	merge m:1 identificad using `employment', nogenerate
-	gen l_firm_emp = ln(firm_emp)
+	merge m:1 identificad using `employment'
+	* Handle cases where firms have no employees in December
+	replace firm_emp = 0 if _merge == 1
+	drop _merge
+	
+	gen l_firm_emp = ln(firm_emp + 1)  // Add 1 to avoid ln(0)
 	gen open_firm = (firm_emp > 0)
 
 	* OPTIMIZED: Batch hiring calculations
@@ -182,13 +185,19 @@ forvalues i=2008/2016{
 	
 	preserve
 	collapse (sum) hired_count=new_hire hired_count_u=new_hire_u, by(identificad)
-	gen hiring = hired_count / firm_emp
-	gen hiring_u = hired_count_u / firm_emp
+	* Handle division by zero for firms with no employment
+	gen hiring = hired_count / (firm_emp + (firm_emp == 0))
+	gen hiring_u = hired_count_u / (firm_emp + (firm_emp == 0))
 	tempfile hiring_data
 	save `hiring_data'
 	restore
 	
-	merge m:1 identificad using `hiring_data', nogenerate
+	merge m:1 identificad using `hiring_data'
+	* Handle cases where firms have no hiring data
+	replace hired_count = 0 if _merge == 1
+	replace hiring = 0 if _merge == 1
+	replace hiring_u = 0 if _merge == 1
+	drop _merge
 
 	* OPTIMIZED: Batch employment flow calculations
 	gen emp_in_jan = (dtadmissao_stata < mdy(1,1,`i') & mesdesli != 1)
@@ -199,16 +208,27 @@ forvalues i=2008/2016{
 		lay_count=(causadesli==10 | causadesli==11) ///
 		qui_count=(causadesli==20 | causadesli==21), by(identificad)
 	
-	gen retention = firm_emp_jan / firm_emp
-	gen turnover = separations / firm_emp
-	gen layoffs = lay_count / firm_emp
-	gen quits = qui_count / firm_emp
+	* Handle division by zero for firms with no employment
+	gen retention = firm_emp_jan / (firm_emp + (firm_emp == 0))
+	gen turnover = separations / (firm_emp + (firm_emp == 0))
+	gen layoffs = lay_count / (firm_emp + (firm_emp == 0))
+	gen quits = qui_count / (firm_emp + (firm_emp == 0))
 	
 	tempfile flows
 	save `flows'
 	restore
 	
-	merge m:1 identificad using `flows', nogenerate
+	merge m:1 identificad using `flows'
+	* Handle cases where firms have no flow data
+	replace firm_emp_jan = 0 if _merge == 1
+	replace separations = 0 if _merge == 1
+	replace lay_count = 0 if _merge == 1
+	replace qui_count = 0 if _merge == 1
+	replace retention = 0 if _merge == 1
+	replace turnover = 0 if _merge == 1
+	replace layoffs = 0 if _merge == 1
+	replace quits = 0 if _merge == 1
+	drop _merge
 
 	* OPTIMIZED: Batch other calculations
 	gen fixed_c = inlist(tpvinculo, 60, 65, 70, 75, 95, 96, 97, 90)
@@ -219,15 +239,24 @@ forvalues i=2008/2016{
 	collapse (sum) fixed_count=fixed_c safety_c=safety_d ///
 		leave_c=(causafast1 != -1), by(identificad)
 	
-	gen fixed_prop = fixed_count / firm_emp
-	gen safety = safety_c / firm_emp
-	gen leaves = leave_c / firm_emp
+	* Handle division by zero for firms with no employment
+	gen fixed_prop = fixed_count / (firm_emp + (firm_emp == 0))
+	gen safety = safety_c / (firm_emp + (firm_emp == 0))
+	gen leaves = leave_c / (firm_emp + (firm_emp == 0))
 	
 	tempfile other_vars
 	save `other_vars'
 	restore
 	
-	merge m:1 identificad using `other_vars', nogenerate
+	merge m:1 identificad using `other_vars'
+	* Handle cases where firms have no other variables data
+	replace fixed_count = 0 if _merge == 1
+	replace safety_c = 0 if _merge == 1
+	replace leave_c = 0 if _merge == 1
+	replace fixed_prop = 0 if _merge == 1
+	replace safety = 0 if _merge == 1
+	replace leaves = 0 if _merge == 1
+	drop _merge
 
 	* OPTIMIZED: Batch education and demographics
 	gen no_hs_c = inlist(grinstrucao, 1, 2, 3, 4, 5, 6)
@@ -247,18 +276,36 @@ forvalues i=2008/2016{
 		total_below_30=d_below_30 total_30_40=betw_30_40 total_above_40=above_40, ///
 		by(identificad)
 	
-	gen prop_nhs = no_high_school / firm_emp
-	gen prop_hs = high_school / firm_emp
-	gen prop_sup = superior / firm_emp
-	gen prop_below_30 = total_below_30 / firm_emp
-	gen prop_30_40 = total_30_40 / firm_emp
-	gen prop_above_40 = total_above_40 / firm_emp
+	* Handle division by zero for firms with no employment
+	gen prop_nhs = no_high_school / (firm_emp + (firm_emp == 0))
+	gen prop_hs = high_school / (firm_emp + (firm_emp == 0))
+	gen prop_sup = superior / (firm_emp + (firm_emp == 0))
+	gen prop_below_30 = total_below_30 / (firm_emp + (firm_emp == 0))
+	gen prop_30_40 = total_30_40 / (firm_emp + (firm_emp == 0))
+	gen prop_above_40 = total_above_40 / (firm_emp + (firm_emp == 0))
 	
 	tempfile demographics
 	save `demographics'
 	restore
 	
-	merge m:1 identificad using `demographics', nogenerate
+	merge m:1 identificad using `demographics'
+	* Handle cases where firms have no demographics data
+	replace male_prop = 0 if _merge == 1
+	replace white_prop = 0 if _merge == 1
+	replace avg_tenure = 0 if _merge == 1
+	replace no_high_school = 0 if _merge == 1
+	replace high_school = 0 if _merge == 1
+	replace superior = 0 if _merge == 1
+	replace total_below_30 = 0 if _merge == 1
+	replace total_30_40 = 0 if _merge == 1
+	replace total_above_40 = 0 if _merge == 1
+	replace prop_nhs = 0 if _merge == 1
+	replace prop_hs = 0 if _merge == 1
+	replace prop_sup = 0 if _merge == 1
+	replace prop_below_30 = 0 if _merge == 1
+	replace prop_30_40 = 0 if _merge == 1
+	replace prop_above_40 = 0 if _merge == 1
+	drop _merge
 
 	* Public firms
 	generate pub_firm = inlist(natjuridica, 1015,1023,1031,1040,1058,1066,1074,1082,1104,1112,1120,1139,1147,1155,1163,1171,1180,1198,1201,1210)

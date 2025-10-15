@@ -152,3 +152,4 @@ erase "$rais_aux/worker_panel_chunked_temp.dta"
 
 di "Chunked worker panel creation completed!"
 di "Final dataset: worker_panel_chunked_final.dta"
+

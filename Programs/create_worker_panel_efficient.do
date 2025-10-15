@@ -206,3 +206,4 @@ erase "$rais_aux/worker_panel_temp.dta"
 
 di "Worker panel creation completed successfully!"
 di "Final dataset saved as: worker_panel_final.dta"
+

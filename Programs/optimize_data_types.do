@@ -80,3 +80,4 @@ end
 
 * Example usage:
 * optimize_types "$rais_aux/worker_panel_final.dta"
+
