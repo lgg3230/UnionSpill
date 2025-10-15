@@ -1,0 +1,466 @@
+Data/CBA/cba_coverage_clean_firm.dta
+Data/CBA/cba_coverage_clean_sector.dta
+Data/CBA/cba_coverage_clean.dta
+Data/CBA/cba_estab_firm.dta
+Data/CBA/cba_estab_sector_2017.dta
+Data/CBA/cba_estab_sector.dta
+Data/CBA/cba_firm_exploded_mun.dta
+Data/CBA/cba_firm_exploded_nat.dta
+Data/CBA/cba_firm_exploded_sta.dta
+Data/CBA/cba_firm_exploded.dta
+Data/CBA/cba_sector_exploded_mun.dta
+Data/CBA/cba_sector_exploded_nat.dta
+Data/CBA/cba_sector_exploded_sta.dta
+Data/CBA/cba_sector_exploded.dta
+Data/CBA/cnes_contracts_coverage_updated.dta
+Data/CBA/cnes_contracts_coverage.dta
+Data/CBA/collapsed_cba_bunit_updated.dta
+Data/CBA/collapsed_cba_firm_1_test.dta
+Data/CBA/collapsed_cba_firm_1.dta
+Data/CBA/collapsed_cba_firm_updated.dta
+Data/CBA/collapsed_cba_firm.dta
+Data/CBA/collapsed_cba_sector.dta
+Data/CBA_RAIS/cba_rais_collapsed_firm_2009.dta
+Data/CBA_RAIS/cba_rais_total/cba_rais_conn_2009.dta
+Data/CBA_RAIS/cba_rais_total/cba_rais_conn_2010.dta
+Data/CBA_RAIS/cba_rais_total/cba_rais_conn_2011.dta
+Data/CBA_RAIS/cba_rais_total/cba_rais_conn_2012.dta
+Data/CBA_RAIS/cba_rais_total/cba_rais_conn_2013.dta
+Data/CBA_RAIS/cba_rais_total/cba_rais_conn_2014.dta
+Data/CBA_RAIS/cba_rais_total/cba_rais_conn_2015.dta
+Data/CBA_RAIS/cba_rais_total/cba_rais_conn_2016.dta
+Data/CBA_RAIS/cba_rais_total/cba_rais_conn_2017.dta
+Data/CBA_RAIS_firm_level/analysis_missing_mu_sing.dta
+Data/CBA_RAIS_firm_level/cba_rais_firm_2007_1.dta
+Data/CBA_RAIS_firm_level/cba_rais_firm_2007_2016.dta
+Data/CBA_RAIS_firm_level/cba_rais_firm_2009_2.dta
+Data/CBA_RAIS_firm_level/cba_rais_firm_2009_4.dta
+Data/CBA_RAIS_firm_level/cba_rais_firm_2009_2016_flows_1.dta
+Data/CBA_RAIS_firm_level/cba_rais_firm_2009_2016_flows_1cba.dta
+Data/CBA_RAIS_firm_level/cba_rais_firm_2009_2016_flows.dta
+Data/CBA_RAIS_firm_level/cba_rais_firm_2009_2016_updated_1.dta
+Data/CBA_RAIS_firm_level/cba_rais_firm_2009_2016_updated.dta
+Data/CBA_RAIS_firm_level/cba_rais_firm_2009_2016.dta
+Data/CBA_RAIS_firm_level/cba_rais_firm_2009_2016s.dta
+Data/CBA_RAIS_firm_level/labor_analysis_lagos.dta
+Data/CBA_RAIS_firm_level/labor_analysis_sample_aug6.dta
+Data/CBA_RAIS_firm_level/labor_analysis_sample_jul31.dta
+Data/CBA_RAIS_firm_level/labor_analysis_sample.dta
+Data/CBA_RAIS_firm_level/lagos_sample_sep24.dta
+Data/CBA_RAIS_firm_level/lagos_sample_workers.dta
+Data/CBA_RAIS_firm_level/permutation_og_sample.dta
+Data/CBA_RAIS_firm_level/permutation_sample.dta
+Data/CBA_RAIS_firm_level/rais_firm_2007.dta
+Data/CBA_RAIS_firm_level/rais_firm_2008.dta
+Data/CBA_RAIS_firm_level/rais_firm_2009.dta
+Data/CBA_RAIS_firm_level/rais_firm_2010.dta
+Data/CBA_RAIS_firm_level/rais_firm_2011.dta
+Data/CBA_RAIS_firm_level/rais_firm_2012.dta
+Data/CBA_RAIS_firm_level/rais_firm_2013.dta
+Data/CBA_RAIS_firm_level/rais_firm_2014.dta
+Data/CBA_RAIS_firm_level/rais_firm_2015.dta
+Data/CBA_RAIS_firm_level/rais_firm_2016.dta
+Data/IBGE/mun_microregion_ibge.dta
+Data/RAIS_aux/0_cba_treat.csv
+Data/RAIS_aux/1_cba_treat.csv
+Data/RAIS_aux/1_cba_treat.dta
+Data/RAIS_aux/bal_pan.dta
+Data/RAIS_aux/balpan_file.dta
+Data/RAIS_aux/balpan_no.dta
+Data/RAIS_aux/balpan_start.dta
+Data/RAIS_aux/connectivity_2007_2011_agg.dta
+Data/RAIS_aux/connectivity_2007_2011_tcl.dta
+Data/RAIS_aux/connectivity_2007_2011_yearly.dta
+Data/RAIS_aux/connectivity_2007_2011.csv
+Data/RAIS_aux/connectivity_2007_2011.dta
+Data/RAIS_aux/connectivity_control_2007_2011_agg.dta
+Data/RAIS_aux/connectivity_control_2007_2011_yearly.dta
+Data/RAIS_aux/connectivity_control_2007_2011.csv
+Data/RAIS_aux/connectivity_control_2007_2011.dta
+Data/RAIS_aux/connectivity_one_2007_2011_agg.dta
+Data/RAIS_aux/connectivity_one_2007_2011_yearly.dta
+Data/RAIS_aux/connectivity_one_2007_2011.csv
+Data/RAIS_aux/connectivity_onecba_2007_2011.csv
+Data/RAIS_aux/connectivity_treat_2007_2011_agg.dta
+Data/RAIS_aux/connectivity_treat_2007_2011_yearly.dta
+Data/RAIS_aux/connectivity_treat_2007_2011.csv
+Data/RAIS_aux/connectivity_treat_2007_2011.dta
+Data/RAIS_aux/connectivity_zero_2007_2011_agg.dta
+Data/RAIS_aux/connectivity_zero_2007_2011_yearly.dta
+Data/RAIS_aux/connectivity_zero_2007_2011.csv
+Data/RAIS_aux/connectivity_zerocba_2007_2011.csv
+Data/RAIS_aux/employers_2007_2008_500.csv
+Data/RAIS_aux/employers_2007_2008.csv
+Data/RAIS_aux/employers_2007_2008.dta
+Data/RAIS_aux/firm_emp_2008.dta
+Data/RAIS_aux/lagos_control.csv
+Data/RAIS_aux/lagos_control.dta
+Data/RAIS_aux/lagos_sample_file_y.dta
+Data/RAIS_aux/lagos_sample_merge_worker.dta
+Data/RAIS_aux/lagos_sample_no_y.dta
+Data/RAIS_aux/lagos_sample_start_y.dta
+Data/RAIS_aux/lagos_sample.csv
+Data/RAIS_aux/lagos_sample.dta
+Data/RAIS_aux/lagos_treat.csv
+Data/RAIS_aux/lagos_treat.dta
+Data/RAIS_aux/luis_sample.csv
+Data/RAIS_aux/luis_sample.dta
+Data/RAIS_aux/one_cba_treat.csv
+Data/RAIS_aux/one_cba_treat.dta
+Data/RAIS_aux/rais_mode_mun_ind.dta
+Data/RAIS_aux/rais_unique_estab_09_16.dta
+Data/RAIS_aux/spill_samples_connectivity.dta
+Data/RAIS_aux/spill_samples.dta
+Data/RAIS_aux/worker_estab_all_years_sample.dta
+Data/RAIS_aux/worker_estab_all_years.dta
+Data/RAIS_aux/zero_cba_treat.csv
+Data/RAIS_aux/zero_cba_treat.dta
+Data/stata_emp_assoc/emp_assoc_2009.dta
+Data/stata_emp_assoc/emp_assoc_2010.dta
+Data/stata_emp_assoc/emp_assoc_2011.dta
+Data/stata_emp_assoc/emp_assoc_2012.dta
+Data/stata_emp_assoc/emp_assoc_2013.dta
+Data/stata_emp_assoc/emp_assoc_2014.dta
+Data/stata_emp_assoc/emp_assoc_2015.dta
+Data/stata_emp_assoc/emp_assoc_2016.dta
+Data/stata_emp_assoc/emp_assoc_2017.dta
+Data/stata_emp_assoc/emp_assoc_2018.dta
+Data/stata_emp_assoc/SIC 38970 - 2010-2011.txt
+Data/stata_emp_assoc/SIC 38970 - 2012-2013.txt
+Data/stata_emp_assoc/SIC 38970 - 2014-2015.txt
+Data/stata_emp_assoc/SIC 38970 - 2016-2018.txt
+Graphs/distro_avg_flowtreat_pf_missing.png
+Graphs/distro_broad_industry_bp.png
+Graphs/distro_broad_industry_missing.png
+Graphs/distro_broad_industry_mu_sample_1.png
+Graphs/distro_broad_industry_mu_sample.png
+Graphs/distro_broad_industry.png
+Graphs/distro_establishment_size_missing.png
+Graphs/distro_establishment_size.png
+Graphs/distro_negotiation_month_missing.png
+Graphs/distro_negotiation_month.png
+Graphs/distro_region_missing.png
+Graphs/distro_region.png
+Graphs/distro_remmedr_missing.png
+Graphs/distro_totalflows__missing.png
+Graphs/distro_totalflows_samebins_missing.png
+Graphs/distro_totaltreat_pw_missing.png
+Graphs/es_cl_24emp_con_2009_2010.png
+Graphs/es_cl_24emp_con_2010_2011.png
+Graphs/es_cl_24emp_con_2011_2012.png
+Graphs/es_emp_spill_lagosuntreated_all.png
+Graphs/es_emp_spill_lagosuntreated_h.png
+Graphs/es_emp_spill_lagosuntreated_one.png
+Graphs/es_emp_spill_lagosuntreated.png
+Graphs/es_emp_spill_lss.png
+Graphs/es_emp_spill.png
+Graphs/es_fixed_prop_con_2009_2010.png
+Graphs/es_fixed_prop_con_2010_2011.png
+Graphs/es_fixed_prop_con_2011_2012.png
+Graphs/es_hiring_con_2009_2010.png
+Graphs/es_hiring_con_2010_2011.png
+Graphs/es_hiring_con_2011_2012.png
+Graphs/es_hiring_spill_am_emp.png
+Graphs/es_hiring_spill_am_tf.png
+Graphs/es_hiring_spill_bm_emp.png
+Graphs/es_hiring_treat.png
+Graphs/es_hiringlagos_treat.png
+Graphs/es_l_emp_treat_1cba_lowconn.png
+Graphs/es_l_emp_treat_1cba.png
+Graphs/es_l_emp_treat_all_lowconn.png
+Graphs/es_l_emp_treat_all.png
+Graphs/es_l_emp_treat_lowconn.png
+Graphs/es_l_emp_treat_x.png
+Graphs/es_l_emp_treat.png
+Graphs/es_l_firm_emp_con_2009_2010.png
+Graphs/es_l_firm_emp_con_2010_2011.png
+Graphs/es_l_firm_emp_con_2011_2012.png
+Graphs/es_l_firm_emp_treat.png
+Graphs/es_l_remdezr_treat_x.png
+Graphs/es_l_remdezr_treat.png
+Graphs/es_l_remmedr_treat.png
+Graphs/es_l_salcontr_treat.png
+Graphs/es_layoffs_con_2009_2010.png
+Graphs/es_layoffs_con_2010_2011.png
+Graphs/es_layoffs_con_2011_2012.png
+Graphs/es_leaves_con_2009_2010.png
+Graphs/es_leaves_con_2010_2011.png
+Graphs/es_leaves_con_2011_2012.png
+Graphs/es_lemp_treat_bassier.png
+Graphs/es_lr_remdezr_con_2009_2010.png
+Graphs/es_lr_remdezr_con_2010_2011.png
+Graphs/es_lr_remdezr_con_2011_2012.png
+Graphs/es_lr_remdezr_treat.png
+Graphs/es_lr_salcontr_50_10_con_2009_2010.png
+Graphs/es_lr_salcontr_50_10_con_2010_2011.png
+Graphs/es_lr_salcontr_50_10_con_2011_2012.png
+Graphs/es_lr_salcontr_90_10_con_2009_2010.png
+Graphs/es_lr_salcontr_90_10_con_2010_2011.png
+Graphs/es_lr_salcontr_90_10_con_2011_2012.png
+Graphs/es_numb_clauses_year.png
+Graphs/es_numb_clauses.png
+Graphs/es_prop_hs_con_2009_2010.png
+Graphs/es_prop_hs_con_2010_2011.png
+Graphs/es_prop_hs_con_2011_2012.png
+Graphs/es_prop_hs_treat.png
+Graphs/es_prop_nhs_con_2009_2010.png
+Graphs/es_prop_nhs_con_2010_2011.png
+Graphs/es_prop_nhs_con_2011_2012.png
+Graphs/es_prop_sup_con_2009_2010.png
+Graphs/es_prop_sup_con_2010_2011.png
+Graphs/es_prop_sup_con_2011_2012.png
+Graphs/es_prop_sup_treat.png
+Graphs/es_quits_con_2009_2010.png
+Graphs/es_quits_con_2010_2011.png
+Graphs/es_quits_con_2011_2012.png
+Graphs/es_remdezr_spill_lagosuntreated_all.png
+Graphs/es_remdezr_spill_lagosuntreated_h.png
+Graphs/es_remdezr_spill_lagosuntreated_one.png
+Graphs/es_remdezr_spill_lagosuntreated.png
+Graphs/es_remdezr_spill_lss.png
+Graphs/es_remdezr_spill_overall.png
+Graphs/es_remdezr_spill.png
+Graphs/es_remdezr_treat_1cba_lowconn.png
+Graphs/es_remdezr_treat_1cba.png
+Graphs/es_remdezr_treat_all_lowconn.png
+Graphs/es_remdezr_treat_all.png
+Graphs/es_remdezr_treat_lowconn.png
+Graphs/es_remmedr_inflw_bm_emp.png
+Graphs/es_remmedr_outflw_bm_emp.png
+Graphs/es_remmedr_spill_am_mu.png
+Graphs/es_remmedr_spill_am.png
+Graphs/es_remmedr_spill_mu.png
+Graphs/es_remmedr_spill.png
+Graphs/es_retention_con_2009_2010.png
+Graphs/es_retention_con_2010_2011.png
+Graphs/es_retention_con_2011_2012.png
+Graphs/es_retention_spill_am_emp.png
+Graphs/es_retention_spill_bm_emp.png
+Graphs/es_retention_treat.png
+Graphs/es_retentionlagos_treat.png
+Graphs/es_safety_con_2009_2010.png
+Graphs/es_safety_con_2010_2011.png
+Graphs/es_safety_con_2011_2012.png
+Graphs/es_separations_con_2009_2010.png
+Graphs/es_separations_con_2010_2011.png
+Graphs/es_separations_con_2011_2012.png
+Graphs/es_spill_pf_employment_pospf.png
+Graphs/es_spill_pf_employment.png
+Graphs/es_spill_pf_remdezr_pospf.png
+Graphs/es_spill_pf_remdezr.png
+Graphs/es_spill_pf_remmedr_pospf.png
+Graphs/es_spill_pf_remmedr.png
+Graphs/es_spill_pw_employment.png
+Graphs/es_spill_pw_remdezr.png
+Graphs/es_spill_pw_remmedr.png
+Graphs/es_turnover_con_2009_2010.png
+Graphs/es_turnover_con_2010_2011.png
+Graphs/es_turnover_con_2011_2012.png
+Graphs/es_turnover_treat.png
+Graphs/lev_emp_evolution.png
+Graphs/log_emp_evolution.png
+Graphs/log_remdezr_evolution.png
+Graphs/log_remmedr_evolution.png
+Graphs/numb_clauses_cba_period.png
+Graphs/numb_clauses_year.png
+Graphs/recap_es_emp_spill_am_mu.png
+Graphs/recap_es_emp_spill_am.png
+Graphs/recap_es_emp_spill_mu.png
+Graphs/recap_es_emp_spill.png
+Graphs/y_resid3_outtreat_pf.png
+Graphs/Agug 6 Recap/es_emp_spill_am_emp_mu.png
+Graphs/Agug 6 Recap/es_emp_spill_am_emp.png
+Graphs/Agug 6 Recap/es_emp_spill_am_tf_mu.png
+Graphs/Agug 6 Recap/es_emp_spill_am_tf.png
+Graphs/Agug 6 Recap/es_emp_spill_bm_emp_mu.png
+Graphs/Agug 6 Recap/es_emp_spill_bm_emp.png
+Graphs/Agug 6 Recap/es_emp_spill_bm_tf_mu.png
+Graphs/Agug 6 Recap/es_emp_spill_bm_tf.png
+Graphs/Agug 6 Recap/es_emp_spill_overall_mu.png
+Graphs/Agug 6 Recap/es_emp_spill_overall.png
+Graphs/Agug 6 Recap/es_remmedr_spill_am_emp_mu.png
+Graphs/Agug 6 Recap/es_remmedr_spill_am_emp.png
+Graphs/Agug 6 Recap/es_remmedr_spill_am_tf_mu.png
+Graphs/Agug 6 Recap/es_remmedr_spill_am_tf.png
+Graphs/Agug 6 Recap/es_remmedr_spill_bm_emp_mu.png
+Graphs/Agug 6 Recap/es_remmedr_spill_bm_emp.png
+Graphs/Agug 6 Recap/es_remmedr_spill_bm_tf_mu.png
+Graphs/Agug 6 Recap/es_remmedr_spill_bm_tf.png
+Graphs/Agug 6 Recap/es_remmedr_spill_overall_mu.png
+Graphs/Agug 6 Recap/es_remmedr_spill_overall.png
+Graphs/Aug6 recap 2/ed_hiring.png
+Graphs/Aug6 recap 2/ed_retention.png
+Graphs/Aug6 recap 2/es_emp_spill_am_emp_mu.png
+Graphs/Aug6 recap 2/es_emp_spill_am_emp.png
+Graphs/Aug6 recap 2/es_emp_spill_am_tf_mu.png
+Graphs/Aug6 recap 2/es_emp_spill_am_tf.png
+Graphs/Aug6 recap 2/es_emp_spill_bm_emp_mu.png
+Graphs/Aug6 recap 2/es_emp_spill_bm_emp.png
+Graphs/Aug6 recap 2/es_emp_spill_bm_tf_mu.png
+Graphs/Aug6 recap 2/es_emp_spill_bm_tf.png
+Graphs/Aug6 recap 2/es_emp_spill_overall_mu.png
+Graphs/Aug6 recap 2/es_emp_spill_overall.png
+Graphs/Aug6 recap 2/es_hiring_spill_overall.png
+Graphs/Aug6 recap 2/es_remdezr_spill_overall_mu.png
+Graphs/Aug6 recap 2/es_remdezr_spill_overall.png
+Graphs/Aug6 recap 2/es_remmedr_spill_am_emp_mu.png
+Graphs/Aug6 recap 2/es_remmedr_spill_am_emp.png
+Graphs/Aug6 recap 2/es_remmedr_spill_am_tf_mu.png
+Graphs/Aug6 recap 2/es_remmedr_spill_am_tf.png
+Graphs/Aug6 recap 2/es_remmedr_spill_bm_emp_mu.png
+Graphs/Aug6 recap 2/es_remmedr_spill_bm_emp.png
+Graphs/Aug6 recap 2/es_remmedr_spill_bm_tf_mu.png
+Graphs/Aug6 recap 2/es_remmedr_spill_bm_tf.png
+Graphs/Aug6 recap 2/es_retention_spill_overall.png
+Graphs/plots jul 31/permutation_1.gph
+Graphs/plots jul 31/permutation_1.png
+Tables/direct_did.csv
+Tables/direct_sample3_lr_remdezr.csv
+Tables/jul31_heterogeneity_l_firm_emp_am_hire_2009.csv
+Tables/jul31_heterogeneity_lr_remdezr_am_hire_2009.csv
+Tables/jul31_heterogeneity_lr_remmedr_am_hire_2009.csv
+Tables/jul31_l_firm_emp_am_lfe_avg_ftreat_pf_n_main.csv
+Tables/jul31_l_firm_emp_am_lfe_avg_ftreat_pf_n_placebo.csv
+Tables/jul31_l_firm_emp_am_lfe_totaltreat_pw_n_main.csv
+Tables/jul31_l_firm_emp_am_lfe_totaltreat_pw_n_placebo.csv
+Tables/jul31_l_firm_emp_am_tf_n_avg_ftreat_pf_n_main.csv
+Tables/jul31_l_firm_emp_am_tf_n_avg_ftreat_pf_n_placebo.csv
+Tables/jul31_l_firm_emp_am_tf_n_totaltreat_pw_n_main.csv
+Tables/jul31_l_firm_emp_am_tf_n_totaltreat_pw_n_placebo.csv
+Tables/jul31_l_firm_emp_am_tn_pre_avg_ftreat_pf_n_main.csv
+Tables/jul31_l_firm_emp_am_tn_pre_avg_ftreat_pf_n_placebo.csv
+Tables/jul31_l_firm_emp_am_tn_pre_totaltreat_pw_n_main.csv
+Tables/jul31_l_firm_emp_am_tn_pre_totaltreat_pw_n_placebo.csv
+Tables/jul31_lr_remdezr_am_lfe_avg_ftreat_pf_n_main.csv
+Tables/jul31_lr_remdezr_am_lfe_avg_ftreat_pf_n_placebo.csv
+Tables/jul31_lr_remdezr_am_lfe_totaltreat_pw_n_main.csv
+Tables/jul31_lr_remdezr_am_lfe_totaltreat_pw_n_placebo.csv
+Tables/jul31_lr_remdezr_am_tf_n_avg_ftreat_pf_n_main.csv
+Tables/jul31_lr_remdezr_am_tf_n_avg_ftreat_pf_n_placebo.csv
+Tables/jul31_lr_remdezr_am_tf_n_totaltreat_pw_n_main.csv
+Tables/jul31_lr_remdezr_am_tf_n_totaltreat_pw_n_placebo.csv
+Tables/jul31_lr_remdezr_am_tn_pre_avg_ftreat_pf_n_main.csv
+Tables/jul31_lr_remdezr_am_tn_pre_avg_ftreat_pf_n_placebo.csv
+Tables/jul31_lr_remdezr_am_tn_pre_totaltreat_pw_n_main.csv
+Tables/jul31_lr_remdezr_am_tn_pre_totaltreat_pw_n_placebo.csv
+Tables/jul31_lr_remmedr_am_lfe_avg_ftreat_pf_n_main.csv
+Tables/jul31_lr_remmedr_am_lfe_avg_ftreat_pf_n_placebo.csv
+Tables/jul31_lr_remmedr_am_lfe_totaltreat_pw_n_main.csv
+Tables/jul31_lr_remmedr_am_lfe_totaltreat_pw_n_placebo.csv
+Tables/jul31_lr_remmedr_am_tf_n_avg_ftreat_pf_n_main.csv
+Tables/jul31_lr_remmedr_am_tf_n_avg_ftreat_pf_n_placebo.csv
+Tables/jul31_lr_remmedr_am_tf_n_totaltreat_pw_n_main.csv
+Tables/jul31_lr_remmedr_am_tf_n_totaltreat_pw_n_placebo.csv
+Tables/jul31_lr_remmedr_am_tn_pre_avg_ftreat_pf_n_main.csv
+Tables/jul31_lr_remmedr_am_tn_pre_avg_ftreat_pf_n_placebo.csv
+Tables/jul31_lr_remmedr_am_tn_pre_totaltreat_pw_n_main.csv
+Tables/jul31_lr_remmedr_am_tn_pre_totaltreat_pw_n_placebo.csv
+Tables/Jul31_Tables.zip
+Tables/mode_union_constraints_l_firm_emp.csv
+Tables/mode_union_constraints_lr_remdezr.csv
+Tables/mode_union_constraints_lr_remmedr.csv
+Tables/mu_catspects_l_firm_emp.csv
+Tables/mu_catspects_lr_remdezr.csv
+Tables/mu_catspects_lr_remmedr.csv
+Tables/mu_lag_l_firm_emp.csv
+Tables/mu_lag_lr_remdezr.csv
+Tables/mu_lag_lr_remmedr.csv
+Tables/mu_lags.csv
+Tables/mu_nlspecs_avg_ftreat_pf_n_sq.csv
+Tables/mu_nlspecs_l_firm_emp_2009.csv
+Tables/mu_nlspecs_totalflows_n.csv
+Tables/mu_nlspecs_totaltreat_pf_n_sq.csv
+Tables/mu_nlspecs_totaltreat_pw_n_sq.csv
+Tables/no_mu_sing_l_firm_emp.csv
+Tables/no_mu_sing_lr_remdezr.csv
+Tables/no_mu_sing_lr_remmedr.csv
+Tables/spillover_did_pf.csv
+Tables/spillover_did_pw.csv
+Tables/spillover_fes_lagosflows_25.csv
+Tables/spillover_lagosflows_pf_25.csv
+Tables/spillover_lagosflows_pw_25.csv
+Tables/spillover_numbclauses_pf_25.csv
+Tables/spillover_numbclauses_pw_25.csv
+Tables/spillover_results_pf_nt_25.csv
+Tables/spillover_results_pf_nt.csv
+Tables/spillover_results_pf_yt_25.csv
+Tables/spillover_results_pf_yt.csv
+Tables/spillover_results_pf.csv
+Tables/spillover_results_pw_nt_25.csv
+Tables/spillover_results_pw_nt.csv
+Tables/spillover_results_pw_yt_25.csv
+Tables/spillover_results_pw_yt.csv
+Tables/spillover_results.csv
+Tables/spillover_sample3_l_firm_emp.csv
+Tables/spillover_sample3_lr_remdezr.csv
+Tables/spillover_sample3_lr_remmedr.csv
+Tables/spillover3_l_firm_emp.csv
+Tables/spillover3_lr_remdezr.csv
+Tables/spillover3_lr_remmedr.csv
+Tables/spillovers specifications.zip
+Tables/Jul31_Tables/jul31_heterogeneity_l_firm_emp_am_lfe.csv
+Tables/Jul31_Tables/jul31_heterogeneity_l_firm_emp_am_tf_n.csv
+Tables/Jul31_Tables/jul31_heterogeneity_l_firm_emp_am_tn_pre.csv
+Tables/Jul31_Tables/jul31_heterogeneity_lr_remdezr_am_lfe.csv
+Tables/Jul31_Tables/jul31_heterogeneity_lr_remdezr_am_tf_n.csv
+Tables/Jul31_Tables/jul31_heterogeneity_lr_remdezr_am_tn_pre.csv
+Tables/Jul31_Tables/jul31_heterogeneity_lr_remmedr_am_lfe.csv
+Tables/Jul31_Tables/jul31_heterogeneity_lr_remmedr_am_tf_n.csv
+Tables/Jul31_Tables/jul31_heterogeneity_lr_remmedr_am_tn_pre.csv
+Tables/Jul31_Tables/jul31_l_firm_emp_am_lfe_avg_ftreat_pf_n_main.csv
+Tables/Jul31_Tables/jul31_l_firm_emp_am_lfe_avg_ftreat_pf_n_placebo.csv
+Tables/Jul31_Tables/jul31_l_firm_emp_am_lfe_totaltreat_pw_n_main.csv
+Tables/Jul31_Tables/jul31_l_firm_emp_am_lfe_totaltreat_pw_n_placebo.csv
+Tables/Jul31_Tables/jul31_l_firm_emp_am_tf_n_avg_ftreat_pf_n_main.csv
+Tables/Jul31_Tables/jul31_l_firm_emp_am_tf_n_avg_ftreat_pf_n_placebo.csv
+Tables/Jul31_Tables/jul31_l_firm_emp_am_tf_n_totaltreat_pw_n_main.csv
+Tables/Jul31_Tables/jul31_l_firm_emp_am_tf_n_totaltreat_pw_n_placebo.csv
+Tables/Jul31_Tables/jul31_l_firm_emp_am_tn_pre_avg_ftreat_pf_n_main.csv
+Tables/Jul31_Tables/jul31_l_firm_emp_am_tn_pre_avg_ftreat_pf_n_placebo.csv
+Tables/Jul31_Tables/jul31_l_firm_emp_am_tn_pre_totaltreat_pw_n_main.csv
+Tables/Jul31_Tables/jul31_l_firm_emp_am_tn_pre_totaltreat_pw_n_placebo.csv
+Tables/Jul31_Tables/jul31_lr_remdezr_am_lfe_avg_ftreat_pf_n_main.csv
+Tables/Jul31_Tables/jul31_lr_remdezr_am_lfe_avg_ftreat_pf_n_placebo.csv
+Tables/Jul31_Tables/jul31_lr_remdezr_am_lfe_totaltreat_pw_n_main.csv
+Tables/Jul31_Tables/jul31_lr_remdezr_am_lfe_totaltreat_pw_n_placebo.csv
+Tables/Jul31_Tables/jul31_lr_remdezr_am_tf_n_avg_ftreat_pf_n_main.csv
+Tables/Jul31_Tables/jul31_lr_remdezr_am_tf_n_avg_ftreat_pf_n_placebo.csv
+Tables/Jul31_Tables/jul31_lr_remdezr_am_tf_n_totaltreat_pw_n_main.csv
+Tables/Jul31_Tables/jul31_lr_remdezr_am_tf_n_totaltreat_pw_n_placebo.csv
+Tables/Jul31_Tables/jul31_lr_remdezr_am_tn_pre_avg_ftreat_pf_n_main.csv
+Tables/Jul31_Tables/jul31_lr_remdezr_am_tn_pre_avg_ftreat_pf_n_placebo.csv
+Tables/Jul31_Tables/jul31_lr_remdezr_am_tn_pre_totaltreat_pw_n_main.csv
+Tables/Jul31_Tables/jul31_lr_remdezr_am_tn_pre_totaltreat_pw_n_placebo.csv
+Tables/Jul31_Tables/jul31_lr_remmedr_am_lfe_avg_ftreat_pf_n_main.csv
+Tables/Jul31_Tables/jul31_lr_remmedr_am_lfe_avg_ftreat_pf_n_placebo.csv
+Tables/Jul31_Tables/jul31_lr_remmedr_am_lfe_totaltreat_pw_n_main.csv
+Tables/Jul31_Tables/jul31_lr_remmedr_am_lfe_totaltreat_pw_n_placebo.csv
+Tables/Jul31_Tables/jul31_lr_remmedr_am_tf_n_avg_ftreat_pf_n_main.csv
+Tables/Jul31_Tables/jul31_lr_remmedr_am_tf_n_avg_ftreat_pf_n_placebo.csv
+Tables/Jul31_Tables/jul31_lr_remmedr_am_tf_n_totaltreat_pw_n_main.csv
+Tables/Jul31_Tables/jul31_lr_remmedr_am_tf_n_totaltreat_pw_n_placebo.csv
+Tables/Jul31_Tables/jul31_lr_remmedr_am_tn_pre_avg_ftreat_pf_n_main.csv
+Tables/Jul31_Tables/jul31_lr_remmedr_am_tn_pre_avg_ftreat_pf_n_placebo.csv
+Tables/Jul31_Tables/jul31_lr_remmedr_am_tn_pre_totaltreat_pw_n_main.csv
+Tables/Jul31_Tables/jul31_lr_remmedr_am_tn_pre_totaltreat_pw_n_placebo.csv
+Tables/Jul31_Tables/jul31_nmu_empsample_l_firm_emp.csv
+Tables/Jul31_Tables/jul31_nmu_empsample_lr_remdezr.csv
+Tables/Jul31_Tables/jul31_nmu_empsample_lr_remmedr.csv
+Tables/Jul31_Tables/jul31_nmu_flowsample_l_firm_emp.csv
+Tables/Jul31_Tables/jul31_nmu_flowsample_lr_remdezr.csv
+Tables/Jul31_Tables/jul31_nmu_flowsample_lr_remmedr.csv
+Tables/Jul31_Tables/jul31_ymu_empsample_l_firm_emp.csv
+Tables/Jul31_Tables/jul31_ymu_empsample_lr_remdezr.csv
+Tables/Jul31_Tables/jul31_ymu_empsample_lr_remmedr.csv
+Tables/Jul31_Tables/jul31_ymu_flowsample_l_firm_emp.csv
+Tables/Jul31_Tables/jul31_ymu_flowsample_lr_remdezr.csv
+Tables/Jul31_Tables/jul31_ymu_flowsample_lr_remmedr.csv
+Tables/spillovers specifications/spillover_sample1_l_firm_emp.csv
+Tables/spillovers specifications/spillover_sample1_lr_remdezr.csv
+Tables/spillovers specifications/spillover_sample1_lr_remmedr.csv
+Tables/spillovers specifications/spillover_sample2_l_firm_emp.csv
+Tables/spillovers specifications/spillover_sample2_lr_remdezr.csv
+Tables/spillovers specifications/spillover_sample2_lr_remmedr.csv
+Tables/spillovers specifications/spillover_sample3_l_firm_emp.csv
+Tables/spillovers specifications/spillover_sample3_lr_remdezr.csv
+Tables/spillovers specifications/spillover_sample3_lr_remmedr.csv
