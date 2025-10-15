@@ -13,7 +13,7 @@ local years "2007 2008 2009 2010 2011 2012 2013 2014 2015 2016"
 local ipca  " 0.607949398754109 0.643834976197206 0.671594887351247 0.711277338716318 0.757534213038901 0.80176356558955 0.849153270408197 0.903562518222102 1 1.06287988213221 1.09420743038879"
 
 
-forvalues i=2016/2016{
+forvalues i=2009/2016{
 	
 // 	local i=2007
 	use "$rais_raw_dir/RAIS_`i'.dta",clear
@@ -567,11 +567,11 @@ save "$rais_firm/rais_firm_`i'.dta", replace
 // Homogenizing municipality and induestry. Using same technique as Lagos (2021), which gets the mode at the worker x year level
 
 // just appending year-level datasets
-use "$rais_aux/worker_estab_2007.dta",clear
+use "$rais_aux/worker_estab_2009.dta",clear
 
-forvalues i=2008/2016 {
-	append using "$rais_aux/worker_estab_`i'.dta"
-	erase "$rais_aux/worker_estab_`i'.dta" // erases year level dataset, so that it does not occupy a lot of hd space
+forvalues k=2010/2016 {
+	append using "$rais_aux/worker_estab_`k'.dta"
+	erase "$rais_aux/worker_estab_`k'.dta" // erases year level dataset, so that it does not occupy a lot of hd space
 }
 
 

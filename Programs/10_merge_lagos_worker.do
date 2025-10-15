@@ -28,3 +28,6 @@ gen cnpj_year = identificad + year_str
 merge 1:m cnpj_year using "$rais_aux/worker_estab_all_years.dta"
 
 keep if _merge==3
+
+compress
+save "$rais_firm/lagos_sample_workers.dta", replace
