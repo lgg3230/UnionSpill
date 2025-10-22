@@ -464,3 +464,6 @@ Tables/spillovers specifications/spillover_sample2_lr_remmedr.csv
 Tables/spillovers specifications/spillover_sample3_l_firm_emp.csv
 Tables/spillovers specifications/spillover_sample3_lr_remdezr.csv
 Tables/spillovers specifications/spillover_sample3_lr_remmedr.csv
+Data/RAIS_aux/2009_separations.dta
+.gitignore
+Data/RAIS_aux/worker_estab_2009.dta
