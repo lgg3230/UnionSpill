@@ -15,11 +15,11 @@ keep lagos_sample_avg industry1 mode_base_month microregion year ///
     identificad firm_emp separations ///
     intreat_n outtreat_n totalflows_n ///
     in_balanced_panel treat_ultra treat_year ///
-    lr_remdezr lr_remmedr l_firm_emp ///
+     l_firm_emp ///
     natjuridica mode_union ///
     outtreat_pw_n intreat_pw_n ///
     totaltreat_pf_n totaltreat_pw_n avg_ftreat_pf_n ///
-    retention n_negs_union_year cl_*
+    retention n_negs_union_year numb_clauses
 
 tostring year, generate(year_str)
 

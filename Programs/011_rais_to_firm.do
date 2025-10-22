@@ -532,12 +532,11 @@ keep if final_rank==1	// considers only main spells of employees active througho
 
 // save an employee level dataset to homogenize municipality and industry for across year 
 preserve
-keep PIS identificad municipio clascnae20 year genero idade dtnascimento_stata  ocup2002 raca_cor causadesli mesdesli firm_emp ///
+keep PIS identificad municipio clascnae20 year genero idade dtnascimento_stata dtadmissao_stata ocup2002 raca_cor causadesli mesdesli ///
     grinstrucao nacionalidad portdefic tpdefic tipoadm tempempr tiposal salcontr ultrem horascontr ///
     remdezembro remmedia remdezr remmedr dtnascimento idade nacionalidad ///
      tempempr tiposal salcontr ///
-     lr_remdezr lr_remmedr lr_salcontr_m lr_salcontr_h r_salcontr_m r_salcontr_h r_remmedr r_remmedr_h r_remdezr r_remdezr_h ///
-     salcontr_p10 salcontr_p50 salcontr_p90 lr_salcontr_90_10 lr_salcontr_50_10
+     lr_remdezr lr_remmedr r_remmedr r_remmedr_h r_remdezr r_remdezr_h ///
 save "$rais_aux/worker_estab_`i'.dta", replace
 restore
 	
