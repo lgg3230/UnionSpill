@@ -25,6 +25,8 @@ bys mode_union: egen treat_union_exp = min(treat_union_exp_pre)
 
  
 collapse (firstnm) treat_union_exp, by(mode_union)
+rename treat_union_exp treat_union_exp_all
+label var treat_union_exp_all "Proportion of firms affected by ultra reform by union"
 
 isid mode_union
 
