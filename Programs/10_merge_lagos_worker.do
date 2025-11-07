@@ -8,7 +8,7 @@
 
 use "$rais_firm/lagos_sample_sep24.dta", clear
 
-keep if in_balanced_panel==1
+/* keep if in_balanced_panel==1 */
 
 keep lagos_sample_avg industry1 mode_base_month microregion year ///
     avg_file_date earliest2009_avg second_cba_avg ///
