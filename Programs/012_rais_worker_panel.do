@@ -425,43 +425,7 @@ drop hire_tag
     bysort identificad: egen qui_count = total(cond(causadesli==20 | causadesli==21, 1, 0)) // w/in each estab, tag spells that were terminated by the employee during the whole year
     gen quits = qui_count / firm_emp
 
-    ** Fixed contract 
-    gen fixed_c = cond(tpvinculo==60 | tpvinculo==65 | tpvinculo==70 | tpvinculo==75 | tpvinculo==95 | tpvinculo==96 |tpvinculo==97 | tpvinculo==90, 1, 0) // mark spells w/ fixed duration contracts: CLT U/PJ DET (60), CLT U/PF DET (65), CLT R/PJ DET (70), CLT R/PF DET (75), CONT PRZ DET (90), CONT TMP DET(95), CONT LEI EST(96), CONT LEI MUN (97)
-    bysort identificad: egen fixed_count = total(fixed_c) // count marked spells within each estab whose contract type is fixed duration
-    gen fixed_prop = fixed_count / firm_emp
-
-    ** Safety events
-    gen safety_d = cond(causadesli==62 | causadesli==73 | causadesli==74 | causafast1==10 | causafast1==30 | causafast2==10 | causafast2==30 | causafast3==10 | causafast1==30, 1, 0) // mark spells that were affected by a safety incident : death from work accident (62), retiring from work accident (73), retiring from work acquired disease (74),  leave due to work accident (10), leave due to work disease (30)
-    bysort identificad: egen safety_c = total(safety_d) // count safety events per estab
-    gen safety = safety_c / firm_emp
-
-    ** Taking leave
-    bysort identificad PIS: egen leave_c = total(cond(causafast1 != -1, 1, 0)) // mark spells that took a leave sometime in the year, count per estab
-    gen leaves = leave_c / firm_emp
-
-    ** Education groups
-    gen no_hs_c = cond(inlist(grinstrucao, 1, 2, 3, 4, 5, 6), 1, 0) // mark spells with no high school (illiterate (1) + incomplete elementary (2-5) + incomplete high schools(6))
-    gen hs_c = cond(inlist(grinstrucao, 7, 8), 1, 0) // mark spells with complete high school (7) and incomplete college (8) 
-    gen sup_c = cond(inlist(grinstrucao, 9, 10, 11), 1, 0) // mark spells with complete college (9), masters (10) and doctoral degree (11)
-
-    bysort identificad PIS: gen tag_nhs = cond(no_hs_c==1 & final_rank==1, 1, 0) // marks relevant (final_rank==1) spell w/in estab-PIS pair that is employed throughout dec that has incomplete hs
-    bysort identificad: egen no_high_school = total(tag_nhs) // count this number of employees per estab
-    drop tag_nhs
-    gen prop_nhs = no_high_school / firm_emp
-
-    bysort identificad PIS: gen tag_hs = cond(hs_c==1 & final_rank==1, 1, 0) // marks  relevant (final_rank==1) w/in estab-PIS pair that is employed throughout dec that has complete hs
-    bysort identificad: egen high_school = total(tag_hs)
-    drop tag_hs
-    gen prop_hs = high_school / firm_emp
-
-    bysort identificad PIS: gen tag_sup = cond(sup_c==1 & final_rank==1, 1, 0) // marks relevant (final_rank==1) spell w/in estab-PIS pair that is employed throughout dec that has complete college
-    bysort identificad: egen superior = total(tag_sup)
-    drop tag_sup
-    gen prop_sup = superior / firm_emp
-
-    ** Occupation groups (left for later or further clarification)
-
-    ** Age calculation
+    
 
     * First, ensure that dtnascimento is a string.
     capture confirm string variable dtnascimento // confirm dtnascimento is in string format
@@ -536,26 +500,11 @@ keep PIS identificad municipio clascnae20 year genero idade dtnascimento_stata d
     grinstrucao nacionalidad portdefic tpdefic tipoadm tempempr tiposal salcontr ultrem horascontr ///
     remdezembro remmedia remdezr remmedr dtnascimento idade nacionalidad ///
      tempempr tiposal salcontr ///
-     lr_remdezr lr_remmedr r_remmedr r_remmedr_h r_remdezr r_remdezr_h ///
+     lr_remdezr lr_remmedr r_remmedr r_remmedr_h r_remdezr r_remdezr_h
+compress
 save "$rais_aux/worker_estab_`i'.dta", replace
 restore
 	
-collapse ///
-(firstnm) identificad_8 year white_prop male_prop avg_tenure no_hs_c prop_nhs hs_c prop_hs sup_c prop_sup total_below_30 prop_below_30 total_30_40 prop_30_40 total_above_40 prop_above_40 ///
- leave_c leaves safety_c safety fixed_count fixed_prop qui_count quits lay_count layoffs separations turnover firm_emp_jan retention pub_firm ///
- hired_count hiring l_firm_emp firm_emp lr_sal~50_10 lr_sal~90_10 salcontr_p10 salcontr_p50 salcontr_p90 ///
- municipio clascnae20 natjuridica /// // take the first non missing observation within estab for observations that are the same for the whole estab
-(mean) lr_remdezr lr_remmedr lr_salcont~m r_salcontr_m r_remmedr r_remdezr lr_remdezr_h lr_remmedr_h lr_salcontr_h /// 
- r_remdezr_h r_remmedr_h r_salcontr_h remdezr_h remmedr_h salcontr_h /// // takes the mean of wage variables within estab
-, by(identificad)
-
-	
-	** microrregion groups
-	tostring municipio, replace force
-	
-
-
-save "$rais_firm/rais_firm_`i'.dta", replace
 
 
 
@@ -590,40 +539,4 @@ gen cnpj_year = identificad + year_str // generates a variable that is the ident
 
 compress
 save "$rais_aux/worker_estab_all_years.dta", replace // saves the full dataset with all years, just in case
-
-
-/* collapse (firstnm) modemun modeind, by(identificad) // collapse to the estab level, to serve as a dictionary for 
-
-tostring modemun, replace
-
-save "$rais_aux/rais_mode_mun_ind.dta", replace
-
-//incoporate the modal municipality and industry values into the collapsed firm level full datasets
-
-forvalues i=2007/2016{
-	use "$rais_aux/rais_mode_mun_ind.dta",clear
-	merge 1:1 identificad using "$rais_firm/rais_firm_`i'.dta" // merge with firm level collapsed full dataset 
-	keep if _merge==3 // keep only observations that are matched. there should not be a decrease in the number of obs
-	drop _merge
-	replace municipio=modemun // replace municipio with mode municipality
-	drop modemun // drop 
-	replace clascnae20=modeind // replace industry id with mode industry id
-	drop modeind
-	
-	** industry groups
-	gen industry =  substr(clascnae20,1,3) // generates specific industry groups using the 1st three digits of the cnae classification
-	
-	
-	save "$rais_firm/rais_firm_`i'.dta", replace
-	
-	// this code generates the unique establishments id databese to perform the merge with the cba dataset. I cannot merge the whole rais because the database would get too big, i add the other variables later (041 do file)
-keep identificad identificad_8 municipio firm_emp 
-gen state = substr(municipio,1,2) // generates state identifier used for matching with the cba dataset
-
-// keep if firm_emp>0 // restrict to firms with postive employment in december
-
-save "$rais_aux/unique_estab_`i'.dta", replace
-
-} */
-
 
