@@ -291,7 +291,7 @@ local deflator : word `pos' of `ipca'
 
      ** Deflated December hourly earnings
      gen r_remdezr_h = .
-	 replace r_remdezr_h = log(remdezr_h/`deflator')
+	 replace r_remdezr_h = remdezr_h/`deflator'
 
     
     // adjust wages to logs and at december 2015 prices
