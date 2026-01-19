@@ -584,7 +584,7 @@ use "$rais_firm/cba_rais_firm_2009_2016_flows_1.dta", clear
 
 keep if lagos_sample_avg==1
 
-save "$rais_firm/lagos_sample_sep24.dta", replace
+save "$rais_firm/lagos_sample_sep24_test.dta", replace
 
 
 * get data from 2007 and 2008:
