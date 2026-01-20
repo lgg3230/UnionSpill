@@ -128,14 +128,14 @@ foreach yr in 2009 2010 2011 {                                                  
     use "$rais_firm/rais_firm_`yr'.dta", clear                                    // Load firm-level RAIS data for current year
 
     * Keep relevant variables (r_remdezr is mean December wages in 2015 prices)
-    keep identificad firm_emp r_remdezr male_prop white_prop prop_sup             // Keep establishment ID, employment, wages, and demographic proportions
+    keep identificad firm_emp r_remdezr male_prop white_prop prop_sup prop_hs prop_nhs // Keep establishment ID, employment, wages, and demographic/education proportions
 
     * Generate prop_female and prop_nonwhite
     gen prop_female = 1 - male_prop                                               // Calculate proportion female as complement of male proportion
     gen prop_nonwhite = 1 - white_prop                                            // Calculate proportion non-white as complement of white proportion
 
     * Rename with year suffix
-    foreach var in firm_emp r_remdezr prop_female prop_nonwhite prop_sup {        // Loop through firm characteristic variables
+    foreach var in firm_emp r_remdezr prop_female prop_nonwhite prop_sup prop_hs prop_nhs { // Loop through firm characteristic variables
         rename `var' `var'_`yr'                                                   // Add year suffix to variable name
     }
 
@@ -154,6 +154,8 @@ egen avg_firm_emp = rowmean(firm_emp_2009 firm_emp_2010 firm_emp_2011)          
 egen avg_prop_female = rowmean(prop_female_2009 prop_female_2010 prop_female_2011) // Calculate average proportion female across 2009-2011
 egen avg_prop_sup = rowmean(prop_sup_2009 prop_sup_2010 prop_sup_2011)            // Calculate average proportion with higher education across 2009-2011
 egen avg_prop_nonwhite = rowmean(prop_nonwhite_2009 prop_nonwhite_2010 prop_nonwhite_2011) // Calculate average proportion non-white across 2009-2011
+egen avg_prop_hs = rowmean(prop_hs_2009 prop_hs_2010 prop_hs_2011)                // Calculate average proportion with high school across 2009-2011
+egen avg_prop_nhs = rowmean(prop_nhs_2009 prop_nhs_2010 prop_nhs_2011)            // Calculate average proportion with less than high school across 2009-2011
 
 * Compute median wages across years (use rowmedian)
 egen med_r_remdezr = rowmedian(r_remdezr_2009 r_remdezr_2010 r_remdezr_2011)      // Calculate median December wages across 2009-2011
@@ -165,11 +167,11 @@ gen l_avg_firm_emp = ln(avg_firm_emp)                                           
 gen l_med_r_remdezr = ln(med_r_remdezr)                                           // Generate log of median December wages
 
 * Keep only needed variables
-keep identificad avg_firm_emp l_avg_firm_emp avg_prop_female avg_prop_sup avg_prop_nonwhite med_r_remdezr l_med_r_remdezr // Keep establishment ID and computed averages
+keep identificad avg_firm_emp l_avg_firm_emp avg_prop_female avg_prop_sup avg_prop_nonwhite avg_prop_hs avg_prop_nhs med_r_remdezr l_med_r_remdezr // Keep establishment ID and computed averages
 
 * Prepare for merge with establishment i
 rename identificad identificad_i                                                  // Rename establishment ID for merging as establishment i
-foreach var in avg_firm_emp l_avg_firm_emp avg_prop_female avg_prop_sup avg_prop_nonwhite med_r_remdezr l_med_r_remdezr { // Loop through average variables
+foreach var in avg_firm_emp l_avg_firm_emp avg_prop_female avg_prop_sup avg_prop_nonwhite avg_prop_hs avg_prop_nhs med_r_remdezr l_med_r_remdezr { // Loop through average variables
     rename `var' `var'_i                                                          // Add _i suffix for establishment i
 }
 
@@ -178,7 +180,7 @@ save "$rais_aux/firm_chars_avg_i.dta", replace                                  
 * Prepare for merge with establishment j
 use "$rais_aux/firm_chars_avg_i.dta", clear                                       // Load firm characteristics (currently suffixed with _i)
 rename identificad_i identificad_j                                                // Rename establishment ID for establishment j
-foreach var in avg_firm_emp l_avg_firm_emp avg_prop_female avg_prop_sup avg_prop_nonwhite med_r_remdezr l_med_r_remdezr { // Loop through average variables
+foreach var in avg_firm_emp l_avg_firm_emp avg_prop_female avg_prop_sup avg_prop_nonwhite avg_prop_hs avg_prop_nhs med_r_remdezr l_med_r_remdezr { // Loop through average variables
     rename `var'_i `var'_j                                                        // Rename variable from _i suffix to _j suffix
 }
 
@@ -270,6 +272,12 @@ gen nonwhite_distance = abs(avg_prop_nonwhite_i - avg_prop_nonwhite_j)          
 * Higher education proportion distance (absolute difference in proportion with higher education)
 gen educ_distance = abs(avg_prop_sup_i - avg_prop_sup_j)                          // Calculate absolute difference in proportion with higher education between establishments
 
+* High school proportion distance (absolute difference in proportion with high school)
+gen hs_distance = abs(avg_prop_hs_i - avg_prop_hs_j)                              // Calculate absolute difference in proportion with high school between establishments
+
+* Less than high school proportion distance (absolute difference in proportion with less than high school)
+gen nhs_distance = abs(avg_prop_nhs_i - avg_prop_nhs_j)                           // Calculate absolute difference in proportion with less than high school between establishments
+
 ********************************************************************************
 * STEP 8: Geographic distance (Haversine) if coordinates available
 ********************************************************************************
@@ -343,7 +351,7 @@ di _newline(2) "=== Distance Measures ==="                                      
 summarize same_muni same_microregion size_distance wage_distance, detail          // Display detailed summary statistics for distance measures
 
 di _newline(2) "=== Workforce Composition Distance Measures ==="                  // Display section header for workforce composition distances
-summarize female_distance nonwhite_distance educ_distance, detail                 // Display detailed summary statistics for workforce composition distance measures
+summarize female_distance nonwhite_distance educ_distance hs_distance nhs_distance, detail // Display detailed summary statistics for workforce composition distance measures
 
 if !missing(geo_distance) {                                                       // If geographic distance was computed
     summarize geo_distance, detail                                                // Display detailed summary statistics for geographic distance
@@ -363,8 +371,8 @@ order identificad_i identificad_j bilateral_conn_pw flows_total ///
       big_industry_j mode_union_j ///
       avg_firm_emp_i avg_firm_emp_j med_r_remdezr_i med_r_remdezr_j ///
       avg_prop_female_i avg_prop_female_j avg_prop_nonwhite_i avg_prop_nonwhite_j ///
-      avg_prop_sup_i avg_prop_sup_j ///
-      size_distance wage_distance female_distance nonwhite_distance educ_distance // Reorder variables: IDs first, then connectivity, geography, industry, firm chars, distances
+      avg_prop_sup_i avg_prop_sup_j avg_prop_hs_i avg_prop_hs_j avg_prop_nhs_i avg_prop_nhs_j ///
+      size_distance wage_distance female_distance nonwhite_distance educ_distance hs_distance nhs_distance // Reorder variables: IDs first, then connectivity, geography, industry, firm chars, distances
 
 compress                                                                          // Reduce dataset memory footprint by optimizing storage types
 save "$rais_aux/bilateral_pairs_descriptives.dta", replace                        // Save final bilateral pairs dataset with all variables
@@ -447,6 +455,22 @@ binscatter bilateral_conn_pw educ_distance, nquantiles(20) ///
     plotregion(color(white)) graphregion(color(white))                            // Publication-quality: navy color, white background
 graph export "$graphs/binscatter_conn_educ_distance.pdf", replace                 // Export graph as PDF file
 
+* Plot 8: Bilateral connectivity vs high school proportion distance
+binscatter bilateral_conn_pw hs_distance, nquantiles(20) ///
+    xtitle("Absolute difference in share with high school") ///
+    ytitle("Bilateral Connectivity") ///
+    mcolor(navy) lcolor(navy) ///
+    plotregion(color(white)) graphregion(color(white))                            // Publication-quality: navy color, white background
+graph export "$graphs/binscatter_conn_hs_distance.pdf", replace                   // Export graph as PDF file
+
+* Plot 9: Bilateral connectivity vs less than high school proportion distance
+binscatter bilateral_conn_pw nhs_distance, nquantiles(20) ///
+    xtitle("Absolute difference in share with less than high school") ///
+    ytitle("Bilateral Connectivity") ///
+    mcolor(navy) lcolor(navy) ///
+    plotregion(color(white)) graphregion(color(white))                            // Publication-quality: navy color, white background
+graph export "$graphs/binscatter_conn_nhs_distance.pdf", replace                  // Export graph as PDF file
+
 ********************************************************************************
 * STEP 12: Compute correlations and generate LaTeX correlation table
 ********************************************************************************
@@ -510,6 +534,20 @@ local corr_educ = r(rho)                                                        
 qui count if !missing(bilateral_conn_pw) & !missing(educ_distance)                // Count observations used
 local n_educ = r(N)                                                               // Store observation count
 post `memhold' ("Share higher education distance") (`corr_educ') (`n_educ')       // Post results to file
+
+* Compute correlation with high school proportion distance
+qui corr bilateral_conn_pw hs_distance                                            // Compute Pearson correlation quietly
+local corr_hs = r(rho)                                                            // Store correlation coefficient
+qui count if !missing(bilateral_conn_pw) & !missing(hs_distance)                  // Count observations used
+local n_hs = r(N)                                                                 // Store observation count
+post `memhold' ("Share high school distance") (`corr_hs') (`n_hs')                // Post results to file
+
+* Compute correlation with less than high school proportion distance
+qui corr bilateral_conn_pw nhs_distance                                           // Compute Pearson correlation quietly
+local corr_nhs = r(rho)                                                           // Store correlation coefficient
+qui count if !missing(bilateral_conn_pw) & !missing(nhs_distance)                 // Count observations used
+local n_nhs = r(N)                                                                // Store observation count
+post `memhold' ("Share less than HS distance") (`corr_nhs') (`n_nhs')             // Post results to file
 
 postclose `memhold'                                                               // Close postfile
 
@@ -642,7 +680,7 @@ if _rc != 0 {                                                                   
 
 * Standardize variables for comparable coefficients
 foreach var in bilateral_conn_pw geo_distance size_distance wage_distance ///
-               female_distance nonwhite_distance educ_distance {                  // Loop through continuous variables
+               female_distance nonwhite_distance educ_distance hs_distance nhs_distance { // Loop through continuous variables
     capture confirm variable `var'                                                // Check if variable exists
     if _rc == 0 {                                                                 // If exists
         qui sum `var'                                                             // Get summary statistics
@@ -662,6 +700,7 @@ if _rc == 0 {                                                                   
     di _newline(2) "=== Regression with Geographic Distance ==="                  // Display section header
     reghdfe z_bilateral_conn_pw z_geo_distance z_size_distance z_wage_distance ///
             z_female_distance z_nonwhite_distance z_educ_distance ///
+            z_hs_distance z_nhs_distance ///
             same_muni same_microregion same_mode_union, ///
             absorb(identificad_i) vce(robust)                                     // FE for establishment i, robust SE
 
@@ -672,6 +711,7 @@ else {                                                                          
     di _newline(2) "=== Regression without Geographic Distance ==="               // Display section header
     reghdfe z_bilateral_conn_pw z_size_distance z_wage_distance ///
             z_female_distance z_nonwhite_distance z_educ_distance ///
+            z_hs_distance z_nhs_distance ///
             same_muni same_microregion same_mode_union, ///
             absorb(identificad_i) vce(robust)                                     // FE for establishment i, robust SE
 
@@ -695,6 +735,7 @@ if _rc == 0 {                                                                   
     coefplot reg_with_geo, ///
         keep(z_geo_distance z_size_distance z_wage_distance ///
              z_female_distance z_nonwhite_distance z_educ_distance ///
+             z_hs_distance z_nhs_distance ///
              same_muni same_microregion same_mode_union) ///
         xline(0, lcolor(gs10)) ///
         mcolor(navy) ciopts(lcolor(navy)) ///
@@ -705,6 +746,8 @@ if _rc == 0 {                                                                   
                    z_female_distance = "Share female distance" ///
                    z_nonwhite_distance = "Share non-white distance" ///
                    z_educ_distance = "Share higher ed. distance" ///
+                   z_hs_distance = "Share high school distance" ///
+                   z_nhs_distance = "Share less than HS distance" ///
                    same_muni = "Same municipality" ///
                    same_microregion = "Same microregion" ///
                    same_mode_union = "Same modal union") ///
@@ -716,6 +759,7 @@ else {                                                                          
     coefplot reg_no_geo, ///
         keep(z_size_distance z_wage_distance ///
              z_female_distance z_nonwhite_distance z_educ_distance ///
+             z_hs_distance z_nhs_distance ///
              same_muni same_microregion same_mode_union) ///
         xline(0, lcolor(gs10)) ///
         mcolor(navy) ciopts(lcolor(navy)) ///
@@ -725,6 +769,8 @@ else {                                                                          
                    z_female_distance = "Share female distance" ///
                    z_nonwhite_distance = "Share non-white distance" ///
                    z_educ_distance = "Share higher ed. distance" ///
+                   z_hs_distance = "Share high school distance" ///
+                   z_nhs_distance = "Share less than HS distance" ///
                    same_muni = "Same municipality" ///
                    same_microregion = "Same microregion" ///
                    same_mode_union = "Same modal union") ///
@@ -762,6 +808,8 @@ di "  - $graphs/binscatter_conn_wage_distance.pdf"                              
 di "  - $graphs/binscatter_conn_female_distance.pdf"                              // Display path to female proportion distance plot
 di "  - $graphs/binscatter_conn_nonwhite_distance.pdf"                            // Display path to non-white proportion distance plot
 di "  - $graphs/binscatter_conn_educ_distance.pdf"                                // Display path to higher education distance plot
+di "  - $graphs/binscatter_conn_hs_distance.pdf"                                  // Display path to high school distance plot
+di "  - $graphs/binscatter_conn_nhs_distance.pdf"                                 // Display path to less than high school distance plot
 di "  - $tables/correlation_bilateral_connectivity.txt"                           // Display path to LaTeX correlation table
 di "  - $graphs/coefplot_bilateral_regression.pdf"                                // Display path to coefficient plot
 capture confirm variable geo_distance                                             // Check if geo_distance variable exists
