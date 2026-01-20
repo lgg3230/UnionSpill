@@ -26,6 +26,12 @@ keep if in_balanced_panel == 1                                                  
 * Keep only the establishment ID
 keep identificad                                                                  // Keep only establishment identifier
 
+* Add "1" prefix to match format in employers CSV files
+* This prefix was added during employers export to avoid precision loss
+gen str15 identificad_prefixed = "1" + identificad                                // Add "1" prefix to establishment ID
+drop identificad                                                                  // Drop original ID
+rename identificad_prefixed identificad                                           // Rename prefixed ID back to identificad
+
 * Count establishments meeting criteria
 count                                                                             // Count number of establishments
 di "Number of establishments meeting sample criteria: " r(N)                      // Display count
