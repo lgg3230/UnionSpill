@@ -468,3 +468,5 @@ Data/RAIS_aux/2009_separations.dta
 .gitignore
 Data/RAIS_aux/worker_estab_2009.dta
 Data/
+Graphs/
+Tables/
