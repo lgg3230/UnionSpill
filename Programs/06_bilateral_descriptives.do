@@ -36,7 +36,7 @@ keep identificad_i identificad_j bilateral_conn_pw flows_total ///
 save "$rais_aux/bilateral_connectivity_raw.dta", replace                          // Save raw bilateral connectivity data as Stata dataset
 
 ********************************************************************************
-* STEP 2: Merge sample flags for establishment i
+* STEP 2: Create list of sample establishments and their characteristics
 ********************************************************************************
 
 * Get lagos_sample_avg and in_balanced_panel from main dataset
@@ -45,10 +45,13 @@ save "$rais_aux/bilateral_connectivity_raw.dta", replace                        
 use "$rais_firm/cba_rais_firm_2009_2016_flows_1.dta", clear                       // Load main firm-level dataset with CBA and RAIS merged data
 keep if year == 2009                                                              // Keep only 2009 observations (sample flags are time-invariant)
 keep identificad lagos_sample_avg in_balanced_panel municipio microregion ///
-     big_industry mode_union                                                      // Keep establishment ID, sample flags, geographic IDs, industry, and union
+     big_industry industry1 mode_union                                            // Keep establishment ID, sample flags, geographic IDs, industries, and union
 
 * Ensure unique observations
 duplicates drop identificad, force                                                // Remove duplicate establishment observations, keeping first occurrence
+
+* Restrict to sample establishments
+keep if lagos_sample_avg == 1 & in_balanced_panel == 1                            // Keep only establishments in Lagos sample and balanced panel
 
 * Ensure municipio is numeric for merging with coordinates
 capture confirm string variable municipio                                         // Check if municipio is stored as string
@@ -56,68 +59,93 @@ if _rc == 0 {                                                                   
     destring municipio, replace force                                             // Convert municipality code from string to numeric, forcing conversion even with non-numeric characters
 }
 
-* Rename for merge
-rename identificad identificad_i                                                  // Rename establishment ID for merging as "sending" establishment i
-rename lagos_sample_avg lagos_sample_i                                            // Rename Lagos sample flag with _i suffix for establishment i
-rename in_balanced_panel balanced_panel_i                                         // Rename balanced panel flag with _i suffix for establishment i
-rename municipio municipio_i                                                      // Rename municipality code with _i suffix for establishment i
-rename microregion microregion_i                                                  // Rename microregion code with _i suffix for establishment i
-rename big_industry big_industry_i                                                // Rename industry code with _i suffix for establishment i
-rename mode_union mode_union_i                                                    // Rename modal union with _i suffix for establishment i
+* Count sample establishments
+count                                                                             // Count number of sample establishments
+local n_estabs = r(N)                                                             // Store count in local macro
+di "Number of sample establishments: `n_estabs'"                                  // Display number of establishments in sample
 
-save "$rais_aux/sample_flags_i.dta", replace                                      // Save sample flags for establishment i as temporary file
-
-* Now merge to bilateral data
-use "$rais_aux/bilateral_connectivity_raw.dta", clear                             // Load raw bilateral connectivity data
-merge m:1 identificad_i using "$rais_aux/sample_flags_i.dta"                      // Many-to-one merge: multiple pairs can have same establishment i
-drop if _merge == 2                                                               // Drop establishments only in sample flags (not in bilateral data)
-drop _merge                                                                       // Drop merge indicator variable
+save "$rais_aux/sample_establishments.dta", replace                               // Save sample establishments
 
 ********************************************************************************
-* STEP 3: Merge sample flags for establishment j
+* STEP 3: Create ALL possible pairs (cross-join of sample establishments)
 ********************************************************************************
 
-use "$rais_firm/cba_rais_firm_2009_2016_flows_1.dta", clear                       // Load main firm-level dataset again for establishment j
-keep if year == 2009                                                              // Keep only 2009 observations
-keep identificad lagos_sample_avg in_balanced_panel municipio microregion ///
-     big_industry mode_union                                                      // Keep establishment ID, sample flags, geographic IDs, industry, and union
+* Create establishment i file
+use "$rais_aux/sample_establishments.dta", clear                                  // Load sample establishments
+rename identificad identificad_i                                                  // Rename establishment ID for establishment i
+rename lagos_sample_avg lagos_sample_i                                            // Rename Lagos sample flag with _i suffix
+rename in_balanced_panel balanced_panel_i                                         // Rename balanced panel flag with _i suffix
+rename municipio municipio_i                                                      // Rename municipality code with _i suffix
+rename microregion microregion_i                                                  // Rename microregion code with _i suffix
+rename big_industry big_industry_i                                                // Rename 2-digit industry code with _i suffix
+rename industry1 industry1_i                                                      // Rename 3-digit industry code with _i suffix
+rename mode_union mode_union_i                                                    // Rename modal union with _i suffix
 
-duplicates drop identificad, force                                                // Remove duplicate establishment observations
+save "$rais_aux/sample_flags_i.dta", replace                                      // Save sample flags for establishment i
 
-* Ensure municipio is numeric for merging with coordinates
-capture confirm string variable municipio                                         // Check if municipio is stored as string
-if _rc == 0 {                                                                     // If municipio is string
-    destring municipio, replace force                                             // Convert to numeric
-}
+* Create establishment j file
+use "$rais_aux/sample_establishments.dta", clear                                  // Load sample establishments
+rename identificad identificad_j                                                  // Rename establishment ID for establishment j
+rename lagos_sample_avg lagos_sample_j                                            // Rename Lagos sample flag with _j suffix
+rename in_balanced_panel balanced_panel_j                                         // Rename balanced panel flag with _j suffix
+rename municipio municipio_j                                                      // Rename municipality code with _j suffix
+rename microregion microregion_j                                                  // Rename microregion code with _j suffix
+rename big_industry big_industry_j                                                // Rename 2-digit industry code with _j suffix
+rename industry1 industry1_j                                                      // Rename 3-digit industry code with _j suffix
+rename mode_union mode_union_j                                                    // Rename modal union with _j suffix
 
-rename identificad identificad_j                                                  // Rename establishment ID for merging as "receiving" establishment j
-rename lagos_sample_avg lagos_sample_j                                            // Rename Lagos sample flag with _j suffix for establishment j
-rename in_balanced_panel balanced_panel_j                                         // Rename balanced panel flag with _j suffix for establishment j
-rename municipio municipio_j                                                      // Rename municipality code with _j suffix for establishment j
-rename microregion microregion_j                                                  // Rename microregion code with _j suffix for establishment j
-rename big_industry big_industry_j                                                // Rename industry code with _j suffix for establishment j
-rename mode_union mode_union_j                                                    // Rename modal union with _j suffix for establishment j
+save "$rais_aux/sample_flags_j.dta", replace                                      // Save sample flags for establishment j
 
-save "$rais_aux/sample_flags_j.dta", replace                                      // Save sample flags for establishment j as temporary file
+* Cross-join: create all possible i-j pairs
+use "$rais_aux/sample_flags_i.dta", clear                                         // Load establishment i data
+gen _crossjoin = 1                                                                // Create dummy variable for cross-join
+save "$rais_aux/sample_flags_i.dta", replace                                      // Save with cross-join key
 
-use "$rais_aux/bilateral_connectivity_raw.dta", clear                             // Load raw bilateral connectivity data again
-merge m:1 identificad_i using "$rais_aux/sample_flags_i.dta", nogen keep(match master) // Merge sample flags for establishment i; keep matched and unmatched from master
-merge m:1 identificad_j using "$rais_aux/sample_flags_j.dta", nogen keep(match master) // Merge sample flags for establishment j; keep matched and unmatched from master
+use "$rais_aux/sample_flags_j.dta", clear                                         // Load establishment j data
+gen _crossjoin = 1                                                                // Create dummy variable for cross-join
+save "$rais_aux/sample_flags_j.dta", replace                                      // Save with cross-join key
+
+* Perform cross-join (creates N^2 pairs)
+use "$rais_aux/sample_flags_i.dta", clear                                         // Load establishment i data
+joinby _crossjoin using "$rais_aux/sample_flags_j.dta"                            // Cross-join with establishment j data
+drop _crossjoin                                                                   // Drop cross-join key
+
+* Remove self-pairs (i == j)
+drop if identificad_i == identificad_j                                            // Remove pairs where establishment i equals establishment j
+
+* Count all possible pairs
+count                                                                             // Count number of pairs
+local n_all_pairs = r(N)                                                          // Store count in local macro
+di "Number of all possible pairs (excluding self-pairs): `n_all_pairs'"           // Display total number of pairs
 
 ********************************************************************************
-* STEP 4: Restrict to pairs where BOTH establishments meet sample criteria
+* STEP 4: Merge bilateral connectivity data (zero for pairs without flows)
 ********************************************************************************
 
-* Both must be in lagos_sample_avg and in_balanced_panel
-keep if lagos_sample_i == 1 & lagos_sample_j == 1                                 // Keep only pairs where both establishments are in Lagos sample
-keep if balanced_panel_i == 1 & balanced_panel_j == 1                             // Keep only pairs where both establishments are in balanced panel
+* Merge connectivity data from MATLAB output
+merge 1:1 identificad_i identificad_j using "$rais_aux/bilateral_connectivity_raw.dta", keep(master match) // Merge connectivity; keep all pairs
 
-* Count pairs
-count                                                                             // Count number of observations (pairs) remaining
-local n_pairs = r(N)                                                              // Store count in local macro
-di "Number of pairs meeting sample criteria: `n_pairs'"                           // Display number of pairs meeting all sample restrictions
+* Set connectivity to zero for pairs without flows
+replace bilateral_conn_pw = 0 if _merge == 1                                      // Set bilateral connectivity to 0 for pairs not in MATLAB output
+replace flows_total = 0 if _merge == 1                                            // Set total flows to 0 for pairs not in MATLAB output
+replace flows_0708 = 0 if _merge == 1                                             // Set 2007-08 flows to 0 for pairs not in MATLAB output
+replace flows_0809 = 0 if _merge == 1                                             // Set 2008-09 flows to 0 for pairs not in MATLAB output
+replace flows_0910 = 0 if _merge == 1                                             // Set 2009-10 flows to 0 for pairs not in MATLAB output
+replace flows_1011 = 0 if _merge == 1                                             // Set 2010-11 flows to 0 for pairs not in MATLAB output
 
-save "$rais_aux/bilateral_pairs_sample.dta", replace                              // Save filtered bilateral pairs dataset
+* Create indicator for positive connectivity
+gen has_positive_flow = (_merge == 3)                                             // Indicator = 1 if pair has at least one worker flow
+drop _merge                                                                       // Drop merge indicator
+
+* Count pairs with positive vs zero connectivity
+count if has_positive_flow == 1                                                   // Count pairs with positive flows
+local n_pos = r(N)                                                                // Store count
+count if has_positive_flow == 0                                                   // Count pairs with zero flows
+local n_zero = r(N)                                                               // Store count
+di "Pairs with positive connectivity: `n_pos'"                                    // Display pairs with flows
+di "Pairs with zero connectivity: `n_zero'"                                       // Display pairs without flows
+
+save "$rais_aux/bilateral_pairs_sample.dta", replace                              // Save all bilateral pairs dataset
 
 ********************************************************************************
 * STEP 5: Merge firm characteristics for establishment i (2009-2011 averages)
@@ -160,18 +188,45 @@ egen avg_prop_nhs = rowmean(prop_nhs_2009 prop_nhs_2010 prop_nhs_2011)          
 * Compute median wages across years (use rowmedian)
 egen med_r_remdezr = rowmedian(r_remdezr_2009 r_remdezr_2010 r_remdezr_2011)      // Calculate median December wages across 2009-2011
 
+* Compute average wages across years (use rowmean)
+egen avg_r_remdezr = rowmean(r_remdezr_2009 r_remdezr_2010 r_remdezr_2011)        // Calculate average December wages across 2009-2011
+
 * Log of average employment
 gen l_avg_firm_emp = ln(avg_firm_emp)                                             // Generate log of average employment
 
 * Log of median wages
 gen l_med_r_remdezr = ln(med_r_remdezr)                                           // Generate log of median December wages
 
+* Log of average wages
+gen l_avg_r_remdezr = ln(avg_r_remdezr)                                           // Generate log of average December wages
+
 * Keep only needed variables
-keep identificad avg_firm_emp l_avg_firm_emp avg_prop_female avg_prop_sup avg_prop_nonwhite avg_prop_hs avg_prop_nhs med_r_remdezr l_med_r_remdezr // Keep establishment ID and computed averages
+keep identificad avg_firm_emp l_avg_firm_emp avg_prop_female avg_prop_sup avg_prop_nonwhite avg_prop_hs avg_prop_nhs med_r_remdezr l_med_r_remdezr avg_r_remdezr l_avg_r_remdezr // Keep establishment ID and computed averages
+
+********************************************************************************
+* STEP 5b: Get pretreatment numb_clauses from 2009 CBA-RAIS data
+********************************************************************************
+
+* Merge numb_clauses from CBA-RAIS firm-level data (2009)
+preserve                                                                          // Preserve current firm characteristics
+use "$rais_firm/cba_rais_firm_2009_2016_flows_1.dta", clear                       // Load CBA-RAIS merged data
+keep if year == 2009                                                              // Keep only 2009 observations (pretreatment)
+keep identificad numb_clauses                                                     // Keep establishment ID and number of clauses
+duplicates drop identificad, force                                                // Remove duplicates, keeping first occurrence
+rename numb_clauses numb_clauses_2009                                             // Rename with year suffix for clarity
+save "$rais_aux/numb_clauses_2009.dta", replace                                   // Save numb_clauses data
+restore                                                                           // Restore firm characteristics
+
+* Merge numb_clauses to firm characteristics
+merge 1:1 identificad using "$rais_aux/numb_clauses_2009.dta", nogen keep(master match) // Merge numb_clauses; keep all firms
+
+* For firms without CBA in 2009, numb_clauses will be missing (should be rare in lagos_sample)
+count if missing(numb_clauses_2009)                                               // Count firms without 2009 clause data
+di "Firms without 2009 numb_clauses: " r(N)                                       // Display count
 
 * Prepare for merge with establishment i
 rename identificad identificad_i                                                  // Rename establishment ID for merging as establishment i
-foreach var in avg_firm_emp l_avg_firm_emp avg_prop_female avg_prop_sup avg_prop_nonwhite avg_prop_hs avg_prop_nhs med_r_remdezr l_med_r_remdezr { // Loop through average variables
+foreach var in avg_firm_emp l_avg_firm_emp avg_prop_female avg_prop_sup avg_prop_nonwhite avg_prop_hs avg_prop_nhs med_r_remdezr l_med_r_remdezr avg_r_remdezr l_avg_r_remdezr numb_clauses_2009 { // Loop through average variables
     rename `var' `var'_i                                                          // Add _i suffix for establishment i
 }
 
@@ -180,7 +235,7 @@ save "$rais_aux/firm_chars_avg_i.dta", replace                                  
 * Prepare for merge with establishment j
 use "$rais_aux/firm_chars_avg_i.dta", clear                                       // Load firm characteristics (currently suffixed with _i)
 rename identificad_i identificad_j                                                // Rename establishment ID for establishment j
-foreach var in avg_firm_emp l_avg_firm_emp avg_prop_female avg_prop_sup avg_prop_nonwhite avg_prop_hs avg_prop_nhs med_r_remdezr l_med_r_remdezr { // Loop through average variables
+foreach var in avg_firm_emp l_avg_firm_emp avg_prop_female avg_prop_sup avg_prop_nonwhite avg_prop_hs avg_prop_nhs med_r_remdezr l_med_r_remdezr avg_r_remdezr l_avg_r_remdezr numb_clauses_2009 { // Loop through average variables
     rename `var'_i `var'_j                                                        // Rename variable from _i suffix to _j suffix
 }
 
@@ -196,7 +251,7 @@ merge m:1 identificad_i using "$rais_aux/firm_chars_avg_i.dta", nogen keep(match
 merge m:1 identificad_j using "$rais_aux/firm_chars_avg_j.dta", nogen keep(match master) // Merge firm characteristics for establishment j
 
 ********************************************************************************
-* STEP 7: Compute distance measures and industry categories
+* STEP 7: Compute proximity measures and industry dummies
 ********************************************************************************
 
 * Create broad_industry from big_industry for establishment i (18 categories)
@@ -248,45 +303,63 @@ gen same_muni = (municipio_i == municipio_j) if !missing(municipio_i) & !missing
 * Same microregion dummy
 gen same_microregion = (microregion_i == microregion_j) if !missing(microregion_i) & !missing(microregion_j) // Create dummy = 1 if both establishments in same microregion
 
-* Same modal union dummy
-gen same_mode_union = (mode_union_i == mode_union_j) if !missing(mode_union_i) & !missing(mode_union_j) // Create dummy = 1 if both establishments have same modal union
+* Same union dummy (renamed from same_mode_union)
+gen same_union = (mode_union_i == mode_union_j) if !missing(mode_union_i) & !missing(mode_union_j) // Create dummy = 1 if both establishments have same union
 
-* Size distance (absolute difference in log employment)
-gen size_distance = abs(l_avg_firm_emp_i - l_avg_firm_emp_j)                      // Calculate absolute difference in log employment between establishments
+* Same big_industry dummy (2-digit CNAE)
+gen same_big_industry = (big_industry_i == big_industry_j) if !missing(big_industry_i) & !missing(big_industry_j) // Create dummy = 1 if both establishments in same 2-digit industry
 
-* Size distance in levels (absolute difference in employment, not logged)
-gen size_distance_levels = abs(avg_firm_emp_i - avg_firm_emp_j)                   // Calculate absolute difference in employment levels between establishments
+* Same industry1 dummy (3-digit CNAE, used for fixed effects)
+gen same_industry = (industry1_i == industry1_j) if !missing(industry1_i) & !missing(industry1_j) // Create dummy = 1 if both establishments in same 3-digit industry
 
-* Wage distance (absolute difference in median wages)
-gen wage_distance = abs(med_r_remdezr_i - med_r_remdezr_j)                        // Calculate absolute difference in median wages between establishments
+* Same industry x microregion cell dummy (3-digit CNAE x microregion)
+gen same_industry_micro = (industry1_i == industry1_j & microregion_i == microregion_j) ///
+    if !missing(industry1_i) & !missing(industry1_j) & !missing(microregion_i) & !missing(microregion_j) // Create dummy = 1 if same 3-digit industry AND same microregion
 
-* Log of wage distance (for visualization)
-gen l_wage_distance = ln(wage_distance + 1)                                       // Calculate log of wage distance plus 1 (to handle zeros)
+* ============================================================================
+* PROXIMITY MEASURES (negative of distance: higher = more similar)
+* ============================================================================
 
-* Female proportion distance (absolute difference in proportion female)
-gen female_distance = abs(avg_prop_female_i - avg_prop_female_j)                  // Calculate absolute difference in proportion female between establishments
+* Size proximity (negative absolute difference in log employment)
+gen size_proximity = -abs(l_avg_firm_emp_i - l_avg_firm_emp_j)                    // Proximity: higher values = more similar size
 
-* Non-white proportion distance (absolute difference in proportion non-white)
-gen nonwhite_distance = abs(avg_prop_nonwhite_i - avg_prop_nonwhite_j)            // Calculate absolute difference in proportion non-white between establishments
+* Size proximity in levels (negative absolute difference in employment)
+gen size_proximity_levels = -abs(avg_firm_emp_i - avg_firm_emp_j)                 // Proximity in levels: higher values = more similar size
 
-* Higher education proportion distance (absolute difference in proportion with higher education)
-gen educ_distance = abs(avg_prop_sup_i - avg_prop_sup_j)                          // Calculate absolute difference in proportion with higher education between establishments
+* Median wage proximity (negative absolute difference in log median wages)
+gen med_wage_proximity = -abs(l_med_r_remdezr_i - l_med_r_remdezr_j)              // Proximity: higher values = more similar median wages
 
-* High school proportion distance (absolute difference in proportion with high school)
-gen hs_distance = abs(avg_prop_hs_i - avg_prop_hs_j)                              // Calculate absolute difference in proportion with high school between establishments
+* Average wage proximity (negative absolute difference in log average wages)
+gen avg_wage_proximity = -abs(l_avg_r_remdezr_i - l_avg_r_remdezr_j)              // Proximity: higher values = more similar average wages
 
-* Less than high school proportion distance (absolute difference in proportion with less than high school)
-gen nhs_distance = abs(avg_prop_nhs_i - avg_prop_nhs_j)                           // Calculate absolute difference in proportion with less than high school between establishments
+* Female proportion proximity (negative absolute difference in proportion female)
+gen female_proximity = -abs(avg_prop_female_i - avg_prop_female_j)                // Proximity: higher values = more similar % female
+
+* Non-white proportion proximity (negative absolute difference in proportion non-white)
+gen nonwhite_proximity = -abs(avg_prop_nonwhite_i - avg_prop_nonwhite_j)          // Proximity: higher values = more similar % non-white
+
+* Higher education proportion proximity (negative absolute difference in proportion with higher education)
+gen educ_proximity = -abs(avg_prop_sup_i - avg_prop_sup_j)                        // Proximity: higher values = more similar % higher education
+
+* High school proportion proximity (negative absolute difference in proportion with high school)
+gen hs_proximity = -abs(avg_prop_hs_i - avg_prop_hs_j)                            // Proximity: higher values = more similar % high school
+
+* Less than high school proportion proximity (negative absolute difference in proportion with less than high school)
+gen nhs_proximity = -abs(avg_prop_nhs_i - avg_prop_nhs_j)                         // Proximity: higher values = more similar % less than high school
+
+* Number of clauses proximity (pretreatment 2009, negative absolute difference)
+gen clauses_proximity = -abs(numb_clauses_2009_i - numb_clauses_2009_j) ///
+    if !missing(numb_clauses_2009_i) & !missing(numb_clauses_2009_j)              // Proximity: higher values = more similar CBA complexity
 
 ********************************************************************************
-* STEP 8: Geographic distance (Haversine) if coordinates available
+* STEP 8: Geographic proximity (based on Haversine distance) if coordinates available
 ********************************************************************************
 
 * Check if municipality coordinates file exists
 capture confirm file "$ibge/municipality_coordinates.dta"                         // Check if coordinates file exists; capture suppresses error if not found
 
 if _rc == 0 {                                                                     // If file exists (return code 0)
-    di "Municipality coordinates file found. Computing geographic distance..."    // Display status message
+    di "Municipality coordinates file found. Computing geographic proximity..."   // Display status message
 
     * Load coordinates and merge for i
     preserve                                                                      // Preserve current dataset in memory
@@ -326,18 +399,18 @@ if _rc == 0 {                                                                   
     gen c = 2 * asin(sqrt(a))                                                     // Compute Haversine formula angular distance c
     gen geo_distance = 6371 * c                                                   // Compute geographic distance in km (Earth radius * angular distance)
 
-    * Log of geographic distance
-    gen l_geo_distance = ln(geo_distance + 1)                                     // Calculate log of geographic distance plus 1 (to handle zeros)
+    * Geographic proximity (negative of distance: higher = closer)
+    gen geo_proximity = -geo_distance                                             // Proximity: higher values = closer geographically
 
     * Clean up temp variables
     drop lat1_rad lat2_rad lon1_rad lon2_rad dlat dlon a c lat_i lon_i lat_j lon_j // Drop intermediate calculation variables
 }
 else {                                                                            // If coordinates file not found
-    di "Municipality coordinates file not found. Skipping geographic distance computation." // Display warning message
+    di "Municipality coordinates file not found. Skipping geographic proximity computation." // Display warning message
     di "To enable this, provide: $ibge/municipality_coordinates.dta"              // Display instructions for adding coordinates
     di "Required variables: municipio (7-digit IBGE code), latitude, longitude"   // Display required variable names
     gen geo_distance = .                                                          // Generate missing geographic distance variable
-    gen l_geo_distance = .                                                        // Generate missing log geographic distance variable
+    gen geo_proximity = .                                                         // Generate missing geographic proximity variable
 }
 
 ********************************************************************************
@@ -345,34 +418,44 @@ else {                                                                          
 ********************************************************************************
 
 di _newline(2) "=== Summary Statistics for Bilateral Connectivity ==="            // Display section header with two blank lines
-summarize bilateral_conn_pw flows_total, detail                         // Display detailed summary statistics for connectivity measures
+summarize bilateral_conn_pw flows_total has_positive_flow, detail                 // Display detailed summary statistics for connectivity measures
 
-di _newline(2) "=== Distance Measures ==="                                        // Display section header for distance measures
-summarize same_muni same_microregion size_distance wage_distance, detail          // Display detailed summary statistics for distance measures
+di _newline(2) "=== Proximity Measures ==="                                       // Display section header for proximity measures
+summarize same_muni same_microregion same_union same_industry same_big_industry same_industry_micro, detail // Display detailed summary statistics for categorical proximity measures
 
-di _newline(2) "=== Workforce Composition Distance Measures ==="                  // Display section header for workforce composition distances
-summarize female_distance nonwhite_distance educ_distance hs_distance nhs_distance, detail // Display detailed summary statistics for workforce composition distance measures
+di _newline(2) "=== Continuous Proximity Measures ==="                            // Display section header for continuous proximity
+summarize size_proximity med_wage_proximity avg_wage_proximity, detail            // Display detailed summary statistics for continuous proximity measures
 
-if !missing(geo_distance) {                                                       // If geographic distance was computed
-    summarize geo_distance, detail                                                // Display detailed summary statistics for geographic distance
+di _newline(2) "=== Workforce Composition Proximity Measures ==="                 // Display section header for workforce composition proximity
+summarize female_proximity nonwhite_proximity educ_proximity hs_proximity nhs_proximity, detail // Display detailed summary statistics for workforce composition proximity measures
+
+di _newline(2) "=== CBA Clauses Proximity Measure ==="                           // Display section header for clauses proximity
+summarize clauses_proximity numb_clauses_2009_i numb_clauses_2009_j, detail       // Display detailed summary statistics for clauses proximity
+
+if !missing(geo_proximity) {                                                      // If geographic proximity was computed
+    summarize geo_distance geo_proximity, detail                                  // Display detailed summary statistics for geographic measures
 }
 
-* Tabulate same municipality and microregion
+* Tabulate same municipality, microregion, and industry
 tab same_muni, missing                                                            // Tabulate same municipality dummy, including missing values
 tab same_microregion, missing                                                     // Tabulate same microregion dummy, including missing values
+tab same_industry, missing                                                        // Tabulate same 3-digit industry dummy, including missing values
+tab same_industry_micro, missing                                                  // Tabulate same industry x microregion dummy, including missing values
 
 ********************************************************************************
 * STEP 10: Save final bilateral pairs dataset
 ********************************************************************************
 
-order identificad_i identificad_j bilateral_conn_pw flows_total ///
-      same_muni same_microregion same_mode_union geo_distance ///
-      big_industry_i broad_industry_i mode_union_i ///
-      big_industry_j mode_union_j ///
-      avg_firm_emp_i avg_firm_emp_j med_r_remdezr_i med_r_remdezr_j ///
+order identificad_i identificad_j bilateral_conn_pw flows_total has_positive_flow ///
+      same_muni same_microregion same_union same_industry same_big_industry same_industry_micro ///
+      geo_distance geo_proximity ///
+      big_industry_i broad_industry_i industry1_i mode_union_i ///
+      big_industry_j industry1_j mode_union_j ///
+      avg_firm_emp_i avg_firm_emp_j med_r_remdezr_i med_r_remdezr_j avg_r_remdezr_i avg_r_remdezr_j ///
       avg_prop_female_i avg_prop_female_j avg_prop_nonwhite_i avg_prop_nonwhite_j ///
       avg_prop_sup_i avg_prop_sup_j avg_prop_hs_i avg_prop_hs_j avg_prop_nhs_i avg_prop_nhs_j ///
-      size_distance wage_distance female_distance nonwhite_distance educ_distance hs_distance nhs_distance // Reorder variables: IDs first, then connectivity, geography, industry, firm chars, distances
+      numb_clauses_2009_i numb_clauses_2009_j ///
+      size_proximity med_wage_proximity avg_wage_proximity female_proximity nonwhite_proximity educ_proximity hs_proximity nhs_proximity clauses_proximity // Reorder variables: IDs first, then connectivity, proximity measures, firm chars
 
 compress                                                                          // Reduce dataset memory footprint by optimizing storage types
 save "$rais_aux/bilateral_pairs_descriptives.dta", replace                        // Save final bilateral pairs dataset with all variables
@@ -382,6 +465,7 @@ di "Number of pairs: " _N                                                       
 
 ********************************************************************************
 * STEP 11: Generate publication-quality binned scatterplots
+*          (with firm i FE residualized y-axis, all pairs including zeros)
 ********************************************************************************
 
 * Install binscatter if needed (ssc install binscatter)
@@ -393,83 +477,208 @@ if _rc != 0 {                                                                   
 * Set publication-quality graph scheme
 set scheme s2color                                                                // Use s2color scheme as base for clean plots
 
-* Plot 1: Bilateral connectivity vs geographic distance (if available)
-capture confirm variable geo_distance                                             // Check if geo_distance variable exists
+********************************************************************************
+* STEP 11a: Compute residualized bilateral connectivity (firm i FE)
+********************************************************************************
+
+di _newline(2) "=== Computing residualized bilateral connectivity (firm i FE) ==="
+
+* Use reghdfe to partial out firm i fixed effects
+* This creates residuals that remove the mean connectivity for each firm i
+qui reghdfe bilateral_conn_pw, absorb(identificad_i) resid(bilateral_conn_resid)  // Regress on nothing, absorb firm i FE, save residuals
+
+* Check residuals
+summarize bilateral_conn_pw bilateral_conn_resid, detail                          // Compare original and residualized connectivity
+
+********************************************************************************
+* STEP 11b: Binscatter plots - ALL PAIRS (including zeros), residualized y-axis
+********************************************************************************
+
+di _newline(2) "=== Generating binscatter plots (all pairs, residualized y-axis) ==="
+
+* Plot 1: Bilateral connectivity vs geographic proximity (if available)
+capture confirm variable geo_proximity                                            // Check if geo_proximity variable exists
 if _rc == 0 {                                                                     // If variable exists
-    count if !missing(geo_distance)                                               // Count non-missing observations
+    count if !missing(geo_proximity)                                              // Count non-missing observations
     if r(N) > 0 {                                                                 // If there are non-missing values
-        binscatter bilateral_conn_pw l_geo_distance, nquantiles(20) ///
-            xtitle("Absolute difference in log geographic distance (km)") ///
-            ytitle("Bilateral Connectivity") ///
+        binscatter bilateral_conn_resid geo_proximity, nquantiles(20) ///
+            xtitle("Geographic Proximity (negative km)") ///
+            ytitle("Bilateral Connectivity (residualized)") ///
             mcolor(navy) lcolor(navy) ///
             plotregion(color(white)) graphregion(color(white))                    // Publication-quality: navy color, white background
-        graph export "$graphs/binscatter_conn_geo_distance.pdf", replace          // Export graph as PDF file
+        graph export "$graphs/binscatter_conn_geo_proximity.pdf", replace         // Export graph as PDF file
     }
 }
 
-* Plot 2: Bilateral connectivity vs size distance (log)
-binscatter bilateral_conn_pw size_distance, nquantiles(20) ///
-    xtitle("Absolute difference in log employment") ///
-    ytitle("Bilateral Connectivity") ///
+* Plot 2: Bilateral connectivity vs size proximity (log)
+binscatter bilateral_conn_resid size_proximity, nquantiles(20) ///
+    xtitle("Size Proximity (negative |log emp diff|)") ///
+    ytitle("Bilateral Connectivity (residualized)") ///
     mcolor(navy) lcolor(navy) ///
     plotregion(color(white)) graphregion(color(white))                            // Publication-quality: navy color, white background
-graph export "$graphs/binscatter_conn_size_distance.pdf", replace                 // Export graph as PDF file
+graph export "$graphs/binscatter_conn_size_proximity.pdf", replace                // Export graph as PDF file
 
-* Plot 3: Bilateral connectivity vs size distance (levels)
-binscatter bilateral_conn_pw size_distance_levels, nquantiles(20) ///
-    xtitle("Absolute difference in employment (levels)") ///
-    ytitle("Bilateral Connectivity") ///
+* Plot 3: Bilateral connectivity vs median wage proximity
+binscatter bilateral_conn_resid med_wage_proximity, nquantiles(20) ///
+    xtitle("Median Wage Proximity (negative |log wage diff|)") ///
+    ytitle("Bilateral Connectivity (residualized)") ///
     mcolor(navy) lcolor(navy) ///
     plotregion(color(white)) graphregion(color(white))                            // Publication-quality: navy color, white background
-graph export "$graphs/binscatter_conn_size_distance_levels.pdf", replace          // Export graph as PDF file
+graph export "$graphs/binscatter_conn_med_wage_proximity.pdf", replace            // Export graph as PDF file
 
-* Plot 4: Bilateral connectivity vs wage distance
-binscatter bilateral_conn_pw l_wage_distance, nquantiles(20) ///
-    xtitle("Absolute difference in log median wages") ///
-    ytitle("Bilateral Connectivity") ///
+* Plot 4: Bilateral connectivity vs average wage proximity
+binscatter bilateral_conn_resid avg_wage_proximity, nquantiles(20) ///
+    xtitle("Average Wage Proximity (negative |log wage diff|)") ///
+    ytitle("Bilateral Connectivity (residualized)") ///
     mcolor(navy) lcolor(navy) ///
     plotregion(color(white)) graphregion(color(white))                            // Publication-quality: navy color, white background
-graph export "$graphs/binscatter_conn_wage_distance.pdf", replace                 // Export graph as PDF file
+graph export "$graphs/binscatter_conn_avg_wage_proximity.pdf", replace            // Export graph as PDF file
 
-* Plot 5: Bilateral connectivity vs female proportion distance
-binscatter bilateral_conn_pw female_distance, nquantiles(20) ///
-    xtitle("Absolute difference in share female") ///
-    ytitle("Bilateral Connectivity") ///
+* Plot 5: Bilateral connectivity vs female proportion proximity
+binscatter bilateral_conn_resid female_proximity, nquantiles(20) ///
+    xtitle("% Female Proximity") ///
+    ytitle("Bilateral Connectivity (residualized)") ///
     mcolor(navy) lcolor(navy) ///
     plotregion(color(white)) graphregion(color(white))                            // Publication-quality: navy color, white background
-graph export "$graphs/binscatter_conn_female_distance.pdf", replace               // Export graph as PDF file
+graph export "$graphs/binscatter_conn_female_proximity.pdf", replace              // Export graph as PDF file
 
-* Plot 6: Bilateral connectivity vs non-white proportion distance
-binscatter bilateral_conn_pw nonwhite_distance, nquantiles(20) ///
-    xtitle("Absolute difference in share non-white") ///
-    ytitle("Bilateral Connectivity") ///
+* Plot 6: Bilateral connectivity vs non-white proportion proximity
+binscatter bilateral_conn_resid nonwhite_proximity, nquantiles(20) ///
+    xtitle("% Non-white Proximity") ///
+    ytitle("Bilateral Connectivity (residualized)") ///
     mcolor(navy) lcolor(navy) ///
     plotregion(color(white)) graphregion(color(white))                            // Publication-quality: navy color, white background
-graph export "$graphs/binscatter_conn_nonwhite_distance.pdf", replace             // Export graph as PDF file
+graph export "$graphs/binscatter_conn_nonwhite_proximity.pdf", replace            // Export graph as PDF file
 
-* Plot 7: Bilateral connectivity vs higher education proportion distance
-binscatter bilateral_conn_pw educ_distance, nquantiles(20) ///
-    xtitle("Absolute difference in share with higher education") ///
-    ytitle("Bilateral Connectivity") ///
+* Plot 7: Bilateral connectivity vs higher education proportion proximity
+binscatter bilateral_conn_resid educ_proximity, nquantiles(20) ///
+    xtitle("% Higher Education Proximity") ///
+    ytitle("Bilateral Connectivity (residualized)") ///
     mcolor(navy) lcolor(navy) ///
     plotregion(color(white)) graphregion(color(white))                            // Publication-quality: navy color, white background
-graph export "$graphs/binscatter_conn_educ_distance.pdf", replace                 // Export graph as PDF file
+graph export "$graphs/binscatter_conn_educ_proximity.pdf", replace                // Export graph as PDF file
 
-* Plot 8: Bilateral connectivity vs high school proportion distance
-binscatter bilateral_conn_pw hs_distance, nquantiles(20) ///
-    xtitle("Absolute difference in share with high school") ///
-    ytitle("Bilateral Connectivity") ///
+* Plot 8: Bilateral connectivity vs high school proportion proximity
+binscatter bilateral_conn_resid hs_proximity, nquantiles(20) ///
+    xtitle("% High School Proximity") ///
+    ytitle("Bilateral Connectivity (residualized)") ///
     mcolor(navy) lcolor(navy) ///
     plotregion(color(white)) graphregion(color(white))                            // Publication-quality: navy color, white background
-graph export "$graphs/binscatter_conn_hs_distance.pdf", replace                   // Export graph as PDF file
+graph export "$graphs/binscatter_conn_hs_proximity.pdf", replace                  // Export graph as PDF file
 
-* Plot 9: Bilateral connectivity vs less than high school proportion distance
-binscatter bilateral_conn_pw nhs_distance, nquantiles(20) ///
-    xtitle("Absolute difference in share with less than high school") ///
-    ytitle("Bilateral Connectivity") ///
+* Plot 9: Bilateral connectivity vs less than high school proportion proximity
+binscatter bilateral_conn_resid nhs_proximity, nquantiles(20) ///
+    xtitle("% Less than High School Proximity") ///
+    ytitle("Bilateral Connectivity (residualized)") ///
     mcolor(navy) lcolor(navy) ///
     plotregion(color(white)) graphregion(color(white))                            // Publication-quality: navy color, white background
-graph export "$graphs/binscatter_conn_nhs_distance.pdf", replace                  // Export graph as PDF file
+graph export "$graphs/binscatter_conn_nhs_proximity.pdf", replace                 // Export graph as PDF file
+
+* Plot 10: Bilateral connectivity vs clauses proximity (pretreatment 2009)
+capture count if !missing(clauses_proximity)                                      // Check if clauses proximity is available
+if r(N) > 0 {                                                                     // If there are non-missing values
+    binscatter bilateral_conn_resid clauses_proximity, nquantiles(20) ///
+        xtitle("CBA Clauses Proximity (negative |diff|)") ///
+        ytitle("Bilateral Connectivity (residualized)") ///
+        mcolor(navy) lcolor(navy) ///
+        plotregion(color(white)) graphregion(color(white))                        // Publication-quality: navy color, white background
+    graph export "$graphs/binscatter_conn_clauses_proximity.pdf", replace         // Export graph as PDF file
+}
+
+********************************************************************************
+* STEP 11c: Binscatter plots - POSITIVE CONNECTIVITY ONLY, residualized y-axis
+********************************************************************************
+
+di _newline(2) "=== Generating binscatter plots (positive connectivity only, residualized) ==="
+
+* Plot 1: Geographic proximity (positive connectivity only)
+capture confirm variable geo_proximity                                            // Check if geo_proximity variable exists
+if _rc == 0 {                                                                     // If variable exists
+    count if !missing(geo_proximity) & has_positive_flow == 1                     // Count non-missing observations with positive flows
+    if r(N) > 0 {                                                                 // If there are non-missing values
+        binscatter bilateral_conn_resid geo_proximity if has_positive_flow == 1, nquantiles(20) ///
+            xtitle("Geographic Proximity (negative km)") ///
+            ytitle("Bilateral Connectivity (residualized)") ///
+            mcolor(maroon) lcolor(maroon) ///
+            plotregion(color(white)) graphregion(color(white))                    // Maroon for positive-only plots
+        graph export "$graphs/binscatter_conn_geo_proximity_posonly.pdf", replace // Export graph as PDF file
+    }
+}
+
+* Plot 2: Size proximity (positive connectivity only)
+binscatter bilateral_conn_resid size_proximity if has_positive_flow == 1, nquantiles(20) ///
+    xtitle("Size Proximity (negative |log emp diff|)") ///
+    ytitle("Bilateral Connectivity (residualized)") ///
+    mcolor(maroon) lcolor(maroon) ///
+    plotregion(color(white)) graphregion(color(white))                            // Maroon for positive-only plots
+graph export "$graphs/binscatter_conn_size_proximity_posonly.pdf", replace        // Export graph as PDF file
+
+* Plot 3: Median wage proximity (positive connectivity only)
+binscatter bilateral_conn_resid med_wage_proximity if has_positive_flow == 1, nquantiles(20) ///
+    xtitle("Median Wage Proximity (negative |log wage diff|)") ///
+    ytitle("Bilateral Connectivity (residualized)") ///
+    mcolor(maroon) lcolor(maroon) ///
+    plotregion(color(white)) graphregion(color(white))                            // Maroon for positive-only plots
+graph export "$graphs/binscatter_conn_med_wage_proximity_posonly.pdf", replace    // Export graph as PDF file
+
+* Plot 4: Average wage proximity (positive connectivity only)
+binscatter bilateral_conn_resid avg_wage_proximity if has_positive_flow == 1, nquantiles(20) ///
+    xtitle("Average Wage Proximity (negative |log wage diff|)") ///
+    ytitle("Bilateral Connectivity (residualized)") ///
+    mcolor(maroon) lcolor(maroon) ///
+    plotregion(color(white)) graphregion(color(white))                            // Maroon for positive-only plots
+graph export "$graphs/binscatter_conn_avg_wage_proximity_posonly.pdf", replace    // Export graph as PDF file
+
+* Plot 5: Female proportion proximity (positive connectivity only)
+binscatter bilateral_conn_resid female_proximity if has_positive_flow == 1, nquantiles(20) ///
+    xtitle("% Female Proximity") ///
+    ytitle("Bilateral Connectivity (residualized)") ///
+    mcolor(maroon) lcolor(maroon) ///
+    plotregion(color(white)) graphregion(color(white))                            // Maroon for positive-only plots
+graph export "$graphs/binscatter_conn_female_proximity_posonly.pdf", replace      // Export graph as PDF file
+
+* Plot 6: Non-white proportion proximity (positive connectivity only)
+binscatter bilateral_conn_resid nonwhite_proximity if has_positive_flow == 1, nquantiles(20) ///
+    xtitle("% Non-white Proximity") ///
+    ytitle("Bilateral Connectivity (residualized)") ///
+    mcolor(maroon) lcolor(maroon) ///
+    plotregion(color(white)) graphregion(color(white))                            // Maroon for positive-only plots
+graph export "$graphs/binscatter_conn_nonwhite_proximity_posonly.pdf", replace    // Export graph as PDF file
+
+* Plot 7: Higher education proximity (positive connectivity only)
+binscatter bilateral_conn_resid educ_proximity if has_positive_flow == 1, nquantiles(20) ///
+    xtitle("% Higher Education Proximity") ///
+    ytitle("Bilateral Connectivity (residualized)") ///
+    mcolor(maroon) lcolor(maroon) ///
+    plotregion(color(white)) graphregion(color(white))                            // Maroon for positive-only plots
+graph export "$graphs/binscatter_conn_educ_proximity_posonly.pdf", replace        // Export graph as PDF file
+
+* Plot 8: High school proximity (positive connectivity only)
+binscatter bilateral_conn_resid hs_proximity if has_positive_flow == 1, nquantiles(20) ///
+    xtitle("% High School Proximity") ///
+    ytitle("Bilateral Connectivity (residualized)") ///
+    mcolor(maroon) lcolor(maroon) ///
+    plotregion(color(white)) graphregion(color(white))                            // Maroon for positive-only plots
+graph export "$graphs/binscatter_conn_hs_proximity_posonly.pdf", replace          // Export graph as PDF file
+
+* Plot 9: Less than high school proximity (positive connectivity only)
+binscatter bilateral_conn_resid nhs_proximity if has_positive_flow == 1, nquantiles(20) ///
+    xtitle("% Less than High School Proximity") ///
+    ytitle("Bilateral Connectivity (residualized)") ///
+    mcolor(maroon) lcolor(maroon) ///
+    plotregion(color(white)) graphregion(color(white))                            // Maroon for positive-only plots
+graph export "$graphs/binscatter_conn_nhs_proximity_posonly.pdf", replace         // Export graph as PDF file
+
+* Plot 10: Clauses proximity (positive connectivity only)
+capture count if !missing(clauses_proximity) & has_positive_flow == 1             // Check if clauses proximity is available
+if r(N) > 0 {                                                                     // If there are non-missing values
+    binscatter bilateral_conn_resid clauses_proximity if has_positive_flow == 1, nquantiles(20) ///
+        xtitle("CBA Clauses Proximity (negative |diff|)") ///
+        ytitle("Bilateral Connectivity (residualized)") ///
+        mcolor(maroon) lcolor(maroon) ///
+        plotregion(color(white)) graphregion(color(white))                        // Maroon for positive-only plots
+    graph export "$graphs/binscatter_conn_clauses_proximity_posonly.pdf", replace // Export graph as PDF file
+}
 
 ********************************************************************************
 * STEP 12: Compute correlations and generate LaTeX correlation table
@@ -480,74 +689,87 @@ tempname memhold                                                                
 tempfile corr_results                                                             // Create temporary file for correlation results
 postfile `memhold' str30 variable corr n using `corr_results'                     // Initialize postfile with variable name, correlation, and N
 
-* Compute correlation with geographic distance (if available)
-capture confirm variable geo_distance                                             // Check if geo_distance exists
+* Compute correlation with geographic proximity (if available)
+capture confirm variable geo_proximity                                            // Check if geo_proximity exists
 if _rc == 0 {                                                                     // If variable exists
-    count if !missing(geo_distance)                                               // Count non-missing observations
+    count if !missing(geo_proximity)                                              // Count non-missing observations
     if r(N) > 0 {                                                                 // If there are non-missing values
-        qui corr bilateral_conn_pw geo_distance                                   // Compute Pearson correlation quietly
+        qui corr bilateral_conn_pw geo_proximity                                  // Compute Pearson correlation quietly
         local corr_geo = r(rho)                                                   // Store correlation coefficient
-        qui count if !missing(bilateral_conn_pw) & !missing(geo_distance)         // Count observations used
+        qui count if !missing(bilateral_conn_pw) & !missing(geo_proximity)        // Count observations used
         local n_geo = r(N)                                                        // Store observation count
-        post `memhold' ("Geographic distance") (`corr_geo') (`n_geo')             // Post results to file
+        post `memhold' ("Geographic proximity") (`corr_geo') (`n_geo')            // Post results to file
     }
 }
 
-* Compute correlation with size distance
-qui corr bilateral_conn_pw size_distance                                          // Compute Pearson correlation quietly
+* Compute correlation with size proximity
+qui corr bilateral_conn_pw size_proximity                                         // Compute Pearson correlation quietly
 local corr_size = r(rho)                                                          // Store correlation coefficient
-qui count if !missing(bilateral_conn_pw) & !missing(size_distance)                // Count observations used
+qui count if !missing(bilateral_conn_pw) & !missing(size_proximity)               // Count observations used
 local n_size = r(N)                                                               // Store observation count
-post `memhold' ("Size distance (log)") (`corr_size') (`n_size')                   // Post results to file
+post `memhold' ("Size proximity (log)") (`corr_size') (`n_size')                  // Post results to file
 
-* Compute correlation with size distance (levels)
-qui corr bilateral_conn_pw size_distance_levels                                   // Compute Pearson correlation quietly
-local corr_size_lev = r(rho)                                                      // Store correlation coefficient
-qui count if !missing(bilateral_conn_pw) & !missing(size_distance_levels)         // Count observations used
-local n_size_lev = r(N)                                                           // Store observation count
-post `memhold' ("Size distance (levels)") (`corr_size_lev') (`n_size_lev')        // Post results to file
+* Compute correlation with median wage proximity
+qui corr bilateral_conn_pw med_wage_proximity                                     // Compute Pearson correlation quietly
+local corr_med_wage = r(rho)                                                      // Store correlation coefficient
+qui count if !missing(bilateral_conn_pw) & !missing(med_wage_proximity)           // Count observations used
+local n_med_wage = r(N)                                                           // Store observation count
+post `memhold' ("Median wage proximity") (`corr_med_wage') (`n_med_wage')         // Post results to file
 
-* Compute correlation with wage distance
-qui corr bilateral_conn_pw wage_distance                                          // Compute Pearson correlation quietly
-local corr_wage = r(rho)                                                          // Store correlation coefficient
-qui count if !missing(bilateral_conn_pw) & !missing(wage_distance)                // Count observations used
-local n_wage = r(N)                                                               // Store observation count
-post `memhold' ("Wage distance") (`corr_wage') (`n_wage')                         // Post results to file
+* Compute correlation with average wage proximity
+qui corr bilateral_conn_pw avg_wage_proximity                                     // Compute Pearson correlation quietly
+local corr_avg_wage = r(rho)                                                      // Store correlation coefficient
+qui count if !missing(bilateral_conn_pw) & !missing(avg_wage_proximity)           // Count observations used
+local n_avg_wage = r(N)                                                           // Store observation count
+post `memhold' ("Average wage proximity") (`corr_avg_wage') (`n_avg_wage')        // Post results to file
 
-* Compute correlation with female proportion distance
-qui corr bilateral_conn_pw female_distance                                        // Compute Pearson correlation quietly
+* Compute correlation with female proportion proximity
+qui corr bilateral_conn_pw female_proximity                                       // Compute Pearson correlation quietly
 local corr_female = r(rho)                                                        // Store correlation coefficient
-qui count if !missing(bilateral_conn_pw) & !missing(female_distance)              // Count observations used
+qui count if !missing(bilateral_conn_pw) & !missing(female_proximity)             // Count observations used
 local n_female = r(N)                                                             // Store observation count
-post `memhold' ("Share female distance") (`corr_female') (`n_female')             // Post results to file
+post `memhold' ("% female proximity") (`corr_female') (`n_female')                // Post results to file
 
-* Compute correlation with non-white proportion distance
-qui corr bilateral_conn_pw nonwhite_distance                                      // Compute Pearson correlation quietly
+* Compute correlation with non-white proportion proximity
+qui corr bilateral_conn_pw nonwhite_proximity                                     // Compute Pearson correlation quietly
 local corr_nonwhite = r(rho)                                                      // Store correlation coefficient
-qui count if !missing(bilateral_conn_pw) & !missing(nonwhite_distance)            // Count observations used
+qui count if !missing(bilateral_conn_pw) & !missing(nonwhite_proximity)           // Count observations used
 local n_nonwhite = r(N)                                                           // Store observation count
-post `memhold' ("Share non-white distance") (`corr_nonwhite') (`n_nonwhite')      // Post results to file
+post `memhold' ("% non-white proximity") (`corr_nonwhite') (`n_nonwhite')         // Post results to file
 
-* Compute correlation with higher education proportion distance
-qui corr bilateral_conn_pw educ_distance                                          // Compute Pearson correlation quietly
+* Compute correlation with higher education proportion proximity
+qui corr bilateral_conn_pw educ_proximity                                         // Compute Pearson correlation quietly
 local corr_educ = r(rho)                                                          // Store correlation coefficient
-qui count if !missing(bilateral_conn_pw) & !missing(educ_distance)                // Count observations used
+qui count if !missing(bilateral_conn_pw) & !missing(educ_proximity)               // Count observations used
 local n_educ = r(N)                                                               // Store observation count
-post `memhold' ("Share higher education distance") (`corr_educ') (`n_educ')       // Post results to file
+post `memhold' ("% higher education proximity") (`corr_educ') (`n_educ')          // Post results to file
 
-* Compute correlation with high school proportion distance
-qui corr bilateral_conn_pw hs_distance                                            // Compute Pearson correlation quietly
+* Compute correlation with high school proportion proximity
+qui corr bilateral_conn_pw hs_proximity                                           // Compute Pearson correlation quietly
 local corr_hs = r(rho)                                                            // Store correlation coefficient
-qui count if !missing(bilateral_conn_pw) & !missing(hs_distance)                  // Count observations used
+qui count if !missing(bilateral_conn_pw) & !missing(hs_proximity)                 // Count observations used
 local n_hs = r(N)                                                                 // Store observation count
-post `memhold' ("Share high school distance") (`corr_hs') (`n_hs')                // Post results to file
+post `memhold' ("% high school proximity") (`corr_hs') (`n_hs')                   // Post results to file
 
-* Compute correlation with less than high school proportion distance
-qui corr bilateral_conn_pw nhs_distance                                           // Compute Pearson correlation quietly
+* Compute correlation with less than high school proportion proximity
+qui corr bilateral_conn_pw nhs_proximity                                          // Compute Pearson correlation quietly
 local corr_nhs = r(rho)                                                           // Store correlation coefficient
-qui count if !missing(bilateral_conn_pw) & !missing(nhs_distance)                 // Count observations used
+qui count if !missing(bilateral_conn_pw) & !missing(nhs_proximity)                // Count observations used
 local n_nhs = r(N)                                                                // Store observation count
-post `memhold' ("Share less than HS distance") (`corr_nhs') (`n_nhs')             // Post results to file
+post `memhold' ("% less than HS proximity") (`corr_nhs') (`n_nhs')                // Post results to file
+
+* Compute correlation with clauses proximity (pretreatment 2009)
+capture confirm variable clauses_proximity                                        // Check if clauses proximity exists
+if _rc == 0 {                                                                     // If variable exists
+    qui count if !missing(clauses_proximity)                                      // Count non-missing observations
+    if r(N) > 0 {                                                                 // If there are non-missing values
+        qui corr bilateral_conn_pw clauses_proximity                              // Compute Pearson correlation quietly
+        local corr_clauses = r(rho)                                               // Store correlation coefficient
+        qui count if !missing(bilateral_conn_pw) & !missing(clauses_proximity)    // Count observations used
+        local n_clauses = r(N)                                                    // Store observation count
+        post `memhold' ("CBA clauses proximity") (`corr_clauses') (`n_clauses')   // Post results to file
+    }
+}
 
 postclose `memhold'                                                               // Close postfile
 
@@ -556,7 +778,7 @@ preserve                                                                        
 use `corr_results', clear                                                         // Load correlation results
 
 * Display correlations in console
-di _newline(2) "=== Correlation Table: Bilateral Connectivity vs Distance Measures ===" // Display section header
+di _newline(2) "=== Correlation Table: Bilateral Connectivity vs Proximity Measures ===" // Display section header
 list variable corr n, noobs sep(0)                                                // List correlations without observation numbers
 
 * Generate LaTeX table with threeparttable
@@ -566,12 +788,12 @@ file open latex_table using "$tables/correlation_bilateral_connectivity.txt", wr
 file write latex_table "\begin{table}[htbp]" _newline                             // LaTeX table environment
 file write latex_table "\centering" _newline                                      // Center the table
 file write latex_table "\begin{threeparttable}" _newline                          // Begin threeparttable for notes
-file write latex_table "\caption{Correlation between Bilateral Connectivity and Distance Measures}" _newline // Table caption
+file write latex_table "\caption{Correlation between Bilateral Connectivity and Proximity Measures}" _newline // Table caption
 file write latex_table "\label{tab:corr_bilateral}" _newline                      // Table label for cross-referencing
 file write latex_table "\footnotesize" _newline                                   // Set font size to footnotesize
 file write latex_table "\begin{tabular}{lcc}" _newline                            // Begin tabular with 3 columns
 file write latex_table "\hline\hline" _newline                                    // Double horizontal line at top
-file write latex_table "Distance Measure & Correlation & N \\\\" _newline         // Column headers
+file write latex_table "Proximity Measure & Correlation & N \\\\" _newline        // Column headers
 file write latex_table "\hline" _newline                                          // Horizontal line after header
 
 * Loop through rows and write to LaTeX
@@ -587,7 +809,7 @@ file write latex_table "\hline\hline" _newline                                  
 file write latex_table "\end{tabular}" _newline                                   // End tabular
 file write latex_table "\begin{tablenotes}" _newline                              // Begin table notes
 file write latex_table "\footnotesize" _newline                                   // Set notes font size
-file write latex_table "\item \textit{Notes:} This table reports Pearson correlation coefficients between bilateral connectivity and various distance measures across establishment pairs. Bilateral connectivity is the average number of worker flows between establishments $i$ and $j$ over consecutive year-pairs (2007-08, 2008-09, 2009-10, 2010-11), normalized by establishment $i$'s employment. Distance measures are computed as the absolute difference between establishment $i$ and $j$ characteristics. Geographic distance is in kilometers, computed using the Haversine formula from municipality centroids. Size distance is measured in log employment (2009-2011 average). Wage distance uses median December earnings (2009-2011, deflated to 2015 prices). Workforce composition distances use 2009-2011 averages. Sample restricted to pairs where both establishments satisfy \texttt{lagos\_sample\_avg==1} and \texttt{in\_balanced\_panel==1}, with at least one worker transition during 2007-2011." _newline // Table notes
+file write latex_table "\item \textit{Notes:} This table reports Pearson correlation coefficients between bilateral connectivity and various proximity measures across establishment pairs. Bilateral connectivity is the average number of worker flows between establishments $i$ and $j$ over consecutive year-pairs (2007-08, 2008-09, 2009-10, 2010-11), normalized by establishment $i$'s employment. Proximity measures are computed as the negative absolute difference between establishment $i$ and $j$ characteristics (higher values = more similar). Geographic proximity is negative distance in kilometers (Haversine formula from municipality centroids). Size proximity uses log employment (2009-2011 average). Wage proximity uses log December earnings (2009-2011, deflated to 2015 prices). Sample includes all possible establishment pairs where both satisfy \texttt{lagos\_sample\_avg==1} and \texttt{in\_balanced\_panel==1}." _newline // Table notes
 file write latex_table "\end{tablenotes}" _newline                                // End table notes
 file write latex_table "\end{threeparttable}" _newline                            // End threeparttable
 file write latex_table "\end{table}" _newline                                     // End table environment
@@ -600,10 +822,10 @@ restore                                                                         
 * STEP 13: Generate bar graph of correlation by broad industry
 ********************************************************************************
 
-* Compute correlation between bilateral connectivity and geographic distance by industry
-capture confirm variable geo_distance                                             // Check if geo_distance exists
+* Compute correlation between bilateral connectivity and geographic proximity by industry
+capture confirm variable geo_proximity                                            // Check if geo_proximity exists
 if _rc == 0 {                                                                     // If variable exists
-    count if !missing(geo_distance)                                               // Count non-missing observations
+    count if !missing(geo_proximity)                                              // Count non-missing observations
     if r(N) > 0 {                                                                 // If there are non-missing values
 
         * Create temporary file to store industry-level correlations
@@ -613,11 +835,11 @@ if _rc == 0 {                                                                   
 
         * Loop through each broad industry category
         forvalues ind = 1/18 {                                                    // Loop through 18 industry categories
-            qui count if broad_industry_i == `ind' & !missing(geo_distance)       // Count observations in this industry
+            qui count if broad_industry_i == `ind' & !missing(geo_proximity)      // Count observations in this industry
             if r(N) > 30 {                                                        // Only compute if sufficient observations
-                qui corr bilateral_conn_pw geo_distance if broad_industry_i == `ind' // Compute correlation for this industry
+                qui corr bilateral_conn_pw geo_proximity if broad_industry_i == `ind' // Compute correlation for this industry
                 local corr_ind = r(rho)                                           // Store correlation
-                qui count if broad_industry_i == `ind' & !missing(bilateral_conn_pw) & !missing(geo_distance) // Count observations
+                qui count if broad_industry_i == `ind' & !missing(bilateral_conn_pw) & !missing(geo_proximity) // Count observations
                 local n_ind = r(N)                                                // Store count
                 post `ind_memhold' (`ind') (`corr_ind') (`n_ind')                 // Post results
             }
@@ -656,7 +878,7 @@ if _rc == 0 {                                                                   
 
         * Create bar graph with value labels
         graph bar corr, over(broad_ind, label(angle(45) labsize(vsmall))) ///
-            ytitle("Corr. of Distance (km) with bilateral conn.") ///
+            ytitle("Corr. of Geo Proximity with bilateral conn.") ///
             bar(1, color(navy)) ///
             ylabel(, angle(0) format(%4.2f)) ///
             blabel(bar, format(%4.2f) size(vsmall)) ///
@@ -679,8 +901,8 @@ if _rc != 0 {                                                                   
 }
 
 * Standardize variables for comparable coefficients
-foreach var in bilateral_conn_pw geo_distance size_distance wage_distance ///
-               female_distance nonwhite_distance educ_distance hs_distance nhs_distance { // Loop through continuous variables
+foreach var in bilateral_conn_pw geo_proximity size_proximity med_wage_proximity avg_wage_proximity ///
+               female_proximity nonwhite_proximity educ_proximity hs_proximity nhs_proximity clauses_proximity { // Loop through continuous variables (including clauses)
     capture confirm variable `var'                                                // Check if variable exists
     if _rc == 0 {                                                                 // If exists
         qui sum `var'                                                             // Get summary statistics
@@ -693,34 +915,54 @@ foreach var in bilateral_conn_pw geo_distance size_distance wage_distance ///
 
 * Run regression with firm i fixed effects (no clustering)
 * Dependent variable: standardized bilateral connectivity
-* Independent variables: standardized distance measures + same_muni, same_microregion, same_mode_union dummies
+* Independent variables: standardized proximity measures + same dummies
 
-capture confirm variable z_geo_distance                                           // Check if geographic distance is available
-if _rc == 0 {                                                                     // If geographic distance available
-    di _newline(2) "=== Regression with Geographic Distance ==="                  // Display section header
-    reghdfe z_bilateral_conn_pw z_geo_distance z_size_distance z_wage_distance ///
-            z_female_distance z_nonwhite_distance z_educ_distance ///
-            z_hs_distance z_nhs_distance ///
-            same_muni same_microregion same_mode_union, ///
+capture confirm variable z_geo_proximity                                          // Check if geographic proximity is available
+if _rc == 0 {                                                                     // If geographic proximity available
+    di _newline(2) "=== Regression with Geographic Proximity (with industry x microregion) ==="
+    reghdfe z_bilateral_conn_pw z_geo_proximity z_size_proximity z_med_wage_proximity z_avg_wage_proximity ///
+            z_female_proximity z_nonwhite_proximity z_educ_proximity ///
+            z_hs_proximity z_nhs_proximity z_clauses_proximity ///
+            same_muni same_microregion same_union same_industry same_industry_micro, ///
             absorb(identificad_i) vce(robust)                                     // FE for establishment i, robust SE
 
     * Store estimates for coefficient plot
     estimates store reg_with_geo                                                  // Store regression estimates
+
+    * Run specification without industry x microregion interaction
+    di _newline(2) "=== Regression with Geographic Proximity (without industry x microregion) ==="
+    reghdfe z_bilateral_conn_pw z_geo_proximity z_size_proximity z_med_wage_proximity z_avg_wage_proximity ///
+            z_female_proximity z_nonwhite_proximity z_educ_proximity ///
+            z_hs_proximity z_nhs_proximity z_clauses_proximity ///
+            same_muni same_microregion same_union same_industry, ///
+            absorb(identificad_i) vce(robust)                                     // FE for establishment i, robust SE
+
+    estimates store reg_with_geo_no_intx                                          // Store regression without interaction
 }
-else {                                                                            // If no geographic distance
-    di _newline(2) "=== Regression without Geographic Distance ==="               // Display section header
-    reghdfe z_bilateral_conn_pw z_size_distance z_wage_distance ///
-            z_female_distance z_nonwhite_distance z_educ_distance ///
-            z_hs_distance z_nhs_distance ///
-            same_muni same_microregion same_mode_union, ///
+else {                                                                            // If no geographic proximity
+    di _newline(2) "=== Regression without Geographic Proximity (with industry x microregion) ==="
+    reghdfe z_bilateral_conn_pw z_size_proximity z_med_wage_proximity z_avg_wage_proximity ///
+            z_female_proximity z_nonwhite_proximity z_educ_proximity ///
+            z_hs_proximity z_nhs_proximity z_clauses_proximity ///
+            same_muni same_microregion same_union same_industry same_industry_micro, ///
             absorb(identificad_i) vce(robust)                                     // FE for establishment i, robust SE
 
     * Store estimates for coefficient plot
     estimates store reg_no_geo                                                    // Store regression estimates
+
+    * Run specification without industry x microregion interaction
+    di _newline(2) "=== Regression without Geographic Proximity (without industry x microregion) ==="
+    reghdfe z_bilateral_conn_pw z_size_proximity z_med_wage_proximity z_avg_wage_proximity ///
+            z_female_proximity z_nonwhite_proximity z_educ_proximity ///
+            z_hs_proximity z_nhs_proximity z_clauses_proximity ///
+            same_muni same_microregion same_union same_industry, ///
+            absorb(identificad_i) vce(robust)                                     // FE for establishment i, robust SE
+
+    estimates store reg_no_geo_no_intx                                            // Store regression without interaction
 }
 
 ********************************************************************************
-* STEP 15: Create coefficient plot with confidence intervals
+* STEP 15: Create coefficient plots with confidence intervals
 ********************************************************************************
 
 * Check if coefplot is installed
@@ -729,62 +971,125 @@ if _rc != 0 {                                                                   
     di "coefplot not installed. Please run: ssc install coefplot"                 // Display installation instructions
 }
 
-* Create coefficient plot
-capture confirm variable z_geo_distance                                           // Check if geographic distance available
-if _rc == 0 {                                                                     // If geographic distance available
+* Create coefficient plot (main specification with industry x microregion)
+capture confirm variable z_geo_proximity                                          // Check if geographic proximity available
+if _rc == 0 {                                                                     // If geographic proximity available
     coefplot reg_with_geo, ///
-        keep(z_geo_distance z_size_distance z_wage_distance ///
-             z_female_distance z_nonwhite_distance z_educ_distance ///
-             z_hs_distance z_nhs_distance ///
-             same_muni same_microregion same_mode_union) ///
+        keep(z_geo_proximity z_size_proximity z_med_wage_proximity z_avg_wage_proximity ///
+             z_female_proximity z_nonwhite_proximity z_educ_proximity ///
+             z_hs_proximity z_nhs_proximity z_clauses_proximity ///
+             same_muni same_microregion same_union same_industry same_industry_micro) ///
         xline(0, lcolor(gs10)) ///
         mcolor(navy) ciopts(lcolor(navy)) ///
         xlabel(, format(%4.2f)) ///
-        coeflabels(z_geo_distance = "Geographic distance" ///
-                   z_size_distance = "Size distance" ///
-                   z_wage_distance = "Wage distance" ///
-                   z_female_distance = "Share female distance" ///
-                   z_nonwhite_distance = "Share non-white distance" ///
-                   z_educ_distance = "Share higher ed. distance" ///
-                   z_hs_distance = "Share high school distance" ///
-                   z_nhs_distance = "Share less than HS distance" ///
+        coeflabels(z_geo_proximity = "Geographic" ///
+                   z_size_proximity = "Size" ///
+                   z_med_wage_proximity = "Median wage" ///
+                   z_avg_wage_proximity = "Average wage" ///
+                   z_female_proximity = "% female" ///
+                   z_nonwhite_proximity = "% non-white" ///
+                   z_educ_proximity = "% higher ed." ///
+                   z_hs_proximity = "% high school" ///
+                   z_nhs_proximity = "% less than HS" ///
+                   z_clauses_proximity = "CBA clauses" ///
                    same_muni = "Same municipality" ///
                    same_microregion = "Same microregion" ///
-                   same_mode_union = "Same modal union") ///
+                   same_union = "Same union" ///
+                   same_industry = "Same industry" ///
+                   same_industry_micro = "Same industry x microregion") ///
         ytitle("") xtitle("Standardized Coefficient") ///
         plotregion(color(white)) graphregion(color(white))                        // Publication-quality coefficient plot, white background
     graph export "$graphs/coefplot_bilateral_regression.pdf", replace             // Export graph as PDF
+
+    * Coefficient plot without industry x microregion interaction
+    coefplot reg_with_geo_no_intx, ///
+        keep(z_geo_proximity z_size_proximity z_med_wage_proximity z_avg_wage_proximity ///
+             z_female_proximity z_nonwhite_proximity z_educ_proximity ///
+             z_hs_proximity z_nhs_proximity z_clauses_proximity ///
+             same_muni same_microregion same_union same_industry) ///
+        xline(0, lcolor(gs10)) ///
+        mcolor(maroon) ciopts(lcolor(maroon)) ///
+        xlabel(, format(%4.2f)) ///
+        coeflabels(z_geo_proximity = "Geographic" ///
+                   z_size_proximity = "Size" ///
+                   z_med_wage_proximity = "Median wage" ///
+                   z_avg_wage_proximity = "Average wage" ///
+                   z_female_proximity = "% female" ///
+                   z_nonwhite_proximity = "% non-white" ///
+                   z_educ_proximity = "% higher ed." ///
+                   z_hs_proximity = "% high school" ///
+                   z_nhs_proximity = "% less than HS" ///
+                   z_clauses_proximity = "CBA clauses" ///
+                   same_muni = "Same municipality" ///
+                   same_microregion = "Same microregion" ///
+                   same_union = "Same union" ///
+                   same_industry = "Same industry") ///
+        ytitle("") xtitle("Standardized Coefficient") ///
+        plotregion(color(white)) graphregion(color(white))                        // Maroon color for no-interaction specification
+    graph export "$graphs/coefplot_bilateral_regression_no_intx.pdf", replace     // Export graph as PDF
 }
-else {                                                                            // If no geographic distance
+else {                                                                            // If no geographic proximity
     coefplot reg_no_geo, ///
-        keep(z_size_distance z_wage_distance ///
-             z_female_distance z_nonwhite_distance z_educ_distance ///
-             z_hs_distance z_nhs_distance ///
-             same_muni same_microregion same_mode_union) ///
+        keep(z_size_proximity z_med_wage_proximity z_avg_wage_proximity ///
+             z_female_proximity z_nonwhite_proximity z_educ_proximity ///
+             z_hs_proximity z_nhs_proximity z_clauses_proximity ///
+             same_muni same_microregion same_union same_industry same_industry_micro) ///
         xline(0, lcolor(gs10)) ///
         mcolor(navy) ciopts(lcolor(navy)) ///
         xlabel(, format(%4.2f)) ///
-        coeflabels(z_size_distance = "Size distance" ///
-                   z_wage_distance = "Wage distance" ///
-                   z_female_distance = "Share female distance" ///
-                   z_nonwhite_distance = "Share non-white distance" ///
-                   z_educ_distance = "Share higher ed. distance" ///
-                   z_hs_distance = "Share high school distance" ///
-                   z_nhs_distance = "Share less than HS distance" ///
+        coeflabels(z_size_proximity = "Size" ///
+                   z_med_wage_proximity = "Median wage" ///
+                   z_avg_wage_proximity = "Average wage" ///
+                   z_female_proximity = "% female" ///
+                   z_nonwhite_proximity = "% non-white" ///
+                   z_educ_proximity = "% higher ed." ///
+                   z_hs_proximity = "% high school" ///
+                   z_nhs_proximity = "% less than HS" ///
+                   z_clauses_proximity = "CBA clauses" ///
                    same_muni = "Same municipality" ///
                    same_microregion = "Same microregion" ///
-                   same_mode_union = "Same modal union") ///
+                   same_union = "Same union" ///
+                   same_industry = "Same industry" ///
+                   same_industry_micro = "Same industry x microregion") ///
         ytitle("") xtitle("Standardized Coefficient") ///
         plotregion(color(white)) graphregion(color(white))                        // Publication-quality coefficient plot, white background
     graph export "$graphs/coefplot_bilateral_regression.pdf", replace             // Export graph as PDF
+
+    * Coefficient plot without industry x microregion interaction
+    coefplot reg_no_geo_no_intx, ///
+        keep(z_size_proximity z_med_wage_proximity z_avg_wage_proximity ///
+             z_female_proximity z_nonwhite_proximity z_educ_proximity ///
+             z_hs_proximity z_nhs_proximity z_clauses_proximity ///
+             same_muni same_microregion same_union same_industry) ///
+        xline(0, lcolor(gs10)) ///
+        mcolor(maroon) ciopts(lcolor(maroon)) ///
+        xlabel(, format(%4.2f)) ///
+        coeflabels(z_size_proximity = "Size" ///
+                   z_med_wage_proximity = "Median wage" ///
+                   z_avg_wage_proximity = "Average wage" ///
+                   z_female_proximity = "% female" ///
+                   z_nonwhite_proximity = "% non-white" ///
+                   z_educ_proximity = "% higher ed." ///
+                   z_hs_proximity = "% high school" ///
+                   z_nhs_proximity = "% less than HS" ///
+                   z_clauses_proximity = "CBA clauses" ///
+                   same_muni = "Same municipality" ///
+                   same_microregion = "Same microregion" ///
+                   same_union = "Same union" ///
+                   same_industry = "Same industry") ///
+        ytitle("") xtitle("Standardized Coefficient") ///
+        plotregion(color(white)) graphregion(color(white))                        // Maroon color for no-interaction specification
+    graph export "$graphs/coefplot_bilateral_regression_no_intx.pdf", replace     // Export graph as PDF
 }
 
 di _newline "Saved: $graphs/coefplot_bilateral_regression.pdf"                    // Display confirmation message
+di "Saved: $graphs/coefplot_bilateral_regression_no_intx.pdf"                     // Display confirmation for no-interaction plot
 
 ********************************************************************************
 * STEP 16: Clean up temporary files
 ********************************************************************************
 
+capture erase "$rais_aux/sample_establishments.dta"                               // Delete temporary sample establishments file
 capture erase "$rais_aux/sample_flags_i.dta"                                      // Delete temporary sample flags file for establishment i
 capture erase "$rais_aux/sample_flags_j.dta"                                      // Delete temporary sample flags file for establishment j
 capture erase "$rais_aux/firm_chars_2009.dta"                                     // Delete temporary 2009 firm characteristics file
@@ -795,6 +1100,7 @@ capture erase "$rais_aux/firm_chars_avg_j.dta"                                  
 capture erase "$rais_aux/coords_i.dta"                                            // Delete temporary coordinates file for establishment i
 capture erase "$rais_aux/coords_j.dta"                                            // Delete temporary coordinates file for establishment j
 capture erase "$rais_aux/bilateral_connectivity_raw.dta"                          // Delete temporary raw bilateral connectivity file
+capture erase "$rais_aux/numb_clauses_2009.dta"                                   // Delete temporary numb_clauses file
 
 timer off 1                                                                       // Stop timer 1
 timer list                                                                        // Display elapsed time from timer 1
@@ -802,21 +1108,36 @@ timer list                                                                      
 di _newline(2) "=== Bilateral Descriptives Complete ==="                          // Display completion message
 di "Output files:"                                                                // Display header for output file list
 di "  - $rais_aux/bilateral_pairs_descriptives.dta"                               // Display path to main output dataset
-di "  - $graphs/binscatter_conn_size_distance.pdf"                                // Display path to size distance (log) plot
-di "  - $graphs/binscatter_conn_size_distance_levels.pdf"                         // Display path to size distance (levels) plot
-di "  - $graphs/binscatter_conn_wage_distance.pdf"                                // Display path to wage distance plot
-di "  - $graphs/binscatter_conn_female_distance.pdf"                              // Display path to female proportion distance plot
-di "  - $graphs/binscatter_conn_nonwhite_distance.pdf"                            // Display path to non-white proportion distance plot
-di "  - $graphs/binscatter_conn_educ_distance.pdf"                                // Display path to higher education distance plot
-di "  - $graphs/binscatter_conn_hs_distance.pdf"                                  // Display path to high school distance plot
-di "  - $graphs/binscatter_conn_nhs_distance.pdf"                                 // Display path to less than high school distance plot
+di _newline "Binscatter plots (all pairs, residualized):"
+di "  - $graphs/binscatter_conn_size_proximity.pdf"                               // Display path to size proximity plot
+di "  - $graphs/binscatter_conn_med_wage_proximity.pdf"                           // Display path to median wage proximity plot
+di "  - $graphs/binscatter_conn_avg_wage_proximity.pdf"                           // Display path to average wage proximity plot
+di "  - $graphs/binscatter_conn_female_proximity.pdf"                             // Display path to female proportion proximity plot
+di "  - $graphs/binscatter_conn_nonwhite_proximity.pdf"                           // Display path to non-white proportion proximity plot
+di "  - $graphs/binscatter_conn_educ_proximity.pdf"                               // Display path to higher education proximity plot
+di "  - $graphs/binscatter_conn_hs_proximity.pdf"                                 // Display path to high school proximity plot
+di "  - $graphs/binscatter_conn_nhs_proximity.pdf"                                // Display path to less than high school proximity plot
+di "  - $graphs/binscatter_conn_clauses_proximity.pdf"                            // Display path to clauses proximity plot
+di _newline "Binscatter plots (positive connectivity only, residualized):"
+di "  - $graphs/binscatter_conn_size_proximity_posonly.pdf"                       // Display path to size proximity plot (positive only)
+di "  - $graphs/binscatter_conn_med_wage_proximity_posonly.pdf"                   // Display path to median wage proximity plot (positive only)
+di "  - $graphs/binscatter_conn_avg_wage_proximity_posonly.pdf"                   // Display path to average wage proximity plot (positive only)
+di "  - $graphs/binscatter_conn_female_proximity_posonly.pdf"                     // Display path to female proportion proximity plot (positive only)
+di "  - $graphs/binscatter_conn_nonwhite_proximity_posonly.pdf"                   // Display path to non-white proportion proximity plot (positive only)
+di "  - $graphs/binscatter_conn_educ_proximity_posonly.pdf"                       // Display path to higher education proximity plot (positive only)
+di "  - $graphs/binscatter_conn_hs_proximity_posonly.pdf"                         // Display path to high school proximity plot (positive only)
+di "  - $graphs/binscatter_conn_nhs_proximity_posonly.pdf"                        // Display path to less than high school proximity plot (positive only)
+di "  - $graphs/binscatter_conn_clauses_proximity_posonly.pdf"                    // Display path to clauses proximity plot (positive only)
+di _newline "Tables and coefficient plots:"
 di "  - $tables/correlation_bilateral_connectivity.txt"                           // Display path to LaTeX correlation table
-di "  - $graphs/coefplot_bilateral_regression.pdf"                                // Display path to coefficient plot
-capture confirm variable geo_distance                                             // Check if geo_distance variable exists
+di "  - $graphs/coefplot_bilateral_regression.pdf"                                // Display path to coefficient plot (with industry x microregion)
+di "  - $graphs/coefplot_bilateral_regression_no_intx.pdf"                        // Display path to coefficient plot (without industry x microregion)
+capture confirm variable geo_proximity                                            // Check if geo_proximity variable exists
 if _rc == 0 {                                                                     // If variable exists
-    count if !missing(geo_distance)                                               // Count non-missing observations
+    count if !missing(geo_proximity)                                              // Count non-missing observations
     if r(N) > 0 {                                                                 // If there are non-missing values
-        di "  - $graphs/binscatter_conn_geo_distance.pdf"                         // Display path to geographic distance plot
+        di "  - $graphs/binscatter_conn_geo_proximity.pdf"                        // Display path to geographic proximity plot
+        di "  - $graphs/binscatter_conn_geo_proximity_posonly.pdf"                // Display path to geographic proximity plot (positive only)
         di "  - $graphs/corr_by_industry.pdf"                                     // Display path to industry correlation bar graph
     }
 }

@@ -39,13 +39,20 @@ Set a flag to 1 to run that stage.
 Requires Stata 17.0 (set in master file with `version 17.0`).
 
 ### Running Individual Programs
-From the Kellogg cluster:
+From the Kellogg cluster, first load the Stata module:
 ```bash
+module load stata/17
 stata-mp -b do Programs/00_master.do
+```
+
+Or use the full path directly:
+```bash
+/software/Stata/stata17/stata-mp -b do Programs/00_master.do
 ```
 
 For optimized parallel processing of RAIS data:
 ```bash
+module load stata/17
 stata-mp -b do Programs/011_rais_to_firm_parallel.do
 ```
 
@@ -112,3 +119,214 @@ For selecting one spell per worker-firm pair:
 1. Rank by contracted hours (highest)
 2. Among tied, rank by hourly December wage (highest)
 3. Random tiebreaker with seed 12345
+
+## Python Environment
+
+The system Python (3.6) is too old for modern packages like DuckDB. Use the conda Python 3.12 environment:
+
+```bash
+# Python interpreter path
+~/.conda/envs/venv_python312/bin/python
+
+# Install packages
+~/.conda/envs/venv_python312/bin/pip install duckdb
+
+# Run Python scripts
+~/.conda/envs/venv_python312/bin/python Programs/script.py
+```
+
+Note: `pip` does not work, use `pip3` or the full conda path above.
+
+## Installed Python Packages (in conda env)
+
+Key packages available in `~/.conda/envs/venv_python312/`:
+- `duckdb` (1.4.1) - Fast SQL analytics for large datasets
+- `pyfixest` (0.40.1) - Fixed effects regression (produces identical results to Stata reghdfe)
+- `pandas`, `numpy`, `matplotlib` - Standard data science stack
+- `pyarrow` - Parquet file support
+
+## Data File Locations & Structures
+
+### Bilateral Connectivity Files
+
+| File | Size | Contents |
+|------|------|----------|
+| `Data/RAIS_aux/bilateral_connectivity_2007_2011.csv` | 5 MB | 62K pairs with year-pair ratios (ratio_0708, ratio_0809, ratio_0910, ratio_1011) |
+| `Data/RAIS_aux/bilateral_connectivity_2011_2016.csv` | 5.6 MB | Post-treatment bilateral pairs with year-pair ratios |
+| `Data/RAIS_aux/bilateral_regression_data.parquet` | 12 GB | 135M pairs with proximity measures (all unique i<j pairs) |
+| `Data/CBA_RAIS_firm_level/cba_rais_firm_2009_2016_flows_1.dta` | - | Firm-level data with `numb_clauses`, `lagos_sample_avg`, `in_balanced_panel` |
+
+### What's IN vs NOT IN the Parquet
+
+**IN the parquet:**
+- `identificad_i`, `identificad_j` (14-digit strings, no leading "1")
+- `bilateral_conn_pre`, `bilateral_conn_post` (aggregated connectivity)
+- Proximity measures: `size_proximity`, `wage_proximity`, `female_proximity`, `nonwhite_proximity`, `educ_proximity`, `hs_proximity`, `nhs_proximity`, `geo_proximity`
+- Dummies: `same_muni`, `same_microregion`, `same_union`, `same_industry`, `same_industry_micro`
+- Standardized versions: `z_bilateral_conn_pre`, `z_bilateral_conn_post`, `z_*_proximity`
+
+**NOT in the parquet (must be computed separately):**
+- `clauses_proximity` - Must be computed from `numb_clauses` in firm-level data
+- Year-pair specific ratios - Only available in original CSVs
+
+### CSV ID Format
+```python
+# CSV has 15-digit IDs with leading "1"
+# Must strip to 14 digits for matching with parquet
+SUBSTR(identificad_i, 2, 14) AS identificad_i
+```
+
+## DuckDB for Efficient Data Manipulation
+
+DuckDB is much faster than Stata for data manipulation on large datasets (135M rows processed in 8.4 min vs hours in Stata).
+
+```python
+import duckdb
+
+con = duckdb.connect()
+con.execute("PRAGMA threads=8")
+con.execute("PRAGMA memory_limit='32GB'")
+
+# Read CSV and parquet directly in SQL
+con.execute("""
+    SELECT * FROM read_csv('file.csv')
+    JOIN read_parquet('file.parquet') USING (id)
+""")
+
+# Handle NULL values with COALESCE
+con.execute("""
+    SELECT
+        COALESCE(ratio_0708, 0) AS ratio_0708,
+        (COALESCE(ratio_0708, 0) + COALESCE(ratio_0809, 0)) / 2 AS avg_ratio
+    FROM read_csv('file.csv')
+""")
+
+# Export to pandas via Arrow (fastest method)
+df = con.execute("SELECT * FROM table").fetch_arrow_table().to_pandas()
+
+# Save to Stata format
+df.to_stata('output.dta', write_index=False, version=118)
+```
+
+## pyfixest for Fixed Effects Regressions
+
+pyfixest produces **identical results to Stata reghdfe** (validated: differences at machine precision ~10⁻⁸).
+
+```python
+import pyfixest as pf
+
+# Univariate regression with FE and robust SE
+model = pf.feols("y ~ x | fe_var", data=df, vcov='hetero')
+
+# Multivariate regression
+model = pf.feols("y ~ x1 + x2 + x3 | fe_var", data=df, vcov='hetero')
+
+# Get results
+coef = model.coef()['x']
+se = model.se()['x']
+ci_lower = coef - 1.96 * se
+ci_upper = coef + 1.96 * se
+```
+
+## Stata Regression Specifications
+
+```stata
+* Univariate with establishment FE
+reghdfe z_outcome z_predictor, absorb(identificad_i) vce(robust)
+
+* Multivariate with establishment FE
+reghdfe z_outcome z_predictor z_controls same_dummies, absorb(identificad_i) vce(robust)
+
+* Export coefficients to CSV using postfile
+tempname coef_hold
+tempfile coef_data
+postfile `coef_hold' str50 variable str20 var_type coef se ci_lower ci_upper str30 spec str20 reg_type r2 using `coef_data'
+
+local coef = _b[z_predictor]
+local se = _se[z_predictor]
+local ci_lower = `coef' - 1.96 * `se'
+local ci_upper = `coef' + 1.96 * `se'
+local r2 = e(r2)
+
+post `coef_hold' ("z_predictor") ("proximity") (`coef') (`se') (`ci_lower') (`ci_upper') ("spec_name") ("univariate") (`r2')
+postclose `coef_hold'
+```
+
+## Variable Standardization
+
+```stata
+* Stata
+qui sum var
+gen z_var = (var - r(mean)) / r(sd)
+```
+
+```python
+# Python
+df['z_var'] = (df['var'] - df['var'].mean()) / df['var'].std()
+```
+
+## Proximity Measures Definition
+
+All proximity measures are defined as **negative absolute difference** (higher = more similar):
+
+```stata
+* Continuous proximity
+gen size_proximity = -abs(l_avg_firm_emp_i - l_avg_firm_emp_j)
+gen wage_proximity = -abs(l_avg_wage_i - l_avg_wage_j)
+gen female_proximity = -abs(avg_prop_female_i - avg_prop_female_j)
+gen clauses_proximity = -abs(numb_clauses_i - numb_clauses_j)
+
+* Geographic proximity (log transform for distance)
+gen geo_proximity = -ln(geo_distance + 0.1)
+
+* Binary dummies
+gen same_industry = (industry1_i == industry1_j)
+gen same_microregion = (microregion_i == microregion_j)
+gen same_industry_micro = (industry1_i == industry1_j & microregion_i == microregion_j)
+```
+
+## Coefficient Export Format
+
+Standard CSV format for Python coefplot scripts:
+```
+variable, var_type, coef, se, ci_lower, ci_upper, spec, reg_type, r2
+```
+
+- `var_type`: "proximity", "dummy", "early_connectivity", "pre_connectivity"
+- `reg_type`: "univariate", "multivariate"
+- `spec`: "pretreat", "post", "post_multivariate", "post_with_pre"
+
+## Performance Benchmarks (135M rows, ~16K FE levels)
+
+| Operation | Tool | Time |
+|-----------|------|------|
+| Data prep (joins, transforms) | DuckDB/Python | 8.4 min |
+| 16 FE regressions | Stata reghdfe | ~45 min |
+| 16 FE regressions | pyfixest | ~61 min |
+| Load 12GB parquet to pandas | pyarrow | ~3 min |
+| Export 135M rows to .dta | pandas.to_stata | ~5 min |
+
+## Recommended Workflow
+
+For large-scale bilateral connectivity analysis:
+
+1. **Data manipulation**: Use Python/DuckDB (much faster than Stata)
+2. **FE regressions**: Either Stata reghdfe or pyfixest (identical results; Stata ~25% faster)
+3. **Plots**: Python/matplotlib (more flexible)
+
+Example pipeline:
+```bash
+# 1. Data prep with DuckDB
+~/.conda/envs/venv_python312/bin/python Programs/07d_bilateral_pretreatment_prep.py
+
+# 2. Regressions with Stata
+module load stata/17
+stata-mp -b do Programs/07d_bilateral_pretreatment.do
+
+# 3. Plots with Python
+~/.conda/envs/venv_python312/bin/python Programs/07d_bilateral_pretreatment_coefplot.py
+```
+
+## Notes on Singleton Fixed Effects
+
+Both Stata reghdfe and pyfixest automatically detect and drop singleton fixed effects (observations where an FE level appears only once). In the bilateral connectivity data, there are typically 2 singleton observations that get dropped.
