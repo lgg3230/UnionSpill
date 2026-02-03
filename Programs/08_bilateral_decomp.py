@@ -110,6 +110,18 @@ def main():
     where = args.where
 
     # -------- 1) global moments --------
+    # First, count total rows and rows dropped due to NULLs
+    count_sql = f"""
+    SELECT
+      COUNT(*) AS n_total,
+      SUM(CASE WHEN {pre_col} IS NULL THEN 1 ELSE 0 END) AS n_pre_null,
+      SUM(CASE WHEN {post_col} IS NULL THEN 1 ELSE 0 END) AS n_post_null,
+      SUM(CASE WHEN NOT ({cell_not_null}) THEN 1 ELSE 0 END) AS n_cell_null
+    FROM read_parquet('{args.path}')
+    WHERE {where}
+    """
+    n_total, n_pre_null, n_post_null, n_cell_null = con.execute(count_sql).fetchone()
+
     global_sql = f"""
     SELECT
       COUNT(*)::UBIGINT AS N,
@@ -147,6 +159,21 @@ def main():
     GROUP BY 1
     """
     con.execute(grp_sql)
+
+    # Verify group table has same total observations as global query
+    # Also count singleton pair-cells (n_g = 1)
+    grp_stats = con.execute("""
+        SELECT
+            SUM(n_g) AS n_total,
+            COUNT(*) AS n_groups,
+            SUM(CASE WHEN n_g = 1 THEN 1 ELSE 0 END) AS n_singletons,
+            SUM(CASE WHEN n_g = 1 THEN n_g ELSE 0 END) AS n_obs_in_singletons
+        FROM grp
+    """).fetchone()
+    n_grp_total, n_groups, n_singletons, n_obs_in_singletons = grp_stats
+
+    if n_grp_total != N:
+        print(f"WARNING: Group total ({n_grp_total}) != Global N ({N}). Some observations may be lost!")
 
     # Scalars from grp: sums needed for within/between SS and cross-products
     agg_sql = """
@@ -210,6 +237,17 @@ def main():
     print(f"cell_j    : {cell_j_col}")
     print(f"where     : {where}")
     print(f"use_hash_cells: {args.use_hash_cells}")
+    print()
+
+    print("=== Observation counts ===")
+    print(f"Total rows (after where filter) = {n_total}")
+    print(f"  Dropped: pre is NULL           = {n_pre_null}")
+    print(f"  Dropped: post is NULL          = {n_post_null}")
+    print(f"  Dropped: cell components NULL  = {n_cell_null}")
+    print(f"  Used in analysis               = {N}")
+    print(f"  Number of pair-cells           = {n_groups}")
+    print(f"  Singleton pair-cells (n=1)     = {n_singletons} ({100*n_singletons/n_groups:.2f}% of pair-cells)")
+    print(f"  Obs in singleton pair-cells    = {n_obs_in_singletons} ({100*n_obs_in_singletons/N:.2f}% of obs)")
     print()
 
     print("=== Global moments ===")

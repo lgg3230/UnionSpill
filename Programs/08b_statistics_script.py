@@ -17,7 +17,7 @@ WHERE has_flow_pre = 1
 share_not_same, n_pos = con.execute(q1).fetchone()
 print(f"Positive pre flows: share not-same_industry_micro = {share_not_same:.3f} (N={n_pos})")
 
-# 2) Complement shares among top 5/10/20/25% connectivity (within positive-flow sample)
+# 2) Complement shares among top 5/10/20/25/50% connectivity (within positive-flow sample)
 q2 = f"""
 WITH pos AS (
   SELECT bilateral_conn_pre, same_industry_micro
@@ -31,7 +31,8 @@ cuts AS (
     quantile_cont(bilateral_conn_pre, 0.95) AS c95,
     quantile_cont(bilateral_conn_pre, 0.90) AS c90,
     quantile_cont(bilateral_conn_pre, 0.80) AS c80,
-    quantile_cont(bilateral_conn_pre, 0.75) AS c75
+    quantile_cont(bilateral_conn_pre, 0.75) AS c75,
+    quantile_cont(bilateral_conn_pre, 0.50) AS c50
   FROM pos
 )
 SELECT 'Top 5%'  AS grp,
@@ -57,6 +58,12 @@ SELECT 'Top 25%' AS grp,
        COUNT(*) AS n
 FROM pos, cuts
 WHERE bilateral_conn_pre >= c75
+UNION ALL
+SELECT 'Top 50%' AS grp,
+       AVG(CASE WHEN same_industry_micro=0 THEN 1.0 ELSE 0.0 END) AS share_not_same,
+       COUNT(*) AS n
+FROM pos, cuts
+WHERE bilateral_conn_pre >= c50
 ;
 """
 rows = con.execute(q2).fetchall()
