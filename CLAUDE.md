@@ -330,3 +330,65 @@ stata-mp -b do Programs/07d_bilateral_pretreatment.do
 ## Notes on Singleton Fixed Effects
 
 Both Stata reghdfe and pyfixest automatically detect and drop singleton fixed effects (observations where an FE level appears only once). In the bilateral connectivity data, there are typically 2 singleton observations that get dropped.
+
+## Coefficient Plot Formatting Standards
+
+Reference implementation: `Programs/06_bilateral_coefplot_gravity.py`
+
+### Layout
+- **No title** on figures (titles added in LaTeX)
+- **Legend below graph** with `bbox_to_anchor=(0.5, -0.18)`, `ncol=2`, `frameon=False`
+- **Horizontal faded guide lines** at each y-position (`alpha=0.2`)
+- **Variables ordered** by univariate coefficient size (smallest at top, largest at bottom)
+
+### Markers & Colors
+- **Univariate**: hollow circle (white fill), blue edge (`#2166AC`), `markeredgewidth=2`
+- **Multivariate**: filled circle, red (`#B2182B`), `markeredgewidth=1.5`
+- Both markers on **same horizontal line** (no vertical offset)
+
+### Coefficient Labels
+- Display coefficient value (3 decimal places) next to each marker
+- Univariate labels **above** marker (`y + 0.25`)
+- Multivariate labels **below** marker (`y - 0.25`)
+- Color matches marker color
+
+### Axis Labels
+- X-axis: **"Coefficient"** (bold, no "Standardized")
+- Y-axis labels: **bold**, no "proximity" suffix, no "Same" prefix
+
+### Variable Label Standards
+| Variable | Label |
+|----------|-------|
+| `z_geo_proximity` | Spatial |
+| `z_size_proximity` | Size |
+| `z_wage_proximity` | Wage |
+| `z_female_proximity` | % Female |
+| `z_nonwhite_proximity` | % Non-white |
+| `z_educ_proximity` | % Higher ed. |
+| `z_hs_proximity` | % High school |
+| `z_clauses_proximity` | # CBA clauses |
+| `same_microregion` | Microregion |
+| `same_union` | Union |
+| `same_industry` | Industry |
+| `same_industry_micro` | Industry × microregion |
+
+### Figure Size
+- `figsize=(8, len(vars) * 0.6 + 1.0)`
+
+### Example Code
+```python
+# Marker with coefficient label
+ax.plot(coef, y, marker='o', markersize=9,
+        markerfacecolor='white',  # hollow for univariate
+        markeredgecolor='#2166AC', markeredgewidth=2)
+ax.text(coef, y + 0.25, f'{coef:.3f}',
+        ha='center', va='bottom', fontsize=8, color='#2166AC')
+
+# Horizontal guide lines
+for i in range(len(vars)):
+    ax.axhline(y=i, color='gray', linestyle='-', linewidth=0.5, alpha=0.2)
+
+# Legend below plot
+ax.legend(handles=legend_elements, loc='upper center',
+          bbox_to_anchor=(0.5, -0.18), ncol=2, frameon=False)
+```
