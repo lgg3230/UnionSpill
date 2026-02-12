@@ -1,17 +1,14 @@
 #!/home/lgg3230/.conda/envs/venv_python312/bin/python
 """
-07d BILATERAL REGRESSION: EARLY → LATE PRE-TREATMENT CONNECTIVITY
+06 BILATERAL REGRESSION: PRE-TREATMENT CONNECTIVITY
 
-Predicts late pre-treatment bilateral connectivity (2009-2011) using:
-- Early pre-treatment connectivity (2007-2009)
-- Gravity/proximity measures
-
-Two-way fixed effects (identificad_i + identificad_j)
-Two-way clustering (identificad_i + identificad_j)
-Univariate and multivariate specifications
+Predicts pre-treatment bilateral connectivity (2007-2011) using gravity/proximity measures.
+- Two-way fixed effects (identificad_i + identificad_j)
+- Two-way clustering (identificad_i + identificad_j)
+- Univariate and multivariate specifications
 
 Input: /tmp/bilateral_pairs_enhanced.parquet (271M directed pairs)
-Output: Data/RAIS_aux/bilateral_pretreatment_coefficients.csv
+Output: Data/RAIS_aux/bilateral_pretreat_gravity_coefficients.csv
 """
 
 import pyfixest as pf
@@ -24,20 +21,15 @@ import time
 import warnings
 warnings.filterwarnings('ignore')
 
-# %%
-
 # ==============================================================================
 # CONFIGURATION
 # ==============================================================================
 
 INPUT_PARQUET = Path('/tmp/bilateral_pairs_enhanced.parquet')
-OUTPUT_CSV = Path('/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/RAIS_aux/bilateral_pretreatment_coefficients.csv')
+OUTPUT_CSV = Path('/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/RAIS_aux/bilateral_pretreat_gravity_coefficients.csv')
 
-# Dependent variable: late pre-treatment connectivity (2009-2011)
-DEP_VAR = 'z_bilateral_conn_late_pre'
-
-# Main predictor: early pre-treatment connectivity (2007-2009)
-EARLY_CONN_VAR = 'z_bilateral_conn_early_pre'
+# Dependent variable: full pre-treatment connectivity (bilateral_conn_pw is the full pre-treatment)
+DEP_VAR = 'z_bilateral_conn_pw'
 
 # Fixed effects and clustering
 FE_VARS = 'identificad_i + identificad_j'
@@ -64,16 +56,12 @@ DUMMY_VARS = [
     'same_industry_micro',
 ]
 
-# All variables for univariate regressions (includes early connectivity)
-UNIVARIATE_VARS = [EARLY_CONN_VAR] + PROXIMITY_VARS + DUMMY_VARS
-
-# All variables for multivariate regression
 ALL_VARS = PROXIMITY_VARS + DUMMY_VARS
 
 # Parallel workers for univariate regressions
 N_WORKERS = 4
 
-# %%
+
 # ==============================================================================
 # DATA LOADING
 # ==============================================================================
@@ -84,7 +72,7 @@ def load_data():
     start = time.time()
 
     # Read only needed columns
-    cols_needed = ['identificad_i', 'identificad_j', DEP_VAR, EARLY_CONN_VAR] + ALL_VARS
+    cols_needed = ['identificad_i', 'identificad_j', DEP_VAR] + ALL_VARS
 
     df = pq.read_table(INPUT_PARQUET, columns=cols_needed).to_pandas()
 
@@ -92,29 +80,21 @@ def load_data():
     df['identificad_i'] = df['identificad_i'].astype('category')
     df['identificad_j'] = df['identificad_j'].astype('category')
 
-    for col in PROXIMITY_VARS + [DEP_VAR, EARLY_CONN_VAR]:
+    for col in PROXIMITY_VARS:
         if col in df.columns:
             df[col] = df[col].astype('float32')
+
+    df[DEP_VAR] = df[DEP_VAR].astype('float32')
 
     print(f"  Loaded {len(df):,} rows in {time.time() - start:.1f}s")
     print(f"  Memory: {df.memory_usage(deep=True).sum() / 1e9:.1f} GB")
 
     return df
 
-# %%
+
 # ==============================================================================
 # REGRESSION FUNCTIONS
 # ==============================================================================
-
-def get_var_type(var):
-    """Determine variable type for output."""
-    if var == EARLY_CONN_VAR:
-        return 'early_connectivity'
-    elif var in PROXIMITY_VARS:
-        return 'proximity'
-    else:
-        return 'dummy'
-
 
 def run_single_univariate(var, df, dep_var):
     """Run a single univariate regression."""
@@ -134,12 +114,12 @@ def run_single_univariate(var, df, dep_var):
 
         return {
             'variable': var,
-            'var_type': get_var_type(var),
+            'var_type': 'proximity' if var in PROXIMITY_VARS else 'dummy',
             'coef': coef,
             'se': se,
             'ci_lower': coef - 1.96 * se,
             'ci_upper': coef + 1.96 * se,
-            'spec': 'pretreat',
+            'spec': 'gravity',
             'reg_type': 'univariate',
             'r2': model._r2,
             'n': model._N,
@@ -157,7 +137,7 @@ def run_univariate_regressions(df, dep_var):
     with ThreadPoolExecutor(max_workers=N_WORKERS) as executor:
         futures = {
             executor.submit(run_single_univariate, var, df, dep_var): var
-            for var in UNIVARIATE_VARS
+            for var in ALL_VARS
         }
 
         for future in futures:
@@ -174,18 +154,15 @@ def run_univariate_regressions(df, dep_var):
 
 
 def run_multivariate_regression(df, dep_var):
-    """Run multivariate regression with all predictors including early connectivity."""
+    """Run multivariate regression with all predictors."""
     print("\n--- Running multivariate regression ---")
 
-    # All predictors including early connectivity
-    all_predictors = [EARLY_CONN_VAR] + ALL_VARS
-
     # Drop rows with any missing values
-    subset = df.dropna(subset=[dep_var] + all_predictors)
+    subset = df.dropna(subset=[dep_var] + ALL_VARS)
     print(f"  Sample size: {len(subset):,}")
 
     # Build formula
-    predictors = ' + '.join(all_predictors)
+    predictors = ' + '.join(ALL_VARS)
     formula = f"{dep_var} ~ {predictors} | {FE_VARS}"
 
     print(f"  Formula: {formula[:80]}...")
@@ -197,18 +174,18 @@ def run_multivariate_regression(df, dep_var):
 
     # Extract coefficients
     results = []
-    for var in all_predictors:
+    for var in ALL_VARS:
         try:
             coef = model.coef()[var]
             se = model.se()[var]
             results.append({
                 'variable': var,
-                'var_type': get_var_type(var),
+                'var_type': 'proximity' if var in PROXIMITY_VARS else 'dummy',
                 'coef': coef,
                 'se': se,
                 'ci_lower': coef - 1.96 * se,
                 'ci_upper': coef + 1.96 * se,
-                'spec': 'pretreat',
+                'spec': 'gravity',
                 'reg_type': 'multivariate',
                 'r2': model._r2,
                 'n': model._N,
@@ -218,14 +195,14 @@ def run_multivariate_regression(df, dep_var):
 
     return pd.DataFrame(results)
 
-# %%
+
 # ==============================================================================
 # MAIN
 # ==============================================================================
 
 def main():
     print("=" * 70)
-    print("07d BILATERAL REGRESSION: EARLY → LATE PRE-TREATMENT")
+    print("06 BILATERAL REGRESSION: PRE-TREATMENT CONNECTIVITY")
     print("=" * 70)
 
     start_time = time.time()

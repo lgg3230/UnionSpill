@@ -30,7 +30,8 @@ COEF_FILE = RAIS_AUX / "bilateral_pretreatment_coefficients.csv"
 # ==============================================================================
 
 VAR_LABELS = {
-    "z_geo_proximity": "Spatial",
+    "z_cep_proximity": "Spatial (CEP)",
+    "z_turnover_proximity": "Turnover",
     "z_size_proximity": "Size",
     "z_wage_proximity": "Wage",
     "z_female_proximity": "% Female",
@@ -50,9 +51,11 @@ VAR_LABELS = {
 # Order for plotting (same order for both univariate and multivariate)
 PROXIMITY_ORDER = [
     "z_bilateral_conn_early_pre",
-    "z_geo_proximity",
+    "z_cep_proximity",
+    "z_turnover_proximity",
     "z_clauses_proximity",
     "z_hs_proximity",
+    "z_nhs_proximity",
     "z_educ_proximity",
     "z_wage_proximity",
     "z_nonwhite_proximity",
@@ -244,7 +247,7 @@ def create_latex_figures(output_path, prox_path, dummy_path):
 
 \begin{tablenotes}
 \footnotesize
-\item \textit{Notes:} This figure shows coefficients from regressions of late-pretreatment bilateral connectivity (2009--2011, based on year pairs 2009--10 and 2010--11) on establishment pair characteristics. Hollow blue markers show univariate regressions (each predictor separately); filled red markers show multivariate regressions (all predictors simultaneously, including early-pretreatment connectivity 2007--2009). All regressions control for establishment $i$ fixed effects. Bilateral connectivity is measured as the person-weighted average flow of workers between establishment pairs. Proximity measures are defined as the negative absolute difference between establishment characteristics (standardized), so higher values indicate greater similarity. Spatial proximity is measured as the negative log of distance between municipality centroids. CBA clauses proximity is based on the number of clauses in collective bargaining agreements. Same-category dummies equal one if both establishments share the indicated category. Establishment characteristics are based on 2009--2011 averages. Horizontal lines represent 95\% confidence intervals based on robust standard errors. All regressions include the universe of establishment pairs, including those with zero worker flows.
+\item \textit{Notes:} This figure shows coefficients from regressions of late-pretreatment bilateral connectivity (2009--2011, based on year pairs 2009--10 and 2010--11) on establishment pair characteristics. Hollow blue markers show univariate regressions (each predictor separately); filled red markers show multivariate regressions (all predictors simultaneously, including early-pretreatment connectivity 2007--2009). All regressions control for establishment $i$ fixed effects. Bilateral connectivity is measured as the person-weighted average flow of workers between establishment pairs. Proximity measures are defined as the negative absolute difference between establishment characteristics (standardized), so higher values indicate greater similarity. Spatial proximity is measured as the negative log of distance between establishment postal code (CEP) centroids. Turnover proximity is measured as the negative absolute difference in establishment turnover rates. CBA clauses proximity is based on the number of clauses in collective bargaining agreements. Same-category dummies equal one if both establishments share the indicated category. Establishment characteristics are based on 2009--2011 averages. Horizontal lines represent 95\% confidence intervals based on robust standard errors. All regressions include the universe of establishment pairs, including those with zero worker flows.
 \end{tablenotes}
 
 \end{threeparttable}

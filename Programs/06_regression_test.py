@@ -47,80 +47,31 @@ RAIS_AUX = BASE_DIR / "Data" / "RAIS_aux"
 TABLES = BASE_DIR / "Tables"
 GRAPHS = BASE_DIR / "Graphs"
 
-INPUT_PARQUET = RAIS_AUX / "bilateral_regression_data.parquet"  # 135M undirected pairs (i < j)
-OUTPUT_UNIV = RAIS_AUX / "bilateral_individual_coefficients.csv"
-OUTPUT_MULTI = RAIS_AUX / "bilateral_regression_coefficients.csv"
+INPUT_PARQUET = Path("/tmp/bilateral_pairs_gravity_ready.parquet")
+OUTPUT_UNIV = RAIS_AUX / "bilateral_univariate_coefficients_gravity.csv"
+OUTPUT_MULTI = RAIS_AUX / "bilateral_multivariate_coefficients_gravity.csv"
 
 # Variables
-# NOTE: z_cep_proximity replaces z_geo_proximity, z_turnover_proximity added
 PROXIMITY_VARS = [
-    'z_cep_proximity', 'z_turnover_proximity', 'z_size_proximity', 'z_wage_proximity',
+    'z_geo_proximity', 'z_size_proximity', 'z_wage_proximity',
     'z_female_proximity', 'z_nonwhite_proximity', 'z_educ_proximity',
     'z_hs_proximity', 'z_clauses_proximity'
 ]
 
-# Supplementary data file (CEP and turnover proximity)
-SUPPLEMENT_PARQUET = RAIS_AUX / "bilateral_cep_turnover.parquet"
-
 DUMMY_VARS = ['same_microregion', 'same_union', 'same_industry', 'same_industry_micro']
 
-DEP_VAR = 'z_bilateral_conn_post'  # Post-treatment connectivity (standardized)
+DEP_VAR = 'z_bilateral_conn_pw'
 FE_VARS = 'identificad_i + identificad_j'
 
 
 def load_data():
-    """Load parquet file with memory optimizations and merge supplementary data."""
+    """Load parquet file with memory optimizations."""
     print(f"Loading {INPUT_PARQUET}...")
     start = time.time()
     df = pq.read_table(INPUT_PARQUET).to_pandas()
     load_time = time.time() - start
     print(f"  Loaded {len(df):,} rows in {load_time:.1f}s")
     print(f"  Initial memory: {df.memory_usage(deep=True).sum()/1e9:.2f} GB")
-
-    # Merge supplementary CEP and turnover proximity data
-    if SUPPLEMENT_PARQUET.exists():
-        print(f"\n  Merging supplementary data from {SUPPLEMENT_PARQUET}...")
-        supp_df = pq.read_table(SUPPLEMENT_PARQUET).to_pandas()
-
-        # Merge on identificad_i and identificad_j
-        df = df.merge(
-            supp_df[['identificad_i', 'identificad_j', 'z_cep_proximity', 'z_turnover_proximity']],
-            on=['identificad_i', 'identificad_j'],
-            how='left'
-        )
-
-        print(f"  Pairs with CEP proximity: {df['z_cep_proximity'].notna().sum():,}")
-        print(f"  Pairs with turnover proximity: {df['z_turnover_proximity'].notna().sum():,}")
-    else:
-        print(f"  WARNING: Supplementary data not found: {SUPPLEMENT_PARQUET}")
-
-    # =========================================================================
-    # Compute clauses_proximity from firm-level data
-    # =========================================================================
-    print("\n  Computing clauses_proximity from firm-level data...")
-    FIRM_DATA = BASE_DIR / "Data" / "CBA_RAIS_firm_level" / "cba_rais_firm_2009_2016_flows_1.parquet"
-    if FIRM_DATA.exists():
-        firm_df = pq.read_table(FIRM_DATA, columns=['identificad', 'year', 'numb_clauses']).to_pandas()
-        firm_df = firm_df[firm_df['year'] == 2009][['identificad', 'numb_clauses']].drop_duplicates()
-
-        # Merge numb_clauses for firm i and j
-        df = df.merge(firm_df.rename(columns={'identificad': 'identificad_i', 'numb_clauses': 'numb_clauses_i'}),
-                      on='identificad_i', how='left')
-        df = df.merge(firm_df.rename(columns={'identificad': 'identificad_j', 'numb_clauses': 'numb_clauses_j'}),
-                      on='identificad_j', how='left')
-
-        # Compute clauses_proximity = -abs(numb_clauses_i - numb_clauses_j)
-        df['clauses_proximity'] = -np.abs(df['numb_clauses_i'] - df['numb_clauses_j'])
-
-        # Standardize
-        mean_val = df['clauses_proximity'].mean()
-        std_val = df['clauses_proximity'].std()
-        df['z_clauses_proximity'] = (df['clauses_proximity'] - mean_val) / std_val
-
-        n_clauses = df['z_clauses_proximity'].notna().sum()
-        print(f"  Pairs with clauses_proximity: {n_clauses:,}")
-    else:
-        print(f"  WARNING: Firm data not found: {FIRM_DATA}")
 
     # =========================================================================
     # OPTIMIZATION 1: Convert FE variables to categorical
@@ -287,7 +238,7 @@ def run_multivariate_regression(df):
             'se': se,
             'ci_lower': ci_lower,
             'ci_upper': ci_upper,
-            'spec': 'with_intx',
+            'spec': 'multivariate_twoway',
             'reg_type': 'multivariate',
             'r2': model._r2,
             'n': model._N
@@ -327,7 +278,7 @@ def main():
     df = load_data()
 
     # Run univariate regressions
-    univ_results = run_univariate_regressions(df)
+    # univ_results = run_univariate_regressions(df)
 
     # Run multivariate regression
     multi_results = run_multivariate_regression(df)

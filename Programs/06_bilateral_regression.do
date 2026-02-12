@@ -64,8 +64,24 @@ import parquet "/tmp/bilateral_pairs_gravity_ready.parquet", clear
 describe
 di _newline "Observations: " _N
 
+********************************************************************************
+* STEP 1b: Merge supplementary CEP and turnover proximity data
+********************************************************************************
+
+di _newline(2) "=== Merging supplementary CEP and turnover proximity data ==="
+
+* Merge with supplementary data (CEP-based distance and turnover proximity)
+merge 1:1 identificad_i identificad_j using "$rais_aux/bilateral_cep_turnover.dta", ///
+    keep(master match) nogen
+
+* Check merge results
+count if !missing(z_cep_proximity)
+di "Pairs with CEP proximity: " r(N)
+count if !missing(z_turnover_proximity)
+di "Pairs with turnover proximity: " r(N)
+
 * Quick summary of key variables
-summarize z_bilateral_conn_pw z_geo_proximity z_size_proximity, separator(0)
+summarize z_bilateral_conn_pw z_cep_proximity z_turnover_proximity z_size_proximity, separator(0)
 
 ********************************************************************************
 * STEP 2: Run UNIVARIATE regressions with two-way fixed effects
@@ -88,7 +104,8 @@ postfile `univ_coef_hold' str50 variable str20 var_type double coef double se //
     using `univ_coef_data'
 
 * Define proximity variables (standardized)
-local prox_vars "z_geo_proximity z_size_proximity z_wage_proximity z_female_proximity z_nonwhite_proximity z_educ_proximity z_hs_proximity z_clauses_proximity"
+* NOTE: z_cep_proximity replaces z_geo_proximity, z_turnover_proximity added
+local prox_vars "z_cep_proximity z_turnover_proximity z_size_proximity z_wage_proximity z_female_proximity z_nonwhite_proximity z_educ_proximity z_hs_proximity z_clauses_proximity"
 
 * Define dummy variables
 local dummy_vars "same_microregion same_union same_industry same_industry_micro"
@@ -289,14 +306,15 @@ else {
     set scheme s2color
 
     coefplot gravity_twoway, ///
-        keep(z_geo_proximity z_size_proximity z_wage_proximity ///
+        keep(z_cep_proximity z_turnover_proximity z_size_proximity z_wage_proximity ///
              z_female_proximity z_nonwhite_proximity z_educ_proximity ///
              z_hs_proximity z_clauses_proximity ///
              same_microregion same_union same_industry same_industry_micro) ///
         xline(0, lcolor(gs10)) ///
         mcolor(navy) ciopts(lcolor(navy)) ///
         xlabel(, format(%5.3f)) ///
-        coeflabels(z_geo_proximity = "Geographic proximity" ///
+        coeflabels(z_cep_proximity = "CEP proximity" ///
+                   z_turnover_proximity = "Turnover proximity" ///
                    z_size_proximity = "Size proximity" ///
                    z_wage_proximity = "Wage proximity" ///
                    z_female_proximity = "% Female proximity" ///

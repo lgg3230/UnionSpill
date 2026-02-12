@@ -79,6 +79,21 @@ di "Observations with clauses_proximity: "
 count if !missing(clauses_proximity)
 
 ********************************************************************************
+* STEP 2b: MERGE CEP AND TURNOVER PROXIMITY
+********************************************************************************
+
+di _newline(2) "=== Merging CEP and turnover proximity ==="
+
+* Merge supplementary CEP and turnover data
+merge 1:1 identificad_i identificad_j using "$rais_aux/bilateral_cep_turnover.dta", ///
+    keep(master match) nogen
+
+di "Observations with CEP proximity: "
+count if !missing(cep_proximity)
+di "Observations with turnover proximity: "
+count if !missing(turnover_proximity)
+
+********************************************************************************
 * STEP 3: STANDARDIZE VARIABLES
 ********************************************************************************
 
@@ -94,8 +109,9 @@ foreach var in bilateral_conn_early_pre bilateral_conn_late_pre {
 }
 
 * Standardize proximity measures (re-standardize within this sample)
+* NOTE: cep_proximity and turnover_proximity already have z_ versions from supplementary data
 foreach var in size_proximity wage_proximity female_proximity nonwhite_proximity ///
-               educ_proximity hs_proximity nhs_proximity geo_proximity clauses_proximity {
+               educ_proximity hs_proximity nhs_proximity clauses_proximity {
     capture confirm variable `var'
     if _rc == 0 {
         qui sum `var'
@@ -104,6 +120,7 @@ foreach var in size_proximity wage_proximity female_proximity nonwhite_proximity
         }
     }
 }
+* z_cep_proximity and z_turnover_proximity already exist from supplementary merge
 
 ********************************************************************************
 * STEP 4: SET UP COEFFICIENT OUTPUT
@@ -112,7 +129,8 @@ foreach var in size_proximity wage_proximity female_proximity nonwhite_proximity
 di _newline(2) "=== Setting up coefficient output ==="
 
 * Define variable lists
-local proximity_vars "z_geo_proximity z_size_proximity z_wage_proximity z_female_proximity z_nonwhite_proximity z_educ_proximity z_hs_proximity z_nhs_proximity"
+* NOTE: z_cep_proximity replaces z_geo_proximity, z_turnover_proximity added
+local proximity_vars "z_cep_proximity z_turnover_proximity z_size_proximity z_wage_proximity z_female_proximity z_nonwhite_proximity z_educ_proximity z_hs_proximity z_nhs_proximity"
 local dummy_vars "same_muni same_microregion same_union same_industry same_industry_micro"
 
 * Initialize postfile for coefficient storage
@@ -195,7 +213,7 @@ di _newline(2) "=== Multivariate regression: Late-pre connectivity ==="
 
 * Full multivariate regression with all predictors including early-pre
 reghdfe z_bilateral_conn_late_pre z_bilateral_conn_early_pre ///
-    z_geo_proximity z_size_proximity z_wage_proximity ///
+    z_cep_proximity z_turnover_proximity z_size_proximity z_wage_proximity ///
     z_female_proximity z_nonwhite_proximity z_educ_proximity ///
     z_hs_proximity z_nhs_proximity z_clauses_proximity ///
     same_muni same_microregion same_union same_industry same_industry_micro, ///
@@ -216,7 +234,7 @@ local ci_upper = `coef' + 1.96 * `se'
 post `coef_hold' ("z_bilateral_conn_early_pre") ("early_connectivity") (`coef') (`se') (`ci_lower') (`ci_upper') ("pretreat") ("multivariate") (`r2_multi')
 
 * Proximity measures
-foreach var in z_geo_proximity z_size_proximity z_wage_proximity z_female_proximity ///
+foreach var in z_cep_proximity z_turnover_proximity z_size_proximity z_wage_proximity z_female_proximity ///
                z_nonwhite_proximity z_educ_proximity z_hs_proximity z_nhs_proximity z_clauses_proximity {
     capture {
         local coef = _b[`var']
@@ -262,7 +280,8 @@ esttab reg_pretreat_multi using "$tables/bilateral_pretreatment_regression.tex",
     title("Pretreatment Bilateral Connectivity: Multivariate Regression") ///
     mtitles("Late-Pre (2009-2011)") ///
     coeflabels(z_bilateral_conn_early_pre "Early-Pre Bilateral Conn." ///
-               z_geo_proximity "Geographic" ///
+               z_cep_proximity "Spatial (CEP)" ///
+               z_turnover_proximity "Turnover" ///
                z_size_proximity "Firm Size" ///
                z_wage_proximity "Wage" ///
                z_female_proximity "\% Female" ///

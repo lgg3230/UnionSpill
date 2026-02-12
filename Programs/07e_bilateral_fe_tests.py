@@ -31,7 +31,7 @@ warnings.filterwarnings('ignore')
 # ==============================================================================
 
 INPUT_PARQUET = Path('/tmp/bilateral_pairs_enhanced.parquet')
-OUTPUT_CSV = Path('/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/RAIS_aux/bilateral_pretreatment_coefficients.csv')
+OUTPUT_CSV = Path('/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/RAIS_aux/bilateral_pretreatment_coefficients_fe_tests.csv')
 
 # Dependent variable: late pre-treatment connectivity (2009-2011)
 DEP_VAR = 'z_bilateral_conn_late_pre'
@@ -40,7 +40,10 @@ DEP_VAR = 'z_bilateral_conn_late_pre'
 EARLY_CONN_VAR = 'z_bilateral_conn_early_pre'
 
 # Fixed effects and clustering
-FE_VARS = 'identificad_i + identificad_j'
+FE_VARS_1 = 'identificad_i + identificad_j'
+FE_VARS_2 = 'identificad_i'
+FE_VARS_3 = ''
+
 VCOV = {'CRV1': 'identificad_i + identificad_j'}
 
 # Proximity measures (excluding nhs per user request)
@@ -65,13 +68,16 @@ DUMMY_VARS = [
 ]
 
 # All variables for univariate regressions (includes early connectivity)
-UNIVARIATE_VARS = [EARLY_CONN_VAR] + PROXIMITY_VARS + DUMMY_VARS
-
+UNIVARIATE_VARS = [EARLY_CONN_VAR] 
 # All variables for multivariate regression
 ALL_VARS = PROXIMITY_VARS + DUMMY_VARS
 
 # Parallel workers for univariate regressions
 N_WORKERS = 4
+
+#All FE specs to test
+FE_SPECS = [s for s in [FE_VARS_1, FE_VARS_2, FE_VARS_3] if s]
+
 
 # %%
 # ==============================================================================
@@ -84,7 +90,7 @@ def load_data():
     start = time.time()
 
     # Read only needed columns
-    cols_needed = ['identificad_i', 'identificad_j', DEP_VAR, EARLY_CONN_VAR] + ALL_VARS
+    cols_needed = ['identificad_i', 'identificad_j', 'z_bilateral_conn_late_pre', 'z_bilateral_conn_early_pre']
 
     df = pq.read_table(INPUT_PARQUET, columns=cols_needed).to_pandas()
 
@@ -92,9 +98,9 @@ def load_data():
     df['identificad_i'] = df['identificad_i'].astype('category')
     df['identificad_j'] = df['identificad_j'].astype('category')
 
-    for col in PROXIMITY_VARS + [DEP_VAR, EARLY_CONN_VAR]:
-        if col in df.columns:
-            df[col] = df[col].astype('float32')
+    # for col in PROXIMITY_VARS + [DEP_VAR, EARLY_CONN_VAR]:
+    #     if col in df.columns:
+    #         df[col] = df[col].astype('float32')
 
     print(f"  Loaded {len(df):,} rows in {time.time() - start:.1f}s")
     print(f"  Memory: {df.memory_usage(deep=True).sum() / 1e9:.1f} GB")
@@ -116,7 +122,7 @@ def get_var_type(var):
         return 'dummy'
 
 
-def run_single_univariate(var, df, dep_var):
+def run_single_univariate(var, df, dep_var, fe_vars):
     """Run a single univariate regression."""
     try:
         # Drop rows with missing values for this variable
@@ -126,11 +132,42 @@ def run_single_univariate(var, df, dep_var):
         if len(subset) < 100:
             return None
 
-        formula = f"{dep_var} ~ {var} | {FE_VARS}"
+        formula = f"{dep_var} ~ {var} | {fe_vars}"
         model = pf.feols(formula, data=subset, vcov=VCOV)
 
         coef = model.coef()[var]
         se = model.se()[var]
+
+        return {
+                'variable': var,
+                'var_type': get_var_type(var),
+                'coef': coef,
+                'se': se,
+                'ci_lower': coef - 1.96 * se,
+                'ci_upper': coef + 1.96 * se,
+                'spec': 'pretreat',
+                'reg_type': 'univariate',
+                'r2': getattr(model, "_r2", None),
+                'n': getattr(model, "_N", len(subset)),
+            }
+    except Exception as e:
+        print(f"  Error in {var}: {e}")
+        return None
+
+def run_univariate_no_fe(var, df, dep_var):
+    """Run univariate regression without fixed effects."""
+    try:
+        subset_cols = [dep_var, var, 'identificad_i', 'identificad_j']
+        subset = df[subset_cols].dropna()
+
+        if len(subset) < 100:
+            return None
+
+        formula = f"{dep_var} ~ {var}"
+        model = pf.feols(formula, data=subset, vcov=VCOV)
+
+        coef = float(model.coef()[var])
+        se   = float(model.se()[var])
 
         return {
             'variable': var,
@@ -141,82 +178,42 @@ def run_single_univariate(var, df, dep_var):
             'ci_upper': coef + 1.96 * se,
             'spec': 'pretreat',
             'reg_type': 'univariate',
-            'r2': model._r2,
-            'n': model._N,
+            'fe_spec': 'none',
+            'r2': getattr(model, "_r2", None),
+            'n': getattr(model, "_N", len(subset)),
         }
     except Exception as e:
-        print(f"  Error in {var}: {e}")
+        print(f"  Error in NO-FE regression: {e}")
         return None
 
+#LOOP OVER FE VARS, DEP VAR IS ALWAYS LATE PRE-TREATMENT CONNECTIVITY, VAR IS ALWAYS EARLY PRE-TREATMENT CONNECTIVITY, BUT FE VARS CHANGE. 
 
 def run_univariate_regressions(df, dep_var):
-    """Run all univariate regressions in parallel."""
-    print("\n--- Running univariate regressions ---")
+    print("\n--- Running univariate regressions (vary FE spec) ---")
     results = []
 
-    with ThreadPoolExecutor(max_workers=N_WORKERS) as executor:
-        futures = {
-            executor.submit(run_single_univariate, var, df, dep_var): var
-            for var in UNIVARIATE_VARS
-        }
+    var = EARLY_CONN_VAR
 
-        for future in futures:
-            var = futures[future]
-            try:
-                result = future.result()
-                if result:
-                    results.append(result)
-                    print(f"  {var}: coef={result['coef']:.4f}, se={result['se']:.4f}, n={result['n']:,}")
-            except Exception as e:
-                print(f"  {var}: FAILED - {e}")
+    # 1) No fixed effects
+    print("  Running NO-FE regression")
+    result = run_univariate_no_fe(var, df, dep_var)
+    if result:
+        results.append(result)
+        print(f"  FE: none | coef={result['coef']:.4f}, se={result['se']:.4f}, n={result['n']:,}")
+
+    # 2) With fixed effects
+    for fe_vars in FE_SPECS:
+        result = run_single_univariate(var, df, dep_var, fe_vars)
+        if result:
+            result["fe_spec"] = fe_vars
+            results.append(result)
+            print(f"  FE: {fe_vars} | coef={result['coef']:.4f}, se={result['se']:.4f}, n={result['n']:,}")
+        else:
+            print(f"  FE: {fe_vars} | FAILED/empty")
 
     return pd.DataFrame(results)
 
 
-def run_multivariate_regression(df, dep_var):
-    """Run multivariate regression with all predictors including early connectivity."""
-    print("\n--- Running multivariate regression ---")
-
-    # All predictors including early connectivity
-    all_predictors = [EARLY_CONN_VAR] + ALL_VARS
-
-    # Drop rows with any missing values
-    subset = df.dropna(subset=[dep_var] + all_predictors)
-    print(f"  Sample size: {len(subset):,}")
-
-    # Build formula
-    predictors = ' + '.join(all_predictors)
-    formula = f"{dep_var} ~ {predictors} | {FE_VARS}"
-
-    print(f"  Formula: {formula[:80]}...")
-    print(f"  Running regression...")
-
-    start = time.time()
-    model = pf.feols(formula, data=subset, vcov=VCOV)
-    print(f"  Completed in {time.time() - start:.1f}s")
-
-    # Extract coefficients
-    results = []
-    for var in all_predictors:
-        try:
-            coef = model.coef()[var]
-            se = model.se()[var]
-            results.append({
-                'variable': var,
-                'var_type': get_var_type(var),
-                'coef': coef,
-                'se': se,
-                'ci_lower': coef - 1.96 * se,
-                'ci_upper': coef + 1.96 * se,
-                'spec': 'pretreat',
-                'reg_type': 'multivariate',
-                'r2': model._r2,
-                'n': model._N,
-            })
-        except Exception as e:
-            print(f"  Warning: Could not extract {var}: {e}")
-
-    return pd.DataFrame(results)
 
 # %%
 # ==============================================================================
@@ -225,7 +222,7 @@ def run_multivariate_regression(df, dep_var):
 
 def main():
     print("=" * 70)
-    print("07d BILATERAL REGRESSION: EARLY → LATE PRE-TREATMENT")
+    print("07e TESTING FE'S IN BILATERAL REGRESSION: EARLY → LATE PRE-TREATMENT")
     print("=" * 70)
 
     start_time = time.time()
@@ -238,15 +235,14 @@ def main():
 
     # Load data
     df = load_data()
+    print(f"Running FE specs: {FE_SPECS}")
 
     # Run univariate regressions
     univ_results = run_univariate_regressions(df, DEP_VAR)
 
-    # Run multivariate regression
-    multi_results = run_multivariate_regression(df, DEP_VAR)
-
+    
     # Combine results
-    all_results = pd.concat([univ_results, multi_results], ignore_index=True)
+    all_results = univ_results.copy()
 
     # Save
     OUTPUT_CSV.parent.mkdir(parents=True, exist_ok=True)
