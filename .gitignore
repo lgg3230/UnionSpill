@@ -1,3 +1,7 @@
+.claude/
+.vscode/
+*.log
+__pycache__/
 Data/CBA/cba_coverage_clean_firm.dta
 Data/CBA/cba_coverage_clean_sector.dta
 Data/CBA/cba_coverage_clean.dta
