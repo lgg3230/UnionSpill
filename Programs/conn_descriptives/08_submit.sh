@@ -23,13 +23,13 @@
 #   28:    Pretreat multivariate (all 14 vars)
 #
 # Usage:
-#   sbatch Programs/08_submit.sh
+#   sbatch Programs/conn_descriptives/08_submit.sh
 #
 # Monitor:
 #   squeue -u $USER -n 08_bilateral
 #
 # After completion, merge results:
-#   ~/.conda/envs/venv_python312/bin/python Programs/08_merge.py
+#   ~/.conda/envs/venv_python312/bin/python Programs/conn_descriptives/08_merge.py
 
 echo "============================================"
 echo "SLURM Job ID: $SLURM_JOB_ID"
@@ -43,7 +43,7 @@ echo "============================================"
 mkdir -p /gpfs/kellogg/proj/lgg3230/UnionSpill/Data/RAIS_aux/bilateral_combined_results
 
 ~/.conda/envs/venv_python312/bin/python \
-    /gpfs/kellogg/proj/lgg3230/UnionSpill/Programs/08_bilateral_worker.py \
+    /gpfs/kellogg/proj/lgg3230/UnionSpill/Programs/conn_descriptives/08_bilateral_worker.py \
     $SLURM_ARRAY_TASK_ID
 
 echo ""

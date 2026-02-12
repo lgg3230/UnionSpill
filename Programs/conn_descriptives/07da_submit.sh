@@ -31,13 +31,13 @@
 #  13  z_clauses_proximity
 #
 # Usage:
-#   sbatch Programs/07da_submit.sh
+#   sbatch Programs/conn_descriptives/07da_submit.sh
 #
 # Monitor:
 #   squeue -u $USER -n 07da_pretreat
 #
 # After completion, merge results:
-#   ~/.conda/envs/venv_python312/bin/python Programs/07da_merge.py
+#   ~/.conda/envs/venv_python312/bin/python Programs/conn_descriptives/07da_merge.py
 
 echo "============================================"
 echo "SLURM Job ID: $SLURM_JOB_ID"
@@ -53,7 +53,7 @@ mkdir -p /gpfs/kellogg/proj/lgg3230/UnionSpill/Data/RAIS_aux/pretreat_univariate
 
 # Run the worker
 ~/.conda/envs/venv_python312/bin/python \
-    /gpfs/kellogg/proj/lgg3230/UnionSpill/Programs/07da_worker.py \
+    /gpfs/kellogg/proj/lgg3230/UnionSpill/Programs/conn_descriptives/07da_worker.py \
     $SLURM_ARRAY_TASK_ID
 
 echo ""

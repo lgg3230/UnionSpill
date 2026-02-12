@@ -14,13 +14,13 @@
 # Re-standardizes dep var and early connectivity over the full sample.
 #
 # Usage:
-#   sbatch Programs/07db_submit.sh
+#   sbatch Programs/conn_descriptives/07db_submit.sh
 #
 # Monitor:
 #   squeue -u $USER -n 07db_pretreat_mv
 #
 # After completion, re-plot:
-#   ~/.conda/envs/venv_python312/bin/python Programs/06_bilateral_coefplot_combined.py
+#   ~/.conda/envs/venv_python312/bin/python Programs/conn_descriptives/06_bilateral_coefplot_combined.py
 
 echo "============================================"
 echo "SLURM Job ID: $SLURM_JOB_ID"
@@ -31,7 +31,7 @@ echo "Start: $(date)"
 echo "============================================"
 
 ~/.conda/envs/venv_python312/bin/python \
-    /gpfs/kellogg/proj/lgg3230/UnionSpill/Programs/07db_bilateral_pretreatment_multivariate.py
+    /gpfs/kellogg/proj/lgg3230/UnionSpill/Programs/conn_descriptives/07db_bilateral_pretreatment_multivariate.py
 
 echo ""
 echo "End: $(date)"
