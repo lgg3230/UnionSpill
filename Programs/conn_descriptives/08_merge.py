@@ -7,6 +7,10 @@ Reads individual result_*.csv from bilateral_combined_results/ and writes:
 - bilateral_pretreat_gravity_coefficients_multivariate.csv
 - bilateral_pretreatment_coefficients_univariate.csv
 - bilateral_pretreatment_coefficients_multivariate.csv
+- bilateral_gravity_6yr_coefficients_univariate.csv
+- bilateral_gravity_6yr_coefficients_multivariate.csv
+- bilateral_pretreatment_6yr_coefficients_univariate.csv
+- bilateral_pretreatment_6yr_coefficients_multivariate.csv
 
 Usage: python Programs/08_merge.py
 """
@@ -23,6 +27,10 @@ OUTPUT_MAP = {
     ('gravity', 'multivariate'): 'bilateral_pretreat_gravity_coefficients_multivariate.csv',
     ('pretreat', 'univariate'): 'bilateral_pretreatment_coefficients_univariate.csv',
     ('pretreat', 'multivariate'): 'bilateral_pretreatment_coefficients_multivariate.csv',
+    ('gravity_6yr', 'univariate'): 'bilateral_gravity_6yr_coefficients_univariate.csv',
+    ('gravity_6yr', 'multivariate'): 'bilateral_gravity_6yr_coefficients_multivariate.csv',
+    ('pretreat_6yr', 'univariate'): 'bilateral_pretreatment_6yr_coefficients_univariate.csv',
+    ('pretreat_6yr', 'multivariate'): 'bilateral_pretreatment_6yr_coefficients_multivariate.csv',
 }
 
 
@@ -35,7 +43,7 @@ def main():
         print("ERROR: No result files found.")
         return
 
-    missing = [i for i in range(29) if not (RESULTS_DIR / f'result_{i:02d}.csv').exists()]
+    missing = [i for i in range(58) if not (RESULTS_DIR / f'result_{i:02d}.csv').exists()]
     if missing:
         print(f"WARNING: Missing task indices: {missing}")
 

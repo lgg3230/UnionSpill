@@ -17,8 +17,15 @@ Index mapping:
   15-23: Pretreat univariate (9 proximity)
   24-27: Pretreat univariate (4 dummies)
   28:    Pretreat multivariate (all 14)
+  29-37: Gravity 6yr univariate (9 proximity)
+  38-41: Gravity 6yr univariate (4 dummies)
+  42:    Gravity 6yr multivariate (all 13)
+  43:    Pretreat 6yr univariate (early connectivity 6yr)
+  44-52: Pretreat 6yr univariate (9 proximity)
+  53-56: Pretreat 6yr univariate (4 dummies)
+  57:    Pretreat 6yr multivariate (all 14)
 
-Usage: python 08_bilateral_worker.py <task_index>  (0-28)
+Usage: python 08_bilateral_worker.py <task_index>  (0-57)
 """
 
 import os
@@ -120,7 +127,64 @@ TASKS.append({
     'regressors_raw': ['bilateral_conn_early_pre'] + RAW_PROXIMITY_VARS + RAW_DUMMY_VARS,
 })
 
-assert len(TASKS) == 29
+# ==============================================================================
+# 6YR TASKS (29-57): Use 6yr connectivity with 3+3 split
+# ==============================================================================
+
+# --- Gravity 6yr univariate: proximity (29-37) ---
+for var in RAW_PROXIMITY_VARS:
+    TASKS.append({
+        'spec': 'gravity_6yr', 'reg_type': 'univariate',
+        'dep_var_raw': 'bilateral_conn_6yr',
+        'regressors_raw': [var],
+    })
+
+# --- Gravity 6yr univariate: dummies (38-41) ---
+for var in RAW_DUMMY_VARS:
+    TASKS.append({
+        'spec': 'gravity_6yr', 'reg_type': 'univariate',
+        'dep_var_raw': 'bilateral_conn_6yr',
+        'regressors_raw': [var],
+    })
+
+# --- Gravity 6yr multivariate (42) ---
+TASKS.append({
+    'spec': 'gravity_6yr', 'reg_type': 'multivariate',
+    'dep_var_raw': 'bilateral_conn_6yr',
+    'regressors_raw': RAW_PROXIMITY_VARS + RAW_DUMMY_VARS,
+})
+
+# --- Pretreat 6yr univariate: early connectivity 6yr (43) ---
+TASKS.append({
+    'spec': 'pretreat_6yr', 'reg_type': 'univariate',
+    'dep_var_raw': 'bilateral_conn_late_6yr',
+    'regressors_raw': ['bilateral_conn_early_6yr'],
+})
+
+# --- Pretreat 6yr univariate: proximity (44-52) ---
+for var in RAW_PROXIMITY_VARS:
+    TASKS.append({
+        'spec': 'pretreat_6yr', 'reg_type': 'univariate',
+        'dep_var_raw': 'bilateral_conn_late_6yr',
+        'regressors_raw': [var],
+    })
+
+# --- Pretreat 6yr univariate: dummies (53-56) ---
+for var in RAW_DUMMY_VARS:
+    TASKS.append({
+        'spec': 'pretreat_6yr', 'reg_type': 'univariate',
+        'dep_var_raw': 'bilateral_conn_late_6yr',
+        'regressors_raw': [var],
+    })
+
+# --- Pretreat 6yr multivariate (57) ---
+TASKS.append({
+    'spec': 'pretreat_6yr', 'reg_type': 'multivariate',
+    'dep_var_raw': 'bilateral_conn_late_6yr',
+    'regressors_raw': ['bilateral_conn_early_6yr'] + RAW_PROXIMITY_VARS + RAW_DUMMY_VARS,
+})
+
+assert len(TASKS) == 58
 
 
 # ==============================================================================
@@ -128,7 +192,7 @@ assert len(TASKS) == 29
 # ==============================================================================
 
 def get_var_type(raw_var):
-    if raw_var == 'bilateral_conn_early_pre':
+    if raw_var in ('bilateral_conn_early_pre', 'bilateral_conn_early_6yr'):
         return 'early_connectivity'
     elif raw_var in RAW_DUMMY_VARS:
         return 'dummy'
@@ -291,7 +355,7 @@ def run_regression(df, task):
 
 def main():
     if len(sys.argv) < 2:
-        print("Usage: 08_bilateral_worker.py <task_index>  (0-28)")
+        print("Usage: 08_bilateral_worker.py <task_index>  (0-57)")
         sys.exit(1)
 
     idx = int(sys.argv[1])

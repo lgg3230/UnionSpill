@@ -413,17 +413,46 @@ drop hire_tag
 //     bysort identificad: egen firm_emp_jan = total(emp_jan_dec) // sums by each firmn the number of employees that were active in Jan that remained active in dec
     gen retention = firm_emp_jan / firm_emp // make it as a ratio of estab employment
 
-    ** Turnover rate
-    bysort identificad: egen separations = total(cond(causadesli != 0, 1, 0)) // w/in each estab, tag spells that were terminated for any reason during the whole year
-    gen turnover = separations / firm_emp 
+    ** Turnover rate (unique workers separated, additive decomposition)
+    * Among separated spells, rank to pick one spell per worker-estab.
+    * This ensures each worker is counted at most once in separation stats.
+    gen byte separated = (causadesli != 0)
 
-    *** Layoffs
-    bysort identificad: egen lay_count = total(cond(causadesli==10 | causadesli==11, 1, 0)) // w/in each estab, tag spells that fired by the employer during the whole year
-    gen layoffs = lay_count / firm_emp
+    * Compute hourly Dec wage for ranking among separated spells (0 if missing)
+    gen remdezr_h_sep = remdezr / (horascontr * 4.348) if separated == 1
+    replace remdezr_h_sep = 0 if remdezr_h_sep == . & separated == 1
 
-    *** Quits
-    bysort identificad: egen qui_count = total(cond(causadesli==20 | causadesli==21, 1, 0)) // w/in each estab, tag spells that were terminated by the employee during the whole year
-    gen quits = qui_count / firm_emp
+    * Rank separated spells: hours (desc), Dec hourly wage (desc), random tiebreaker
+    bysort identificad PIS: egen max_hours_sep = max(horascontr * separated)
+    gen sep_rank1 = (horascontr == max_hours_sep & separated == 1)
+
+    bysort identificad PIS: egen max_wage_sep = max(remdezr_h_sep * sep_rank1)
+    gen sep_rank2 = (remdezr_h_sep == max_wage_sep & sep_rank1 == 1)
+
+    set seed 54321
+    gen random_sep = runiform() if sep_rank2 == 1
+    bysort identificad PIS: egen max_random_sep = max(random_sep)
+    gen sep_final = (random_sep == max_random_sep & sep_rank2 == 1)
+
+    * Classify selected spell into mutually exclusive categories
+    gen byte is_layoff   = (sep_final == 1 & (causadesli == 10 | causadesli == 11))
+    gen byte is_quit     = (sep_final == 1 & (causadesli == 20 | causadesli == 21))
+    gen byte is_other_sep = (sep_final == 1 & is_layoff == 0 & is_quit == 0)
+
+    * Count per establishment
+    bysort identificad: egen separations = total(sep_final)
+    bysort identificad: egen lay_count   = total(is_layoff)
+    bysort identificad: egen qui_count   = total(is_quit)
+    bysort identificad: egen other_sep_count = total(is_other_sep)
+
+    gen turnover  = separations / firm_emp
+    gen layoffs   = lay_count / firm_emp
+    gen quits     = qui_count / firm_emp
+    gen other_sep = other_sep_count / firm_emp
+
+    * Clean up temporary variables
+    drop separated remdezr_h_sep max_hours_sep sep_rank1 max_wage_sep sep_rank2 ///
+         random_sep max_random_sep sep_final is_layoff is_quit is_other_sep
 
     ** Fixed contract 
     gen fixed_c = cond(tpvinculo==60 | tpvinculo==65 | tpvinculo==70 | tpvinculo==75 | tpvinculo==95 | tpvinculo==96 |tpvinculo==97 | tpvinculo==90, 1, 0) // mark spells w/ fixed duration contracts: CLT U/PJ DET (60), CLT U/PF DET (65), CLT R/PJ DET (70), CLT R/PF DET (75), CONT PRZ DET (90), CONT TMP DET(95), CONT LEI EST(96), CONT LEI MUN (97)
@@ -542,7 +571,7 @@ restore
 	
 collapse ///
 (firstnm) identificad_8 year white_prop male_prop avg_tenure no_hs_c prop_nhs hs_c prop_hs sup_c prop_sup total_below_30 prop_below_30 total_30_40 prop_30_40 total_above_40 prop_above_40 ///
- leave_c leaves safety_c safety fixed_count fixed_prop qui_count quits lay_count layoffs separations turnover firm_emp_jan retention pub_firm ///
+ leave_c leaves safety_c safety fixed_count fixed_prop qui_count quits lay_count layoffs other_sep_count other_sep separations turnover firm_emp_jan retention pub_firm ///
  hired_count hiring l_firm_emp firm_emp lr_sal~50_10 lr_sal~90_10 salcontr_p10 salcontr_p50 salcontr_p90 ///
  municipio clascnae20 natjuridica /// // take the first non missing observation within estab for observations that are the same for the whole estab
 (mean) lr_remdezr lr_remmedr lr_salcont~m r_salcontr_m r_remmedr r_remdezr lr_remdezr_h lr_remmedr_h lr_salcontr_h /// 

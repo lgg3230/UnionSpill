@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=08_bilateral
 #SBATCH --account=kellogg
-#SBATCH --array=13,28
+#SBATCH --array=0-57
 #SBATCH --partition=kellogg
 #SBATCH --time=03:00:00
 #SBATCH --nodes=1
@@ -11,7 +11,7 @@
 #SBATCH --output=/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/RAIS_aux/bilateral_combined_results/slurm_%A_%a.log
 #SBATCH --error=/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/RAIS_aux/bilateral_combined_results/slurm_%A_%a.err
 #
-# 08: Run 29 bilateral regressions (gravity + pretreatment) on separate nodes.
+# 08: Run 58 bilateral regressions (gravity + pretreatment, 4yr + 6yr) on separate nodes.
 #
 # Index mapping:
 #   0-8:   Gravity univariate (9 proximity)
@@ -21,6 +21,13 @@
 #   15-23: Pretreat univariate (9 proximity)
 #   24-27: Pretreat univariate (4 dummies)
 #   28:    Pretreat multivariate (all 14 vars)
+#   29-37: Gravity 6yr univariate (9 proximity)
+#   38-41: Gravity 6yr univariate (4 dummies)
+#   42:    Gravity 6yr multivariate (all 13 vars)
+#   43:    Pretreat 6yr univariate (early connectivity 6yr)
+#   44-52: Pretreat 6yr univariate (9 proximity)
+#   53-56: Pretreat 6yr univariate (4 dummies)
+#   57:    Pretreat 6yr multivariate (all 14 vars)
 #
 # Usage:
 #   sbatch Programs/conn_descriptives/08_submit.sh

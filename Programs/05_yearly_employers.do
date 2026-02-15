@@ -175,9 +175,28 @@ foreach prefix in totalout totalin totalflows outlagos inlagos totallagos {
     }
 }
 
+// NaN-aware per-worker variables:
+foreach prefix in totalout totalin totalflows outlagos inlagos totallagos {
+    local pwprefix = "`prefix'_pw"
+    ds `pwprefix'_*
+    local vars = r(varlist)
+
+    gen `pwprefix'_n = 0
+    gen `pwprefix'_count_n = 0
+
+    foreach var of local vars {
+        replace `pwprefix'_n = `pwprefix'_n + `var' if !missing(`var')
+        replace `pwprefix'_count_n = `pwprefix'_count_n + (missing(`var') == 0)
+    }
+
+    replace `pwprefix'_n = `pwprefix'_n / `pwprefix'_count_n if `pwprefix'_count_n > 0
+    replace `pwprefix'_n = . if `pwprefix'_count_n == 0
+    drop `pwprefix'_count_n
+}
+
 save "$rais_aux/connectivity_2007_2011_yearly.dta", replace
 
-keep identificad totalout totalin totalflows outlagos inlagos totallagos totalout_pw totalin_pw totalflows_pw outlagos_pw inlagos_pw totallagos_pw
+keep identificad totalout totalin totalflows outlagos inlagos totallagos totalout_pw totalin_pw totalflows_pw outlagos_pw inlagos_pw totallagos_pw totalout_pw_n totalin_pw_n totalflows_pw_n outlagos_pw_n inlagos_pw_n totallagos_pw_n
 
 save "$rais_aux/connectivity_2007_2011_agg.dta", replace
 
