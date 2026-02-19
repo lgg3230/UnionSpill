@@ -6,6 +6,10 @@ turnover measures based on **unique workers**, not spells.
 
 Additivity: separations_u = layoffs_u + quits_u + other_sep_u
 
+Rates are computed as count / avg(firm_emp_t, firm_emp_{t-1}).
+For 2009, firm_emp_{t-1} comes from RAIS_2008. If a firm isn't in 2008,
+we fall back to using 2009 employment alone.
+
 Algorithm
 ---------
 For each separated worker-establishment pair, one spell is selected using
@@ -19,7 +23,7 @@ Input
 
 Output
 ------
-- Data/CBA_RAIS_firm_level/corrected_turnover_sample.dta
+- Data/CBA_RAIS_firm_level/corrected_turnover_sample.csv
 """
 
 import duckdb
@@ -34,9 +38,9 @@ import os
 PROJECT = "/kellogg/proj/lgg3230/UnionSpill"
 RAIS_DIR = "/kellogg/proj/lgg3230/RAIS/output/data/full"
 SAMPLE_FILE = os.path.join(PROJECT, "Data/CBA_RAIS_firm_level/cba_rais_firm_2009_2016_flows_1.dta")
-OUTPUT_FILE = os.path.join(PROJECT, "Data/CBA_RAIS_firm_level/corrected_turnover_sample.dta")
+OUTPUT_FILE = os.path.join(PROJECT, "Data/CBA_RAIS_firm_level/corrected_turnover_sample.csv")
 
-YEARS = range(2009, 2017)
+YEARS = range(2008, 2017)
 
 # Columns needed from RAIS
 COLS = [
@@ -107,162 +111,245 @@ for year in YEARS:
     # ------------------------------------------------------------------
     con.register("rais", df)
 
-    # Compute hourly December wage for ranking (0 if missing/zero)
-    # empdec_lagos = empem3112 * (tempempr > 1)
-    # final_rank logic: among empdec_lagos==1, rank by hours desc, dec wage desc, random
-    result = con.execute(f"""
-    WITH base AS (
+    if year == 2008:
+        # For 2008, we only need Dec employment (used as lag for 2009)
+        result = con.execute(f"""
+        WITH base AS (
+            SELECT
+                identificad,
+                PIS,
+                horascontr,
+                empem3112,
+                tempempr,
+                CASE WHEN empem3112 = 1 AND (tempempr > 1 OR tempempr IS NULL) THEN 1 ELSE 0 END AS empdec_lagos,
+                CASE
+                    WHEN remdezr IS NULL OR remdezr = 0 OR horascontr IS NULL OR horascontr = 0
+                    THEN 0.0
+                    ELSE remdezr / (horascontr * 4.348)
+                END AS remdezr_h,
+                hash(identificad || '|' || PIS || '|' || CAST(horascontr AS VARCHAR)
+                     || '|' || CAST(remdezr AS VARCHAR) || '|12345') / 1e19 AS random_tb
+            FROM rais
+        ),
+        dec_ranked AS (
+            SELECT *,
+                ROW_NUMBER() OVER (
+                    PARTITION BY identificad, PIS
+                    ORDER BY
+                        CASE WHEN empdec_lagos = 1 THEN horascontr ELSE -1 END DESC,
+                        CASE WHEN empdec_lagos = 1 THEN remdezr_h  ELSE -1 END DESC,
+                        random_tb DESC
+                ) AS rn_dec
+            FROM base
+            WHERE empdec_lagos = 1
+        ),
+        dec_emp AS (
+            SELECT identificad, COUNT(*) AS firm_emp
+            FROM dec_ranked
+            WHERE rn_dec = 1
+            GROUP BY identificad
+        )
         SELECT
             identificad,
-            PIS,
-            horascontr,
-            causadesli,
-            empem3112,
-            tempempr,
-            dtadmissao,
-            mesdesli,
-            -- empdec_lagos: employed in Dec per Lagos (2021)
-            CASE WHEN empem3112 = 1 AND tempempr > 1 THEN 1 ELSE 0 END AS empdec_lagos,
-            -- Hourly Dec wage (for ranking); treat NULL/0 remdezr as 0
-            CASE
-                WHEN remdezr IS NULL OR remdezr = 0 OR horascontr IS NULL OR horascontr = 0
-                THEN 0.0
-                ELSE remdezr / (horascontr * 4.348)
-            END AS remdezr_h,
-            -- Random tiebreaker (seeded via hash for reproducibility)
-            hash(identificad || '|' || PIS || '|' || CAST(horascontr AS VARCHAR)
-                 || '|' || CAST(remdezr AS VARCHAR) || '|12345') / 1e19 AS random_tb
-        FROM rais
-    ),
+            {year} AS year,
+            firm_emp,
+            0 AS separations_u,
+            0 AS layoffs_u,
+            0 AS quits_u,
+            0 AS other_sep_u,
+            0 AS hired_u
+        FROM dec_emp
+        ORDER BY identificad
+        """).fetch_arrow_table().to_pandas()
 
-    -- =================================================================
-    -- December employment: unique workers via final_rank
-    -- =================================================================
-    dec_ranked AS (
-        SELECT *,
-            ROW_NUMBER() OVER (
-                PARTITION BY identificad, PIS
-                ORDER BY
-                    CASE WHEN empdec_lagos = 1 THEN horascontr ELSE -1 END DESC,
-                    CASE WHEN empdec_lagos = 1 THEN remdezr_h  ELSE -1 END DESC,
-                    random_tb DESC
-            ) AS rn_dec
-        FROM base
-        WHERE empdec_lagos = 1
-    ),
-    dec_emp AS (
-        SELECT identificad, COUNT(*) AS firm_emp
-        FROM dec_ranked
-        WHERE rn_dec = 1
-        GROUP BY identificad
-    ),
+        print(f"  Establishments (2008, emp only): {len(result):,}")
+    else:
+        # Full query for 2009-2016: counts + employment
+        result = con.execute(f"""
+        WITH base AS (
+            SELECT
+                identificad,
+                PIS,
+                horascontr,
+                causadesli,
+                empem3112,
+                tempempr,
+                dtadmissao,
+                mesdesli,
+                CASE WHEN empem3112 = 1 AND (tempempr > 1 OR tempempr IS NULL) THEN 1 ELSE 0 END AS empdec_lagos,
+                CASE
+                    WHEN remdezr IS NULL OR remdezr = 0 OR horascontr IS NULL OR horascontr = 0
+                    THEN 0.0
+                    ELSE remdezr / (horascontr * 4.348)
+                END AS remdezr_h,
+                hash(identificad || '|' || PIS || '|' || CAST(horascontr AS VARCHAR)
+                     || '|' || CAST(remdezr AS VARCHAR) || '|12345') / 1e19 AS random_tb
+            FROM rais
+        ),
 
-    -- =================================================================
-    -- Separations: unique workers, one spell per worker-estab
-    -- =================================================================
-    separated AS (
-        SELECT *
-        FROM base
-        WHERE causadesli != 0 AND causadesli IS NOT NULL
-    ),
-    sep_ranked AS (
-        SELECT *,
-            ROW_NUMBER() OVER (
-                PARTITION BY identificad, PIS
-                ORDER BY horascontr DESC, remdezr_h DESC, random_tb DESC
-            ) AS rn_sep
-        FROM separated
-    ),
-    sep_selected AS (
+        -- =================================================================
+        -- December employment: unique workers via final_rank
+        -- =================================================================
+        dec_ranked AS (
+            SELECT *,
+                ROW_NUMBER() OVER (
+                    PARTITION BY identificad, PIS
+                    ORDER BY
+                        CASE WHEN empdec_lagos = 1 THEN horascontr ELSE -1 END DESC,
+                        CASE WHEN empdec_lagos = 1 THEN remdezr_h  ELSE -1 END DESC,
+                        random_tb DESC
+                ) AS rn_dec
+            FROM base
+            WHERE empdec_lagos = 1
+        ),
+        dec_emp AS (
+            SELECT identificad, COUNT(*) AS firm_emp
+            FROM dec_ranked
+            WHERE rn_dec = 1
+            GROUP BY identificad
+        ),
+
+        -- =================================================================
+        -- Separations: unique workers, one spell per worker-estab
+        -- =================================================================
+        separated AS (
+            SELECT *
+            FROM base
+            WHERE causadesli != 0 AND causadesli IS NOT NULL
+        ),
+        sep_ranked AS (
+            SELECT *,
+                ROW_NUMBER() OVER (
+                    PARTITION BY identificad, PIS
+                    ORDER BY horascontr DESC, remdezr_h DESC, random_tb DESC
+                ) AS rn_sep
+            FROM separated
+        ),
+        sep_selected AS (
+            SELECT
+                identificad,
+                PIS,
+                causadesli,
+                CASE WHEN causadesli IN (10, 11) THEN 1 ELSE 0 END AS is_layoff,
+                CASE WHEN causadesli IN (20, 21) THEN 1 ELSE 0 END AS is_quit,
+                CASE WHEN causadesli NOT IN (10, 11, 20, 21) THEN 1 ELSE 0 END AS is_other_sep
+            FROM sep_ranked
+            WHERE rn_sep = 1
+        ),
+        sep_counts AS (
+            SELECT
+                identificad,
+                COUNT(*)        AS separations_u,
+                SUM(is_layoff)  AS layoffs_u,
+                SUM(is_quit)    AS quits_u,
+                SUM(is_other_sep) AS other_sep_u
+            FROM sep_selected
+            GROUP BY identificad
+        ),
+
+        -- =================================================================
+        -- Hiring: unique workers hired in year
+        -- =================================================================
+        hired AS (
+            SELECT DISTINCT identificad, PIS
+            FROM base
+            WHERE YEAR(COALESCE(
+                TRY_CAST(dtadmissao AS DATE),
+                TRY_STRPTIME(CAST(dtadmissao AS VARCHAR), '%d%m%Y')
+            )) = {year}
+        ),
+        hire_counts AS (
+            SELECT identificad, COUNT(*) AS hired_u
+            FROM hired
+            GROUP BY identificad
+        )
+
+        -- =================================================================
+        -- Combine (raw counts only, no rates)
+        -- =================================================================
         SELECT
-            identificad,
-            PIS,
-            causadesli,
-            CASE WHEN causadesli IN (10, 11) THEN 1 ELSE 0 END AS is_layoff,
-            CASE WHEN causadesli IN (20, 21) THEN 1 ELSE 0 END AS is_quit,
-            CASE WHEN causadesli NOT IN (10, 11, 20, 21) THEN 1 ELSE 0 END AS is_other_sep
-        FROM sep_ranked
-        WHERE rn_sep = 1
-    ),
-    sep_counts AS (
-        SELECT
-            identificad,
-            COUNT(*)        AS separations_u,
-            SUM(is_layoff)  AS layoffs_u,
-            SUM(is_quit)    AS quits_u,
-            SUM(is_other_sep) AS other_sep_u
-        FROM sep_selected
-        GROUP BY identificad
-    ),
+            d.identificad,
+            {year} AS year,
+            d.firm_emp,
+            COALESCE(s.separations_u, 0) AS separations_u,
+            COALESCE(s.layoffs_u, 0)     AS layoffs_u,
+            COALESCE(s.quits_u, 0)       AS quits_u,
+            COALESCE(s.other_sep_u, 0)   AS other_sep_u,
+            COALESCE(h.hired_u, 0)       AS hired_u
+        FROM dec_emp d
+        LEFT JOIN sep_counts s ON d.identificad = s.identificad
+        LEFT JOIN hire_counts h ON d.identificad = h.identificad
+        ORDER BY d.identificad
+        """).fetch_arrow_table().to_pandas()
 
-    -- =================================================================
-    -- Hiring: unique workers hired in year
-    -- =================================================================
-    hired AS (
-        SELECT DISTINCT identificad, PIS
-        FROM base
-        WHERE YEAR(CAST(dtadmissao AS DATE)) = {year}
-    ),
-    hire_counts AS (
-        SELECT identificad, COUNT(*) AS hired_u
-        FROM hired
-        GROUP BY identificad
-    )
-
-    -- =================================================================
-    -- Combine
-    -- =================================================================
-    SELECT
-        d.identificad,
-        {year} AS year,
-        d.firm_emp,
-        COALESCE(s.separations_u, 0) AS separations_u,
-        COALESCE(s.layoffs_u, 0)     AS layoffs_u,
-        COALESCE(s.quits_u, 0)       AS quits_u,
-        COALESCE(s.other_sep_u, 0)   AS other_sep_u,
-        COALESCE(h.hired_u, 0)       AS hired_u,
-        -- Rates
-        CASE WHEN d.firm_emp > 0 THEN COALESCE(s.separations_u, 0) * 1.0 / d.firm_emp ELSE NULL END AS turnover_u,
-        CASE WHEN d.firm_emp > 0 THEN COALESCE(s.layoffs_u, 0)     * 1.0 / d.firm_emp ELSE NULL END AS layoff_rate_u,
-        CASE WHEN d.firm_emp > 0 THEN COALESCE(s.quits_u, 0)       * 1.0 / d.firm_emp ELSE NULL END AS quit_rate_u,
-        CASE WHEN d.firm_emp > 0 THEN COALESCE(s.other_sep_u, 0)   * 1.0 / d.firm_emp ELSE NULL END AS other_sep_rate_u,
-        CASE WHEN d.firm_emp > 0 THEN COALESCE(h.hired_u, 0)       * 1.0 / d.firm_emp ELSE NULL END AS hiring_rate_u
-    FROM dec_emp d
-    LEFT JOIN sep_counts s ON d.identificad = s.identificad
-    LEFT JOIN hire_counts h ON d.identificad = h.identificad
-    ORDER BY d.identificad
-    """).fetch_arrow_table().to_pandas()
-
-    con.unregister("rais")
-    del df
-
-    # Verification: additivity check
-    addit_check = (result["separations_u"] == result["layoffs_u"] + result["quits_u"] + result["other_sep_u"]).all()
-    print(f"  Additivity check (separations = layoffs + quits + other): {'PASS' if addit_check else 'FAIL'}")
-    print(f"  Establishments: {len(result):,}")
-    print(f"  Median turnover_u: {result['turnover_u'].median():.3f}")
-    print(f"  Median hiring_rate_u: {result['hiring_rate_u'].median():.3f}")
+        # Verification: additivity check
+        addit_check = (result["separations_u"] == result["layoffs_u"] + result["quits_u"] + result["other_sep_u"]).all()
+        print(f"  Additivity check (separations = layoffs + quits + other): {'PASS' if addit_check else 'FAIL'}")
+        print(f"  Establishments: {len(result):,}")
 
     all_years.append(result)
+    con.unregister("rais")
+    del df
     elapsed = time.time() - t0
     print(f"  Done in {elapsed:.1f}s")
 
 # ---------------------------------------------------------------------------
-# Combine all years and save
+# Combine all years and compute rates using avg employment
 # ---------------------------------------------------------------------------
 print(f"\n{'='*60}")
-print("Combining all years and saving...")
+print("Combining all years and computing rates...")
 
 panel = pd.concat(all_years, ignore_index=True)
-print(f"Total observations: {len(panel):,}")
-print(f"Unique establishments: {panel['identificad'].nunique():,}")
-print(f"Years: {sorted(panel['year'].unique())}")
+
+# DuckDB may return Decimal types; convert numeric columns to float
+numeric_cols = ["firm_emp", "separations_u", "layoffs_u", "quits_u", "other_sep_u", "hired_u"]
+for c in numeric_cols:
+    panel[c] = pd.to_numeric(panel[c], errors="coerce").astype(float)
+
+panel.sort_values(["identificad", "year"], inplace=True)
+panel.reset_index(drop=True, inplace=True)
+
+# Create lagged employment
+panel["firm_emp_lag"] = panel.groupby("identificad")["firm_emp"].shift(1)
+
+# Average employment = (current + lagged) / 2; fall back to current if no lag
+panel["avg_emp"] = (panel["firm_emp"] + panel["firm_emp_lag"]) / 2
+panel.loc[panel["firm_emp_lag"].isna(), "avg_emp"] = panel.loc[panel["firm_emp_lag"].isna(), "firm_emp"]
+
+# Report 2009 firms missing 2008 employment
+firms_2009 = panel[panel["year"] == 2009]
+n_2009_no_lag = firms_2009["firm_emp_lag"].isna().sum()
+n_2009_total = len(firms_2009)
+print(f"  2009 firms with no 2008 employment match: {n_2009_no_lag:,} / {n_2009_total:,} ({n_2009_no_lag/n_2009_total*100:.1f}%)")
+
+# Compute rates: count / avg_emp
+for count_col, rate_col in [
+    ("separations_u", "turnover_u"),
+    ("layoffs_u", "layoff_rate_u"),
+    ("quits_u", "quit_rate_u"),
+    ("other_sep_u", "other_sep_rate_u"),
+    ("hired_u", "hiring_rate_u"),
+]:
+    panel[rate_col] = np.where(panel["avg_emp"] > 0, panel[count_col] / panel["avg_emp"], np.nan)
+
+# Drop 2008 rows (only needed as lag)
+panel = panel[panel["year"] >= 2009].copy()
 
 # Log employment
 panel["l_firm_emp"] = np.log(panel["firm_emp"].replace(0, np.nan))
 
-# Save as Stata .dta
-panel.to_stata(OUTPUT_FILE, write_index=False, version=118)
+# Drop helper column
+panel.drop(columns=["firm_emp_lag"], inplace=True)
+
+print(f"Total observations: {len(panel):,}")
+print(f"Unique establishments: {panel['identificad'].nunique():,}")
+print(f"Years: {sorted(panel['year'].unique())}")
+
+# Ensure identificad is a 14-character zero-padded string (matches Stata format)
+panel["identificad"] = panel["identificad"].astype(str).str.zfill(14)
+
+# Save as CSV
+panel.to_csv(OUTPUT_FILE, index=False)
 print(f"Saved to {OUTPUT_FILE}")
 
 # ---------------------------------------------------------------------------
@@ -270,7 +357,7 @@ print(f"Saved to {OUTPUT_FILE}")
 # ---------------------------------------------------------------------------
 print(f"\n{'='*60}")
 print("Summary statistics:")
-for col in ["firm_emp", "separations_u", "layoffs_u", "quits_u", "other_sep_u",
+for col in ["firm_emp", "avg_emp", "separations_u", "layoffs_u", "quits_u", "other_sep_u",
             "hired_u", "turnover_u", "layoff_rate_u", "quit_rate_u",
             "other_sep_rate_u", "hiring_rate_u"]:
     s = panel[col].describe()
