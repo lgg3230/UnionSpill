@@ -71,6 +71,7 @@ con.execute("PRAGMA threads=8")
 con.execute("PRAGMA memory_limit='32GB'")
 
 all_years = []
+prev_dec_workers = {}  # {identificad -> set of PIS} for previous year's Dec workers
 
 for year in YEARS:
     t0 = time.time()
@@ -110,6 +111,59 @@ for year in YEARS:
     # Register in DuckDB and compute measures
     # ------------------------------------------------------------------
     con.register("rais", df)
+
+    # ------------------------------------------------------------------
+    # Pre-query: extract Dec worker set for this year (for YoY retention)
+    # ------------------------------------------------------------------
+    dec_workers_df = con.execute("""
+        WITH base AS (
+            SELECT
+                identificad,
+                PIS,
+                horascontr,
+                CASE WHEN empem3112 = 1 AND (tempempr > 1 OR tempempr IS NULL) THEN 1 ELSE 0 END AS empdec_lagos,
+                CASE
+                    WHEN remdezr IS NULL OR remdezr = 0 OR horascontr IS NULL OR horascontr = 0
+                    THEN 0.0
+                    ELSE remdezr / (horascontr * 4.348)
+                END AS remdezr_h,
+                hash(identificad || '|' || PIS || '|' || CAST(horascontr AS VARCHAR)
+                     || '|' || CAST(remdezr AS VARCHAR) || '|12345') / 1e19 AS random_tb
+            FROM rais
+        ),
+        dec_ranked AS (
+            SELECT
+                identificad,
+                PIS,
+                ROW_NUMBER() OVER (
+                    PARTITION BY identificad, PIS
+                    ORDER BY horascontr DESC, remdezr_h DESC, random_tb DESC
+                ) AS rn_dec
+            FROM base
+            WHERE empdec_lagos = 1
+        )
+        SELECT identificad, PIS
+        FROM dec_ranked
+        WHERE rn_dec = 1
+    """).fetch_arrow_table().to_pandas()
+
+    cur_dec_workers = (
+        dec_workers_df
+        .groupby("identificad")["PIS"]
+        .apply(set)
+        .to_dict()
+    )
+
+    # Compute YoY retention numerator: workers in Dec(t-1) AND Dec(t)
+    if year >= 2009 and prev_dec_workers:
+        cur_dec_set = set(zip(dec_workers_df["identificad"], dec_workers_df["PIS"]))
+        yoy_counts = {}
+        for estab, prev_pis_set in prev_dec_workers.items():
+            count = sum(1 for pis in prev_pis_set if (estab, pis) in cur_dec_set)
+            if count > 0:
+                yoy_counts[estab] = count
+    else:
+        yoy_counts = {}
 
     if year == 2008:
         # For 2008, we only need Dec employment (used as lag for 2009)
@@ -157,7 +211,9 @@ for year in YEARS:
             0 AS layoffs_u,
             0 AS quits_u,
             0 AS other_sep_u,
-            0 AS hired_u
+            0 AS hired_u,
+            0 AS firm_emp_jan,
+            0 AS jan_dec_count
         FROM dec_emp
         ORDER BY identificad
         """).fetch_arrow_table().to_pandas()
@@ -176,6 +232,10 @@ for year in YEARS:
                 tempempr,
                 dtadmissao,
                 mesdesli,
+                COALESCE(
+                    TRY_CAST(dtadmissao AS DATE),
+                    TRY_STRPTIME(CAST(dtadmissao AS VARCHAR), '%d%m%Y')
+                ) AS admit_date,
                 CASE WHEN empem3112 = 1 AND (tempempr > 1 OR tempempr IS NULL) THEN 1 ELSE 0 END AS empdec_lagos,
                 CASE
                     WHEN remdezr IS NULL OR remdezr = 0 OR horascontr IS NULL OR horascontr = 0
@@ -253,15 +313,46 @@ for year in YEARS:
         hired AS (
             SELECT DISTINCT identificad, PIS
             FROM base
-            WHERE YEAR(COALESCE(
-                TRY_CAST(dtadmissao AS DATE),
-                TRY_STRPTIME(CAST(dtadmissao AS VARCHAR), '%d%m%Y')
-            )) = {year}
+            WHERE YEAR(admit_date) = {year}
         ),
         hire_counts AS (
             SELECT identificad, COUNT(*) AS hired_u
             FROM hired
             GROUP BY identificad
+        ),
+
+        -- =================================================================
+        -- January employment: unique workers via jan_rank
+        -- =================================================================
+        jan_filter AS (
+            SELECT *
+            FROM base
+            WHERE admit_date < MAKE_DATE({year}, 1, 1)
+              AND (mesdesli IS NULL OR mesdesli != 1)
+              AND DATEDIFF('month', admit_date, MAKE_DATE({year}, 1, 31)) > 1
+        ),
+        jan_ranked AS (
+            SELECT *,
+                ROW_NUMBER() OVER (
+                    PARTITION BY identificad, PIS
+                    ORDER BY horascontr DESC, remdezr_h DESC, random_tb DESC
+                ) AS rn_jan
+            FROM jan_filter
+        ),
+        jan_emp AS (
+            SELECT identificad, COUNT(*) AS firm_emp_jan
+            FROM jan_ranked
+            WHERE rn_jan = 1
+            GROUP BY identificad
+        ),
+        -- Workers present in BOTH January and December (numerator of retention)
+        jan_dec_overlap AS (
+            SELECT j.identificad, COUNT(*) AS jan_dec_count
+            FROM jan_ranked j
+            INNER JOIN dec_ranked d
+                ON j.identificad = d.identificad AND j.PIS = d.PIS
+            WHERE j.rn_jan = 1 AND d.rn_dec = 1
+            GROUP BY j.identificad
         )
 
         -- =================================================================
@@ -275,10 +366,14 @@ for year in YEARS:
             COALESCE(s.layoffs_u, 0)     AS layoffs_u,
             COALESCE(s.quits_u, 0)       AS quits_u,
             COALESCE(s.other_sep_u, 0)   AS other_sep_u,
-            COALESCE(h.hired_u, 0)       AS hired_u
+            COALESCE(h.hired_u, 0)       AS hired_u,
+            COALESCE(j.firm_emp_jan, 0)  AS firm_emp_jan,
+            COALESCE(o.jan_dec_count, 0) AS jan_dec_count
         FROM dec_emp d
-        LEFT JOIN sep_counts s ON d.identificad = s.identificad
-        LEFT JOIN hire_counts h ON d.identificad = h.identificad
+        LEFT JOIN sep_counts s      ON d.identificad = s.identificad
+        LEFT JOIN hire_counts h     ON d.identificad = h.identificad
+        LEFT JOIN jan_emp j         ON d.identificad = j.identificad
+        LEFT JOIN jan_dec_overlap o ON d.identificad = o.identificad
         ORDER BY d.identificad
         """).fetch_arrow_table().to_pandas()
 
@@ -286,6 +381,10 @@ for year in YEARS:
         addit_check = (result["separations_u"] == result["layoffs_u"] + result["quits_u"] + result["other_sep_u"]).all()
         print(f"  Additivity check (separations = layoffs + quits + other): {'PASS' if addit_check else 'FAIL'}")
         print(f"  Establishments: {len(result):,}")
+
+    # Add YoY retention count and carry Dec workers forward
+    result["dec_yoy_count"] = result["identificad"].map(yoy_counts).fillna(0).astype(int)
+    prev_dec_workers = cur_dec_workers
 
     all_years.append(result)
     con.unregister("rais")
@@ -302,7 +401,8 @@ print("Combining all years and computing rates...")
 panel = pd.concat(all_years, ignore_index=True)
 
 # DuckDB may return Decimal types; convert numeric columns to float
-numeric_cols = ["firm_emp", "separations_u", "layoffs_u", "quits_u", "other_sep_u", "hired_u"]
+numeric_cols = ["firm_emp", "separations_u", "layoffs_u", "quits_u", "other_sep_u",
+                "hired_u", "firm_emp_jan", "jan_dec_count", "dec_yoy_count"]
 for c in numeric_cols:
     panel[c] = pd.to_numeric(panel[c], errors="coerce").astype(float)
 
@@ -332,6 +432,20 @@ for count_col, rate_col in [
 ]:
     panel[rate_col] = np.where(panel["avg_emp"] > 0, panel[count_col] / panel["avg_emp"], np.nan)
 
+# Retention rate: workers in Jan AND Dec / workers in Jan
+panel["retention_u"] = np.where(
+    panel["firm_emp_jan"] > 0,
+    panel["jan_dec_count"] / panel["firm_emp_jan"],
+    np.nan
+)
+
+# YoY retention: workers in Dec(t-1) AND Dec(t) / Dec(t-1) employment
+panel["retention_yoy_u"] = np.where(
+    panel["firm_emp_lag"] > 0,
+    panel["dec_yoy_count"] / panel["firm_emp_lag"],
+    np.nan
+)
+
 # Drop 2008 rows (only needed as lag)
 panel = panel[panel["year"] >= 2009].copy()
 
@@ -358,8 +472,9 @@ print(f"Saved to {OUTPUT_FILE}")
 print(f"\n{'='*60}")
 print("Summary statistics:")
 for col in ["firm_emp", "avg_emp", "separations_u", "layoffs_u", "quits_u", "other_sep_u",
-            "hired_u", "turnover_u", "layoff_rate_u", "quit_rate_u",
-            "other_sep_rate_u", "hiring_rate_u"]:
+            "hired_u", "firm_emp_jan", "jan_dec_count", "dec_yoy_count",
+            "turnover_u", "layoff_rate_u", "quit_rate_u",
+            "other_sep_rate_u", "hiring_rate_u", "retention_u", "retention_yoy_u"]:
     s = panel[col].describe()
     print(f"  {col:20s}: mean={s['mean']:.3f}  median={s['50%']:.3f}  "
           f"min={s['min']:.3f}  max={s['max']:.1f}")
