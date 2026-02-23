@@ -392,3 +392,56 @@ for i in range(len(vars)):
 ax.legend(handles=legend_elements, loc='upper center',
           bbox_to_anchor=(0.5, -0.18), ncol=2, frameon=False)
 ```
+
+## Going-Forward Workflow (Single Canonical Repo)
+
+Single canonical remote: `https://github.com/lgg3230/UnionSpill.git`
+
+Both the cluster and Mac should point to this remote:
+
+```bash
+# Verify remote (run on either machine)
+git remote -v
+
+# If Mac still points to Replication-Mar-2, update it:
+git remote set-url origin https://github.com/lgg3230/UnionSpill.git
+```
+
+### Daily workflow
+
+```bash
+# Before starting work
+git pull origin main
+
+# After writing code
+git add Programs/<files>
+git commit -m "Description of change"
+git push origin main
+
+# After running analysis (Tables, Graphs are now tracked)
+git add Tables/ Graphs/
+git commit -m "Update outputs: <brief description>"
+git push origin main
+```
+
+### What is tracked vs ignored
+
+| Path | Tracked? |
+|------|----------|
+| `Programs/` | Yes — all code |
+| `Tables/*.csv`, `Tables/*.tex` | Yes — regression output |
+| `Tables/*.zip` | No — archives excluded |
+| `Graphs/*.png`, `Graphs/*.pdf` | Yes — figures |
+| `Graphs/plots jul 31/*.gph` | No — Stata format excluded |
+| `Data/` | No — too large, synced separately via rsync |
+
+### Data sync (one-time, Mac → cluster)
+
+```bash
+# From Mac — use --dry-run first to verify
+rsync -avz --progress --dry-run \
+  ".../Replication-Mar-2/UnionSpill/Data/" \
+  lgg3230@kellogg.northwestern.edu:/kellogg/proj/lgg3230/UnionSpill/Data/
+
+# Remove --dry-run when satisfied
+```
