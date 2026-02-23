@@ -1,0 +1,25 @@
+\begin{table}[htbp]
+\centering
+\begin{threeparttable}
+\caption{Correlation between Bilateral Connectivity and Distance Measures}
+\label{tab:corr_bilateral}
+\footnotesize
+\begin{tabular}{lcc}
+\hline\hline
+Distance Measure & Correlation & N \\
+\hline
+Geographic distance & -0.088 & 38,634 \\
+Size distance (log) & -0.023 & 38,634 \\
+Size distance (levels) & -0.166 & 38,634 \\
+Wage distance & -0.064 & 38,634 \\
+Share female distance & -0.029 & 38,634 \\
+Share non-white distance & -0.111 & 38,634 \\
+Share higher education distance & 0.014 & 38,634 \\
+\hline\hline
+\end{tabular}
+\begin{tablenotes}
+\footnotesize
+\item \textit{Notes:} This table reports Pearson correlation coefficients between bilateral connectivity and various distance measures across establishment pairs. Bilateral connectivity is the average number of worker flows between establishments $i$ and $j$ over consecutive year-pairs (2007-08, 2008-09, 2009-10, 2010-11), normalized by establishment $i$'s employment. Distance measures are computed as the absolute difference between establishment $i$ and $j$ characteristics. Geographic distance is in kilometers, computed using the Haversine formula from municipality centroids. Size distance is measured in log employment (2009-2011 average). Wage distance uses median December earnings (2009-2011, deflated to 2015 prices). Workforce composition distances use 2009-2011 averages. Sample restricted to pairs with at least one worker transition during 2007-2011.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}

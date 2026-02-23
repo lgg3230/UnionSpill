@@ -1,0 +1,27 @@
+\begin{table}[htbp]
+\centering
+\begin{threeparttable}
+\caption{Correlation between Bilateral Connectivity and Proximity Measures}
+\label{tab:corr_bilateral}
+\footnotesize
+\begin{tabular}{lcc}
+\hline\hline
+Proximity Measure & Correlation & N \\\\
+\hline
+Geographic proximity &  0.010 & 135655152 \\\\
+Size proximity &  0.003 & 135655152 \\\\
+Wage proximity &  0.008 & 135655152 \\\\
+% female proximity &  0.006 & 135655152 \\\\
+% non-white proximity &  0.007 & 135655152 \\\\
+% higher ed. proximity &  0.005 & 135655152 \\\\
+% high school proximity &  0.005 & 135655152 \\\\
+% less than HS proximity &  0.008 & 135655152 \\\\
+CBA clauses proximity &  0.010 & 135655152 \\\\
+\hline\hline
+\end{tabular}
+\begin{tablenotes}
+\footnotesize
+\item \textit{Notes:} Pearson correlations between bilateral connectivity and proximity measures. Sample includes all establishment pairs (including zeros).
+\end{tablenotes}
+\end{threeparttable}
+\end{table}

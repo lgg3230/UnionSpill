@@ -1,0 +1,63 @@
+\begin{table}[htbp]\centering
+\def\sym#1{\ifmmode^{#1}\else\(^{#1}\)\fi}
+\caption{Bilateral Connectivity: Pre vs Post Treatment (Multivariate)}
+\begin{tabular}{l*{3}{c}}
+\toprule
+                    &\multicolumn{1}{c}{(1)}&\multicolumn{1}{c}{(2)}&\multicolumn{1}{c}{(3)}\\
+                    &\multicolumn{1}{c}{Pre (2007-2011)}&\multicolumn{1}{c}{Post (2011-2015)}&\multicolumn{1}{c}{Post + Pre Control}\\
+\midrule
+z\_geo\_proximity     &       0.014\sym{***}&       0.011\sym{***}&       0.008\sym{***}\\
+                    &     (0.000)         &     (0.000)         &     (0.000)         \\
+\addlinespace
+z\_size\_proximity    &      -0.002\sym{***}&      -0.000\sym{**} &       0.000\sym{***}\\
+                    &     (0.000)         &     (0.000)         &     (0.000)         \\
+\addlinespace
+z\_wage\_proximity    &      -0.001\sym{***}&      -0.001\sym{***}&      -0.001\sym{***}\\
+                    &     (0.000)         &     (0.000)         &     (0.000)         \\
+\addlinespace
+z\_female\_proximity  &       0.002\sym{***}&       0.001\sym{***}&       0.001\sym{***}\\
+                    &     (0.000)         &     (0.000)         &     (0.000)         \\
+\addlinespace
+z\_nonwhite\_proximity&       0.001\sym{***}&       0.000\sym{***}&       0.000\sym{***}\\
+                    &     (0.000)         &     (0.000)         &     (0.000)         \\
+\addlinespace
+z\_educ\_proximity    &       0.001\sym{***}&       0.002\sym{***}&       0.001\sym{***}\\
+                    &     (0.000)         &     (0.000)         &     (0.000)         \\
+\addlinespace
+z\_hs\_proximity      &       0.002\sym{***}&       0.002\sym{***}&       0.002\sym{***}\\
+                    &     (0.000)         &     (0.000)         &     (0.000)         \\
+\addlinespace
+z\_nhs\_proximity     &       0.000\sym{***}&       0.000\sym{***}&       0.000\sym{*}  \\
+                    &     (0.000)         &     (0.000)         &     (0.000)         \\
+\addlinespace
+same\_muni           &       0.075\sym{***}&       0.074\sym{***}&       0.057\sym{***}\\
+                    &     (0.008)         &     (0.008)         &     (0.008)         \\
+\addlinespace
+same\_microregion    &      -0.045\sym{***}&      -0.030\sym{***}&      -0.020\sym{***}\\
+                    &     (0.004)         &     (0.004)         &     (0.004)         \\
+\addlinespace
+same\_union          &       0.246\sym{***}&       0.214\sym{***}&       0.160\sym{***}\\
+                    &     (0.004)         &     (0.004)         &     (0.004)         \\
+\addlinespace
+same\_industry       &      -0.090\sym{***}&      -0.087\sym{***}&      -0.067\sym{***}\\
+                    &     (0.002)         &     (0.003)         &     (0.003)         \\
+\addlinespace
+same\_industry\_micro &       2.916\sym{***}&       2.831\sym{***}&       2.191\sym{***}\\
+                    &     (0.044)         &     (0.045)         &     (0.049)         \\
+\addlinespace
+z\_bilateral\_conn\_pre&                     &                     &       0.220\sym{***}\\
+                    &                     &                     &     (0.012)         \\
+\addlinespace
+Constant            &      -0.007\sym{***}&      -0.007\sym{***}&      -0.005\sym{***}\\
+                    &     (0.000)         &     (0.000)         &     (0.000)         \\
+\midrule
+Observations        & 135,605,745         & 135,605,745         & 135,605,745         \\
+R-squared           &       0.015         &       0.014         &       0.061         \\
+\bottomrule
+\multicolumn{4}{l}{\footnotesize Standard errors in parentheses}\\
+\multicolumn{4}{l}{\footnotesize Robust standard errors. Establishment i fixed effects absorbed.}\\
+\multicolumn{4}{l}{\footnotesize Pre-treatment: 4 year-pairs 2007-2011. Post-treatment: 4 year-pairs 2011-2015.}\\
+\multicolumn{4}{l}{\footnotesize Firm characteristics based on 2009-2011 pre-treatment averages.}\\
+\multicolumn{4}{l}{\footnotesize \sym{*} \(p<0.10\), \sym{**} \(p<0.05\), \sym{***} \(p<0.01\)}\\
+\end{tabular}
+\end{table}

@@ -1,0 +1,6 @@
+Group,N firms,Mean connected firms,Median connected firms,SD connected firms,P25 connected firms,P75 connected firms,Min connected firms,Max connected firms,Mean connected treated,Median connected treated,Mean prop treated (all connected),Median prop treated (all connected),Mean prop treated (known status),Median prop treated (known status),Mean connected in sample,Median connected in sample
+Whole sample,16472,49.97850898494415,18.0,126.58224473798916,6.0,43.0,0,5663,6.156872268091306,2.0,0.23450145,0.083333336,0.76206815,1.0,7.5957989315201555,4.0
+Treated (treat_ultra=1),12276,47.55726621049202,18.0,106.01231944007009,7.0,41.0,0,3438,7.313782991202346,3.0,0.2983289,0.12903225,0.8788403,1.0,8.261322906484196,4.0
+Untreated (treat_ultra=0),4196,57.06220209723546,17.0,173.0876583952109,5.0,52.0,0,5663,2.7721639656816017,1.0,0.047765065,0.02,0.40266302,0.4,5.648713060057197,3.0
+"Untreated, positive connectivity",2264,97.52871024734982,45.0,227.68388491743903,19.0,99.0,1,5663,5.137809187279152,2.0,0.08852571,0.0625,0.59014344,0.5952381,9.190371024734983,5.0
+"Untreated, zero connectivity",1931,9.646815121698602,6.0,12.748201700124055,2.0,13.0,0,182,0.0,0.0,0.0,0.0,0.0,0.0,1.4992232004142931,1.0

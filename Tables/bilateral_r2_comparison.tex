@@ -1,0 +1,64 @@
+\begin{table}[htbp]\centering
+\def\sym#1{\ifmmode^{#1}\else\(^{#1}\)\fi}
+\caption{Post-Treatment Bilateral Connectivity: R² Comparison}
+\begin{tabular}{l*{2}{c}}
+\toprule
+                    &\multicolumn{1}{c}{(1)}&\multicolumn{1}{c}{(2)}\\
+                    &\multicolumn{1}{c}{Excl. Pre-Conn}&\multicolumn{1}{c}{Incl. Pre-Conn}\\
+\midrule
+Pre-treatment Bilateral Conn.&                     &       0.228\sym{***}\\
+                    &                     &     (0.013)         \\
+\addlinespace
+Geographic Proximity&       0.015\sym{***}&       0.015\sym{***}\\
+                    &     (0.000)         &     (0.000)         \\
+\addlinespace
+Size Proximity      &      -0.000         &       0.001\sym{***}\\
+                    &     (0.000)         &     (0.000)         \\
+\addlinespace
+Wage Proximity      &      -0.001\sym{***}&      -0.002\sym{***}\\
+                    &     (0.000)         &     (0.000)         \\
+\addlinespace
+\% Female Proximity &       0.002\sym{***}&       0.001\sym{***}\\
+                    &     (0.000)         &     (0.000)         \\
+\addlinespace
+\% Non-White Proximity&      -0.000\sym{**} &      -0.001\sym{***}\\
+                    &     (0.000)         &     (0.000)         \\
+\addlinespace
+\% Higher Ed. Proximity&       0.002\sym{***}&       0.001\sym{***}\\
+                    &     (0.000)         &     (0.000)         \\
+\addlinespace
+\% High School Proximity&       0.002\sym{***}&       0.002\sym{***}\\
+                    &     (0.000)         &     (0.000)         \\
+\addlinespace
+CBA Clauses Proximity&       0.002\sym{***}&       0.000\sym{***}\\
+                    &     (0.000)         &     (0.000)         \\
+\addlinespace
+Same Industry       &      -0.088\sym{***}&      -0.005\sym{**} \\
+                    &     (0.003)         &     (0.002)         \\
+\addlinespace
+Same Union          &       0.213\sym{***}&       0.186\sym{***}\\
+                    &     (0.004)         &     (0.005)         \\
+\addlinespace
+Same Microregion    &      -0.008\sym{***}&       0.153\sym{***}\\
+                    &     (0.002)         &     (0.004)         \\
+\addlinespace
+Same Industry x Microregion&       2.840\sym{***}&                     \\
+                    &     (0.045)         &                     \\
+\addlinespace
+Constant            &      -0.006\sym{***}&      -0.007\sym{***}\\
+                    &     (0.000)         &     (0.000)         \\
+\midrule
+Observations        & 135,605,745         & 135,605,745         \\
+R²                  &      0.0138         &      0.0554         \\
+R² (within)         &      0.0134         &      0.0549         \\
+\bottomrule
+\multicolumn{3}{l}{\footnotesize Standard errors in parentheses}\\
+\multicolumn{3}{l}{\footnotesize Robust standard errors in parentheses.}\\
+\multicolumn{3}{l}{\footnotesize Establishment i fixed effects absorbed.}\\
+\multicolumn{3}{l}{\footnotesize Both models exclude z\\_nhs\\_proximity.}\\
+\multicolumn{3}{l}{\footnotesize Model 1 excludes pre-treatment bilateral connectivity.}\\
+\multicolumn{3}{l}{\footnotesize Model 2 includes pre-treatment bilateral connectivity but excludes same\\_industry\\_micro.}\\
+\multicolumn{3}{l}{\footnotesize All proximity measures standardized.}\\
+\multicolumn{3}{l}{\footnotesize \sym{*} \(p<0.10\), \sym{**} \(p<0.05\), \sym{***} \(p<0.01\)}\\
+\end{tabular}
+\end{table}

@@ -1,0 +1,22 @@
+R² Comparison: Post-Treatment Bilateral Connectivity
+==================================================
+
+Model 1: Excludes pre-treatment bilateral connectivity
+  - Includes: all proximity (excl. nhs) + all dummies (incl. same_industry_micro)
+  - Excludes: z_bilateral_conn_pre, z_nhs_proximity
+  - R² =    0.0138
+  - R² (within) =    0.0134
+
+Model 2: Includes pre-treatment bilateral conn, excludes same_industry_micro
+  - Includes: z_bilateral_conn_pre + all proximity (excl. nhs) + dummies (excl. same_ind_micro)
+  - Excludes: same_industry_micro, z_nhs_proximity
+  - R² =    0.0554
+  - R² (within) =    0.0549
+
+Difference (Model 2 - Model 1):
+  - Delta R² =    0.0416
+  - Delta R² (within) =    0.0416
+
+Interpretation:
+  Adding pre-treatment bilateral conn (and removing same_industry_micro)
+  changes R² by 0.0416 ( 4.16 percentage points)

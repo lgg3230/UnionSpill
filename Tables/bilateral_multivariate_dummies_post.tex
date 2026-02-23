@@ -1,0 +1,31 @@
+\begin{table}[htbp]\centering
+\def\sym#1{\ifmmode^{#1}\else\(^{#1}\)\fi}
+\caption{Post-Treatment Bilateral Connectivity: Same-Category Dummies}
+\begin{tabular}{l*{1}{c}}
+\toprule
+                    &\multicolumn{1}{c}{(1)}\\
+                    &\multicolumn{1}{c}{Bilateral Conn.}\\
+\midrule
+Same Industry x Microregion&       2.197\sym{***}\\
+                    &     (0.049)         \\
+\addlinespace
+Same Microregion    &      -0.003         \\
+                    &     (0.002)         \\
+\addlinespace
+Same Union          &       0.159\sym{***}\\
+                    &     (0.004)         \\
+\addlinespace
+Same Industry       &      -0.068\sym{***}\\
+                    &     (0.003)         \\
+\midrule
+Observations        & 135,605,745         \\
+R-squared           &       0.061         \\
+\bottomrule
+\multicolumn{2}{l}{\footnotesize Standard errors in parentheses}\\
+\multicolumn{2}{l}{\footnotesize Robust standard errors in parentheses.}\\
+\multicolumn{2}{l}{\footnotesize Establishment i fixed effects absorbed.}\\
+\multicolumn{2}{l}{\footnotesize From same multivariate regression as continuous measures.}\\
+\multicolumn{2}{l}{\footnotesize Regression includes pre-treatment bilateral connectivity.}\\
+\multicolumn{2}{l}{\footnotesize \sym{*} \(p<0.10\), \sym{**} \(p<0.05\), \sym{***} \(p<0.01\)}\\
+\end{tabular}
+\end{table}

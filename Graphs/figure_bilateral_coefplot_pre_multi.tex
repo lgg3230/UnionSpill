@@ -1,0 +1,25 @@
+\begin{figure}[htbp]
+\centering
+\caption{Predictors of Pre-Treatment Bilateral Connectivity: Multivariate Regression}
+
+\begin{threeparttable}
+\label{fig:bilateral_coefplot_pre_multivariate}
+
+\begin{subfigure}{0.49\textwidth}
+    \includegraphics[width=\textwidth]{coefplot_bilateral_continuous_pre_multi.pdf}
+    \caption{Continuous Proximity Measures}
+    \label{fig:bilateral_continuous_pre}
+\end{subfigure}
+\begin{subfigure}{0.49\textwidth}
+    \includegraphics[width=\textwidth]{coefplot_bilateral_dummies_pre_multi.pdf}
+    \caption{Same-Category Dummies}
+    \label{fig:bilateral_dummies_pre}
+\end{subfigure}
+
+\begin{tablenotes}
+\footnotesize
+\item \textit{Notes:} Coefficients from a single multivariate regression of pre-treatment bilateral connectivity (2007--2011) on all predictors simultaneously, controlling for establishment $i$ fixed effects. Bilateral connectivity is measured as the person-weighted average flow of workers between establishment pairs across four consecutive year-pairs. Proximity measures are defined as the negative absolute difference between establishment characteristics (standardized), so higher values indicate greater similarity. Geographic proximity is measured as the negative log of distance between municipality centroids. CBA clauses proximity is based on the number of clauses in collective bargaining agreements. Same-category dummies equal one if both establishments share the indicated category. Establishment characteristics are based on 2009 pre-treatment values. Horizontal lines represent 95\% confidence intervals based on robust standard errors. All regressions include the universe of establishment pairs, including those with zero worker flows.
+\end{tablenotes}
+
+\end{threeparttable}
+\end{figure}

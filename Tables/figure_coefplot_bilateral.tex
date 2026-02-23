@@ -1,0 +1,15 @@
+\begin{figure}[htbp]
+\centering
+\begin{threeparttable}
+\begin{subfigure}{0.8\textwidth}
+    \includegraphics[width=\textwidth]{Results - Tables and Figures/Connectivity/coefplot_bilateral_regression.pdf}
+\end{subfigure}
+
+\caption{Determinants of Bilateral Connectivity}
+\label{fig:coefplot_bilateral}
+\begin{tablenotes}
+\footnotesize
+\item \textit{Notes:} This figure displays standardized coefficient estimates from a regression of bilateral connectivity on distance measures and indicator variables. The dependent variable is standardized bilateral connectivity between establishment pairs $i$ and $j$. All continuous regressors (geographic distance, size distance, wage distance, and workforce composition distances) are standardized to have mean zero and standard deviation one, allowing for direct comparison of effect magnitudes. Geographic distance is computed using the Haversine formula from municipality centroids. Size distance is the absolute difference in log employment (2009-2011 average). Wage distance is the absolute difference in median December earnings (2009-2011, deflated to 2015 prices). Workforce composition distances are absolute differences in shares of female, non-white, and higher education workers (2009-2011 averages). Same municipality, same microregion, and same modal union are indicator variables equal to one if both establishments share the respective characteristic. Regression includes establishment $i$ fixed effects with robust standard errors. Horizontal bars represent 95\% confidence intervals. Sample restricted to pairs where both establishments satisfy \texttt{lagos\_sample\_avg==1} and \texttt{in\_balanced\_panel==1}, with at least one worker transition during 2007-2011.
+\end{tablenotes}
+\end{threeparttable}
+\end{figure}

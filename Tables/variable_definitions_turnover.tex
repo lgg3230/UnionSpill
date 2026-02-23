@@ -1,0 +1,68 @@
+% variable_definitions_turnover.tex
+% Corrected turnover variable definitions (unique workers, additive decomposition)
+
+\begin{table}[htbp]
+\centering
+\caption{Variable Definitions: Corrected Worker Flow Measures}
+\label{tab:var_def_turnover}
+\small
+\begin{tabular}{@{}llp{7.5cm}@{}}
+\toprule
+\textbf{Variable} & \textbf{Type} & \textbf{Definition} \\
+\midrule
+\multicolumn{3}{@{}l}{\textit{Panel A: Counts (unique workers per establishment--year)}} \\[4pt]
+\texttt{firm\_emp} & Count &
+  Number of unique workers employed in December, selected via the final-rank algorithm among spells with \texttt{empdec\_lagos}$=1$. \\[4pt]
+\texttt{separations\_u} & Count &
+  Number of unique workers with at least one separated spell (\texttt{causadesli}$\neq 0$) during the year. When a worker has multiple separated spells, one is selected via the ranking algorithm (see notes). \\[4pt]
+\texttt{layoffs\_u} & Count &
+  Unique separated workers whose selected spell has \texttt{causadesli}$\in\{10, 11\}$ (dismissal without/with cause). \\[4pt]
+\texttt{quits\_u} & Count &
+  Unique separated workers whose selected spell has \texttt{causadesli}$\in\{20, 21\}$ (voluntary resignation without/with cause). \\[4pt]
+\texttt{other\_sep\_u} & Count &
+  Unique separated workers whose selected spell has any other non-zero \texttt{causadesli} (e.g., end of fixed-term contract, retirement, death, transfer). \\[4pt]
+\texttt{hired\_u} & Count &
+  Unique workers with at least one spell starting in year $t$ (\texttt{dtadmissao} in year $t$). \\[6pt]
+\midrule
+\multicolumn{3}{@{}l}{\textit{Panel B: Rates (count / \texttt{firm\_emp})}} \\[4pt]
+\texttt{turnover\_u} & Rate &
+  $\texttt{separations\_u} \;/\; \texttt{firm\_emp}$ \\[4pt]
+\texttt{layoff\_rate\_u} & Rate &
+  $\texttt{layoffs\_u} \;/\; \texttt{firm\_emp}$ \\[4pt]
+\texttt{quit\_rate\_u} & Rate &
+  $\texttt{quits\_u} \;/\; \texttt{firm\_emp}$ \\[4pt]
+\texttt{other\_sep\_rate\_u} & Rate &
+  $\texttt{other\_sep\_u} \;/\; \texttt{firm\_emp}$ \\[4pt]
+\texttt{hiring\_rate\_u} & Rate &
+  $\texttt{hired\_u} \;/\; \texttt{firm\_emp}$ \\[4pt]
+\bottomrule
+\end{tabular}
+
+\vspace{6pt}
+\begin{minipage}{0.95\textwidth}
+\footnotesize
+\textbf{Notes.}
+
+\textit{Additivity property.}
+By construction, $\texttt{separations\_u} = \texttt{layoffs\_u} + \texttt{quits\_u} + \texttt{other\_sep\_u}$,
+and equivalently $\texttt{turnover\_u} = \texttt{layoff\_rate\_u} + \texttt{quit\_rate\_u} + \texttt{other\_sep\_rate\_u}$.
+
+\textit{Selection algorithm for separated spells.}
+When a worker has multiple separated spells at the same establishment in a given year, one spell is selected using the same ranking criteria as the December employment selection (Lagos, 2021):
+(1)~highest contracted hours (\texttt{horascontr});
+(2)~among ties, highest hourly December wage (\texttt{remdezr} / (\texttt{horascontr} $\times$ 4.348), with missing/zero wages treated as~0);
+(3)~random tiebreaker (seed 54321 in Stata, hash-based in Python).
+The selected spell's \texttt{causadesli} code determines the separation category.
+
+\textit{December employment.}
+\texttt{firm\_emp} counts unique workers with \texttt{empdec\_lagos}$=1$ (i.e., \texttt{empem3112}$=1$ and \texttt{tempempr}$>1$), selecting one spell per worker--establishment pair via the final-rank algorithm (seed 12345).
+
+\textit{Separation codes (\texttt{causadesli}).}
+Layoffs: 10 (dismissal without cause), 11 (dismissal with cause).
+Quits: 20 (resignation without cause), 21 (resignation with cause).
+Other: all remaining non-zero codes (e.g., 12 = end of fixed-term, 30--32 = transfer, 40 = retirement, 50 = death, 60--74 = work accidents/disability).
+
+\textit{Sample.}
+The standalone Python script (\texttt{011b\_corrected\_turnover.py}) restricts to establishments with \texttt{lagos\_sample\_avg}$=1$ and \texttt{in\_balanced\_panel}$=1$. The Stata pipeline (\texttt{011\_rais\_to\_firm.do}) computes these measures for all establishments.
+\end{minipage}
+\end{table}
