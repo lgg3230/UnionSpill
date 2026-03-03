@@ -35,7 +35,7 @@ mpl.rcParams['ps.fonttype'] = 42
 
 BASE_DIR = Path("/kellogg/proj/lgg3230/UnionSpill")
 RAIS_AUX = BASE_DIR / "Data" / "RAIS_aux"
-GRAPHS = BASE_DIR / "Graphs"
+GRAPHS = BASE_DIR / "Graphs" / "connectivity"
 
 # 06 regression: predicting pre-treatment connectivity with gravity measures (split files)
 GRAVITY_UNIV_FILE = RAIS_AUX / "bilateral_pretreat_gravity_coefficients_univariate.csv"

@@ -20,7 +20,7 @@
 capture log close
 local d = subinstr("`c(current_date)'"," ","_",.)
 local t = subinstr("`c(current_time)'",":","",.)
-log using "$logs/FinalResults_composition_`d'_`t'.log", replace text
+log using "$logs/composition/FinalResults_composition_`d'_`t'.log", replace text
 
 di "Started: `c(current_date)' `c(current_time)'"
 di "Stata version: `c(stata_version)'"
@@ -252,16 +252,16 @@ local s_spill    "lagos_sample_avg==1 & treat_ultra==0 & in_balanced_panel==1"
 * ── INITIALIZE OUTPUT CSV FILES ─────────────────────────────────────────────
 
 foreach panel in A B C {
-	capture erase "$tables/results_direct_panel`panel'_composition.csv"
+	capture erase "$tables/composition/results_direct_panel`panel'_composition.csv"
 	tempname fh
-	file open `fh' using "$tables/results_direct_panel`panel'_composition.csv", write replace
+	file open `fh' using "$tables/composition/results_direct_panel`panel'_composition.csv", write replace
 	file write `fh' "spec,section,outcome,row_type,value" _n
 	file close `fh'
 }
 
-capture erase "$tables/results_spill_composition.csv"
+capture erase "$tables/composition/results_spill_composition.csv"
 tempname fh
-file open `fh' using "$tables/results_spill_composition.csv", write replace
+file open `fh' using "$tables/composition/results_spill_composition.csv", write replace
 file write `fh' "spec,section,outcome,row_type,value" _n
 file close `fh'
 
@@ -290,7 +290,7 @@ foreach panel in A B C {
 		local section   "direct_C"
 	}
 
-	local csv_out "$tables/results_direct_panel`panel'_composition.csv"
+	local csv_out "$tables/composition/results_direct_panel`panel'_composition.csv"
 
 	di _newline(1)
 	di as result "--- Panel `panel' ---"
@@ -364,7 +364,7 @@ di as result "------------------------------------------------------------------
 di as result "SPILLOVER EFFECTS"
 di as result "-----------------------------------------------------------------------"
 
-local csv_spill "$tables/results_spill_composition.csv"
+local csv_spill "$tables/composition/results_spill_composition.csv"
 
 foreach outcome of global composition_outcomes {
 

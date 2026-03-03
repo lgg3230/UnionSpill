@@ -1,0 +1,20 @@
+\begin{figure}[htbp]
+\centering
+\begin{threeparttable}
+
+\includegraphics[width=0.7\textwidth]{Results - Tables and Figures/avg_within_firm_cdf.pdf}
+
+\caption{Pre-Treatment Wage Distribution: Treated vs.\ Control Firms}
+\label{fig:avg_within_firm_cdf}
+
+\begin{tablenotes}
+\footnotesize
+\item \textit{Notes:} This figure displays the average within-firm wage distribution for treated and control establishments during the pre-treatment period (2009--2011). For each firm $i$ in group $g \in \{\text{treated, control}\}$, we compute the empirical histogram $f_i(w)$ of log real December earnings across all workers employed at the firm in a given year. We then average these firm-level histograms across establishments within each group, giving each firm equal weight regardless of size:
+\[
+    \bar{f}_g(w) = \frac{1}{N_g} \sum_{i \in g} f_i(w).
+\]
+This within-firm averaging avoids conflating cross-firm wage dispersion with within-firm wage heterogeneity. The $x$-axis reports log real December earnings deflated to December 2015 prices using Brazil's IPCA index. Each bin spans an equal interval of the log-wage distribution, constructed over the 0.5th--99.5th percentile range of the pooled sample. Bars for each group are plotted side by side within each bin. The sample is restricted to establishments satisfying \texttt{lagos\_sample\_avg}$=1$ and \texttt{in\_balanced\_panel}$=1$, following the balanced-panel definition of \citet{Lagos2025}. Treatment status (\texttt{treat\_ultra}$=1$) indicates that the establishment's collective bargaining agreement was directly affected by Brazil's Súmula 277 reform in 2012, which extended the retroactive validity of wage clauses negotiated in CBAs. Control establishments (\texttt{treat\_ultra}$=0$) are firms in the Lagos sample that are not directly covered by an affected agreement. Worker-level wages are drawn from the worker panel derived from RAIS (Relação Anual de Informações Sociais). When a worker holds multiple spells at the same establishment in a calendar year, the spell with the highest contracted hours is retained (ties broken by hourly December wage, then randomly with seed 12345).
+\end{tablenotes}
+
+\end{threeparttable}
+\end{figure}

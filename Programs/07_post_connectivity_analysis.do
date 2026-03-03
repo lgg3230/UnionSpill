@@ -627,9 +627,9 @@ else {
         title("Correlates of Post-Treatment Bilateral Connectivity") ///
         plotregion(color(white)) graphregion(color(white))
 }
-graph export "$graphs/coefplot_bilateral_post.pdf", replace
+graph export "$graphs/connectivity/coefplot_bilateral_post.pdf", replace
 
-di "Saved: $graphs/coefplot_bilateral_post.pdf"
+di "Saved: $graphs/connectivity/coefplot_bilateral_post.pdf"
 
 ********************************************************************************
 * PART 7: CLEAN UP TEMPORARY FILES

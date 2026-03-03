@@ -7,7 +7,7 @@ Produces TWO tables on separate pages:
   1. Direct effects — Panels A / B / C (treated vs. control establishments)
   2. Spillover effects — connected untreated establishments
 
-Output: UnionSpill/Tables/turnover_tables.tex
+Output: UnionSpill/Tables/turnover/turnover_tables.tex
 """
 
 import re
@@ -135,19 +135,18 @@ def notes_spill(outcome_desc):
 
 DIRECT_OUTCOMES = [
     "retention_u", "hiring_rate_u", "turnover_u",
-    "quit_rate_u", "layoff_rate_u", "churn_rate_u",
+    "quit_rate_u", "layoff_rate_u", "churn_rate_u", "l_total_hours",
 ]
 DIRECT_HEADERS = [
     r"Retention\\Rate", r"Hiring\\Rate", r"Sep.\\Rate",
-    r"Quit\\Rate", r"Layoff\\Rate", r"Churn\\Rate",
+    r"Quit\\Rate", r"Layoff\\Rate", r"Churn\\Rate", r"Log\\Hours",
 ]
 
 SPILL_OUTCOMES = DIRECT_OUTCOMES + [
-    "totalflows_pw", "totaltreat_pw", "outtreat_pw", "intreat_pw",
+    "totalflows_pw", "outflows_pw", "inflows_pw",
 ]
 SPILL_HEADERS = DIRECT_HEADERS + [
-    r"Total\\Flows p.w.", r"Flows to\\Treated p.w.",
-    r"Outflows to\\Treated p.w.", r"Inflows from\\Treated p.w.",
+    r"Total\\Flows p.w.", r"Outflows\\p.w.", r"Inflows\\p.w.",
 ]
 
 OUTCOME_GROUPS = [
@@ -167,25 +166,24 @@ OUTCOME_GROUPS = [
             r"employment), hiring rate, separation rate (= separations / average "
             r"employment), quit rate, layoff rate, and churn rate "
             r"(= (separations + hires) / average employment). "
-            r"Columns (7)--(10) report annual per-worker bilateral flow outcomes: "
-            r"total bilateral flows per worker, flows to treated firms per worker, "
-            r"outflows to treated firms per worker, and inflows from treated firms "
-            r"per worker. These four columns measure whether the reform reshapes "
-            r"labour mobility toward treated establishments",
+            r"Column (7) reports log total contracted hours summed across "
+            r"December-employment workers. "
+            r"Columns (8)--(10) report annual per-worker bilateral flow outcomes: "
+            r"total bilateral flows per worker, total outflows per worker, and "
+            r"total inflows per worker. These three columns measure whether the "
+            r"reform reshapes overall labour mobility",
         ),
         spill_notes=notes_spill(
             r"establishment employment flow rates and worker mobility outcomes. "
             r"Columns (1)--(6) report the retention rate, hiring rate, separation "
             r"rate, quit rate, layoff rate, and churn rate "
             r"(= (separations + hires) / average employment). "
-            r"Columns (7)--(10) report annual per-worker bilateral flow outcomes: "
-            r"total bilateral flows per worker, flows to treated firms per worker, "
-            r"outflows to treated firms per worker, and inflows from treated firms "
-            r"per worker. Note: for column (8), the connectivity regressor "
-            r"(\textit{totaltreat\_pw\_norm}) is derived from pre-reform "
-            r"\textit{totaltreat\_pw} values; the coefficient on Post $\times$ "
-            r"Connectivity therefore captures whether higher pre-reform flows to "
-            r"treated firms predict continued elevated post-reform flows to treated",
+            r"Column (7) reports log total contracted hours summed across "
+            r"December-employment workers. "
+            r"Columns (8)--(10) report annual per-worker bilateral flow outcomes: "
+            r"total bilateral flows per worker, total outflows per worker, and "
+            r"total inflows per worker. These three columns measure whether "
+            r"spillover effects propagate through overall worker mobility",
         ),
     ),
 ]
@@ -378,14 +376,15 @@ def make_spill_table(group):
 # ── Main ─────────────────────────────────────────────────────────────────────
 
 def main():
-    script_dir  = Path(__file__).resolve().parent
-    tables_dir  = script_dir.parent / "Tables"
-    output_file = tables_dir / "turnover_tables.tex"
+    script_dir   = Path(__file__).resolve().parent
+    tables_dir   = script_dir.parent.parent / "Tables"
+    pipeline_dir = tables_dir / "turnover"
+    output_file  = pipeline_dir / "turnover_tables.tex"
 
-    pa_file = tables_dir / f"results_direct_panelA_{SPEC}.csv"
-    pb_file = tables_dir / f"results_direct_panelB_{SPEC}.csv"
-    pc_file = tables_dir / f"results_direct_panelC_{SPEC}.csv"
-    sp_file = tables_dir / f"results_spill_{SPEC}.csv"
+    pa_file = pipeline_dir / f"results_direct_panelA_{SPEC}.csv"
+    pb_file = pipeline_dir / f"results_direct_panelB_{SPEC}.csv"
+    pc_file = pipeline_dir / f"results_direct_panelC_{SPEC}.csv"
+    sp_file = pipeline_dir / f"results_spill_{SPEC}.csv"
 
     missing = [f.name for f in [pa_file, pb_file, pc_file, sp_file] if not f.exists()]
     if missing:

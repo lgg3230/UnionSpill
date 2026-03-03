@@ -14,7 +14,7 @@
 capture log close
 local d = subinstr("`c(current_date)'"," ","_",.)
 local t = subinstr("`c(current_time)'",":","",.)
-log using "$logs/FinalResults_mincer_`d'_`t'.log", replace text
+log using "$logs/residuals/FinalResults_mincer_`d'_`t'.log", replace text
 
 di "Started: `c(current_date)' `c(current_time)'"
 di "Stata version: `c(stata_version)'"
@@ -231,24 +231,25 @@ local extra_year "ib0.totalflows_pw_pre_07_114#i.year"
 
 * ── SAMPLE MACROS ───────────────────────────────────────────────────────────
 
+* Panel A: treated + zero-connectivity untreated (matches Gui's direct_a)
+* Panel B: treated + ALL untreated (matches Gui's direct_b; no ≤1% panel)
 local s_direct_A "(treat_ultra==0 & totaltreat_pw_n==0 | treat_ultra==1) & lagos_sample_avg==1 & in_balanced_panel==1"
-local s_direct_B "(treat_ultra==0 & totaltreat_pw_n<=0.01 | treat_ultra==1) & lagos_sample_avg==1 & in_balanced_panel==1"
-local s_direct_C "(treat_ultra==0 | treat_ultra==1) & lagos_sample_avg==1 & in_balanced_panel==1"
+local s_direct_B "(treat_ultra==0 | treat_ultra==1) & lagos_sample_avg==1 & in_balanced_panel==1"
 local s_spill    "lagos_sample_avg==1 & treat_ultra==0 & in_balanced_panel==1"
 
 * ── INITIALIZE OUTPUT CSV FILES ─────────────────────────────────────────────
 
-foreach panel in A B C {
-	capture erase "$tables/results_direct_panel`panel'_mincer.csv"
+foreach panel in A B {
+	capture erase "$tables/residuals/results_direct_panel`panel'_mincer.csv"
 	tempname fh
-	file open `fh' using "$tables/results_direct_panel`panel'_mincer.csv", write replace
+	file open `fh' using "$tables/residuals/results_direct_panel`panel'_mincer.csv", write replace
 	file write `fh' "spec,section,outcome,row_type,value" _n
 	file close `fh'
 }
 
-capture erase "$tables/results_spill_mincer.csv"
+capture erase "$tables/residuals/results_spill_mincer.csv"
 tempname fh
-file open `fh' using "$tables/results_spill_mincer.csv", write replace
+file open `fh' using "$tables/residuals/results_spill_mincer.csv", write replace
 file write `fh' "spec,section,outcome,row_type,value" _n
 file close `fh'
 
@@ -261,14 +262,14 @@ di as result "==================================================================
 di as result "STARTING ESTIMATION"
 di as result "======================================================================="
 
-* ── PARTS A-C: DIRECT EFFECTS ───────────────────────────────────────────────
+* ── PARTS A-B: DIRECT EFFECTS ───────────────────────────────────────────────
 
 di _newline(2)
 di as result "-----------------------------------------------------------------------"
-di as result "DIRECT EFFECTS — PANELS A, B, C"
+di as result "DIRECT EFFECTS — PANELS A, B"
 di as result "-----------------------------------------------------------------------"
 
-foreach panel in A B C {
+foreach panel in A B {
 
 	if "`panel'" == "A" {
 		local s_use     "`s_direct_A'"
@@ -277,16 +278,11 @@ foreach panel in A B C {
 	}
 	if "`panel'" == "B" {
 		local s_use     "`s_direct_B'"
-		local s_use_pre "treat_ultra==0 & totaltreat_pw_n<=0.01 & lagos_sample_avg==1 & in_balanced_panel==1"
+		local s_use_pre "treat_ultra==0 & lagos_sample_avg==1 & in_balanced_panel==1"
 		local section   "direct_B"
 	}
-	if "`panel'" == "C" {
-		local s_use     "`s_direct_C'"
-		local s_use_pre "treat_ultra==0 & lagos_sample_avg==1 & in_balanced_panel==1"
-		local section   "direct_C"
-	}
 
-	local csv_out "$tables/results_direct_panel`panel'_mincer.csv"
+	local csv_out "$tables/residuals/results_direct_panel`panel'_mincer.csv"
 
 	di _newline(1)
 	di as result "--- Panel `panel' ---"
@@ -360,7 +356,7 @@ di as result "------------------------------------------------------------------
 di as result "SPILLOVER EFFECTS"
 di as result "-----------------------------------------------------------------------"
 
-local csv_spill "$tables/results_spill_mincer.csv"
+local csv_spill "$tables/residuals/results_spill_mincer.csv"
 
 foreach outcome in lr_remdezr_w lr_remdezr_resid lr_remdezr_h_w lr_hourly_resid {
 
@@ -432,7 +428,7 @@ log close
 di as result "Finished: `c(current_date)' `c(current_time)'"
 
 * ── Auto-generate LaTeX tables ──────────────────────────────────────────────
-shell python3 "$programs/generate_mincer_latex.py"
+shell python3 "$programs/residuals/generate_mincer_latex.py"
 di as result "LaTeX tables written to Tables/mincer_tables.tex"
 
 ********************************************************************************

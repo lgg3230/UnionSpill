@@ -39,8 +39,8 @@ binscatter bilateral_conn_resid geo_log_proximity, nquantiles(20) ///
     ytitle("Bilateral Connectivity (residualized)") ///
     mcolor(navy) lcolor(navy) ///
     plotregion(color(white)) graphregion(color(white))
-graph export "$graphs/binscatter_conn_geo_log_proximity.pdf", replace
-di _newline "Graph exported to: $graphs/binscatter_conn_geo_log_proximity.pdf"
+graph export "$graphs/connectivity/binscatter_conn_geo_log_proximity.pdf", replace
+di _newline "Graph exported to: $graphs/connectivity/binscatter_conn_geo_log_proximity.pdf"
 ********************************************************************************
 * Summary statistics
 ********************************************************************************

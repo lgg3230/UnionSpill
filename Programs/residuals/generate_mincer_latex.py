@@ -13,7 +13,7 @@ Column layout (same for both tables):
   (4) Residual                Panel C
   (5) Residual                Spillover
 
-Output: UnionSpill/Tables/mincer_tables.tex
+Output: UnionSpill/Tables/residuals/mincer_tables.tex
 """
 
 import re
@@ -285,13 +285,14 @@ def latex_document(tables):
 # ── Main ─────────────────────────────────────────────────────────────────────
 
 def main():
-    tables_dir  = Path(__file__).resolve().parent.parent / "Tables"
-    output_file = tables_dir / "mincer_tables.tex"
+    tables_dir   = Path(__file__).resolve().parent.parent.parent / "Tables"
+    pipeline_dir = tables_dir / "residuals"
+    output_file  = pipeline_dir / "mincer_tables.tex"
 
-    pa_file = tables_dir / f"results_direct_panelA_{SPEC}.csv"
-    pb_file = tables_dir / f"results_direct_panelB_{SPEC}.csv"
-    pc_file = tables_dir / f"results_direct_panelC_{SPEC}.csv"
-    sp_file = tables_dir / f"results_spill_{SPEC}.csv"
+    pa_file = pipeline_dir / f"results_direct_panelA_{SPEC}.csv"
+    pb_file = pipeline_dir / f"results_direct_panelB_{SPEC}.csv"
+    pc_file = pipeline_dir / f"results_direct_panelC_{SPEC}.csv"
+    sp_file = pipeline_dir / f"results_spill_{SPEC}.csv"
 
     missing = [f.name for f in [pa_file, pb_file, pc_file, sp_file] if not f.exists()]
     if missing:

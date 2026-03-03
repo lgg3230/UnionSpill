@@ -5,7 +5,7 @@ Generate publication-ready LaTeX tables for workforce composition analysis.
 Two tables per outcome group (direct effects Panels A/B/C; spillover effects).
 Outcomes: Tenure, Demographics, Education, and average worker age (7 cols total).
 
-Output: UnionSpill/Tables/composition_tables.tex
+Output: UnionSpill/Tables/composition/composition_tables.tex
 """
 
 import re
@@ -314,14 +314,15 @@ def make_spill_table(group):
 # ── Main ──────────────────────────────────────────────────────────────────────
 
 def main():
-    script_dir  = Path(__file__).resolve().parent
-    tables_dir  = script_dir.parent / "Tables"
-    output_file = tables_dir / "composition_tables.tex"
+    script_dir   = Path(__file__).resolve().parent
+    tables_dir   = script_dir.parent.parent / "Tables"
+    pipeline_dir = tables_dir / "composition"
+    output_file  = pipeline_dir / "composition_tables.tex"
 
-    pa_file = tables_dir / f"results_direct_panelA_{SPEC}.csv"
-    pb_file = tables_dir / f"results_direct_panelB_{SPEC}.csv"
-    pc_file = tables_dir / f"results_direct_panelC_{SPEC}.csv"
-    sp_file = tables_dir / f"results_spill_{SPEC}.csv"
+    pa_file = pipeline_dir / f"results_direct_panelA_{SPEC}.csv"
+    pb_file = pipeline_dir / f"results_direct_panelB_{SPEC}.csv"
+    pc_file = pipeline_dir / f"results_direct_panelC_{SPEC}.csv"
+    sp_file = pipeline_dir / f"results_spill_{SPEC}.csv"
 
     missing = [f.name for f in [pa_file, pb_file, pc_file, sp_file] if not f.exists()]
     if missing:

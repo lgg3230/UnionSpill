@@ -13,7 +13,7 @@
 capture log close
 local d = subinstr("`c(current_date)'"," ","_",.)
 local t = subinstr("`c(current_time)'",":","",.)
-log using "$logs/FinalResults_turnover_`d'_`t'.log", replace text
+log using "$logs/turnover/FinalResults_turnover_`d'_`t'.log", replace text
 
 di "Started: `c(current_date)' `c(current_time)'"
 di "Stata version: `c(stata_version)'"
@@ -45,9 +45,9 @@ use "$rais_firm/lagos_sample_sep24_pct_unionexp_ext_df2.dta", clear
 di as result "Merging turnover data..."
 
 preserve
-	import delimited "$rais_aux/corrected_turnover_sample.csv", clear
+	import delimited "$rais_firm/corrected_turnover_sample.csv", clear
 	keep identificad year separations_u avg_emp turnover_u ///
-	     layoff_rate_u quit_rate_u hiring_rate_u retention_u hired_u
+	     layoff_rate_u quit_rate_u hiring_rate_u retention_u hired_u total_hours
 	tostring identificad, replace format(%014.0f) force
 	tempfile turnover
 	save `turnover'
@@ -62,27 +62,27 @@ label var turnover_u "Separation rate (separations / avg employment, uncensored)
 gen double churn_rate_u = (separations_u + hired_u) / avg_emp if avg_emp > 0
 label var churn_rate_u "Churn rate ((hires + separations) / avg employment, uncensored)"
 
+gen double l_total_hours = ln(total_hours) if total_hours > 0
+label var l_total_hours "Log total contracted hours (Dec. employment)"
+
 di as result "Turnover data merged."
 
 * ── MERGE FLOW OUTCOMES PANEL (2009-2016) ───────────────────────────────────
 preserve
 	import delimited "$rais_aux/totalflows_panel_2009_2016.csv", clear
 	tostring identificad, replace format(%014.0f) force
-	rename inflows_from_treat_pw intreat_pw
-	rename outflows_to_treat_pw  outtreat_pw
-	keep identificad year totalflows_pw totaltreat_pw outtreat_pw intreat_pw
+	keep identificad year totalflows_pw outflows_pw inflows_pw
 	tempfile flows_panel
 	save `flows_panel'
 restore
 
 * Drop old static connectivity variables to avoid merge conflict
-cap drop totalflows_pw totaltreat_pw outtreat_pw intreat_pw
+cap drop totalflows_pw outflows_pw inflows_pw
 
 merge 1:1 identificad year using `flows_panel', keep(master match) nogen
 label var totalflows_pw "Total bilateral flows per worker"
-label var totaltreat_pw "Flows to treated firms per worker"
-label var outtreat_pw   "Outflows to treated per worker"
-label var intreat_pw    "Inflows from treated per worker"
+label var outflows_pw   "Total outflows per worker"
+label var inflows_pw    "Total inflows per worker"
 
 di as result "Flow outcomes panel merged."
 
@@ -227,9 +227,9 @@ label var mic_ind_exp "Share treated within each micro-industry cell"
 di as result "Creating turnover pre-treatment bins..."
 
 * Direct-effects outcomes (6): present for both treated and untreated firms
-global turnover_outcomes "retention_u hiring_rate_u turnover_u quit_rate_u layoff_rate_u churn_rate_u"
-* Flow-mechanism outcomes (4): only for untreated firms — spillover panel only
-global flow_outcomes     "totalflows_pw totaltreat_pw outtreat_pw intreat_pw"
+global turnover_outcomes "retention_u hiring_rate_u turnover_u quit_rate_u layoff_rate_u churn_rate_u l_total_hours"
+* Flow outcomes (3): total bilateral flows, outflows, inflows (all firms)
+global flow_outcomes     "totalflows_pw outflows_pw inflows_pw"
 
 foreach v of global turnover_outcomes {
 
@@ -298,16 +298,16 @@ local s_spill    "lagos_sample_avg==1 & treat_ultra==0 & in_balanced_panel==1"
 * ── INITIALIZE OUTPUT CSV FILES ─────────────────────────────────────────────
 
 foreach panel in A B C {
-	capture erase "$tables/results_direct_panel`panel'_turnover.csv"
+	capture erase "$tables/turnover/results_direct_panel`panel'_turnover.csv"
 	tempname fh
-	file open `fh' using "$tables/results_direct_panel`panel'_turnover.csv", write replace
+	file open `fh' using "$tables/turnover/results_direct_panel`panel'_turnover.csv", write replace
 	file write `fh' "spec,section,outcome,row_type,value" _n
 	file close `fh'
 }
 
-capture erase "$tables/results_spill_turnover.csv"
+capture erase "$tables/turnover/results_spill_turnover.csv"
 tempname fh
-file open `fh' using "$tables/results_spill_turnover.csv", write replace
+file open `fh' using "$tables/turnover/results_spill_turnover.csv", write replace
 file write `fh' "spec,section,outcome,row_type,value" _n
 file close `fh'
 
@@ -336,7 +336,7 @@ foreach panel in A B C {
 		local section   "direct_C"
 	}
 
-	local csv_out "$tables/results_direct_panel`panel'_turnover.csv"
+	local csv_out "$tables/turnover/results_direct_panel`panel'_turnover.csv"
 
 	di _newline(1)
 	di as result "--- Panel `panel' ---"
@@ -345,7 +345,23 @@ foreach panel in A B C {
 
 		di as text "  Estimating: `outcome' (Panel `panel')"
 
-		local absorb "`base_fe' ib0.`outcome'_pre4#i.year ib0.l_firm_emp_pre4#i.year `extra_year'"
+		* Flow outcomes: handle totalflows_pw separately (avoid perfect absorption)
+		local is_total_outcome = ("`outcome'" == "totalflows_pw")
+		local is_other_flow    = regexm("`outcome'", "flows_pw$") & !`is_total_outcome'
+
+		if `is_total_outcome' {
+			* Spec A: 2007-2011 totalflows bins (current spec — expected to fail, for comparison)
+			local absorb_A "`base_fe' ib0.l_firm_emp_pre4#i.year `extra_year'"
+			* Spec B: 2009-2011 totalflows bins (outcome_pre4 window)
+			local absorb_B "`base_fe' ib0.l_firm_emp_pre4#i.year ib0.totalflows_pw_pre4#i.year"
+			local absorb "`absorb_A'"   // primary for CSV/graph output
+		}
+		else if `is_other_flow' {
+			local absorb "`base_fe' ib0.l_firm_emp_pre4#i.year `extra_year'"
+		}
+		else {
+			local absorb "`base_fe' ib0.`outcome'_pre4#i.year ib0.l_firm_emp_pre4#i.year `extra_year'"
+		}
 
 		* Post-treatment
 		reghdfe `outcome' treat_ultra##i.treat_year if `s_use', ///
@@ -379,8 +395,18 @@ foreach panel in A B C {
 		* Event study for pre-trend F-test
 		reghdfe `outcome' i.treat_ultra##ib2011.year if `s_use', ///
 			absorb(`absorb') vce(cluster identificad)
-		testparm 1.treat_ultra#i(2009 2010).year
-		local pre_ftest_pval = r(p)
+		capture testparm 1.treat_ultra#i(2009 2010).year
+		local pre_ftest_pval = cond(_rc == 0, r(p), .)
+
+		* Spec B comparison for totalflows_pw
+		if `is_total_outcome' {
+			di as result "--- totalflows_pw Spec B (outcome_pre4 bins, no extra_year) ---"
+			reghdfe `outcome' treat_ultra##i.treat_year if `s_use', ///
+				absorb(`absorb_B') vce(cluster identificad)
+			di "Spec B post coef: " _b[1.treat_ultra#1.treat_year] ///
+			   "  se: " _se[1.treat_ultra#1.treat_year] ///
+			   "  R2: " e(r2)
+		}
 
 		* Baseline mean (untreated control group, 2009)
 		quietly sum `outcome' if `s_use_pre' & year == 2009
@@ -424,7 +450,7 @@ foreach panel in A B C {
 			ci(95) ciopts(recast(rcap) color(blue)) mcolor(blue) ///
 			text(0.05 6 "`post_coef_s' (`post_se_s')", color(blue) size(small))
 
-		graph export "$graphs/es_`outcome'_direct`panel'_`d'.pdf", as(pdf) replace
+		graph export "$graphs/turnover/es_`outcome'_direct`panel'_`d'.pdf", as(pdf) replace
 		estimates drop _es_d_tmp
 	}
 
@@ -438,13 +464,28 @@ di as result "------------------------------------------------------------------
 di as result "SPILLOVER EFFECTS"
 di as result "-----------------------------------------------------------------------"
 
-local csv_spill "$tables/results_spill_turnover.csv"
+local csv_spill "$tables/turnover/results_spill_turnover.csv"
 
 foreach outcome in $turnover_outcomes $flow_outcomes {
 
 	di as text "  Estimating: `outcome' (spillover)"
 
-	local absorb "`base_fe' ib0.`outcome'_pre4#i.year ib0.l_firm_emp_pre4#i.year `extra_year'"
+	local is_total_outcome = ("`outcome'" == "totalflows_pw")
+	local is_other_flow    = regexm("`outcome'", "flows_pw$") & !`is_total_outcome'
+
+	if `is_total_outcome' {
+		* Spec A: 2007-2011 totalflows bins (current spec — expected to fail, for comparison)
+		local absorb_A "`base_fe' ib0.l_firm_emp_pre4#i.year `extra_year'"
+		* Spec B: 2009-2011 totalflows bins (outcome_pre4 window)
+		local absorb_B "`base_fe' ib0.l_firm_emp_pre4#i.year ib0.totalflows_pw_pre4#i.year"
+		local absorb "`absorb_A'"   // primary for CSV/graph output
+	}
+	else if `is_other_flow' {
+		local absorb "`base_fe' ib0.l_firm_emp_pre4#i.year `extra_year'"
+	}
+	else {
+		local absorb "`base_fe' ib0.`outcome'_pre4#i.year ib0.l_firm_emp_pre4#i.year `extra_year'"
+	}
 
 	* Post-treatment
 	reghdfe `outcome' c.`conn'##i.treat_year if `s_spill', ///
@@ -478,8 +519,18 @@ foreach outcome in $turnover_outcomes $flow_outcomes {
 	* Event study for pre-trend F-test
 	reghdfe `outcome' c.`conn'##ib2011.year if `s_spill', ///
 		absorb(`absorb') vce(cluster identificad)
-	testparm c.`conn'#i(2009 2010).year
-	local pre_ftest_pval = r(p)
+	capture testparm c.`conn'#i(2009 2010).year
+	local pre_ftest_pval = cond(_rc == 0, r(p), .)
+
+	* Spec B comparison for totalflows_pw
+	if `is_total_outcome' {
+		di as result "--- totalflows_pw Spec B (outcome_pre4 bins, no extra_year) ---"
+		reghdfe `outcome' c.`conn'##i.treat_year if `s_spill', ///
+			absorb(`absorb_B') vce(cluster identificad)
+		di "Spec B post coef: " _b[1.treat_year#c.`conn'] ///
+		   "  se: " _se[1.treat_year#c.`conn'] ///
+		   "  R2: " e(r2)
+	}
 
 	* Baseline mean (spillover sample, 2009)
 	quietly sum `outcome' if `s_spill' & year == 2009
@@ -522,7 +573,7 @@ foreach outcome in $turnover_outcomes $flow_outcomes {
 		ci(95) ciopts(recast(rcap) color(blue)) mcolor(blue) ///
 		text(0.015 5 "`post_coef_s' (`post_se_s')", color(blue) size(small))
 
-	graph export "$graphs/es_`outcome'_spill_`d'.pdf", as(pdf) replace
+	graph export "$graphs/turnover/es_`outcome'_spill_`d'.pdf", as(pdf) replace
 	estimates drop _es_sp_tmp
 }
 
@@ -537,7 +588,7 @@ log close
 di as result "Finished: `c(current_date)' `c(current_time)'"
 
 * ── Auto-generate LaTeX tables ──────────────────────────────────────────────
-shell python3 "$programs/generate_turnover_latex.py"
+shell python3 "$programs/turnover/generate_turnover_latex.py"
 di as result "LaTeX tables written to Tables/turnover_tables.tex"
 
 ********************************************************************************

@@ -21,7 +21,7 @@ from pathlib import Path
 
 PROJECT_ROOT = Path("/gpfs/kellogg/proj/lgg3230/UnionSpill")
 RAIS_AUX = PROJECT_ROOT / "Data" / "RAIS_aux"
-GRAPHS = PROJECT_ROOT / "Graphs"
+GRAPHS = PROJECT_ROOT / "Graphs" / "connectivity"
 
 COEF_FILE = RAIS_AUX / "bilateral_pretreatment_coefficients.csv"
 
