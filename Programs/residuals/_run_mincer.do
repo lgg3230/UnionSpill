@@ -10,4 +10,4 @@ global graphs    "$main/UnionSpill/Graphs"
 global logs      "$main/UnionSpill/Logs"
 global programs  "$main/UnionSpill/Programs"
 
-do "$programs/Main_Results_mincer.do"
+do "$programs/residuals/Main_Results_mincer.do"

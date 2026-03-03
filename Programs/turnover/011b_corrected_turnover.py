@@ -198,7 +198,7 @@ for year in YEARS:
             WHERE empdec_lagos = 1
         ),
         dec_emp AS (
-            SELECT identificad, COUNT(*) AS firm_emp
+            SELECT identificad, COUNT(*) AS firm_emp, SUM(horascontr) AS total_hours
             FROM dec_ranked
             WHERE rn_dec = 1
             GROUP BY identificad
@@ -207,6 +207,7 @@ for year in YEARS:
             identificad,
             {year} AS year,
             firm_emp,
+            total_hours,
             0 AS separations_u,
             0 AS layoffs_u,
             0 AS quits_u,
@@ -263,7 +264,7 @@ for year in YEARS:
             WHERE empdec_lagos = 1
         ),
         dec_emp AS (
-            SELECT identificad, COUNT(*) AS firm_emp
+            SELECT identificad, COUNT(*) AS firm_emp, SUM(horascontr) AS total_hours
             FROM dec_ranked
             WHERE rn_dec = 1
             GROUP BY identificad
@@ -362,6 +363,7 @@ for year in YEARS:
             d.identificad,
             {year} AS year,
             d.firm_emp,
+            d.total_hours,
             COALESCE(s.separations_u, 0) AS separations_u,
             COALESCE(s.layoffs_u, 0)     AS layoffs_u,
             COALESCE(s.quits_u, 0)       AS quits_u,
@@ -401,7 +403,7 @@ print("Combining all years and computing rates...")
 panel = pd.concat(all_years, ignore_index=True)
 
 # DuckDB may return Decimal types; convert numeric columns to float
-numeric_cols = ["firm_emp", "separations_u", "layoffs_u", "quits_u", "other_sep_u",
+numeric_cols = ["firm_emp", "total_hours", "separations_u", "layoffs_u", "quits_u", "other_sep_u",
                 "hired_u", "firm_emp_jan", "jan_dec_count", "dec_yoy_count"]
 for c in numeric_cols:
     panel[c] = pd.to_numeric(panel[c], errors="coerce").astype(float)
@@ -452,6 +454,9 @@ panel = panel[panel["year"] >= 2009].copy()
 # Log employment
 panel["l_firm_emp"] = np.log(panel["firm_emp"].replace(0, np.nan))
 
+# Log total contracted hours
+panel["l_total_hours"] = np.log(panel["total_hours"].replace(0, np.nan))
+
 # Drop helper column
 panel.drop(columns=["firm_emp_lag"], inplace=True)
 
@@ -471,10 +476,11 @@ print(f"Saved to {OUTPUT_FILE}")
 # ---------------------------------------------------------------------------
 print(f"\n{'='*60}")
 print("Summary statistics:")
-for col in ["firm_emp", "avg_emp", "separations_u", "layoffs_u", "quits_u", "other_sep_u",
+for col in ["firm_emp", "total_hours", "avg_emp", "separations_u", "layoffs_u", "quits_u", "other_sep_u",
             "hired_u", "firm_emp_jan", "jan_dec_count", "dec_yoy_count",
             "turnover_u", "layoff_rate_u", "quit_rate_u",
-            "other_sep_rate_u", "hiring_rate_u", "retention_u", "retention_yoy_u"]:
+            "other_sep_rate_u", "hiring_rate_u", "retention_u", "retention_yoy_u",
+            "l_total_hours"]:
     s = panel[col].describe()
     print(f"  {col:20s}: mean={s['mean']:.3f}  median={s['50%']:.3f}  "
           f"min={s['min']:.3f}  max={s['max']:.1f}")
