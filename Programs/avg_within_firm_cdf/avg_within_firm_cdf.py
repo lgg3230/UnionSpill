@@ -15,9 +15,18 @@ This is the within-firm analog of the distributional comparison: each
 firm gets equal weight, and the between-firm variation does not inflate
 the within-firm spread.
 
+Reading the crosswalk lines
+---------------------------
+Dashed vertical lines mark selected percentiles of the treated distribution.
+Each label reads "T pX = C p(Y)": the wage that falls at the Xth percentile
+among treated firms corresponds to only the Yth percentile among control firms.
+Y < X throughout, meaning control firms systematically pay less — a worker at
+any given rank in the treated distribution would rank higher in the control
+distribution at the same wage.
+
 Outputs
 -------
-- Graphs/avg_within_firm_cdf/avg_within_firm_cdf_<date>.pdf   (pre vs. post, 2 panels)
+- Graphs/avg_within_firm_cdf/avg_within_firm_cdf_<date>.pdf
 """
 
 import os
@@ -99,7 +108,7 @@ periods = {
     "Pre-treatment (2009–2011)": (2009, 2011),
 }
 
-NBINS = 20
+NBINS = 12
 
 def avg_within_firm_hist(df, bins):
     """
@@ -123,7 +132,28 @@ def avg_within_firm_hist(df, bins):
 
 
 # ---------------------------------------------------------------------------
-# 5. Plot
+# 5. Quantile mapping (computed here so we can use it in the plot)
+# ---------------------------------------------------------------------------
+fine_grid = np.linspace(w_lo, w_hi, 2000)
+
+sub_pre = workers[workers["year"].between(2009, 2011)]
+
+def avg_within_firm_cdf_fine(df, grid):
+    firms = df["identificad"].unique()
+    cdf_matrix = np.zeros((len(firms), len(grid)), dtype=np.float32)
+    wages_by_firm = df.groupby("identificad")["lr_remdezr"].apply(np.array)
+    for k, fid in enumerate(firms):
+        w = wages_by_firm[fid]
+        cdf_matrix[k, :] = np.searchsorted(np.sort(w), grid, side="right") / len(w)
+    return cdf_matrix.mean(axis=0)
+
+cdf_treat   = avg_within_firm_cdf_fine(sub_pre[sub_pre["treat_ultra"] == 1][["identificad", "lr_remdezr"]], fine_grid)
+cdf_control = avg_within_firm_cdf_fine(sub_pre[sub_pre["treat_ultra"] == 0][["identificad", "lr_remdezr"]], fine_grid)
+
+REF_PCTS = [0.10, 0.25, 0.50, 0.75, 0.90]
+
+# ---------------------------------------------------------------------------
+# 6. Plot
 # ---------------------------------------------------------------------------
 
 # Register Libertinus Serif from project fonts/ directory
@@ -147,7 +177,7 @@ bin_width = bins[1] - bins[0]
 # Side-by-side offset: each group bar takes half the bin width
 half_w = bin_width * 0.45
 
-fig, ax = plt.subplots(1, 1, figsize=(7, 4.5))
+fig, ax = plt.subplots(1, 1, figsize=(10, 4.5))
 
 period_label, (y0, y1) = list(periods.items())[0]
 sub = workers[workers["year"].between(y0, y1)]
@@ -166,7 +196,25 @@ for offset, group, gval in [(-half_w / 2, "control", 0), (half_w / 2, "treated",
         width=half_w,
         color=COLORS[group],
         alpha=0.85,
-        label=f"{LABELS[group]} ({n_firms:,} firms)",
+        label=LABELS[group],
+    )
+
+# Add vertical reference lines at treated percentiles (labels just above plot)
+y_fracs = [1.01, 1.01, 1.01, 1.01, 1.01]  # all just above plot border
+for i, pct in enumerate(REF_PCTS):
+    idx = np.searchsorted(cdf_treat, pct)
+    w_star = fine_grid[min(idx, len(fine_grid) - 1)]
+    pct_in_control = np.interp(w_star, fine_grid, cdf_control) * 100
+
+    ax.axvline(w_star, color="black", linestyle="--", linewidth=1.4)
+
+    ax.text(
+        w_star, y_fracs[i],
+        f"T p{int(pct*100)}\n= C p{pct_in_control:.0f}",
+        transform=ax.get_xaxis_transform(),
+        ha="center", va="bottom", fontsize=10,
+        color="black",
+        clip_on=False,
     )
 
 ax.set_xlabel("Log wages (Dec 2015 R$)", fontsize=12, fontweight="bold")
@@ -175,6 +223,8 @@ ax.xaxis.set_major_formatter(mticker.FormatStrFormatter("%.1f"))
 ax.yaxis.set_major_formatter(mticker.PercentFormatter(xmax=1.0))
 ax.grid(axis="y", linestyle="--", alpha=0.4)
 ax.legend(loc="upper right", frameon=False, fontsize=11)
+ax.spines["top"].set_visible(False)
+ax.spines["right"].set_visible(False)
 
 fig.tight_layout()
 fig.savefig(OUT, bbox_inches="tight")
@@ -182,25 +232,9 @@ print(f"\nSaved: {OUT}")
 plt.close(fig)
 
 # ---------------------------------------------------------------------------
-# 6. Quantile mapping table: where does control p75 land in treated?
+# 7. Quantile mapping table: where does control p75 land in treated?
 # ---------------------------------------------------------------------------
 print("\n--- Quantile mapping (pooled 2009-2011, pre-treatment) ---")
-fine_grid = np.linspace(w_lo, w_hi, 2000)
-fine_bins = np.linspace(w_lo, w_hi, 2001)
-
-sub_pre = workers[workers["year"].between(2009, 2011)]
-
-def avg_within_firm_cdf_fine(df, grid):
-    firms = df["identificad"].unique()
-    cdf_matrix = np.zeros((len(firms), len(grid)), dtype=np.float32)
-    wages_by_firm = df.groupby("identificad")["lr_remdezr"].apply(np.array)
-    for k, fid in enumerate(firms):
-        w = wages_by_firm[fid]
-        cdf_matrix[k, :] = np.searchsorted(np.sort(w), grid, side="right") / len(w)
-    return cdf_matrix.mean(axis=0)
-
-cdf_treat   = avg_within_firm_cdf_fine(sub_pre[sub_pre["treat_ultra"] == 1][["identificad", "lr_remdezr"]], fine_grid)
-cdf_control = avg_within_firm_cdf_fine(sub_pre[sub_pre["treat_ultra"] == 0][["identificad", "lr_remdezr"]], fine_grid)
 
 for pct in [0.10, 0.25, 0.50, 0.75, 0.90]:
     idx_ctrl = np.searchsorted(cdf_control, pct)
