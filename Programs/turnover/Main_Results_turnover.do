@@ -77,7 +77,9 @@ preserve
 restore
 
 * Drop old static connectivity variables to avoid merge conflict
-cap drop totalflows_pw outflows_pw inflows_pw
+cap drop totalflows_pw
+cap drop outflows_pw
+cap drop inflows_pw
 
 merge 1:1 identificad year using `flows_panel', keep(master match) nogen
 label var totalflows_pw "Total bilateral flows per worker"
@@ -286,7 +288,7 @@ di as result "==================================================================
 local spec       "turnover"
 local conn       "totaltreat_pw_norm"
 local base_fe    "identificad i.industry1#i.year i.mode_base_month#i.year i.microregion#i.year"
-local extra_year "ib0.totalflows_pw_pre_07_114#i.year"
+local extra_year "ib0.totalflows_pw_pre4#i.year"
 
 * ── SAMPLE MACROS ───────────────────────────────────────────────────────────
 
@@ -345,23 +347,7 @@ foreach panel in A B C {
 
 		di as text "  Estimating: `outcome' (Panel `panel')"
 
-		* Flow outcomes: handle totalflows_pw separately (avoid perfect absorption)
-		local is_total_outcome = ("`outcome'" == "totalflows_pw")
-		local is_other_flow    = regexm("`outcome'", "flows_pw$") & !`is_total_outcome'
-
-		if `is_total_outcome' {
-			* Spec A: 2007-2011 totalflows bins (current spec — expected to fail, for comparison)
-			local absorb_A "`base_fe' ib0.l_firm_emp_pre4#i.year `extra_year'"
-			* Spec B: 2009-2011 totalflows bins (outcome_pre4 window)
-			local absorb_B "`base_fe' ib0.l_firm_emp_pre4#i.year ib0.totalflows_pw_pre4#i.year"
-			local absorb "`absorb_A'"   // primary for CSV/graph output
-		}
-		else if `is_other_flow' {
-			local absorb "`base_fe' ib0.l_firm_emp_pre4#i.year `extra_year'"
-		}
-		else {
-			local absorb "`base_fe' ib0.`outcome'_pre4#i.year ib0.l_firm_emp_pre4#i.year `extra_year'"
-		}
+		local absorb "`base_fe' ib0.`outcome'_pre4#i.year ib0.l_firm_emp_pre4#i.year `extra_year'"
 
 		* Post-treatment
 		reghdfe `outcome' treat_ultra##i.treat_year if `s_use', ///
@@ -397,16 +383,6 @@ foreach panel in A B C {
 			absorb(`absorb') vce(cluster identificad)
 		capture testparm 1.treat_ultra#i(2009 2010).year
 		local pre_ftest_pval = cond(_rc == 0, r(p), .)
-
-		* Spec B comparison for totalflows_pw
-		if `is_total_outcome' {
-			di as result "--- totalflows_pw Spec B (outcome_pre4 bins, no extra_year) ---"
-			reghdfe `outcome' treat_ultra##i.treat_year if `s_use', ///
-				absorb(`absorb_B') vce(cluster identificad)
-			di "Spec B post coef: " _b[1.treat_ultra#1.treat_year] ///
-			   "  se: " _se[1.treat_ultra#1.treat_year] ///
-			   "  R2: " e(r2)
-		}
 
 		* Baseline mean (untreated control group, 2009)
 		quietly sum `outcome' if `s_use_pre' & year == 2009
@@ -470,22 +446,7 @@ foreach outcome in $turnover_outcomes $flow_outcomes {
 
 	di as text "  Estimating: `outcome' (spillover)"
 
-	local is_total_outcome = ("`outcome'" == "totalflows_pw")
-	local is_other_flow    = regexm("`outcome'", "flows_pw$") & !`is_total_outcome'
-
-	if `is_total_outcome' {
-		* Spec A: 2007-2011 totalflows bins (current spec — expected to fail, for comparison)
-		local absorb_A "`base_fe' ib0.l_firm_emp_pre4#i.year `extra_year'"
-		* Spec B: 2009-2011 totalflows bins (outcome_pre4 window)
-		local absorb_B "`base_fe' ib0.l_firm_emp_pre4#i.year ib0.totalflows_pw_pre4#i.year"
-		local absorb "`absorb_A'"   // primary for CSV/graph output
-	}
-	else if `is_other_flow' {
-		local absorb "`base_fe' ib0.l_firm_emp_pre4#i.year `extra_year'"
-	}
-	else {
-		local absorb "`base_fe' ib0.`outcome'_pre4#i.year ib0.l_firm_emp_pre4#i.year `extra_year'"
-	}
+	local absorb "`base_fe' ib0.`outcome'_pre4#i.year ib0.l_firm_emp_pre4#i.year `extra_year'"
 
 	* Post-treatment
 	reghdfe `outcome' c.`conn'##i.treat_year if `s_spill', ///
@@ -521,16 +482,6 @@ foreach outcome in $turnover_outcomes $flow_outcomes {
 		absorb(`absorb') vce(cluster identificad)
 	capture testparm c.`conn'#i(2009 2010).year
 	local pre_ftest_pval = cond(_rc == 0, r(p), .)
-
-	* Spec B comparison for totalflows_pw
-	if `is_total_outcome' {
-		di as result "--- totalflows_pw Spec B (outcome_pre4 bins, no extra_year) ---"
-		reghdfe `outcome' c.`conn'##i.treat_year if `s_spill', ///
-			absorb(`absorb_B') vce(cluster identificad)
-		di "Spec B post coef: " _b[1.treat_year#c.`conn'] ///
-		   "  se: " _se[1.treat_year#c.`conn'] ///
-		   "  R2: " e(r2)
-	}
 
 	* Baseline mean (spillover sample, 2009)
 	quietly sum `outcome' if `s_spill' & year == 2009
