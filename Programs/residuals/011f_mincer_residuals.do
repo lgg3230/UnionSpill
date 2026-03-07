@@ -136,10 +136,19 @@ di as result "========================================================"
 * reghdfe with varying slopes: cell_id intercept + cell_id-specific age slopes
 * This implements: lr_remdezr = α(cell) + Σ βₖ(cell)·ageᵏ + ε
 * NOTE: no i. prefix — reghdfe absorb handles demeaning internally
+
+timer clear 1
+timer on 1
+di as result "  TIMING: lr_remdezr reghdfe started: `c(current_date)' `c(current_time)'"
+
 reghdfe lr_remdezr if !missing(lr_remdezr), ///
     absorb(cell_id cell_id#c.age1 cell_id#c.age2 ///
            cell_id#c.age3 cell_id#c.age4) ///
     residuals(lr_remdezr_resid)
+
+timer off 1
+timer list 1
+di as result "  TIMING: lr_remdezr reghdfe finished: `c(current_date)' `c(current_time)'"
 
 qui sum lr_remdezr_resid
 di as result "  Residual mean : " %9.6f r(mean) "  (should be ~0)"
@@ -155,10 +164,18 @@ di as result "========================================================"
 di as result "Outcome: lr_hourly (log hourly wage)"
 di as result "========================================================"
 
+timer clear 2
+timer on 2
+di as result "  TIMING: lr_hourly reghdfe started: `c(current_date)' `c(current_time)'"
+
 reghdfe lr_hourly if !missing(lr_hourly), ///
     absorb(cell_id cell_id#c.age1 cell_id#c.age2 ///
            cell_id#c.age3 cell_id#c.age4) ///
     residuals(lr_hourly_resid)
+
+timer off 2
+timer list 2
+di as result "  TIMING: lr_hourly reghdfe finished: `c(current_date)' `c(current_time)'"
 
 qui sum lr_hourly_resid
 di as result "  Residual mean : " %9.6f r(mean) "  (should be ~0)"

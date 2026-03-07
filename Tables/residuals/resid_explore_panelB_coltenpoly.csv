@@ -1,0 +1,9 @@
+spec,section,outcome,row_type,value
+"resid_explore";"direct_B";"lr_remdezr_resid";"main";   0.0160***"
+"resid_explore";"direct_B";"lr_remdezr_resid";"main_se";   0.0032"
+"resid_explore";"direct_B";"lr_remdezr_resid";"pre";   0.0028"
+"resid_explore";"direct_B";"lr_remdezr_resid";"pre_se";   0.0032"
+"resid_explore";"direct_B";"lr_remdezr_resid";"n_obs";     130,497"
+"resid_explore";"direct_B";"lr_remdezr_resid";"n_estab";      16,400"
+"resid_explore";"direct_B";"lr_remdezr_resid";"pre_pval";   0.0039"
+"resid_explore";"direct_B";"lr_remdezr_resid";"mean_pre";  -0.1247"

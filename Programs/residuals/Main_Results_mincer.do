@@ -19,6 +19,11 @@ log using "$logs/residuals/FinalResults_mincer_`d'_`t'.log", replace text
 di "Started: `c(current_date)' `c(current_time)'"
 di "Stata version: `c(stata_version)'"
 
+* Allow caller to override residuals CSV name and output suffix
+* Defaults: standard Stata residuals, no suffix on output filenames
+if "$resid_csv_name"  == "" global resid_csv_name  "mincer_residuals_firm_year.csv"
+if "$results_suffix"  == "" global results_suffix   ""
+
 ********************************************************************************
 * SECTION 1: SETUP AND DATA MERGE
 ********************************************************************************
@@ -46,7 +51,7 @@ use "$rais_firm/lagos_sample_sep24_pct_unionexp_ext_df2.dta", clear
 di as result "Merging Mincer residuals..."
 
 preserve
-	import delimited "$rais_firm/mincer_residuals_firm_year.csv", clear
+	import delimited "$rais_firm/$resid_csv_name", clear
 	tostring identificad, replace format(%014.0f) force
 	keep identificad year lr_remdezr_resid lr_hourly_resid
 	tempfile mincer
@@ -240,16 +245,16 @@ local s_spill    "lagos_sample_avg==1 & treat_ultra==0 & in_balanced_panel==1"
 * ── INITIALIZE OUTPUT CSV FILES ─────────────────────────────────────────────
 
 foreach panel in A B {
-	capture erase "$tables/residuals/results_direct_panel`panel'_mincer.csv"
+	capture erase "$tables/residuals/results_direct_panel`panel'_mincer$results_suffix.csv"
 	tempname fh
-	file open `fh' using "$tables/residuals/results_direct_panel`panel'_mincer.csv", write replace
+	file open `fh' using "$tables/residuals/results_direct_panel`panel'_mincer$results_suffix.csv", write replace
 	file write `fh' "spec,section,outcome,row_type,value" _n
 	file close `fh'
 }
 
-capture erase "$tables/residuals/results_spill_mincer.csv"
+capture erase "$tables/residuals/results_spill_mincer$results_suffix.csv"
 tempname fh
-file open `fh' using "$tables/residuals/results_spill_mincer.csv", write replace
+file open `fh' using "$tables/residuals/results_spill_mincer$results_suffix.csv", write replace
 file write `fh' "spec,section,outcome,row_type,value" _n
 file close `fh'
 
@@ -282,7 +287,7 @@ foreach panel in A B {
 		local section   "direct_B"
 	}
 
-	local csv_out "$tables/residuals/results_direct_panel`panel'_mincer.csv"
+	local csv_out "$tables/residuals/results_direct_panel`panel'_mincer$results_suffix.csv"
 
 	di _newline(1)
 	di as result "--- Panel `panel' ---"
@@ -356,7 +361,7 @@ di as result "------------------------------------------------------------------
 di as result "SPILLOVER EFFECTS"
 di as result "-----------------------------------------------------------------------"
 
-local csv_spill "$tables/residuals/results_spill_mincer.csv"
+local csv_spill "$tables/residuals/results_spill_mincer$results_suffix.csv"
 
 foreach outcome in lr_remdezr_w lr_remdezr_resid lr_remdezr_h_w lr_hourly_resid {
 
