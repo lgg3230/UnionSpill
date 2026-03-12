@@ -137,10 +137,10 @@ for i in "${!FILE_LABELS[@]}"; do
     # Create local dir
     if [[ "$local" == */ ]]; then
         mkdir -p "$local"
-        rsync -az --info=progress2 "${SRC}:${remote}" "${local}"
+        rsync -az --progress "${SRC}:${remote}" "${local}"
     else
         mkdir -p "$(dirname "$local")"
-        rsync -az --info=progress2 "${SRC}:${remote}" "${local}"
+        rsync -az --progress "${SRC}:${remote}" "${local}"
     fi
 
     echo -e "  ${GREEN}✓ done${RESET}"
