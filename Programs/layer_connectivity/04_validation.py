@@ -4,7 +4,7 @@ Script 04: Validation and diagnostics.
 
 A. Coverage diagnostics: distribution of count_n across (firm, layer) cells.
 B. Reconstruction check: employment-weighted average of layer measures vs original
-   firm-level totaltreat_pw_n.
+   firm-level totaltreat_pw_n (which differs: that is the all-worker firm measure).
 C. Layer mixing summary: within/cross-layer shares across all movers.
 
 Usage:
@@ -20,7 +20,7 @@ import pandas as pd
 import numpy as np
 
 sys.path.insert(0, os.path.dirname(__file__))
-from layer_config import LAYER_DEFS, OUT_BASE, ORIG_FIRM_CONN
+from layer_config import LAYER_DEFS, OUT_BASE, ORIG_FIRM_CONN, ORIG_FIRM_CONN_PARQUET
 
 
 def parse_args():
@@ -31,7 +31,7 @@ def parse_args():
 
 def coverage_diagnostics(df: pd.DataFrame, layer: str, out_dir: str):
     """Distribution of count_n across (firm, layer) cells."""
-    count_col = "totaltreat_pw_n_count_n"
+    count_col = "layer_treat_pw_n_count_n"
     if count_col not in df.columns:
         print(f"  Warning: column {count_col} not found; skipping coverage diagnostics")
         return
@@ -41,7 +41,7 @@ def coverage_diagnostics(df: pd.DataFrame, layer: str, out_dir: str):
     for k in range(5):
         n = (df[count_col] == k).sum()
         rows.append({"count_n": k, "n_cells": n, "share": n / total})
-    n_missing = df["totaltreat_pw_n"].isna().sum()
+    n_missing = df["layer_treat_pw_n"].isna().sum()
     rows.append({"count_n": "missing", "n_cells": n_missing,
                  "share": n_missing / total})
 
@@ -54,12 +54,12 @@ def coverage_diagnostics(df: pd.DataFrame, layer: str, out_dir: str):
 
 def reconstruction_check(df_layer: pd.DataFrame, layer: str, out_dir: str):
     """
-    Employment-weighted average of layer totaltreat_pw_n should approximate
+    Employment-weighted average of layer_treat_pw_n should approximate
     the original firm-level totaltreat_pw_n.
 
     Issues 15 & 17: compute reconstruction per year pair (not pooled across all
     4 pairs), using a NaN-aware average across pairs.  Rows with NaN
-    totaltreat_pw_n are excluded from the weighted sum rather than filled
+    layer_treat_pw_n are excluded from the weighted sum rather than filled
     with 0 (which would bias the reconstruction downward).
     """
     trans_path = os.path.join(OUT_BASE, "transitions_base",
@@ -90,7 +90,7 @@ def reconstruction_check(df_layer: pd.DataFrame, layer: str, out_dir: str):
     )
     df_merged = df_emp_pair.merge(df_firm_pair, on=["identificad", "pair_label"])
     df_merged = df_merged.merge(
-        df_layer[["identificad", "layer_id", "totaltreat_pw_n"]],
+        df_layer[["identificad", "layer_id", "layer_treat_pw_n"]],
         on=["identificad", "layer_id"],
         how="left",
     )
@@ -98,12 +98,12 @@ def reconstruction_check(df_layer: pd.DataFrame, layer: str, out_dir: str):
 
     # Issue 17: do NOT fill NaN with 0; use NaN × weight = NaN so that
     # missing-layer rows are excluded from each pair's contribution.
-    df_merged["weighted_measure"] = df_merged["weight"] * df_merged["totaltreat_pw_n"]
+    df_merged["weighted_measure"] = df_merged["weight"] * df_merged["layer_treat_pw_n"]
 
     # Contribution per (firm, pair): employment-weighted sum of layer measure.
     # Returns NaN when all layers in a firm-pair have no measure.
     def _pair_contribution(g):
-        if g["totaltreat_pw_n"].notna().any():
+        if g["layer_treat_pw_n"].notna().any():
             return g["weighted_measure"].sum(skipna=True)
         return float("nan")
 
@@ -120,11 +120,14 @@ def reconstruction_check(df_layer: pd.DataFrame, layer: str, out_dir: str):
         .reset_index(name="reconstructed")
     )
 
-    # Load original firm-level measure
-    if not os.path.exists(ORIG_FIRM_CONN):
-        print(f"  {ORIG_FIRM_CONN} not found; skipping reconstruction check.")
+    # Load original firm-level measure (parquet preferred, DTA fallback)
+    if os.path.exists(ORIG_FIRM_CONN_PARQUET):
+        df_orig = pd.read_parquet(ORIG_FIRM_CONN_PARQUET)
+    elif os.path.exists(ORIG_FIRM_CONN):
+        df_orig = pd.read_stata(ORIG_FIRM_CONN, columns=["identificad", "totaltreat_pw_n"])
+    else:
+        print(f"  {ORIG_FIRM_CONN_PARQUET} not found; skipping reconstruction check.")
         return
-    df_orig = pd.read_stata(ORIG_FIRM_CONN, columns=["identificad", "totaltreat_pw_n"])
     df_orig = df_orig.rename(columns={"totaltreat_pw_n": "original"})
 
     df_cmp = df_reconstructed.merge(df_orig, on="identificad", how="inner")
@@ -218,13 +221,18 @@ def main():
     out_dir = os.path.join(OUT_BASE, "validation")
     os.makedirs(out_dir, exist_ok=True)
 
-    # Load final measures (filename updated per Issue 13 rename in 03_compute_n.py)
-    final_path = os.path.join(OUT_BASE, "final_measures",
-                               f"firm_layer_connectivity_{args.layer}.dta")
-    if not os.path.exists(final_path):
-        print(f"Final measures file not found: {final_path}")
+    # Load final measures — parquet preferred, DTA fallback
+    parquet_path = os.path.join(OUT_BASE, "final_measures",
+                                f"firm_layer_connectivity_{args.layer}.parquet")
+    dta_path     = os.path.join(OUT_BASE, "final_measures",
+                                f"firm_layer_connectivity_{args.layer}.dta")
+    if os.path.exists(parquet_path):
+        df = pd.read_parquet(parquet_path)
+    elif os.path.exists(dta_path):
+        df = pd.read_stata(dta_path)
+    else:
+        print(f"Final measures file not found: {parquet_path}")
         sys.exit(1)
-    df = pd.read_stata(final_path)
 
     print("\n=== A. Coverage Diagnostics ===")
     coverage_diagnostics(df, args.layer, out_dir)

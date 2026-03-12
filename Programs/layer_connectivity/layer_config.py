@@ -16,6 +16,12 @@ LAYER_DEFS = {
                            labels=["0_no_hs", "1_hs", "2_higher"]),
         "parquet_col": "educ_bin",   # pre-computed in worker_panel_lagos.parquet
     },
+    "edu2": {
+        "description": "Education bins: no_hs / has_hs (derived from edu via remap)",
+        "raw_cols":    ["grinstrucao"],
+        "compute":     None,   # derived from edu; run 01b_remap_edu2.py instead of 01
+        "parquet_col": "educ_bin",
+    },
 }
 
 YEAR_PAIRS  = [(2007, 2008), (2008, 2009), (2009, 2010), (2010, 2011)]
@@ -42,7 +48,10 @@ RAIS_AUX  = os.path.join(_proj, "Data/RAIS_aux")
 CBA_FIRM  = os.path.join(_proj, "Data/CBA_RAIS_firm_level")
 OUT_BASE  = os.path.join(_proj, "Data/layer_connectivity")
 
-YEARLY_EMP_TEMPLATE  = os.path.join(RAIS_AUX, "yearly_employers_{year}.dta")
-WORKER_PANEL_PARQUET = os.path.join(CBA_FIRM,  "worker_panel_lagos.parquet")
-CBA_RAIS_FIRM        = os.path.join(CBA_FIRM,  "cba_rais_firm_2009_2016_flows_1.dta")
-ORIG_FIRM_CONN       = os.path.join(RAIS_AUX,  "connectivity_treat_2007_2011_agg.dta")
+YEARLY_EMP_TEMPLATE         = os.path.join(RAIS_AUX, "yearly_employers_{year}.dta")
+YEARLY_EMP_PARQUET_TEMPLATE = os.path.join(RAIS_AUX, "yearly_employers_{year}.parquet")
+WORKER_PANEL_PARQUET        = os.path.join(CBA_FIRM,  "worker_panel_lagos.parquet")
+CBA_RAIS_FIRM               = os.path.join(CBA_FIRM,  "cba_rais_firm_2009_2016_flows_1.dta")
+FIRM_STATUS_PARQUET         = os.path.join(CBA_FIRM,  "firm_status.parquet")
+ORIG_FIRM_CONN              = os.path.join(RAIS_AUX,  "connectivity_treat_2007_2011_agg.dta")
+ORIG_FIRM_CONN_PARQUET      = os.path.join(RAIS_AUX,  "connectivity_treat_2007_2011_agg.parquet")

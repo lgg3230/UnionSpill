@@ -448,7 +448,7 @@ foreach panel in A B C {
 				ci(95) ciopts(recast(rcap) color(blue)) mcolor(blue) ///
 				text(0.05 6 "`post_coef_s' (`post_se_s')", color(blue) size(small))
 
-			graph export "$graphs/es_`outcome'_direct`panel'_`d'.pdf", as(pdf) replace
+			cap graph export "$graphs/es_`outcome'_direct`panel'_`d'.pdf", as(pdf) replace
 			estimates drop _es_d_tmp
 		}
 	}
@@ -534,7 +534,7 @@ foreach panel in A B C {
 			ci(95) ciopts(recast(rcap) color(blue)) mcolor(blue) ///
 			text(2.5 4 "`post_coef_s' (`post_se_s')", color(blue) size(small))
 
-		graph export "$graphs/es_numb_clauses_direct`panel'_`d'.pdf", as(pdf) replace
+		cap graph export "$graphs/es_numb_clauses_direct`panel'_`d'.pdf", as(pdf) replace
 		estimates drop _es_d_tmp
 	}
 
@@ -632,7 +632,7 @@ foreach outcome in $base_outcomes $pct_outcomes_dec $pct_outcomes_hr $ratio_outc
 			ci(95) ciopts(recast(rcap) color(blue)) mcolor(blue) ///
 			text(0.015 5 "`post_coef_s' (`post_se_s')", color(blue) size(small))
 
-		graph export "$graphs/es_`outcome'_spill_`d'.pdf", as(pdf) replace
+		cap graph export "$graphs/es_`outcome'_spill_`d'.pdf", as(pdf) replace
 		estimates drop _es_sp_tmp
 	}
 }
@@ -717,7 +717,7 @@ if _rc == 0 {
 		ci(95) ciopts(recast(rcap) color(blue)) mcolor(blue) ///
 		text(0.6 4 "`post_coef_s' (`post_se_s')", color(blue) size(small))
 
-	graph export "$graphs/es_numb_clauses_spill_`d'.pdf", as(pdf) replace
+	cap graph export "$graphs/es_numb_clauses_spill_`d'.pdf", as(pdf) replace
 	estimates drop _es_sp_tmp
 }
 

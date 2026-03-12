@@ -1,20 +1,12 @@
 #!/usr/bin/env python3
 """
-Script 02: Aggregate transition records to (firm, layer, year_pair) level.
+Script 02d: Aggregate demographic transition records to (firm, layer, year_pair) level.
 
-Computes:
-  - E_t:         workers at focal firm in year t (outflow records)
-  - E_t1:        workers at focal firm in year t+1 (inflow records)
-  - E_avg:       (E_t + E_t1) / 2  — average employment denominator
-  - ratio_total: (outflows to treated + inflows from treated) / E_avg
-  - ratio_same:  contacts with treated in same layer / workers with observed contact layer
-  - ratio_cross: contacts with treated in cross layer / workers with observed contact layer
-
-Outputs long and wide parquet files.
+Identical logic to 02_aggregate.py; handles gender and race layers.
 
 Usage:
-    python 02_aggregate.py --layer occ3
-    python 02_aggregate.py --layer edu
+    python 02d_aggregate_demog.py --layer gender
+    python 02d_aggregate_demog.py --layer race
 """
 
 import argparse
@@ -25,12 +17,12 @@ import pandas as pd
 import numpy as np
 
 sys.path.insert(0, os.path.dirname(__file__))
-from layer_config import LAYER_DEFS, PAIR_LABELS, OUT_BASE
+from layer_config import PAIR_LABELS, OUT_BASE
 
 
 def parse_args():
     p = argparse.ArgumentParser()
-    p.add_argument("--layer", required=True, choices=list(LAYER_DEFS.keys()))
+    p.add_argument("--layer", required=True, choices=["gender", "race"])
     return p.parse_args()
 
 
@@ -50,16 +42,8 @@ def main():
     con.execute("PRAGMA threads=8")
     con.execute("PRAGMA memory_limit='32GB'")
 
-    # Register the input parquet
     con.execute(f"CREATE VIEW transitions AS SELECT * FROM read_parquet('{in_path}')")
 
-    # Aggregate using new symmetric schema
-    # E_t       = count of outflow records (workers at focal firm in year t)
-    # E_t1      = count of inflow records  (workers at focal firm in year t+1)
-    # E_avg     = (E_t + E_t1) / 2.0       (average employment denominator)
-    # M_out_any = movers to any other firm (outflows)
-    # M_in_any  = movers from any other firm (inflows)
-    # totalflows_layer_pw = (M_out_any + M_in_any) / E_avg
     query = """
         WITH agg AS (
             SELECT
@@ -95,12 +79,10 @@ def main():
     """
     df = con.execute(query).fetch_arrow_table().to_pandas()
 
-    # Cast COUNT()/SUM() columns from Decimal to float
     for col in ["E_t", "E_t1", "E_avg", "M_total", "M_same", "M_cross",
                 "N_contact_layer_obs", "M_out_any", "M_in_any"]:
         df[col] = df[col].astype(float)
 
-    # Compute ratios (replace 0 denominator with NaN → ratio becomes NaN)
     df["ratio_total"] = df["M_total"] / df["E_avg"].replace(0, np.nan)
     N = df["N_contact_layer_obs"].replace(0, np.nan)
     df["ratio_same"]  = df["M_same"]  / N
@@ -109,8 +91,7 @@ def main():
     print(f"Long components: {len(df):,} rows")
     df.to_parquet(long_path, index=False)
 
-    # Reshape to wide: one row per (identificad, layer_id)
-    pair_values = list(PAIR_LABELS.values())  # ["0708","0809","0910","1011"]
+    pair_values = list(PAIR_LABELS.values())
 
     df_wide = df.pivot_table(
         index=["identificad_focal", "layer_id_focal"],
