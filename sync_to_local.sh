@@ -15,7 +15,7 @@ REMOTE_HOST="kellogg.northwestern.edu"
 REMOTE_ROOT="/kellogg/proj/lgg3230/UnionSpill"
 REMOTE_RAIS="/kellogg/proj/lgg3230/RAIS/output/data/full"
 
-LOCAL_ROOT="$HOME/UnionSpill"   # change this to wherever your repo is cloned
+LOCAL_ROOT="/Users/luisg/Library/CloudStorage/OneDrive-NorthwesternUniversity/4 - PhD/02_Research/Org_Econ BR/UnionSpillovers/Cluster/UnionSpill"
 # ─────────────────────────────────────────────────────────────────────────────
 
 FULL=false
