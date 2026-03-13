@@ -7,8 +7,8 @@ Computes:
   - E_t1:        workers at focal firm in year t+1 (inflow records)
   - E_avg:       (E_t + E_t1) / 2  — average employment denominator
   - ratio_total: (outflows to treated + inflows from treated) / E_avg
-  - ratio_same:  contacts with treated in same layer / workers with observed contact layer
-  - ratio_cross: contacts with treated in cross layer / workers with observed contact layer
+  - ratio_same:  contacts with treated in same layer / E_avg  (additive decomposition of ratio_total)
+  - ratio_cross: contacts with treated in cross layer / E_avg (additive decomposition of ratio_total)
 
 Outputs long and wide parquet files.
 
@@ -101,10 +101,10 @@ def main():
         df[col] = df[col].astype(float)
 
     # Compute ratios (replace 0 denominator with NaN → ratio becomes NaN)
-    df["ratio_total"] = df["M_total"] / df["E_avg"].replace(0, np.nan)
-    N = df["N_contact_layer_obs"].replace(0, np.nan)
-    df["ratio_same"]  = df["M_same"]  / N
-    df["ratio_cross"] = df["M_cross"] / N
+    E = df["E_avg"].replace(0, np.nan)
+    df["ratio_total"] = df["M_total"] / E
+    df["ratio_same"]  = df["M_same"]  / E
+    df["ratio_cross"] = df["M_cross"] / E
 
     print(f"Long components: {len(df):,} rows")
     df.to_parquet(long_path, index=False)

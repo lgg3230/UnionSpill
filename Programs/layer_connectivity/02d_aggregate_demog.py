@@ -83,10 +83,10 @@ def main():
                 "N_contact_layer_obs", "M_out_any", "M_in_any"]:
         df[col] = df[col].astype(float)
 
-    df["ratio_total"] = df["M_total"] / df["E_avg"].replace(0, np.nan)
-    N = df["N_contact_layer_obs"].replace(0, np.nan)
-    df["ratio_same"]  = df["M_same"]  / N
-    df["ratio_cross"] = df["M_cross"] / N
+    E = df["E_avg"].replace(0, np.nan)
+    df["ratio_total"] = df["M_total"] / E
+    df["ratio_same"]  = df["M_same"]  / E
+    df["ratio_cross"] = df["M_cross"] / E
 
     print(f"Long components: {len(df):,} rows")
     df.to_parquet(long_path, index=False)
