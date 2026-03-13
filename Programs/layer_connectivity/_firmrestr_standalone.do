@@ -61,13 +61,12 @@ save `tfwide'
 use "$rais_firm/lagos_sample_sep24_pct_unionexp_ext_df2.dta", clear
 keep if year >= 2009
 
-merge m:1 identificad using `tfwide',      keep(master match) nogen
-merge m:1 identificad using `restr_firms', keep(match)        nogen
+merge m:1 identificad using `tfwide', keep(master match) nogen
 
 keep if lagos_sample_avg == 1
 
 count
-di as result "  Firm-panel obs after restriction: `r(N)'"
+di as result "  Firm-panel obs (full sample, before layer restriction): `r(N)'"
 
 * ── Step 4: Encode categorical FE variables ──────────────────────────────────
 capture confirm string variable industry1
@@ -87,22 +86,18 @@ cap drop treat_year placebo_year
 gen byte treat_year   = (year >= 2012)
 gen byte placebo_year = (year < 2011)
 
-* ── Step 6: Firm connectivity scaling (P90 in restricted control sample) ──────
+* ── Step 6: Firm connectivity scaling (P90 anchored to FULL spillover sample) ──
 local s_spill_r "lagos_sample_avg==1 & treat_ultra==0 & in_balanced_panel==1"
 sum totaltreat_pw_n if `s_spill_r' & year == 2009, detail
 gen double totaltreat_pw_norm_r = totaltreat_pw_n / r(p90)
-label var totaltreat_pw_norm_r "Firm connectivity (scaled to P90, restricted sample)"
+label var totaltreat_pw_norm_r "Firm connectivity (scaled to P90, full spillover sample)"
 
 * ── Step 7: Pre-treatment firm employment bins ────────────────────────────────
 bys identificad: egen firm_emp_pre_o = mean(firm_emp) if inrange(year, 2009, 2011)
 bys identificad: egen firm_emp_pre   = min(firm_emp_pre_o)
 drop firm_emp_pre_o
 gen double l_firm_emp_pre = ln(firm_emp_pre)
-egen l_firm_emp_pre4_o = cut(l_firm_emp_pre) ///
-	if year == 2009 & in_balanced_panel == 1, group(4)
-bys identificad: egen l_firm_emp_pre4 = min(l_firm_emp_pre4_o)
-drop l_firm_emp_pre4_o
-replace l_firm_emp_pre4 = 0 if missing(l_firm_emp_pre4)
+* (bins for l_firm_emp_pre4 computed in Step 8b on full sample)
 
 * ── Step 8: Pre-treatment totalflows bins ─────────────────────────────────────
 gen double totalflows_pw_pre_07_11     = 0
@@ -121,6 +116,32 @@ egen totalflows_pw_pre4_r_o = cut(totalflows_pw_pre_07_11) ///
 bys identificad: egen totalflows_pw_pre4_r = min(totalflows_pw_pre4_r_o)
 drop totalflows_pw_pre4_r_o
 replace totalflows_pw_pre4_r = 0 if missing(totalflows_pw_pre4_r)
+
+* ── Step 8b: Pre-treatment outcome bins (FULL sample, to match main spec) ─────
+* Wage outcomes: compute _pre (mean 2009-2011) then quartile bins
+foreach outcome in lr_remdezr_w lr_remdezr_h_w {
+	cap drop `outcome'_pre_o `outcome'_pre `outcome'_pre4_o `outcome'_pre4
+	bys identificad: egen `outcome'_pre_o = mean(`outcome') if inrange(year, 2009, 2011)
+	bys identificad: egen `outcome'_pre   = min(`outcome'_pre_o)
+	drop `outcome'_pre_o
+	egen `outcome'_pre4_o = cut(`outcome'_pre) ///
+		if year == 2009 & in_balanced_panel == 1, group(4)
+	bys identificad: egen `outcome'_pre4 = min(`outcome'_pre4_o)
+	drop `outcome'_pre4_o
+	replace `outcome'_pre4 = 0 if missing(`outcome'_pre4)
+}
+* l_firm_emp: _pre already created in Step 7 as ln(firm_emp_pre); only need bins
+cap drop l_firm_emp_pre4_o l_firm_emp_pre4
+egen l_firm_emp_pre4_o = cut(l_firm_emp_pre) ///
+	if year == 2009 & in_balanced_panel == 1, group(4)
+bys identificad: egen l_firm_emp_pre4 = min(l_firm_emp_pre4_o)
+drop l_firm_emp_pre4_o
+replace l_firm_emp_pre4 = 0 if missing(l_firm_emp_pre4)
+
+* ── Step 9: Restrict to layer firms ───────────────────────────────────────────
+merge m:1 identificad using `restr_firms', keep(match) nogen
+count
+di as result "  Firm-panel obs after layer restriction: `r(N)'"
 
 di as result "Variables created."
 
@@ -146,18 +167,7 @@ foreach outcome in lr_remdezr_w lr_remdezr_h_w l_firm_emp {
 
 	di as text "  Estimating: `outcome'"
 
-	cap drop `outcome'_pre_o
-	cap drop `outcome'_pre
-	cap drop `outcome'_pre4_o
-	cap drop `outcome'_pre4
-	bys identificad: egen `outcome'_pre_o = mean(`outcome') if inrange(year, 2009, 2011)
-	bys identificad: egen `outcome'_pre   = min(`outcome'_pre_o)
-	drop `outcome'_pre_o
-	egen `outcome'_pre4_o = cut(`outcome'_pre) ///
-		if year == 2009 & in_balanced_panel == 1, group(4)
-	bys identificad: egen `outcome'_pre4 = min(`outcome'_pre4_o)
-	drop `outcome'_pre4_o
-	replace `outcome'_pre4 = 0 if missing(`outcome'_pre4)
+	* _pre and _pre4 already computed on full sample in Step 8b above
 
 	local absorb_r "`base_fe_r' ib0.`outcome'_pre4#i.year ib0.l_firm_emp_pre4#i.year `extra_r'"
 

@@ -4,15 +4,16 @@
 *          layer-specific connectivity to treated firms as the treatment variable.
 *          Identifies within-firm cross-layer variation in spillover transmission.
 *
-* Layers:  edu  (3-bin: 0_no_hs / 1_hs / 2_higher)
-*          edu2 (2-bin: no_hs / has_hs)
+* Layers:  edu2   (2-bin: no_hs / has_hs)
+*          gender (female / male)
+*          race   (white / nonwhite)
 *
 * Main FE: identificad × year  — absorbs all firm-level controls
 * Other FE (layer-level, vary within firm×year):
 *          outcome_pre4 × year, l_layer_emp_pre4 × year,
 *          layer_totalflows_pw_pre4 × year
 *
-* Output:  Tables/layer_connectivity/results_spill_layer_{edu,edu2}_layer_spill.csv
+* Output:  Tables/layer_connectivity/results_spill_layer_{edu2,gender,race}_layer_spill.csv
 *          Graphs/layer_connectivity/es_{outcome}_spill_{layer}_{date}.pdf
 ********************************************************************************
 
@@ -45,7 +46,7 @@ local  spec       "layer_spill"
 * SECTION 2: LOOP OVER LAYER DEFINITIONS
 ********************************************************************************
 
-foreach layer in edu edu2 {
+foreach layer in edu2 gender race {
 
 	di _newline(2)
 	di as result "======================================================================="
@@ -66,7 +67,7 @@ foreach layer in edu edu2 {
 	* ── 2b. Merge connectivity (firm × layer, time-invariant pre-treatment) ──
 	di as result "Merging layer connectivity..."
 	merge m:1 identificad layer_id using ///
-		"$layer_data/final_measures/firm_layer_connectivity_edu2.dta", ///
+		"$layer_data/final_measures/firm_layer_connectivity_`layer'.dta", ///
 		keep(master match) nogen
 
 	count
@@ -174,7 +175,7 @@ foreach layer in edu edu2 {
 	****************************************************************************
 
 	local conn       "layer_conn_norm"
-	local base_fe    "i.identificad#i.year"
+	local base_fe    "i.firm_id#i.year"
 	local extra_year "ib0.layer_totalflows_pw_pre4#i.year"
 
 	****************************************************************************
@@ -451,11 +452,10 @@ foreach layer in edu edu2 {
 	use "$rais_firm/lagos_sample_sep24_pct_unionexp_ext_df2.dta", clear
 	keep if year >= 2009
 	merge m:1 identificad using `tfwide', keep(master match) nogen
-	merge m:1 identificad using `restr_firms', keep(match) nogen
 	keep if lagos_sample_avg == 1
 
 	count
-	di as result "  Firm-panel obs after restriction: `r(N)'"
+	di as result "  Firm-panel obs (full sample, before layer restriction): `r(N)'"
 
 	* ── Encode categorical FE variables ──────────────────────────────────
 	capture confirm string variable industry1
@@ -476,14 +476,14 @@ foreach layer in edu edu2 {
 	cap drop placebo_year
 	gen byte placebo_year = (year < 2011)
 
-	* ── Firm connectivity scaling (P90 in restricted control sample) ──────
+	* ── Firm connectivity scaling (P90 anchored to FULL spillover sample) ──
 	local s_spill_r "lagos_sample_avg==1 & treat_ultra==0 & in_balanced_panel==1"
 	sum totaltreat_pw_n if `s_spill_r' & year == 2009, detail
 	cap drop totaltreat_pw_norm_r
 	gen double totaltreat_pw_norm_r = totaltreat_pw_n / r(p90)
-	label var totaltreat_pw_norm_r "Firm connectivity (scaled to P90, restricted sample)"
+	label var totaltreat_pw_norm_r "Firm connectivity (scaled to P90, full spillover sample)"
 
-	* ── Pre-treatment firm employment bins ───────────────────────────────
+	* ── Pre-treatment firm employment (full sample) ───────────────────────
 	cap drop firm_emp_pre_o
 	cap drop firm_emp_pre
 	bys identificad: ///
@@ -493,13 +493,7 @@ foreach layer in edu edu2 {
 	drop firm_emp_pre_o
 	cap drop l_firm_emp_pre
 	gen double l_firm_emp_pre = ln(firm_emp_pre)
-	cap drop l_firm_emp_pre4_o
-	cap drop l_firm_emp_pre4
-	egen l_firm_emp_pre4_o = cut(l_firm_emp_pre) ///
-		if year == 2009 & in_balanced_panel == 1, group(4)
-	bys identificad: egen l_firm_emp_pre4 = min(l_firm_emp_pre4_o)
-	drop l_firm_emp_pre4_o
-	replace l_firm_emp_pre4 = 0 if missing(l_firm_emp_pre4)
+	* (l_firm_emp_pre4 bins computed in full-sample step below)
 
 	* ── Pre-treatment totalflows bins ────────────────────────────────────
 	cap drop totalflows_pw_pre_07_11
@@ -521,6 +515,35 @@ foreach layer in edu edu2 {
 	bys identificad: egen totalflows_pw_pre4_r = min(totalflows_pw_pre4_r_o)
 	drop totalflows_pw_pre4_r_o
 	replace totalflows_pw_pre4_r = 0 if missing(totalflows_pw_pre4_r)
+
+	* ── Pre-treatment outcome bins (FULL sample, to match main spec) ──────
+	foreach outcome in lr_remdezr_w lr_remdezr_h_w {
+		cap drop `outcome'_pre_o `outcome'_pre `outcome'_pre4_o `outcome'_pre4
+		bys identificad: ///
+			egen `outcome'_pre_o = mean(`outcome') if inrange(year, 2009, 2011)
+		bys identificad: ///
+			egen `outcome'_pre   = min(`outcome'_pre_o)
+		drop `outcome'_pre_o
+		egen `outcome'_pre4_o = cut(`outcome'_pre) ///
+			if year == 2009 & in_balanced_panel == 1, group(4)
+		bys identificad: ///
+			egen `outcome'_pre4 = min(`outcome'_pre4_o)
+		drop `outcome'_pre4_o
+		replace `outcome'_pre4 = 0 if missing(`outcome'_pre4)
+	}
+	* l_firm_emp: _pre already set as ln(firm_emp_pre) above; only need bins
+	cap drop l_firm_emp_pre4_o l_firm_emp_pre4
+	egen l_firm_emp_pre4_o = cut(l_firm_emp_pre) ///
+		if year == 2009 & in_balanced_panel == 1, group(4)
+	bys identificad: ///
+		egen l_firm_emp_pre4 = min(l_firm_emp_pre4_o)
+	drop l_firm_emp_pre4_o
+	replace l_firm_emp_pre4 = 0 if missing(l_firm_emp_pre4)
+
+	* ── Restrict to layer firms ───────────────────────────────────────────
+	merge m:1 identificad using `restr_firms', keep(match) nogen
+	count
+	di as result "  Firm-panel obs after layer restriction: `r(N)'"
 
 	di as result "Firm-level restricted variables created."
 
@@ -544,23 +567,7 @@ foreach layer in edu edu2 {
 
 		di as text "  Estimating (restricted): `outcome' (layer: `layer')"
 
-		* Pre-treatment outcome bins
-		cap drop `outcome'_pre_o
-		cap drop `outcome'_pre
-		bys identificad: ///
-			egen `outcome'_pre_o = mean(`outcome') if inrange(year, 2009, 2011)
-		bys identificad: ///
-			egen `outcome'_pre = min(`outcome'_pre_o)
-		drop `outcome'_pre_o
-
-		cap drop `outcome'_pre4_o
-		cap drop `outcome'_pre4
-		egen `outcome'_pre4_o = cut(`outcome'_pre) ///
-			if year == 2009 & in_balanced_panel == 1, group(4)
-		bys identificad: ///
-			egen `outcome'_pre4 = min(`outcome'_pre4_o)
-		drop `outcome'_pre4_o
-		replace `outcome'_pre4 = 0 if missing(`outcome'_pre4)
+		* _pre and _pre4 already computed on full sample above
 
 		local absorb_r "`base_fe_r' ib0.`outcome'_pre4#i.year ib0.l_firm_emp_pre4#i.year `extra_r'"
 
@@ -656,7 +663,7 @@ foreach layer in edu edu2 {
 log close
 di as result "Finished: `c(current_date)' `c(current_time)'"
 
-shell source /gpfs/kellogg/proj/lgg3230/UnionSpill/Programs/notify.sh && notify "Layer spillover done" "edu + edu2 regressions complete"
+shell source /gpfs/kellogg/proj/lgg3230/UnionSpill/Programs/notify.sh && notify "Layer spillover done" "edu2 + gender + race regressions complete"
 
 ********************************************************************************
 * END OF DO-FILE

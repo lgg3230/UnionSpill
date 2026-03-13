@@ -19,5 +19,8 @@ for layer in gender race; do
     $PYTHON "$SCRIPTS/03d_compute_n_demog.py" --layer "$layer" 2>&1 | tee -a "$LOGS/03d_${layer}.log"
 done
 
+echo "=== 06d: Build demog outcomes ===" | tee "$LOGS/06d_demog_outcomes.log"
+$PYTHON "$SCRIPTS/06_prep_demog_outcomes.py" 2>&1 | tee -a "$LOGS/06d_demog_outcomes.log"
+
 source "$PROJ/Programs/notify.sh"
-notify "Demog layers done" "gender + race complete"
+notify "Demog layers done" "gender + race transitions + outcomes complete"
