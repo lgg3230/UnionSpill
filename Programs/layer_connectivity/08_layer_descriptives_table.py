@@ -137,10 +137,23 @@ for ld in ORDER:
     col += k
 cmidrule = "    " + " ".join(cmi_parts)
 
+# Wrapped sub-layer labels for header row 2 (shortstack to save horizontal space)
+HEADER_LABEL = {
+    ("edu",    "0_no_hs"):  r"\shortstack{No high\\school}",
+    ("edu",    "1_hs"):     r"\shortstack{High school\\diploma}",
+    ("edu",    "2_higher"): r"\shortstack{Higher\\education}",
+    ("edu2",   "no_hs"):    r"\shortstack{No high\\school}",
+    ("edu2",   "has_hs"):   r"\shortstack{HS or\\above}",
+    ("gender", "female"):   "Female",
+    ("gender", "male"):     "Male",
+    ("race",   "nonwhite"): "Non-white",
+    ("race",   "white"):    "White",
+}
+
 # Header row 2: sub-layer names
 h2_cells = [""]
 for ld, li in ALL_COLS:
-    h2_cells.append(FORMAL_LAYER[(ld, li)])
+    h2_cells.append(HEADER_LABEL.get((ld, li), FORMAL_LAYER[(ld, li)]))
 header2 = "    " + " & ".join(h2_cells) + " \\\\"
 
 # ---------------------------------------------------------------------------
