@@ -102,12 +102,21 @@ for layer_def, meta in LAYER_DEFS.items():
     layer_ids = list(meta["labels"].keys())
     k = len(layer_ids)
 
-    # Keep only firms where all layers are observed
-    wide = df.pivot(index="identificad", columns="layer_id", values=VAR)
-    wide = wide[layer_ids].dropna()
+    # Pivot (keep all firms, may have NaN for missing layers)
+    wide_all = df.pivot(index="identificad", columns="layer_id", values=VAR)
+    wide_all = wide_all.reindex(columns=layer_ids)
+
+    # Fraction of spillover firms with at least 2 layers observed
+    n_spill        = len(spill_firms)
+    n_ge2          = (wide_all.notna().sum(axis=1) >= 2).sum()
+    frac_ge2_layers = n_ge2 / n_spill
+
+    # Variance decomposition uses only firms where ALL layers are observed
+    wide   = wide_all.dropna()
     n_firms = len(wide)
     N = n_firms * k
 
+    print(f"  Firms with ≥2 layers: {n_ge2:,} / {n_spill:,} ({frac_ge2_layers:.3f})")
     print(f"  Firms with all {k} layers: {n_firms:,}")
 
     # ── ANOVA SS decomposition (exactly additive) ──
@@ -135,7 +144,7 @@ for layer_def, meta in LAYER_DEFS.items():
                 "formal_def":     meta["formal"],
                 "layer_id":       layer_id,
                 "formal_layer":   meta["labels"][layer_id],
-                "n_firms":        n_firms,
+                "frac_ge2_layers": frac_ge2_layers,
                 "mean_conn":      sub.mean(),
                 "var_total":      var_total,
                 "var_within":     var_within,
