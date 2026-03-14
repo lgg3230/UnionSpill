@@ -10,8 +10,8 @@
 *          07_layer_spillover_portable.do
 *          Data/CBA_RAIS_firm_level/lagos_sample_sep24_pct_unionexp_ext_df2.dta
 *          Data/RAIS_aux/totalflows_wide_2007_2011.csv
-*          Data/layer_connectivity/firm_layer_outcomes_{edu2,gender,race}.dta
-*          Data/layer_connectivity/final_measures/firm_layer_connectivity_{edu2,gender,race}.dta
+*          Data/layer_connectivity/firm_layer_outcomes_{edu,edu2,gender,race}.dta
+*          Data/layer_connectivity/final_measures/firm_layer_connectivity_{edu,edu2,gender,race}.dta
 *          Tables/layer_connectivity/    (empty — outputs go here)
 *          Graphs/layer_connectivity/    (empty — outputs go here)
 *          Logs/layer_connectivity/      (empty — log goes here)
@@ -55,7 +55,7 @@ local spec "layer_spill"
 * SECTION 2: LOOP OVER LAYER DEFINITIONS
 ********************************************************************************
 
-foreach layer in edu2 gender race {
+foreach layer in edu edu2 gender race {
 
 	di _newline(2)
 	di as result "======================================================================="
