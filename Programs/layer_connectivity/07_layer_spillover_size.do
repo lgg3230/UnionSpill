@@ -10,7 +10,8 @@
 *   - Outer loop: foreach size in small large
 *   - Two specs per size group: within-firm (firm×year FE) and cross-firm.
 *
-* Layers:  edu2   (2-bin: no_hs / has_hs)
+* Layers:  edu    (3-bin: 0_no_hs / 1_hs / 2_higher)
+*          edu2   (2-bin: no_hs / has_hs)
 *          gender (female / male)
 *          race   (white / nonwhite)
 *
@@ -45,7 +46,7 @@ local spec "layer_spill"
 * SECTION 2: LOOP OVER LAYER DEFINITIONS
 ********************************************************************************
 
-foreach layer in edu2 gender race {
+foreach layer in edu edu2 gender race {
 
 	di _newline(2)
 	di as result "======================================================================="

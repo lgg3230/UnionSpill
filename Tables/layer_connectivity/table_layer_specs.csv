@@ -1,19 +1,37 @@
 layer,spec,outcome,main,main_se,pre,pre_se,n_obs,n_firms,pre_pval
 edu,(1) Within-firm FE,Log Dec. wage,-0.0017,(0.0028),-0.0015,(0.0045),"76,872","3,936",0.046
-edu,(2) Cross-firm FE,Log Dec. wage,0.0001,(0.0023),-0.0009,(0.0036),"80,816","4,183",0.269
-edu,(3) Firm-level (restricted),Log Dec. wage,0.0055**,(0.0024),0.0013,(0.0025),"32,498","4,085",0.867
+edu,(2) Cross-firm FE,Log Dec. wage,0.0002,(0.0023),-0.0009,(0.0036),"80,816","4,183",0.258
+edu,(3) Firm-level (restricted),Log Dec. wage,0.0051**,(0.0023),0.0020,(0.0025),"32,498","4,085",0.735
 edu,(1) Within-firm FE,Log hourly wage,-0.0011,(0.0012),0.0004,(0.0020),"76,872","3,936",0.098
-edu,(2) Cross-firm FE,Log hourly wage,0.0001,(0.0010),0.0005,(0.0016),"80,816","4,183",0.313
-edu,(3) Firm-level (restricted),Log hourly wage,0.0072***,(0.0024),0.0007,(0.0025),"32,498","4,085",0.878
-edu,(1) Within-firm FE,Log employment,0.0022,(0.0041),0.0022,(0.0051),"76,872","3,936",0.449
-edu,(2) Cross-firm FE,Log employment,0.0031,(0.0045),0.0036,(0.0040),"80,816","4,183",0.652
-edu,(3) Firm-level (restricted),Log employment,0.0011,(0.0082),-0.0023,(0.0064),"32,696","4,087",0.913
-edu2,(1) Within-firm FE,Log Dec. wage,-0.0004,(0.0050),-0.0002,(0.0051),"52,588","3,645",0.023
-edu2,(2) Cross-firm FE,Log Dec. wage,0.0025,(0.0027),0.0018,(0.0029),"59,458","4,175",0.740
-edu2,(3) Firm-level (restricted),Log Dec. wage,0.0055**,(0.0024),0.0013,(0.0025),"32,498","4,085",0.867
-edu2,(1) Within-firm FE,Log hourly wage,-0.0004,(0.0020),0.0006,(0.0022),"52,588","3,645",0.009
-edu2,(2) Cross-firm FE,Log hourly wage,0.0011,(0.0011),0.0008,(0.0013),"59,458","4,175",0.616
-edu2,(3) Firm-level (restricted),Log hourly wage,0.0072***,(0.0024),0.0007,(0.0025),"32,498","4,085",0.878
-edu2,(1) Within-firm FE,Log employment,0.0101,(0.0121),-0.0044,(0.0125),"52,588","3,645",0.344
-edu2,(2) Cross-firm FE,Log employment,-0.0029,(0.0070),-0.0022,(0.0060),"59,458","4,175",0.673
-edu2,(3) Firm-level (restricted),Log employment,0.0011,(0.0082),-0.0023,(0.0064),"32,696","4,087",0.913
+edu,(2) Cross-firm FE,Log hourly wage,0.0001,(0.0010),0.0005,(0.0016),"80,816","4,183",0.303
+edu,(3) Firm-level (restricted),Log hourly wage,0.0066***,(0.0023),0.0016,(0.0026),"32,498","4,085",0.791
+edu,(1) Within-firm FE,Log employment,0.0023,(0.0041),0.0022,(0.0051),"76,872","3,936",0.451
+edu,(2) Cross-firm FE,Log employment,0.0031,(0.0045),0.0037,(0.0040),"80,816","4,183",0.639
+edu,(3) Firm-level (restricted),Log employment,0.0006,(0.0083),-0.0016,(0.0064),"32,696","4,087",0.881
+edu2,(1) Within-firm FE,Log Dec. wage,-0.0007,(0.0049),0.0007,(0.0051),"52,588","3,645",0.013
+edu2,(2) Cross-firm FE,Log Dec. wage,0.0021,(0.0027),0.0022,(0.0030),"59,458","4,175",0.640
+edu2,(3) Firm-level (restricted),Log Dec. wage,0.0051**,(0.0023),0.0020,(0.0025),"32,498","4,085",0.735
+edu2,(1) Within-firm FE,Log hourly wage,-0.0005,(0.0020),0.0010,(0.0022),"52,588","3,645",0.005
+edu2,(2) Cross-firm FE,Log hourly wage,0.0009,(0.0011),0.0011,(0.0013),"59,458","4,175",0.548
+edu2,(3) Firm-level (restricted),Log hourly wage,0.0066***,(0.0023),0.0016,(0.0026),"32,498","4,085",0.791
+edu2,(1) Within-firm FE,Log employment,0.0086,(0.0122),-0.0045,(0.0128),"52,588","3,645",0.335
+edu2,(2) Cross-firm FE,Log employment,-0.0032,(0.0070),-0.0016,(0.0061),"59,458","4,175",0.663
+edu2,(3) Firm-level (restricted),Log employment,0.0006,(0.0083),-0.0016,(0.0064),"32,696","4,087",0.881
+gender,(1) Within-firm FE,Log Dec. wage,-0.0004,(0.0035),0.0018,(0.0035),"55,450","3,730",0.812
+gender,(2) Cross-firm FE,Log Dec. wage,0.0010,(0.0022),0.0006,(0.0020),"60,908","4,177",0.956
+gender,(3) Firm-level (restricted),Log Dec. wage,0.0051**,(0.0023),0.0020,(0.0025),"32,498","4,085",0.735
+gender,(1) Within-firm FE,Log hourly wage,-0.0000,(0.0014),0.0007,(0.0015),"55,450","3,730",0.805
+gender,(2) Cross-firm FE,Log hourly wage,0.0011,(0.0009),0.0002,(0.0008),"60,908","4,177",0.964
+gender,(3) Firm-level (restricted),Log hourly wage,0.0066***,(0.0023),0.0016,(0.0026),"32,498","4,085",0.791
+gender,(1) Within-firm FE,Log employment,-0.0103**,(0.0047),0.0107,(0.0095),"55,450","3,730",0.085
+gender,(2) Cross-firm FE,Log employment,-0.0018,(0.0044),0.0036,(0.0055),"60,908","4,177",0.764
+gender,(3) Firm-level (restricted),Log employment,0.0006,(0.0083),-0.0016,(0.0064),"32,696","4,087",0.881
+race,(1) Within-firm FE,Log Dec. wage,-0.0037,(0.0028),-0.0008,(0.0041),"48,656","3,476",0.749
+race,(2) Cross-firm FE,Log Dec. wage,0.0010,(0.0021),-0.0023,(0.0028),"57,155","4,165",0.699
+race,(3) Firm-level (restricted),Log Dec. wage,0.0051**,(0.0023),0.0020,(0.0025),"32,412","4,074",0.736
+race,(1) Within-firm FE,Log hourly wage,-0.0014,(0.0013),0.0004,(0.0017),"48,656","3,476",0.694
+race,(2) Cross-firm FE,Log hourly wage,0.0012,(0.0009),-0.0009,(0.0012),"57,155","4,165",0.716
+race,(3) Firm-level (restricted),Log hourly wage,0.0067***,(0.0023),0.0016,(0.0026),"32,412","4,074",0.783
+race,(1) Within-firm FE,Log employment,0.0230***,(0.0061),-0.0102,(0.0076),"48,656","3,476",0.407
+race,(2) Cross-firm FE,Log employment,0.0191***,(0.0055),-0.0001,(0.0053),"57,155","4,165",0.956
+race,(3) Firm-level (restricted),Log employment,0.0007,(0.0083),-0.0017,(0.0064),"32,608","4,076",0.882

@@ -4,7 +4,8 @@
 *          layer-specific connectivity to treated firms as the treatment variable.
 *          Identifies within-firm cross-layer variation in spillover transmission.
 *
-* Layers:  edu2   (2-bin: no_hs / has_hs)
+* Layers:  edu    (3-bin: 0_no_hs / 1_hs / 2_higher)
+*          edu2   (2-bin: no_hs / has_hs)
 *          gender (female / male)
 *          race   (white / nonwhite)
 *
@@ -13,7 +14,7 @@
 *          outcome_pre4 × year, l_layer_emp_pre4 × year,
 *          layer_totalflows_pw_pre4 × year
 *
-* Output:  Tables/layer_connectivity/results_spill_layer_{edu2,gender,race}_layer_spill.csv
+* Output:  Tables/layer_connectivity/results_spill_layer_{edu,edu2,gender,race}_layer_spill.csv
 *          Graphs/layer_connectivity/es_{outcome}_spill_{layer}_{date}.pdf
 ********************************************************************************
 
@@ -46,7 +47,7 @@ local  spec       "layer_spill"
 * SECTION 2: LOOP OVER LAYER DEFINITIONS
 ********************************************************************************
 
-foreach layer in edu2 gender race {
+foreach layer in edu edu2 gender race {
 
 	di _newline(2)
 	di as result "======================================================================="

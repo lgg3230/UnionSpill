@@ -77,22 +77,27 @@ SPECS = [
         "sublabel":    "firm FE + standard controls",
         "file_tpl":    "results_spill_firmrestr_{layer}_layer_spill.csv",
         "section_key": "firmrestr",
-        "outcomes":    ["lr_remdezr", "lr_remdezr_h", "l_firm_emp"],
+        "outcomes":    ["lr_remdezr_w", "lr_remdezr_h_w", "l_firm_emp"],
         "outcome_labels": {
-            "lr_remdezr":   "Log Dec. wage (firm avg.)",
-            "lr_remdezr_h": "Log hourly wage (firm avg.)",
-            "l_firm_emp":   "Log employment (firm)",
+            "lr_remdezr_w":   "Log Dec. wage (firm avg.)",
+            "lr_remdezr_h_w": "Log hourly wage (firm avg.)",
+            "l_firm_emp":     "Log employment (firm)",
         },
     },
 ]
 
-LAYERS = ["edu", "edu2"]
-LAYER_LABELS = {"edu": "3-bin edu (no HS / HS / higher)", "edu2": "2-bin edu (no HS / has HS)"}
+LAYERS = ["edu", "edu2", "gender", "race"]
+LAYER_LABELS = {
+    "edu":    "3-bin education (no HS / HS / higher)",
+    "edu2":   "2-bin education (no HS / has HS)",
+    "gender": "Gender (female / male)",
+    "race":   "Race (non-white / white)",
+}
 
 OUTCOME_ORDER = [
     # (generic label, spec1_outcome, spec2_outcome, spec3_outcome)
-    ("Log Dec. wage",   "lr_remdezr_layer", "lr_remdezr_layer", "lr_remdezr"),
-    ("Log hourly wage", "lr_remdezr_h_layer", "lr_remdezr_h_layer", "lr_remdezr_h"),
+    ("Log Dec. wage",   "lr_remdezr_layer", "lr_remdezr_layer", "lr_remdezr_w"),
+    ("Log hourly wage", "lr_remdezr_h_layer", "lr_remdezr_h_layer", "lr_remdezr_h_w"),
     ("Log employment",  "l_layer_emp",      "l_layer_emp",      "l_firm_emp"),
 ]
 
@@ -210,9 +215,10 @@ def build_latex() -> str:
     # One panel per layer bin specification
     for li, layer in enumerate(LAYERS):
         # Panel header
+        panel_letter = chr(ord("A") + li)
         lines.append(
             r"\multicolumn{" + str(ncols) + r"}{l}{\textit{Panel "
-            + ("A" if li == 0 else "B")
+            + panel_letter
             + r": " + LAYER_LABELS[layer] + r"}} \\"
         )
 
@@ -304,7 +310,9 @@ def build_latex() -> str:
     lines.append(
         r"\textit{Layer definitions.} Panel A groups workers into three education bins: "
         r"no high-school diploma (no HS), completed high school (HS), and tertiary or above (higher). "
-        r"Panel B collapses HS and higher into a single group (2-bin partition)."
+        r"Panel B collapses HS and higher into a single group (2-bin partition). "
+        r"Panel C partitions workers by gender (female / male). "
+        r"Panel D classifies workers as non-white or white."
     )
     lines.append(r"")
     lines.append(
