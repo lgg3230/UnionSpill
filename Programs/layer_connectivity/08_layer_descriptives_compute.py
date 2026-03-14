@@ -156,6 +156,16 @@ for group_name, firm_set in GROUPS.items():
 
         print(f"  {layer_def}: {stats['n_firms']:,} firms (all layers) | frac>=2: {frac_ge2:.3f}")
 
+        # Average layer employment 2009-2011 from outcomes file
+        outcomes = pd.read_stata(
+            os.path.join(OUT_BASE, f"firm_layer_outcomes_{layer_def}.dta"),
+            columns=["identificad", "layer_id", "year", "layer_emp"],
+        )
+        outcomes = outcomes[
+            outcomes["identificad"].isin(firm_set) & outcomes["year"].between(2009, 2011)
+        ]
+        avg_layer_emp = outcomes.groupby("layer_id")["layer_emp"].mean()
+
         for layer_id in layer_ids:
             sub = df[df["layer_id"] == layer_id][VAR]
             rows.append({
@@ -166,6 +176,7 @@ for group_name, firm_set in GROUPS.items():
                 "formal_layer":    meta["labels"][layer_id],
                 "frac_ge2_layers": frac_ge2,
                 "mean_conn":       sub.mean(),
+                "avg_layer_emp":   avg_layer_emp.get(layer_id, float("nan")),
                 **stats,
             })
 

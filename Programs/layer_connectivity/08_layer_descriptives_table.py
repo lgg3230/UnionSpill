@@ -78,20 +78,21 @@ def panel_body(group_df):
 
             col1 = mr(k, formal_def) if is_first else ""
             col2 = row["formal_layer"]
-            col3 = fmt_mean(row["mean_conn"])
+            col3 = f"{row['avg_layer_emp']:.1f}"
+            col4 = fmt_mean(row["mean_conn"])
 
             if is_first:
-                col4 = mr(k, f"{frac_ge2*100:.1f}\\%")
-                col5 = mr(k, fmt_var(var_total))
-                col6 = mr(k, fmt_var(var_within))
-                col7 = mr(k, fmt_var(var_between))
-                col8 = mr(k, fmt_pct(pct_within))
-                col9 = mr(k, fmt_pct(pct_between))
+                col5 = mr(k, f"{frac_ge2*100:.1f}\\%")
+                col6 = mr(k, fmt_var(var_total))
+                col7 = mr(k, fmt_var(var_within))
+                col8 = mr(k, fmt_var(var_between))
+                col9 = mr(k, fmt_pct(pct_within))
+                col10 = mr(k, fmt_pct(pct_between))
             else:
-                col4 = col5 = col6 = col7 = col8 = col9 = ""
+                col5 = col6 = col7 = col8 = col9 = col10 = ""
 
             lines.append(
-                f"    {col1} & {col2} & {col3} & {col4} & {col5} & {col6} & {col7} & {col8} & {col9} \\\\"
+                f"    {col1} & {col2} & {col3} & {col4} & {col5} & {col6} & {col7} & {col8} & {col9} & {col10} \\\\"
             )
 
             if is_last and layer_def != ORDER[-1]:
@@ -105,6 +106,8 @@ def panel_body(group_df):
 notes = (
     "\\textit{Notes:} "
     "This table describes the variance decomposition of within-firm layers' connectivity. "
+    "``Avg.\\ layer emp.'' is the average number of workers in each sub-layer "
+    "across spillover sample firms in 2009--2011. "
     "The column ``\\% firms w/ $\\geq$2 layers'' reports the share of spillover "
     "sample firms with non-missing connectivity in at least two sub-layers, "
     "which is the minimum required for within-firm identification. "
@@ -136,16 +139,17 @@ PANEL_LABELS = {
     "large": "Panel C: Large firms (avg.\\ employment 2009--11 $\\geq$ median)",
 }
 
-col_spec = "p{2.8cm}p{3.2cm}" + "c" * 7
+col_spec = "p{2.4cm}p{2.8cm}" + "c" * 8
 
 header1 = (
-    "    \\multicolumn{3}{l}{} & & "
+    "    \\multicolumn{4}{l}{} & & "
     "\\multicolumn{5}{c}{\\textit{Variance decomposition}} \\\\"
 )
-cmidrule = "    \\cmidrule(lr){5-9}"
+cmidrule = "    \\cmidrule(lr){6-10}"
 
 col_header = (
-    "    \\shortstack{Layer\\\\definition} & Sub-layer & Mean & "
+    "    \\shortstack{Layer\\\\definition} & Sub-layer & "
+    "\\shortstack{Avg.\\\\layer\\\\emp.} & Mean & "
     "\\shortstack{\\% firms\\\\$\\geq$2 layers} & Total & "
     "\\shortstack{Within-\\\\firm} & \\shortstack{Between-\\\\firm} & "
     "\\shortstack{Within\\\\(\\%)} & \\shortstack{Between\\\\(\\%)} \\\\"
@@ -157,7 +161,7 @@ for g in GROUP_ORDER:
     group_df = df[df["group"] == g]
     body     = panel_body(group_df)
     block = (
-        f"    \\multicolumn{{9}}{{l}}{{\\textit{{{label}}}}} \\\\\n"
+        f"    \\multicolumn{{10}}{{l}}{{\\textit{{{label}}}}} \\\\\n"
         f"    \\midrule\n"
         f"{body}"
     )
@@ -174,7 +178,7 @@ tex = f"""%% Table: Within-firm variation in layer connectivity (3 panels)
   \\centering
   \\caption{{Within-Firm Variation in Layer Connectivity}}
   \\label{{tab:layer_descriptives}}
-  \\scriptsize
+  \\resizebox{{\\textwidth}}{{!}}{{%
   \\begin{{tabular}}{{{col_spec}}}
     \\toprule\\toprule
 {header1}
@@ -183,7 +187,7 @@ tex = f"""%% Table: Within-firm variation in layer connectivity (3 panels)
     \\midrule
 {panels_tex}
     \\bottomrule
-  \\end{{tabular}}
+  \\end{{tabular}}}}
   \\begin{{tablenotes}}
     \\scriptsize
     {notes}
