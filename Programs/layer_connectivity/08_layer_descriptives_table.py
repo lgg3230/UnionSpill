@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """
-Script 08b: Produce LaTeX table of layer connectivity descriptives.
+Script 08b: Produce LaTeX tables of layer connectivity descriptives.
 
-Reads Tables/layer_connectivity/layer_descriptives.csv (produced by 08a) and
-writes Tables/layer_connectivity/layer_descriptives.tex.
+Produces two tables (both transposed: rows = statistics, columns = layer specs):
+  layer_descriptives_full.tex  — full spillover sample
+  layer_descriptives_size.tex  — Panel A: small firms, Panel B: large firms
 
-Three panels: Panel A (all firms), Panel B (small), Panel C (large).
-Small = avg employment 2009-2011 < median; Large = >= median.
+Reads Tables/layer_connectivity/layer_descriptives.csv (produced by 08a).
 """
 
 import os
@@ -18,10 +18,9 @@ import pandas as pd
 ROOT       = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 TABLES_DIR = os.path.join(ROOT, "Tables", "layer_connectivity")
 IN_CSV     = os.path.join(TABLES_DIR, "layer_descriptives.csv")
-OUT_TEX    = os.path.join(TABLES_DIR, "layer_descriptives.tex")
 
 # ---------------------------------------------------------------------------
-# Load & sort
+# Load & index
 # ---------------------------------------------------------------------------
 df = pd.read_csv(IN_CSV)
 
@@ -32,182 +31,222 @@ SUB_ORDER = {
     "gender": ["female", "male"],
     "race":   ["nonwhite", "white"],
 }
-GROUP_ORDER = ["all", "small", "large"]
+FORMAL_DEF = {
+    "edu":    "Education (3-levels)",
+    "edu2":   "Education (2-levels)",
+    "gender": "Gender",
+    "race":   "Race",
+}
+FORMAL_LAYER = {}   # filled from data
+for _, row in df.iterrows():
+    FORMAL_LAYER[(row["layer_def"], row["layer_id"])] = row["formal_layer"]
 
-df["_def_order"] = df["layer_def"].map({v: i for i, v in enumerate(ORDER)})
-df["_sub_order"] = df.apply(lambda r: SUB_ORDER[r["layer_def"]].index(r["layer_id"]), axis=1)
-df["_grp_order"] = df["group"].map({v: i for i, v in enumerate(GROUP_ORDER)})
-df = df.sort_values(["_grp_order", "_def_order", "_sub_order"]).drop(
-    columns=["_def_order", "_sub_order", "_grp_order"]
-)
+# Build nested lookup: data[group][layer_def][layer_id] -> dict of stats
+data = {}
+for _, row in df.iterrows():
+    g, ld, li = row["group"], row["layer_def"], row["layer_id"]
+    data.setdefault(g, {}).setdefault(ld, {})[li] = row.to_dict()
+
+# All (layer_def, layer_id) pairs in column order
+ALL_COLS = [(ld, li) for ld in ORDER for li in SUB_ORDER[ld]]
 
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
-
-def mr(n, content):
-    if n == 1:
-        return content
-    return f"\\multirow{{{n}}}{{*}}{{{content}}}"
-
-def fmt_mean(x):   return f"{x:.4f}"
+def fmt_emp(x):    return f"{x:.1f}"
 def fmt_wage(x):   return f"{x:,.0f}"
 def fmt_flows(x):  return f"{x:.4f}"
+def fmt_conn(x):   return f"{x:.4f}"
+def fmt_pct_ge2(x): return f"{x*100:.1f}\\%"
 def fmt_var(x):    return f"{x:.5f}"
-def fmt_pct(x):    return f"{x:.1f}"
+def fmt_pct(x):    return f"{x:.1f}\\%"
+
+def mc(k, content):
+    """LaTeX multicolumn spanning k columns, centered."""
+    return f"\\multicolumn{{{k}}}{{c}}{{{content}}}"
 
 # ---------------------------------------------------------------------------
 # Build body for one panel (one group)
 # ---------------------------------------------------------------------------
 
-def panel_body(group_df):
+# Per-sublayer rows: one cell per (layer_def, sub_layer)
+SUBLAYER_ROWS = [
+    ("Avg.\\ layer employment",    "avg_layer_emp",     fmt_emp),
+    ("Avg.\\ real wage (BRL)",     "avg_layer_wage",    fmt_wage),
+    ("Avg.\\ flows p.w.",          "avg_totalflows_pw", fmt_flows),
+    ("Mean connectivity",          "mean_conn",         fmt_conn),
+]
+
+# Per-layerdef rows: one multicolumn cell per layer_def
+LAYERDEF_ROWS = [
+    ("\\% firms $\\geq$2 layers", "frac_ge2_layers", fmt_pct_ge2),
+    ("Variance (total)",           "var_total",       fmt_var),
+    ("Variance (within-firm)",     "var_within",      fmt_var),
+    ("Variance (between-firm)",    "var_between",     fmt_var),
+    ("Within-firm (\\%)",          "pct_within",      fmt_pct),
+    ("Between-firm (\\%)",         "pct_between",     fmt_pct),
+]
+
+def panel_body(group, midrule_after=False):
     lines = []
-    for layer_def in ORDER:
-        sub = group_df[group_df["layer_def"] == layer_def].reset_index(drop=True)
-        k   = len(sub)
 
-        frac_ge2    = sub.loc[0, "frac_ge2_layers"]
-        var_total   = sub.loc[0, "var_total"]
-        var_within  = sub.loc[0, "var_within"]
-        var_between = sub.loc[0, "var_between"]
-        pct_within  = sub.loc[0, "pct_within"]
-        pct_between = sub.loc[0, "pct_between"]
-        formal_def  = sub.loc[0, "formal_def"]
+    # Per-sublayer rows
+    for label, stat, fmt_fn in SUBLAYER_ROWS:
+        cells = [f"\\quad {label}"]
+        for ld, li in ALL_COLS:
+            val = data[group][ld][li][stat]
+            cells.append(fmt_fn(val))
+        lines.append("    " + " & ".join(cells) + " \\\\")
 
-        for i, row in sub.iterrows():
-            is_first = (i == sub.index[0])
-            is_last  = (i == sub.index[-1])
+    lines.append("    \\midrule")
 
-            col1 = mr(k, formal_def) if is_first else ""
-            col2 = row["formal_layer"]
-            col3 = f"{row['avg_layer_emp']:.1f}"
-            col4 = fmt_wage(row["avg_layer_wage"])
-            col5 = fmt_flows(row["avg_totalflows_pw"])
-            col6 = fmt_mean(row["mean_conn"])
+    # Per-layerdef rows (multicolumn)
+    for label, stat, fmt_fn in LAYERDEF_ROWS:
+        cells = [f"\\quad {label}"]
+        for ld in ORDER:
+            k   = len(SUB_ORDER[ld])
+            val = data[group][ld][SUB_ORDER[ld][0]][stat]  # same for all sub-layers
+            cells.append(mc(k, fmt_fn(val)))
+        lines.append("    " + " & ".join(cells) + " \\\\")
 
-            if is_first:
-                col7  = mr(k, f"{frac_ge2*100:.1f}\\%")
-                col8  = mr(k, fmt_var(var_total))
-                col9  = mr(k, fmt_var(var_within))
-                col10 = mr(k, fmt_var(var_between))
-                col11 = mr(k, fmt_pct(pct_within))
-                col12 = mr(k, fmt_pct(pct_between))
-            else:
-                col7 = col8 = col9 = col10 = col11 = col12 = ""
-
-            lines.append(
-                f"    {col1} & {col2} & {col3} & {col4} & {col5} & {col6} & {col7} & {col8} & {col9} & {col10} & {col11} & {col12} \\\\"
-            )
-
-            if is_last and layer_def != ORDER[-1]:
-                lines.append("    \\midrule")
+    if midrule_after:
+        lines.append("    \\midrule\\midrule")
 
     return "\n".join(lines)
 
 # ---------------------------------------------------------------------------
-# Tablenotes
+# Build column headers (shared by both tables)
 # ---------------------------------------------------------------------------
-notes = (
+N_DATACOLS = sum(len(SUB_ORDER[ld]) for ld in ORDER)   # 9
+N_COLS     = 1 + N_DATACOLS                            # 10
+col_spec   = "l" + "c" * N_DATACOLS
+
+# Header row 1: layer definition names with multicolumn spans
+h1_cells = [""]
+for ld in ORDER:
+    k = len(SUB_ORDER[ld])
+    h1_cells.append(mc(k, f"\\textit{{{FORMAL_DEF[ld]}}}"))
+header1 = "    " + " & ".join(h1_cells) + " \\\\"
+
+# Cmidrules under each layer definition block
+col = 2
+cmi_parts = []
+for ld in ORDER:
+    k = len(SUB_ORDER[ld])
+    cmi_parts.append(f"\\cmidrule(lr){{{col}-{col+k-1}}}")
+    col += k
+cmidrule = "    " + " ".join(cmi_parts)
+
+# Header row 2: sub-layer names
+h2_cells = [""]
+for ld, li in ALL_COLS:
+    h2_cells.append(FORMAL_LAYER[(ld, li)])
+header2 = "    " + " & ".join(h2_cells) + " \\\\"
+
+# ---------------------------------------------------------------------------
+# Full-sample table
+# ---------------------------------------------------------------------------
+notes_full = (
     "\\textit{Notes:} "
-    "This table describes the variance decomposition of within-firm layers' connectivity. "
-    "``Avg.\\ layer emp.'' is the average number of workers in each sub-layer "
-    "across spillover sample firms in 2009--2011. "
-    "``Avg.\\ real wage'' is the average real December wage (deflated to December 2015 BRL) "
-    "within each sub-layer, also averaged over 2009--2011. "
-    "``Avg.\\ flows p.w.'' is the average total worker outflows per worker in each sub-layer, "
+    "This table summarises pre-treatment (2009--2011) descriptive statistics "
+    "for layer connectivity across four worker-partitioning schemes, "
+    "restricted to the spillover sample (untreated, balanced-panel firms in the Lagos sample). "
+    "Each column corresponds to a sub-layer within a given layer definition. "
+    "``Avg.\\ layer employment'' is the average number of workers in the sub-layer. "
+    "``Avg.\\ real wage'' is the average December real wage (deflated to December 2015 BRL). "
+    "``Avg.\\ flows p.w.'' is average total worker outflows per worker in that sub-layer, "
     "averaged across year-pairs 2007--08 through 2010--11. "
-    "The column ``\\% firms w/ $\\geq$2 layers'' reports the share of spillover "
-    "sample firms with non-missing connectivity in at least two sub-layers, "
-    "which is the minimum required for within-firm identification. "
-    "\\textit{Layer connectivity} measures the average pre-treatment worker flow "
-    "from a focal firm's sub-layer to treated firms, per employee of that sub-layer, "
-    "averaged across year-pairs 2007--08, 2008--09, 2009--10, and 2010--11. "
-    "Variance decomposition follows the ANOVA identity "
-    "$\\mathrm{Var}(X) = \\mathrm{E}[\\mathrm{Var}(X|Y)] + \\mathrm{Var}(\\mathrm{E}[X|Y])$, "
-    "where both components are normalized by $N - 1$ "
-    "(with $N = \\text{firms} \\times \\text{sub-layers}$) "
-    "so that they sum exactly to total variance. "
-    "\\textit{Within-firm} captures cross-layer dispersion in connectivity "
-    "within a given firm; \\textit{between-firm} captures dispersion in "
-    "firm-level average connectivity. "
-    "\\textit{Education (3-levels)} partitions workers into three groups by schooling: "
-    "less than high school, high school diploma, and higher education. "
-    "\\textit{Education (2-levels)} merges the top two groups. "
-    "\\textit{Race} classifies workers as white or non-white. "
-    "Panels B and C split firms by median average December employment in 2009--2011 "
-    "(median: 31.7 workers)."
+    "``Mean connectivity'' is the average pre-treatment flow from a focal firm's sub-layer "
+    "to treated firms per worker of that sub-layer. "
+    "``\\% firms $\\geq$2 layers'' is the share of spillover firms with non-missing connectivity "
+    "in at least two sub-layers (minimum for within-firm identification); "
+    "this statistic is the same for all sub-layers within a definition. "
+    "The variance decomposition follows the ANOVA identity "
+    "$\\mathrm{Var}(X) = \\mathrm{E}[\\mathrm{Var}(X|\\mathrm{firm})] "
+    "+ \\mathrm{Var}(\\mathrm{E}[X|\\mathrm{firm}])$, "
+    "normalized by $N-1$ so that components sum exactly to total variance."
 )
 
-# ---------------------------------------------------------------------------
-# Assemble panels
-# ---------------------------------------------------------------------------
-PANEL_LABELS = {
-    "all":   "Panel A: All firms",
-    "small": "Panel B: Small firms (avg.\\ employment 2009--11 $<$ median)",
-    "large": "Panel C: Large firms (avg.\\ employment 2009--11 $\\geq$ median)",
-}
-
-col_spec = "p{2.4cm}p{2.8cm}" + "c" * 10
-
-header1 = (
-    "    \\multicolumn{6}{l}{} & & "
-    "\\multicolumn{5}{c}{\\textit{Variance decomposition}} \\\\"
-)
-cmidrule = "    \\cmidrule(lr){8-12}"
-
-col_header = (
-    "    \\shortstack{Layer\\\\definition} & Sub-layer & "
-    "\\shortstack{Avg.\\\\layer\\\\emp.} & "
-    "\\shortstack{Avg.\\\\real wage\\\\(BRL)} & "
-    "\\shortstack{Avg.\\\\flows\\\\p.w.} & Mean & "
-    "\\shortstack{\\% firms\\\\$\\geq$2 layers} & Total & "
-    "\\shortstack{Within-\\\\firm} & \\shortstack{Between-\\\\firm} & "
-    "\\shortstack{Within\\\\(\\%)} & \\shortstack{Between\\\\(\\%)} \\\\"
-)
-
-panel_blocks = []
-for g in GROUP_ORDER:
-    label    = PANEL_LABELS[g]
-    group_df = df[df["group"] == g]
-    body     = panel_body(group_df)
-    block = (
-        f"    \\multicolumn{{12}}{{l}}{{\\textit{{{label}}}}} \\\\\n"
-        f"    \\midrule\n"
-        f"{body}"
-    )
-    panel_blocks.append(block)
-
-panels_tex = "\n    \\midrule\n    \\midrule\n".join(panel_blocks)
-
-# ---------------------------------------------------------------------------
-# Write
-# ---------------------------------------------------------------------------
-tex = f"""%% Table: Within-firm variation in layer connectivity (3 panels)
-%% Auto-generated by Programs/layer_connectivity/08_layer_descriptives_table.py
+tex_full = f"""%% Auto-generated by Programs/layer_connectivity/08_layer_descriptives_table.py
 \\begin{{table}}[H]
   \\centering
-  \\caption{{Within-Firm Variation in Layer Connectivity}}
-  \\label{{tab:layer_descriptives}}
+  \\caption{{Layer Connectivity Descriptives --- Full Spillover Sample}}
+  \\label{{tab:layer_desc_full}}
   \\resizebox{{\\textwidth}}{{!}}{{%
   \\begin{{tabular}}{{{col_spec}}}
     \\toprule\\toprule
 {header1}
 {cmidrule}
-{col_header}
+{header2}
     \\midrule
-{panels_tex}
+{panel_body("all")}
     \\bottomrule
   \\end{{tabular}}}}
-  \\begin{{tablenotes}}
-    \\scriptsize
-    {notes}
-  \\end{{tablenotes}}
+  \\begin{{minipage}}{{\\linewidth}}
+    \\scriptsize\\vspace{{4pt}}
+    {notes_full}
+  \\end{{minipage}}
 \\end{{table}}
 """
 
-with open(OUT_TEX, "w") as f:
-    f.write(tex)
+# ---------------------------------------------------------------------------
+# Size-split table (Panel A: small, Panel B: large)
+# ---------------------------------------------------------------------------
+notes_size = (
+    "\\textit{Notes:} "
+    "This table reports the same descriptive statistics as Table~\\ref{{tab:layer_desc_full}}, "
+    "split by firm size. "
+    "Panel A restricts to small firms (average December employment 2009--2011 below the median); "
+    "Panel B restricts to large firms (at or above the median, corresponding to 31.7 workers). "
+    "See notes to Table~\\ref{{tab:layer_desc_full}} for variable definitions."
+)
 
-print(f"Saved to {OUT_TEX}")
-print()
-print(tex)
+panel_a = (
+    f"    \\multicolumn{{{N_COLS}}}{{l}}{{\\textit{{Panel A: Small firms "
+    f"(avg.\\ employment 2009--11 $<$ median)}}}} \\\\\n"
+    f"    \\midrule\n"
+    f"{panel_body('small', midrule_after=True)}"
+)
+panel_b = (
+    f"    \\multicolumn{{{N_COLS}}}{{l}}{{\\textit{{Panel B: Large firms "
+    f"(avg.\\ employment 2009--11 $\\geq$ median)}}}} \\\\\n"
+    f"    \\midrule\n"
+    f"{panel_body('large')}"
+)
+
+tex_size = f"""%% Auto-generated by Programs/layer_connectivity/08_layer_descriptives_table.py
+\\begin{{table}}[H]
+  \\centering
+  \\caption{{Layer Connectivity Descriptives --- By Firm Size}}
+  \\label{{tab:layer_desc_size}}
+  \\resizebox{{\\textwidth}}{{!}}{{%
+  \\begin{{tabular}}{{{col_spec}}}
+    \\toprule\\toprule
+{header1}
+{cmidrule}
+{header2}
+    \\midrule
+{panel_a}
+{panel_b}
+    \\bottomrule
+  \\end{{tabular}}}}
+  \\begin{{minipage}}{{\\linewidth}}
+    \\scriptsize\\vspace{{4pt}}
+    {notes_size}
+  \\end{{minipage}}
+\\end{{table}}
+"""
+
+# ---------------------------------------------------------------------------
+# Write
+# ---------------------------------------------------------------------------
+out_full = os.path.join(TABLES_DIR, "layer_descriptives_full.tex")
+out_size = os.path.join(TABLES_DIR, "layer_descriptives_size.tex")
+
+with open(out_full, "w") as f:
+    f.write(tex_full)
+print(f"Saved: {out_full}")
+
+with open(out_size, "w") as f:
+    f.write(tex_size)
+print(f"Saved: {out_size}")
