@@ -5,14 +5,11 @@ Script 08b: Produce LaTeX table of layer connectivity descriptives.
 Reads Tables/layer_connectivity/layer_descriptives.csv (produced by 08a) and
 writes Tables/layer_connectivity/layer_descriptives.tex.
 
-Table structure:
-    Row group per layer definition (multirow).
-    One row per sub-layer with mean connectivity.
-    Variance decomposition columns span the group via multirow.
+Three panels: Panel A (all firms), Panel B (small), Panel C (large).
+Small = avg employment 2009-2011 < median; Large = >= median.
 """
 
 import os
-import numpy as np
 import pandas as pd
 
 # ---------------------------------------------------------------------------
@@ -24,145 +21,154 @@ IN_CSV     = os.path.join(TABLES_DIR, "layer_descriptives.csv")
 OUT_TEX    = os.path.join(TABLES_DIR, "layer_descriptives.tex")
 
 # ---------------------------------------------------------------------------
-# Load
+# Load & sort
 # ---------------------------------------------------------------------------
 df = pd.read_csv(IN_CSV)
 
-# Layer def order
 ORDER = ["edu", "edu2", "gender", "race"]
-# Build explicit row order: layer_def order, then sub-layer order within each def
 SUB_ORDER = {
     "edu":    ["0_no_hs", "1_hs", "2_higher"],
     "edu2":   ["no_hs", "has_hs"],
     "gender": ["female", "male"],
     "race":   ["nonwhite", "white"],
 }
+GROUP_ORDER = ["all", "small", "large"]
+
 df["_def_order"] = df["layer_def"].map({v: i for i, v in enumerate(ORDER)})
 df["_sub_order"] = df.apply(lambda r: SUB_ORDER[r["layer_def"]].index(r["layer_id"]), axis=1)
-df = df.sort_values(["_def_order", "_sub_order"]).drop(columns=["_def_order", "_sub_order"])
-
-# One row per (layer_def, sub_layer), variance cols are constant within group
-groups = df.groupby("layer_def", sort=False)
+df["_grp_order"] = df["group"].map({v: i for i, v in enumerate(GROUP_ORDER)})
+df = df.sort_values(["_grp_order", "_def_order", "_sub_order"]).drop(
+    columns=["_def_order", "_sub_order", "_grp_order"]
+)
 
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
 
-def fmt_mean(x):
-    """Mean connectivity: show 4 decimal places."""
-    return f"{x:.4f}"
-
-def fmt_var(x):
-    """Variance: 5 decimal places."""
-    return f"{x:.5f}"
-
-def fmt_pct(x):
-    """Percentage: 1 decimal place."""
-    return f"{x:.1f}"
-
-def mr(n, content, valign="c"):
-    """LaTeX \\multirow."""
+def mr(n, content):
     if n == 1:
         return content
     return f"\\multirow{{{n}}}{{*}}{{{content}}}"
 
+def fmt_mean(x): return f"{x:.4f}"
+def fmt_var(x):  return f"{x:.5f}"
+def fmt_pct(x):  return f"{x:.1f}"
+
 # ---------------------------------------------------------------------------
-# Build table body lines
+# Build body for one panel (one group)
 # ---------------------------------------------------------------------------
-body_lines = []
 
-for layer_def in ORDER:
-    sub = df[df["layer_def"] == layer_def].reset_index(drop=True)
-    k   = len(sub)
+def panel_body(group_df):
+    lines = []
+    for layer_def in ORDER:
+        sub = group_df[group_df["layer_def"] == layer_def].reset_index(drop=True)
+        k   = len(sub)
 
-    # Values constant within group
-    frac_ge2   = sub.loc[0, "frac_ge2_layers"]
-    var_total  = sub.loc[0, "var_total"]
-    var_within = sub.loc[0, "var_within"]
-    var_between= sub.loc[0, "var_between"]
-    pct_within = sub.loc[0, "pct_within"]
-    pct_between= sub.loc[0, "pct_between"]
-    formal_def = sub.loc[0, "formal_def"]
+        frac_ge2    = sub.loc[0, "frac_ge2_layers"]
+        var_total   = sub.loc[0, "var_total"]
+        var_within  = sub.loc[0, "var_within"]
+        var_between = sub.loc[0, "var_between"]
+        pct_within  = sub.loc[0, "pct_within"]
+        pct_between = sub.loc[0, "pct_between"]
+        formal_def  = sub.loc[0, "formal_def"]
 
-    for i, row in sub.iterrows():
-        is_first = (i == sub.index[0])
-        is_last  = (i == sub.index[-1])
+        for i, row in sub.iterrows():
+            is_first = (i == sub.index[0])
+            is_last  = (i == sub.index[-1])
 
-        # Col 1: layer definition name (multirow)
-        col1 = mr(k, formal_def) if is_first else ""
+            col1 = mr(k, formal_def) if is_first else ""
+            col2 = row["formal_layer"]
+            col3 = fmt_mean(row["mean_conn"])
 
-        # Col 2: sub-layer label
-        col2 = row["formal_layer"]
+            if is_first:
+                col4 = mr(k, f"{frac_ge2*100:.1f}\\%")
+                col5 = mr(k, fmt_var(var_total))
+                col6 = mr(k, fmt_var(var_within))
+                col7 = mr(k, fmt_var(var_between))
+                col8 = mr(k, fmt_pct(pct_within))
+                col9 = mr(k, fmt_pct(pct_between))
+            else:
+                col4 = col5 = col6 = col7 = col8 = col9 = ""
 
-        # Col 3: mean connectivity
-        col3 = fmt_mean(row["mean_conn"])
+            lines.append(
+                f"    {col1} & {col2} & {col3} & {col4} & {col5} & {col6} & {col7} & {col8} & {col9} \\\\"
+            )
 
-        # Cols 4–8: variance decomposition (multirow)
-        if is_first:
-            col4 = mr(k, f"{frac_ge2*100:.1f}\\%")
-            col5 = mr(k, fmt_var(var_total))
-            col6 = mr(k, fmt_var(var_within))
-            col7 = mr(k, fmt_var(var_between))
-            col8 = mr(k, fmt_pct(pct_within))
-            col9 = mr(k, fmt_pct(pct_between))
-        else:
-            col4 = col5 = col6 = col7 = col8 = col9 = ""
+            if is_last and layer_def != ORDER[-1]:
+                lines.append("    \\midrule")
 
-        line = f"    {col1} & {col2} & {col3} & {col4} & {col5} & {col6} & {col7} & {col8} & {col9} \\\\"
-        body_lines.append(line)
-
-        if is_last and layer_def != ORDER[-1]:
-            body_lines.append("    \\midrule")
+    return "\n".join(lines)
 
 # ---------------------------------------------------------------------------
 # Tablenotes
 # ---------------------------------------------------------------------------
 notes = (
     "\\textit{Notes:} "
-    "Sample restricted to untreated firms in the balanced panel that belong to the "
-    "Lagos~(2025) connected sample (4,196 firms). "
+    "This table describes the variance decomposition of within-firm layers' connectivity. "
     "The column ``\\% firms w/ $\\geq$2 layers'' reports the share of spillover "
     "sample firms with non-missing connectivity in at least two sub-layers, "
     "which is the minimum required for within-firm identification. "
-    "\\textit{Layer connectivity} (\\texttt{layer\\_treat\\_pw\\_n}) measures "
-    "the average pre-treatment worker flow from a focal firm's sub-layer to "
-    "treated firms, per employee of that sub-layer, averaged across year-pairs "
-    "2007--08, 2008--09, 2009--10, and 2010--11. "
+    "\\textit{Layer connectivity} measures the average pre-treatment worker flow "
+    "from a focal firm's sub-layer to treated firms, per employee of that sub-layer, "
+    "averaged across year-pairs 2007--08, 2008--09, 2009--10, and 2010--11. "
     "Variance decomposition follows the ANOVA identity "
-    "$\\mathrm{Var}(X) = \\mathrm{Var}_{\\mathrm{within}} + \\mathrm{Var}_{\\mathrm{between}}$, "
-    "where both components are normalized by $N - 1$ (with $N = \\text{firms} \\times \\text{sub-layers}$) "
+    "$\\mathrm{Var}(X) = \\mathrm{E}[\\mathrm{Var}(X|Y)] + \\mathrm{Var}(\\mathrm{E}[X|Y])$, "
+    "where both components are normalized by $N - 1$ "
+    "(with $N = \\text{firms} \\times \\text{sub-layers}$) "
     "so that they sum exactly to total variance. "
     "\\textit{Within-firm} captures cross-layer dispersion in connectivity "
     "within a given firm; \\textit{between-firm} captures dispersion in "
     "firm-level average connectivity. "
-    "\\textit{Education (tertile)} partitions workers into three groups by schooling: "
+    "\\textit{Education (3-levels)} partitions workers into three groups by schooling: "
     "less than high school, high school diploma, and higher education. "
-    "\\textit{Education (binary)} merges the top two groups. "
-    "\\textit{Race} classifies workers as white (\\textit{branca}) "
-    "or non-white (\\textit{parda} and \\textit{preta}); "
-    "indigenous, Asian, and workers with missing race are excluded."
+    "\\textit{Education (2-levels)} merges the top two groups. "
+    "\\textit{Race} classifies workers as white or non-white. "
+    "Panels B and C split firms by median average December employment in 2009--2011 "
+    "(median: 31.7 workers)."
 )
 
 # ---------------------------------------------------------------------------
-# Assemble full LaTeX
+# Assemble panels
 # ---------------------------------------------------------------------------
-col_spec = "p{2.8cm}p{3.2cm}" + "c" * 7   # fixed-width text cols + numeric
+PANEL_LABELS = {
+    "all":   "Panel A: All firms",
+    "small": "Panel B: Small firms (avg.\\ employment 2009--11 $<$ median)",
+    "large": "Panel C: Large firms (avg.\\ employment 2009--11 $\\geq$ median)",
+}
 
-# Use \thead{} for multi-line headers (requires makecell package)
+col_spec = "p{2.8cm}p{3.2cm}" + "c" * 7
+
 header1 = (
-    "    \\multicolumn{3}{l}{} & "
+    "    \\multicolumn{3}{l}{} & & "
     "\\multicolumn{5}{c}{\\textit{Variance decomposition}} \\\\"
 )
-cmidrule = "    \\cmidrule(lr){4-8}"
+cmidrule = "    \\cmidrule(lr){5-9}"
 
-header2 = (
-    "    \\shortstack{Layer\\\\definition} & \\shortstack{Sub-\\\\layer} & Mean & "
+col_header = (
+    "    \\shortstack{Layer\\\\definition} & Sub-layer & Mean & "
     "\\shortstack{\\% firms\\\\$\\geq$2 layers} & Total & "
     "\\shortstack{Within-\\\\firm} & \\shortstack{Between-\\\\firm} & "
     "\\shortstack{Within\\\\(\\%)} & \\shortstack{Between\\\\(\\%)} \\\\"
 )
 
-tex = f"""%% Table: Within-firm variation in layer connectivity
+panel_blocks = []
+for g in GROUP_ORDER:
+    label    = PANEL_LABELS[g]
+    group_df = df[df["group"] == g]
+    body     = panel_body(group_df)
+    block = (
+        f"    \\multicolumn{{9}}{{l}}{{\\textit{{{label}}}}} \\\\\n"
+        f"    \\midrule\n"
+        f"{body}"
+    )
+    panel_blocks.append(block)
+
+panels_tex = "\n    \\midrule\n    \\midrule\n".join(panel_blocks)
+
+# ---------------------------------------------------------------------------
+# Write
+# ---------------------------------------------------------------------------
+tex = f"""%% Table: Within-firm variation in layer connectivity (3 panels)
 %% Auto-generated by Programs/layer_connectivity/08_layer_descriptives_table.py
 \\begin{{table}}[H]
   \\centering
@@ -170,16 +176,16 @@ tex = f"""%% Table: Within-firm variation in layer connectivity
   \\label{{tab:layer_descriptives}}
   \\scriptsize
   \\begin{{tabular}}{{{col_spec}}}
-    \\toprule
+    \\toprule\\toprule
 {header1}
 {cmidrule}
-{header2}
+{col_header}
     \\midrule
-{chr(10).join(body_lines)}
+{panels_tex}
     \\bottomrule
   \\end{{tabular}}
   \\begin{{tablenotes}}
-    \\footnotesize
+    \\scriptsize
     {notes}
   \\end{{tablenotes}}
 \\end{{table}}
