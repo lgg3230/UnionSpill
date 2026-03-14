@@ -168,18 +168,21 @@ for group_name, firm_set in GROUPS.items():
         avg_layer_emp  = outcomes.groupby("layer_id")["layer_emp"].mean()
         avg_layer_wage = outcomes.groupby("layer_id")["r_remdezr_layer"].mean()
 
+        avg_totalflows = df.groupby("layer_id")["totalflows_layer_pw_n"].mean()
+
         for layer_id in layer_ids:
             sub = df[df["layer_id"] == layer_id][VAR]
             rows.append({
-                "group":           group_name,
-                "layer_def":       layer_def,
-                "formal_def":      meta["formal"],
-                "layer_id":        layer_id,
-                "formal_layer":    meta["labels"][layer_id],
-                "frac_ge2_layers": frac_ge2,
-                "mean_conn":       sub.mean(),
-                "avg_layer_emp":   avg_layer_emp.get(layer_id, float("nan")),
-                "avg_layer_wage":  avg_layer_wage.get(layer_id, float("nan")),
+                "group":               group_name,
+                "layer_def":           layer_def,
+                "formal_def":          meta["formal"],
+                "layer_id":            layer_id,
+                "formal_layer":        meta["labels"][layer_id],
+                "frac_ge2_layers":     frac_ge2,
+                "mean_conn":           sub.mean(),
+                "avg_layer_emp":       avg_layer_emp.get(layer_id, float("nan")),
+                "avg_layer_wage":      avg_layer_wage.get(layer_id, float("nan")),
+                "avg_totalflows_pw":   avg_totalflows.get(layer_id, float("nan")),
                 **stats,
             })
 
