@@ -181,14 +181,14 @@ def build_latex() -> str:
     # Panels = layers; columns = outcomes × specs
     ncols = 1 + n_outcomes * n_spec  # 1 + 3*3 = 10
 
-    lines.append(r"\begin{table}[htbp]")
+    lines.append(r"\begin{table}[H]")
     lines.append(r"\centering")
     lines.append(r"\caption{Layer spillover effects --- specification comparison}")
     lines.append(r"\label{tab:layer_specs}")
-    lines.append(r"\footnotesize")
     col_spec = "l" + "".join(["ccc"] * n_outcomes)
+    lines.append(r"\resizebox{\textwidth}{!}{%")
     lines.append(r"\begin{tabular}{" + col_spec + r"}")
-    lines.append(r"\toprule")
+    lines.append(r"\toprule\toprule")
 
     # Header row 1 — outcome labels as multicolumn groups
     header1 = [""]
@@ -276,12 +276,13 @@ def build_latex() -> str:
         lines.append(" & ".join(cells) + r" \\")
 
     lines.append(r"\bottomrule")
-    lines.append(r"\end{tabular}")
+    lines.append(r"\end{tabular}}")
     lines.append(r"\begin{minipage}{\linewidth}")
-    lines.append(r"\footnotesize")
-    lines.append(r"\vspace{4pt}")
+    lines.append(r"\scriptsize\vspace{4pt}")
     lines.append(
-        r"\textit{Notes:} All regressions restricted to untreated, balanced-panel firms in the Lagos sample. "
+        r"\textit{Notes:} This table compares spillover effects of layer-level connectivity to treated firms "
+        r"across three specifications and four worker-partitioning schemes. "
+        r"All regressions are restricted to untreated, balanced-panel firms in the Lagos sample. "
         r"Connectivity is scaled to the 90th percentile of the control sample at 2009 and is "
         r"interacted with a post-2012 indicator (S\'{u}mula 277 reform). The pre-trend (placebo) coefficient "
         r"uses a fictitious treatment onset at 2010, estimated on the pre-reform period (2007--2011) only. "

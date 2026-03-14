@@ -1,10 +1,10 @@
-\begin{table}[htbp]
+\begin{table}[H]
 \centering
 \caption{Layer spillover effects --- specification comparison}
 \label{tab:layer_specs}
-\footnotesize
+\resizebox{\textwidth}{!}{%
 \begin{tabular}{lccccccccc}
-\toprule
+\toprule\toprule
  & \multicolumn{3}{c}{Log Dec. wage} & \multicolumn{3}{c}{Log hourly wage} & \multicolumn{3}{c}{Log employment} \\
 \cmidrule(lr){2-4} \cmidrule(lr){5-7} \cmidrule(lr){8-10}
  & (1) & (2) & (3) & (1) & (2) & (3) & (1) & (2) & (3) \\
@@ -56,11 +56,10 @@ Mode $\times$ year FE & --- & \checkmark & --- & --- & \checkmark & --- & --- & 
 Firm FE & --- & --- & \checkmark & --- & --- & \checkmark & --- & --- & \checkmark \\
 Standard controls & --- & --- & \checkmark & --- & --- & \checkmark & --- & --- & \checkmark \\
 \bottomrule
-\end{tabular}
+\end{tabular}}
 \begin{minipage}{\linewidth}
-\footnotesize
-\vspace{4pt}
-\textit{Notes:} All regressions restricted to untreated, balanced-panel firms in the Lagos sample. Connectivity is scaled to the 90th percentile of the control sample at 2009 and is interacted with a post-2012 indicator (S\'{u}mula 277 reform). The pre-trend (placebo) coefficient uses a fictitious treatment onset at 2010, estimated on the pre-reform period (2007--2011) only. The pre-trend F-test $p$-value tests the joint significance of all pre-trend event-study coefficients; small values indicate detectable pre-trends.
+\scriptsize\vspace{4pt}
+\textit{Notes:} This table compares spillover effects of layer-level connectivity to treated firms across three specifications and four worker-partitioning schemes. All regressions are restricted to untreated, balanced-panel firms in the Lagos sample. Connectivity is scaled to the 90th percentile of the control sample at 2009 and is interacted with a post-2012 indicator (S\'{u}mula 277 reform). The pre-trend (placebo) coefficient uses a fictitious treatment onset at 2010, estimated on the pre-reform period (2007--2011) only. The pre-trend F-test $p$-value tests the joint significance of all pre-trend event-study coefficients; small values indicate detectable pre-trends.
 
 \textit{Outcome levels.} Columns (1) and (2) use \textit{layer-level} outcomes: each observation is a firm--layer--year cell, and the connectivity measure captures the share of that layer's outflows reaching treated firms. Column (3) uses \textit{firm-level} outcomes and the aggregate firm-level connectivity, restricted to the subset of firms present in the layer sample.
 

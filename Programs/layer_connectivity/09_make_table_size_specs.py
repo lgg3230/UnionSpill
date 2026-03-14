@@ -129,7 +129,7 @@ def build_latex() -> str:
     lines = []
     ncols_total = 1 + len(OUTCOMES) * N_COLS  # 1 + 3*4 = 13
 
-    lines.append(r"\begin{table}[htbp]")
+    lines.append(r"\begin{table}[H]")
     lines.append(r"\centering")
     lines.append(r"\caption{Layer spillover effects by firm size}")
     lines.append(r"\label{tab:size_specs}")
@@ -197,13 +197,14 @@ def build_latex() -> str:
     lines.append(r"\bottomrule")
     lines.append(r"\end{tabular}}")
     lines.append(r"\begin{minipage}{\linewidth}")
-    lines.append(r"\footnotesize\vspace{4pt}")
+    lines.append(r"\scriptsize\vspace{4pt}")
     lines.append(
-        r"\textit{Notes:} All regressions restricted to untreated, balanced-panel firms in the Lagos sample. "
-        r"Small firms have average December employment 2009--2011 below the median (31.7 workers); "
-        r"large firms are at or above the median. "
+        r"\textit{Notes:} This table reports layer-level spillover effects split by firm size, "
+        r"comparing small firms (below-median average December employment 2009--2011) to large firms "
+        r"(at or above median, corresponding to 31.7 workers). "
+        r"All regressions are restricted to untreated, balanced-panel firms in the Lagos sample. "
         r"Connectivity is scaled to the 90th percentile of the full control sample at 2009 "
-        r"(same scale for both size groups). "
+        r"(same scale for both size groups) so coefficients are comparable across columns. "
         r"The pre-trend (placebo) coefficient uses a fictitious treatment onset at 2010, "
         r"estimated on the pre-reform period (2007--2011) only. "
         r"Pre-trend F-test $p$-value tests joint significance of all pre-trend event-study coefficients. "
