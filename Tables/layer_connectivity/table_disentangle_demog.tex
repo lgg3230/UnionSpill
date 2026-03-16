@@ -1,0 +1,57 @@
+\begin{table}[H]
+\centering
+\caption{Disentangling layer spillover effects --- education and demographics}
+\label{tab:disentangle_demog}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lcccccccccccccccccc}
+\toprule\toprule
+ & \multicolumn{3}{c}{Log Dec. wage} & \multicolumn{3}{c}{Log hourly wage} & \multicolumn{3}{c}{Log employment} & \multicolumn{3}{c}{Log Dec. wage} & \multicolumn{3}{c}{Log hourly wage} & \multicolumn{3}{c}{Log employment} \\
+\cmidrule(lr){2-4} \cmidrule(lr){5-7} \cmidrule(lr){8-10} \cmidrule(lr){11-13} \cmidrule(lr){14-16} \cmidrule(lr){17-19}
+ & \shortstack{Own layer \\ (1)} & \shortstack{Cross-layer \\ (2)} & \shortstack{Firm \\ (3)} & \shortstack{Own layer \\ (4)} & \shortstack{Cross-layer \\ (5)} & \shortstack{Firm \\ (6)} & \shortstack{Own layer \\ (7)} & \shortstack{Cross-layer \\ (8)} & \shortstack{Firm \\ (9)} & \shortstack{Own layer \\ (10)} & \shortstack{Cross-layer \\ (11)} & \shortstack{Firm \\ (12)} & \shortstack{Own layer \\ (13)} & \shortstack{Cross-layer \\ (14)} & \shortstack{Firm \\ (15)} & \shortstack{Own layer \\ (16)} & \shortstack{Cross-layer \\ (17)} & \shortstack{Firm \\ (18)} \\
+\midrule
+\multicolumn{19}{l}{\textit{Panel A: 2-bin education (no HS / has HS)}} \\
+\quad Connectivity $\times$ Post & 0.0016 & 0.0050** & 0.0057*** & -0.0005 & 0.0032*** & 0.0077*** & -0.0132 & 0.0126 & 0.0067 & 0.0078*** & 0.0055* & 0.0074*** & 0.0044*** & 0.0015 & 0.0098*** & 0.0043 & 0.0048 & 0.0048 \\
+ & (0.0043) & (0.0020) & (0.0019) & (0.0017) & (0.0010) & (0.0024) & (0.0085) & (0.0081) & (0.0075) & (0.0022) & (0.0030) & (0.0020) & (0.0010) & (0.0012) & (0.0023) & (0.0078) & (0.0082) & (0.0066) \\
+\quad Pre-trend (placebo) & -0.0017 & -0.0005 & -0.0008 & 0.0006 & -0.0005 & -0.0010 & 0.0042 & -0.0082 & -0.0003 & -0.0002 & -0.0066** & 0.0004 & -0.0001 & -0.0023** & 0.0005 & -0.0021 & -0.0094 & -0.0032 \\
+ & (0.0048) & (0.0022) & (0.0023) & (0.0021) & (0.0009) & (0.0022) & (0.0079) & (0.0072) & (0.0057) & (0.0026) & (0.0027) & (0.0020) & (0.0012) & (0.0010) & (0.0020) & (0.0055) & (0.0069) & (0.0045) \\
+\quad Observations & 27,239 & 28,624 & 29,555 & 27,239 & 28,624 & 29,555 & 27,239 & 28,624 & 29,555 & 32,334 & 27,112 & 32,897 & 32,334 & 27,112 & 32,897 & 32,334 & 27,112 & 32,897 \\
+\quad Firms & 3,661 & 3,665 & 3,713 & 3,661 & 3,665 & 3,713 & 3,661 & 3,665 & 3,713 & 4,121 & 3,704 & 4,133 & 4,121 & 3,704 & 4,133 & 4,121 & 3,704 & 4,133 \\
+\quad Pre-trend F-test $p$-value & 0.909 & 0.105 & 0.091 & 0.666 & 0.094 & 0.068 & 0.428 & 0.418 & 0.916 & 0.949 & 0.002 & 0.588 & 0.924 & 0.002 & 0.516 & 0.921 & 0.469 & 0.703 \\
+\quad Regressor: $c_{\text{no\_hs}}$ & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & --- & --- & --- & --- & --- & --- & --- & --- & --- \\
+\quad Regressor: $c_{\text{has\_hs}}$ & --- & --- & --- & --- & --- & --- & --- & --- & --- & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark \\[6pt]
+\multicolumn{19}{l}{\textit{Panel B: Gender (female / male)}} \\
+\quad Connectivity $\times$ Post & -0.0002 & 0.0033** & 0.0025** & 0.0006 & 0.0022** & 0.0039*** & 0.0045 & 0.0072* & 0.0069* & 0.0082*** & 0.0020 & 0.0050*** & 0.0048*** & 0.0013 & 0.0069*** & 0.0138** & 0.0059 & 0.0047 \\
+ & (0.0035) & (0.0013) & (0.0011) & (0.0015) & (0.0009) & (0.0015) & (0.0060) & (0.0038) & (0.0037) & (0.0023) & (0.0023) & (0.0017) & (0.0012) & (0.0010) & (0.0020) & (0.0062) & (0.0062) & (0.0057) \\
+\quad Pre-trend (placebo) & 0.0022 & -0.0008 & 0.0010 & 0.0008 & -0.0003 & 0.0006 & 0.0015 & -0.0015 & -0.0002 & -0.0034 & -0.0014 & 0.0001 & -0.0011 & -0.0009 & 0.0003 & -0.0098 & -0.0011 & -0.0036 \\
+ & (0.0037) & (0.0012) & (0.0013) & (0.0015) & (0.0005) & (0.0012) & (0.0046) & (0.0026) & (0.0021) & (0.0028) & (0.0023) & (0.0020) & (0.0012) & (0.0010) & (0.0021) & (0.0068) & (0.0043) & (0.0042) \\
+\quad Observations & 29,460 & 29,122 & 30,737 & 29,460 & 29,122 & 30,737 & 29,460 & 29,122 & 30,737 & 31,565 & 28,845 & 32,343 & 31,565 & 28,845 & 32,343 & 31,565 & 28,845 & 32,343 \\
+\quad Firms & 3,831 & 3,766 & 3,861 & 3,831 & 3,766 & 3,861 & 3,831 & 3,766 & 3,861 & 4,053 & 3,815 & 4,065 & 4,053 & 3,815 & 4,065 & 4,053 & 3,815 & 4,065 \\
+\quad Pre-trend F-test $p$-value & 0.382 & 0.453 & 0.606 & 0.358 & 0.617 & 0.606 & 0.504 & 0.879 & 0.991 & 0.358 & 0.765 & 0.766 & 0.627 & 0.539 & 0.764 & 0.256 & 0.418 & 0.584 \\
+\quad Regressor: $c_{\text{female}}$ & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & --- & --- & --- & --- & --- & --- & --- & --- & --- \\
+\quad Regressor: $c_{\text{male}}$ & --- & --- & --- & --- & --- & --- & --- & --- & --- & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark \\[6pt]
+\multicolumn{19}{l}{\textit{Panel C: Race (non-white / white)}} \\
+\quad Connectivity $\times$ Post & 0.0026 & 0.0034** & 0.0016 & 0.0023* & 0.0020** & 0.0027** & 0.0186*** & -0.0048 & -0.0018 & 0.0076* & 0.0090*** & 0.0078*** & 0.0043** & 0.0056*** & 0.0102*** & 0.0027 & -0.0034 & 0.0008 \\
+ & (0.0033) & (0.0017) & (0.0013) & (0.0014) & (0.0008) & (0.0014) & (0.0070) & (0.0039) & (0.0034) & (0.0039) & (0.0028) & (0.0020) & (0.0018) & (0.0014) & (0.0024) & (0.0084) & (0.0112) & (0.0070) \\
+\quad Pre-trend (placebo) & -0.0018 & -0.0001 & -0.0001 & -0.0005 & -0.0002 & 0.0000 & -0.0062 & 0.0027 & 0.0009 & -0.0015 & 0.0027 & 0.0012 & -0.0010 & 0.0015 & 0.0015 & -0.0035 & 0.0175*** & 0.0021 \\
+ & (0.0028) & (0.0009) & (0.0008) & (0.0013) & (0.0004) & (0.0008) & (0.0079) & (0.0023) & (0.0020) & (0.0036) & (0.0031) & (0.0021) & (0.0015) & (0.0012) & (0.0021) & (0.0071) & (0.0068) & (0.0047) \\
+\quad Observations & 26,099 & 26,830 & 28,606 & 26,099 & 26,830 & 28,606 & 26,099 & 26,830 & 28,606 & 31,203 & 25,817 & 32,145 & 31,203 & 25,817 & 32,145 & 31,203 & 25,817 & 32,145 \\
+\quad Firms & 3,552 & 3,486 & 3,605 & 3,552 & 3,486 & 3,605 & 3,552 & 3,486 & 3,605 & 4,035 & 3,619 & 4,056 & 4,035 & 3,619 & 4,056 & 4,035 & 3,619 & 4,056 \\
+\quad Pre-trend F-test $p$-value & 0.978 & 0.536 & 0.927 & 0.950 & 0.397 & 0.822 & 0.162 & 0.598 & 0.857 & 0.042 & 0.598 & 0.474 & 0.036 & 0.451 & 0.419 & 0.806 & 0.015 & 0.910 \\
+\quad Regressor: $c_{\text{nonwhite}}$ & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & --- & --- & --- & --- & --- & --- & --- & --- & --- \\
+\quad Regressor: $c_{\text{white}}$ & --- & --- & --- & --- & --- & --- & --- & --- & --- & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark \\
+\midrule
+\midrule
+\multicolumn{19}{l}{\textit{Specification}} \\
+Layer-level outcomes & \checkmark & \checkmark & --- & \checkmark & \checkmark & --- & \checkmark & \checkmark & --- & \checkmark & \checkmark & --- & \checkmark & \checkmark & --- & \checkmark & \checkmark & --- \\
+Firm-level outcomes & --- & --- & \checkmark & --- & --- & \checkmark & --- & --- & \checkmark & --- & --- & \checkmark & --- & --- & \checkmark & --- & --- & \checkmark \\
+Own-layer outcome & \checkmark & --- & --- & \checkmark & --- & --- & \checkmark & --- & --- & \checkmark & --- & --- & \checkmark & --- & --- & \checkmark & --- & --- \\
+Cross-layer outcome & --- & \checkmark & --- & --- & \checkmark & --- & --- & \checkmark & --- & --- & \checkmark & --- & --- & \checkmark & --- & --- & \checkmark & --- \\
+Firm FE & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark \\
+Year FE & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark \\
+\bottomrule
+\end{tabular}}
+\begin{minipage}{\linewidth}
+\scriptsize\vspace{4pt}
+\textit{Notes:} This table tests which worker group's connectivity to treated firms drives the spillover effect. Column groups correspond to a specific connectivity variable (the regressor), identified by checkmarks at the bottom. Layer-level regressions restrict the sample to workers in the indicated layer (cross-layer or own-layer as shown) and absorb firm FE and year FE. Firm-level regressions collapse to firm$\times$year and absorb firm FE and year FE. In all cases the regressor is the focal connectivity variable interacted with a post-2012 indicator (S\'{u}mula 277 reform). All regressions are restricted to untreated, balanced-panel firms. Connectivity is scaled to the 90th percentile of the control sample at 2009. Standard errors clustered at the firm level. $^{***}p<0.01$, $^{**}p<0.05$, $^{*}p<0.10$.
+\end{minipage}
+\end{table}

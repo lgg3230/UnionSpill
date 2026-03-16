@@ -74,7 +74,7 @@ SPECS = [
     },
     {
         "label":       "(3) Firm-level (restricted)",
-        "sublabel":    "firm FE + standard controls",
+        "sublabel":    "firm FE",
         "file_tpl":    "results_spill_firmrestr_{layer}_layer_spill.csv",
         "section_key": "firmrestr",
         "outcomes":    ["lr_remdezr_w", "lr_remdezr_h_w", "l_firm_emp"],
@@ -92,6 +92,12 @@ LAYER_LABELS = {
     "edu2":   "2-bin education (no HS / has HS)",
     "gender": "Gender (female / male)",
     "race":   "Race (non-white / white)",
+}
+
+# Split into two tables
+LAYER_GROUPS = {
+    "edu":   (["edu", "edu2"],      "Education layers"),
+    "demog": (["gender", "race"],   "Demographic layers"),
 }
 
 OUTCOME_ORDER = [
@@ -175,7 +181,7 @@ OUTCOME_SHORT = [
     "Log employment",
 ]
 
-def build_latex() -> str:
+def build_latex(layers_subset: list, caption: str, label: str) -> str:
     lines = []
     n_outcomes = len(OUTCOME_ORDER)
     # Panels = layers; columns = outcomes × specs
@@ -183,8 +189,8 @@ def build_latex() -> str:
 
     lines.append(r"\begin{table}[H]")
     lines.append(r"\centering")
-    lines.append(r"\caption{Layer spillover effects --- specification comparison}")
-    lines.append(r"\label{tab:layer_specs}")
+    lines.append(r"\caption{" + caption + r"}")
+    lines.append(r"\label{" + label + r"}")
     col_spec = "l" + "".join(["ccc"] * n_outcomes)
     lines.append(r"\resizebox{\textwidth}{!}{%")
     lines.append(r"\begin{tabular}{" + col_spec + r"}")
@@ -204,16 +210,15 @@ def build_latex() -> str:
         col += n_spec
     lines.append(" ".join(cmi))
 
-    # Header row 2 — (1)(2)(3) repeating for each outcome group
+    # Header row 2 — sequential numbering (1)–(n_outcomes*n_spec)
     header2 = [""]
-    for _ in OUTCOME_ORDER:
-        for i in range(1, n_spec + 1):
-            header2.append(f"({i})")
+    for col_num in range(1, n_outcomes * n_spec + 1):
+        header2.append(f"({col_num})")
     lines.append(" & ".join(header2) + r" \\")
     lines.append(r"\midrule")
 
     # One panel per layer bin specification
-    for li, layer in enumerate(LAYERS):
+    for li, layer in enumerate(layers_subset):
         # Panel header
         panel_letter = chr(ord("A") + li)
         lines.append(
@@ -249,7 +254,7 @@ def build_latex() -> str:
                     else:
                         stat_cells.append(fmt_stat(v, row_type) if v != "--" else "---")
             is_last_stat = ri == len(STAT_ROWS) - 1
-            end = r" \\[6pt]" if is_last_stat and li < len(LAYERS) - 1 else r" \\"
+            end = r" \\[6pt]" if is_last_stat and li < len(layers_subset) - 1 else r" \\"
             lines.append(" & ".join(stat_cells) + end)
 
     lines.append(r"\midrule")
@@ -261,11 +266,8 @@ def build_latex() -> str:
         ("Layer-level outcomes",            lambda si: si in (0, 1)),
         ("Firm-level outcomes",             lambda si: si == 2),
         ("Firm $\\times$ year FE",          lambda si: si == 0),
-        ("Microregion $\\times$ year FE",   lambda si: si == 1),
-        ("Industry $\\times$ year FE",      lambda si: si == 1),
-        ("Mode $\\times$ year FE",          lambda si: si == 1),
+        ("Firm-level FE",                   lambda si: si == 1),
         ("Firm FE",                         lambda si: si == 2),
-        ("Standard controls",               lambda si: si == 2),
     ]
 
     for label, condition in CHECKMARK_ROWS:
@@ -282,30 +284,41 @@ def build_latex() -> str:
     lines.append(
         r"\textit{Notes:} This table compares spillover effects of layer-level connectivity to treated firms "
         r"across three specifications and four worker-partitioning schemes. "
-        r"All regressions are restricted to untreated, balanced-panel firms in the Lagos sample. "
+        r"All regressions are restricted to untreated, balanced-panel firms. "
         r"Connectivity is scaled to the 90th percentile of the control sample at 2009 and is "
         r"interacted with a post-2012 indicator (S\'{u}mula 277 reform). The pre-trend (placebo) coefficient "
-        r"uses a fictitious treatment onset at 2010, estimated on the pre-reform period (2007--2011) only. "
+        r"tests whether connectivity predicts differential outcomes in 2009--2010 relative to 2011, "
+        r"using only pre-reform years (2009--2011). "
         r"The pre-trend F-test $p$-value tests the joint significance of all pre-trend event-study "
         r"coefficients; small values indicate detectable pre-trends."
     )
     lines.append(r"")
+    # Build sequential column references for notes
+    within_cols  = ", ".join(f"({1 + oi*n_spec})"     for oi in range(n_outcomes))
+    cross_cols   = ", ".join(f"({2 + oi*n_spec})"     for oi in range(n_outcomes))
+    firm_cols    = ", ".join(f"({3 + oi*n_spec})"     for oi in range(n_outcomes))
+    layer_cols   = ", ".join(
+        f"({1 + oi*n_spec}) and ({2 + oi*n_spec})" for oi in range(n_outcomes)
+    )
     lines.append(
-        r"\textit{Outcome levels.} Columns (1) and (2) use \textit{layer-level} outcomes: "
+        r"\textit{Outcome levels.} Columns " + within_cols + r" and " + cross_cols
+        + r" use \textit{layer-level} outcomes: "
         r"each observation is a firm--layer--year cell, and the connectivity measure captures the share "
         r"of that layer's outflows reaching treated firms. "
-        r"Column (3) uses \textit{firm-level} outcomes and the aggregate firm-level connectivity, "
+        r"Columns " + firm_cols + r" use \textit{firm-level} outcomes and the aggregate firm-level connectivity, "
         r"restricted to the subset of firms present in the layer sample."
     )
     lines.append(r"")
     lines.append(
-        r"\textit{Fixed effects.} Within-firm specification (1) absorbs firm$\times$year FE; "
+        r"\textit{Fixed effects.} Columns " + within_cols
+        + r" (within-firm) absorb firm$\times$year FE; "
         r"identification comes from cross-layer variation within the same firm--year. "
-        r"Cross-firm specification (2) includes microregion$\times$year, industry$\times$year, "
-        r"and mode$\times$year FE, controlling for local labor-market trends, sector shocks, and "
+        r"Columns " + cross_cols
+        + r" (cross-firm) include firm-level FE: microregion$\times$year, industry$\times$year, "
+        r"and mode$\times$year, controlling for local labor-market trends, sector shocks, and "
         r"contract-type composition. "
-        r"Firm-level specification (3) includes firm FE together with a standard set of "
-        r"time-varying controls (log employment, wage quartile, and sector trends)."
+        r"Columns " + firm_cols
+        + r" (firm-level) include firm FE and year FE."
     )
     lines.append(r"")
     lines.append(
@@ -326,9 +339,9 @@ def build_latex() -> str:
 
 
 # ── Build flat CSV for quick inspection ───────────────────────────────────────
-def build_csv() -> pd.DataFrame:
+def build_csv(layers_subset: list) -> pd.DataFrame:
     rows = []
-    for layer in LAYERS:
+    for layer in layers_subset:
         for out_label, out0, out1, out2 in OUTCOME_ORDER:
             out_per_spec = [out0, out1, out2]
             for si, spec in enumerate(SPECS):
@@ -351,17 +364,37 @@ def build_csv() -> pd.DataFrame:
 # ── Write outputs ──────────────────────────────────────────────────────────────
 TABLES.mkdir(parents=True, exist_ok=True)
 
-tex_out = TABLES / "table_layer_specs.tex"
-csv_out = TABLES / "table_layer_specs.csv"
+CAPTIONS = {
+    "edu":   "Layer spillover effects --- education layers",
+    "demog": "Layer spillover effects --- demographic layers",
+}
+LABELS = {
+    "edu":   "tab:layer_specs_edu",
+    "demog": "tab:layer_specs_demog",
+}
 
-tex = build_latex()
-tex_out.write_text(tex)
-print(f"Wrote: {tex_out}")
+for group_key, (layers_subset, _) in LAYER_GROUPS.items():
+    tex_out = TABLES / f"table_layer_specs_{group_key}.tex"
+    csv_out = TABLES / f"table_layer_specs_{group_key}.csv"
 
-df_out = build_csv()
-df_out.to_csv(csv_out, index=False)
-print(f"Wrote: {csv_out}")
+    tex = build_latex(layers_subset, CAPTIONS[group_key], LABELS[group_key])
+    tex_out.write_text(tex)
+    print(f"Wrote: {tex_out}")
 
-# Print preview
-print()
-print(df_out.to_string(index=False))
+    df_out = build_csv(layers_subset)
+    df_out.to_csv(csv_out, index=False)
+    print(f"Wrote: {csv_out}")
+
+    print()
+    print(df_out.to_string(index=False))
+    print()
+
+# Also keep the combined table for backwards compatibility
+tex_out_all = TABLES / "table_layer_specs.tex"
+csv_out_all = TABLES / "table_layer_specs.csv"
+tex_all = build_latex(LAYERS, "Layer spillover effects --- specification comparison", "tab:layer_specs")
+tex_out_all.write_text(tex_all)
+df_all = build_csv(LAYERS)
+df_all.to_csv(csv_out_all, index=False)
+print(f"Wrote: {tex_out_all}")
+print(f"Wrote: {csv_out_all}")

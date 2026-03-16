@@ -65,6 +65,14 @@ foreach layer in edu edu2 gender race {
 	cap drop firm_id
 	egen firm_id = group(identificad)
 
+	* Create firm×layer unit ID for cross-section FE
+	cap drop firm_layer_id
+	egen firm_layer_id = group(identificad layer_id)
+
+	* Create numeric layer ID for layer×year FE
+	cap drop layer_id_num
+	encode layer_id, gen(layer_id_num)
+
 	* ── 2b. Merge connectivity (firm × layer, time-invariant pre-treatment) ──
 	di as result "Merging layer connectivity..."
 	merge m:1 identificad layer_id using ///
@@ -176,7 +184,7 @@ foreach layer in edu edu2 gender race {
 	****************************************************************************
 
 	local conn       "layer_conn_norm"
-	local base_fe    "i.firm_id#i.year"
+	local base_fe    "i.firm_layer_id i.year i.firm_id#i.year i.layer_id_num#i.year"
 	local extra_year "ib0.layer_totalflows_pw_pre4#i.year"
 
 	****************************************************************************
@@ -310,7 +318,7 @@ foreach layer in edu edu2 gender race {
 	di as result "CROSS-FIRM SPEC — layer: `layer'"
 	di as result "-----------------------------------------------------------------------"
 
-	local base_fe_cross "i.industry1_num#i.year i.mode_base_month_num#i.year i.microregion_num#i.year"
+	local base_fe_cross "i.firm_layer_id i.year i.industry1_num#i.year i.mode_base_month_num#i.year i.microregion_num#i.year i.layer_id_num#i.year"
 
 	local csv_cross "$tables/layer_connectivity/results_spill_layer_cross_`layer'_`spec'.csv"
 	capture erase "`csv_cross'"
@@ -533,7 +541,8 @@ foreach layer in edu edu2 gender race {
 		replace `outcome'_pre4 = 0 if missing(`outcome'_pre4)
 	}
 	* l_firm_emp: _pre already set as ln(firm_emp_pre) above; only need bins
-	cap drop l_firm_emp_pre4_o l_firm_emp_pre4
+	cap drop l_firm_emp_pre4_o
+	cap drop l_firm_emp_pre4
 	egen l_firm_emp_pre4_o = cut(l_firm_emp_pre) ///
 		if year == 2009 & in_balanced_panel == 1, group(4)
 	bys identificad: ///

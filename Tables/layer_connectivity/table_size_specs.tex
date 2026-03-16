@@ -1,54 +1,57 @@
+\begin{landscape}
 \begin{table}[H]
 \centering
 \caption{Layer spillover effects by firm size}
 \label{tab:size_specs}
+\setlength{\tabcolsep}{3pt}
 \resizebox{\textwidth}{!}{%
-\begin{tabular}{lcccccccccccc}
+\begin{tabular}{lcccccccccccccccccc}
 \toprule\toprule
- & \multicolumn{4}{c}{Log Dec. wage} & \multicolumn{4}{c}{Log hourly wage} & \multicolumn{4}{c}{Log employment} \\
-\cmidrule(lr){2-5} \cmidrule(lr){6-9} \cmidrule(lr){10-13}
- & \shortstack{Within-firm\\Small} & \shortstack{Within-firm\\Large} & \shortstack{Cross-firm\\Small} & \shortstack{Cross-firm\\Large} & \shortstack{Within-firm\\Small} & \shortstack{Within-firm\\Large} & \shortstack{Cross-firm\\Small} & \shortstack{Cross-firm\\Large} & \shortstack{Within-firm\\Small} & \shortstack{Within-firm\\Large} & \shortstack{Cross-firm\\Small} & \shortstack{Cross-firm\\Large} \\
+ & \multicolumn{6}{c}{Log Dec. wage} & \multicolumn{6}{c}{Log hourly wage} & \multicolumn{6}{c}{Log employment} \\
+\cmidrule(lr){2-7} \cmidrule(lr){8-13} \cmidrule(lr){14-19}
+ & \shortstack{Within-firm\\Small} & \shortstack{Within-firm\\Large} & \shortstack{Cross-firm\\Small} & \shortstack{Cross-firm\\Large} & \shortstack{Firm-level\\Small} & \shortstack{Firm-level\\Large} & \shortstack{Within-firm\\Small} & \shortstack{Within-firm\\Large} & \shortstack{Cross-firm\\Small} & \shortstack{Cross-firm\\Large} & \shortstack{Firm-level\\Small} & \shortstack{Firm-level\\Large} & \shortstack{Within-firm\\Small} & \shortstack{Within-firm\\Large} & \shortstack{Cross-firm\\Small} & \shortstack{Cross-firm\\Large} & \shortstack{Firm-level\\Small} & \shortstack{Firm-level\\Large} \\
 \midrule
-\multicolumn{13}{l}{\textit{Panel A: 3-bin education (no HS / HS / higher)}} \\
-\quad Connectivity $\times$ Post & 0.0006 & -0.0055 & 0.0029 & -0.0030 & -0.0000 & -0.0029 & 0.0011 & -0.0018 & -0.0096** & 0.0217*** & -0.0069* & 0.0122* \\
- & (0.0032) & (0.0046) & (0.0026) & (0.0041) & (0.0014) & (0.0019) & (0.0011) & (0.0019) & (0.0047) & (0.0068) & (0.0039) & (0.0071) \\
-\quad Pre-trend (placebo) & -0.0018 & -0.0011 & -0.0020 & -0.0002 & -0.0002 & 0.0012 & -0.0004 & 0.0013 & 0.0045 & 0.0015 & -0.0013 & 0.0102* \\
- & (0.0041) & (0.0102) & (0.0044) & (0.0074) & (0.0019) & (0.0044) & (0.0020) & (0.0033) & (0.0089) & (0.0073) & (0.0060) & (0.0059) \\
-\quad Observations & 36,116 & 40,756 & 39,806 & 40,897 & 36,116 & 40,756 & 39,806 & 40,897 & 36,116 & 40,756 & 39,806 & 40,897 \\
-\quad Layers $\times$ firms & 4,642 & 5,192 & 5,568 & 5,265 & 4,642 & 5,192 & 5,568 & 5,265 & 4,642 & 5,192 & 5,568 & 5,265 \\
-\quad Firms & 2,143 & 1,793 & 2,378 & 1,797 & 2,143 & 1,793 & 2,378 & 1,797 & 2,143 & 1,793 & 2,378 & 1,797 \\
-\quad Pre-trend F-test $p$-value & 0.193 & 0.261 & 0.442 & 0.550 & 0.301 & 0.325 & 0.586 & 0.587 & 0.254 & 0.896 & 0.688 & 0.209 \\[6pt]
-\multicolumn{13}{l}{\textit{Panel B: 2-bin education (no HS / has HS)}} \\
-\quad Connectivity $\times$ Post & 0.0049 & -0.0116 & 0.0080** & -0.0024 & 0.0018 & -0.0057* & 0.0028** & -0.0017 & 0.0010 & 0.0110 & -0.0050 & -0.0045 \\
- & (0.0056) & (0.0077) & (0.0035) & (0.0054) & (0.0022) & (0.0030) & (0.0014) & (0.0024) & (0.0151) & (0.0207) & (0.0081) & (0.0129) \\
-\quad Pre-trend (placebo) & 0.0049 & -0.0082 & 0.0060 & -0.0058* & 0.0008 & 0.0019 & 0.0023 & -0.0011 & -0.0043 & -0.0030 & -0.0074 & 0.0076 \\
- & (0.0065) & (0.0076) & (0.0044) & (0.0033) & (0.0029) & (0.0028) & (0.0020) & (0.0018) & (0.0135) & (0.0288) & (0.0078) & (0.0122) \\
-\quad Observations & 23,214 & 29,374 & 29,159 & 30,041 & 23,214 & 29,374 & 29,159 & 30,041 & 23,214 & 29,374 & 29,159 & 30,041 \\
-\quad Layers $\times$ firms & 2,742 & 3,591 & 3,943 & 3,820 & 2,742 & 3,591 & 3,943 & 3,820 & 2,742 & 3,591 & 3,943 & 3,820 \\
-\quad Firms & 1,745 & 1,900 & 2,225 & 1,931 & 1,745 & 1,900 & 2,225 & 1,931 & 1,745 & 1,900 & 2,225 & 1,931 \\
-\quad Pre-trend F-test $p$-value & 0.003 & 0.458 & 0.052 & 0.125 & 0.001 & 0.705 & 0.085 & 0.653 & 0.510 & 0.407 & 0.572 & 0.425 \\[6pt]
-\multicolumn{13}{l}{\textit{Panel C: Gender (female / male)}} \\
-\quad Connectivity $\times$ Post & -0.0019 & 0.0077 & 0.0012 & 0.0047 & -0.0005 & 0.0030 & 0.0008 & 0.0036* & -0.0066 & -0.0326* & -0.0016 & -0.0105 \\
- & (0.0036) & (0.0075) & (0.0025) & (0.0036) & (0.0014) & (0.0033) & (0.0009) & (0.0018) & (0.0046) & (0.0171) & (0.0044) & (0.0132) \\
-\quad Pre-trend (placebo) & 0.0023 & -0.0004 & 0.0001 & 0.0002 & 0.0007 & -0.0009 & -0.0002 & -0.0002 & 0.0072 & 0.0182 & -0.0010 & 0.0164* \\
- & (0.0039) & (0.0075) & (0.0026) & (0.0048) & (0.0016) & (0.0032) & (0.0010) & (0.0020) & (0.0097) & (0.0147) & (0.0068) & (0.0091) \\
-\quad Observations & 25,136 & 30,308 & 30,109 & 30,598 & 25,136 & 30,308 & 30,109 & 30,598 & 25,136 & 30,308 & 30,109 & 30,598 \\
-\quad Layers $\times$ firms & 2,956 & 3,733 & 3,985 & 3,862 & 2,956 & 3,733 & 3,985 & 3,862 & 2,956 & 3,733 & 3,985 & 3,862 \\
-\quad Firms & 1,798 & 1,931 & 2,220 & 1,941 & 1,798 & 1,931 & 2,220 & 1,941 & 1,798 & 1,931 & 2,220 & 1,941 \\
-\quad Pre-trend F-test $p$-value & 0.582 & 0.510 & 0.862 & 0.605 & 0.560 & 0.558 & 0.960 & 0.653 & 0.091 & 0.462 & 0.685 & 0.195 \\[6pt]
-\multicolumn{13}{l}{\textit{Panel D: Race (non-white / white)}} \\
-\quad Connectivity $\times$ Post & -0.0039 & -0.0007 & -0.0001 & 0.0046 & -0.0014 & -0.0002 & 0.0002 & 0.0033* & 0.0255*** & 0.0113 & 0.0204*** & 0.0027 \\
- & (0.0031) & (0.0048) & (0.0026) & (0.0036) & (0.0014) & (0.0027) & (0.0011) & (0.0019) & (0.0066) & (0.0172) & (0.0062) & (0.0106) \\
-\quad Pre-trend (placebo) & 0.0002 & -0.0080 & -0.0006 & -0.0041 & 0.0006 & -0.0023 & -0.0008 & -0.0011 & -0.0105 & -0.0203 & -0.0041 & 0.0050 \\
- & (0.0048) & (0.0075) & (0.0034) & (0.0037) & (0.0019) & (0.0039) & (0.0013) & (0.0018) & (0.0081) & (0.0181) & (0.0055) & (0.0099) \\
-\quad Observations & 21,076 & 27,570 & 28,075 & 28,784 & 21,076 & 27,570 & 28,075 & 28,784 & 21,076 & 27,570 & 28,075 & 28,784 \\
-\quad Layers $\times$ firms & 2,469 & 3,359 & 3,865 & 3,688 & 2,469 & 3,359 & 3,865 & 3,688 & 2,469 & 3,359 & 3,865 & 3,688 \\
-\quad Firms & 1,663 & 1,811 & 2,245 & 1,891 & 1,663 & 1,811 & 2,245 & 1,891 & 1,663 & 1,811 & 2,245 & 1,891 \\
-\quad Pre-trend F-test $p$-value & 0.793 & 0.519 & 0.901 & 0.543 & 0.592 & 0.837 & 0.779 & 0.804 & 0.425 & 0.227 & 0.742 & 0.845 \\
+\multicolumn{19}{l}{\textit{Panel A: 3-bin education (no HS / HS / higher)}} \\
+\quad Connectivity $\times$ Post & -0.0014 & -0.0110*** & 0.0020 & -0.0056 & 0.0077** & 0.0048 & -0.0010 & -0.0049*** & 0.0004 & -0.0023 & 0.0067** & 0.0097** & -0.0040 & 0.0154** & -0.0023 & 0.0086 & 0.0000 & 0.0102 \\
+ & (0.0029) & (0.0040) & (0.0023) & (0.0037) & (0.0034) & (0.0041) & (0.0012) & (0.0017) & (0.0010) & (0.0017) & (0.0028) & (0.0045) & (0.0054) & (0.0069) & (0.0043) & (0.0073) & (0.0091) & (0.0193) \\
+\quad Pre-trend (placebo) & 0.0110** & -0.0006 & 0.0095** & 0.0008 & 0.0014 & 0.0048 & 0.0051** & 0.0012 & 0.0042** & 0.0013 & 0.0012 & 0.0035 & -0.0043 & 0.0074 & -0.0044 & 0.0132** & -0.0149* & 0.0068 \\
+ & (0.0048) & (0.0096) & (0.0039) & (0.0069) & (0.0037) & (0.0048) & (0.0021) & (0.0040) & (0.0017) & (0.0029) & (0.0036) & (0.0046) & (0.0074) & (0.0066) & (0.0058) & (0.0054) & (0.0085) & (0.0131) \\
+\quad Observations & 29,924 & 46,735 & 33,558 & 46,959 & 15,602 & 15,694 & 29,924 & 46,735 & 33,558 & 46,959 & 15,602 & 15,694 & 29,924 & 46,735 & 33,558 & 46,959 & 15,720 & 15,768 \\
+\quad Layers $\times$ firms & 3,737 & 5,952 & 4,621 & 6,053 & --- & --- & 3,737 & 5,952 & 4,621 & 6,053 & --- & --- & 3,737 & 5,952 & 4,621 & 6,053 & --- & --- \\
+\quad Firms & 1,795 & 2,088 & 2,073 & 2,095 & 1,965 & 1,969 & 1,795 & 2,088 & 2,073 & 2,095 & 1,965 & 1,969 & 1,795 & 2,088 & 2,073 & 2,095 & 1,965 & 1,971 \\
+\quad Pre-trend F-test $p$-value & 0.055 & 0.915 & 0.123 & 0.538 & 0.816 & 0.237 & 0.055 & 0.818 & 0.102 & 0.616 & 0.864 & 0.232 & 0.564 & 0.210 & 0.457 & 0.046 & 0.097 & 0.515 \\[6pt]
+\multicolumn{19}{l}{\textit{Panel B: 2-bin education (no HS / has HS)}} \\
+\quad Connectivity $\times$ Post & 0.0023 & -0.0100 & 0.0077** & 0.0005 & 0.0077** & 0.0048 & 0.0002 & -0.0044 & 0.0024* & 0.0002 & 0.0067** & 0.0097** & -0.0143 & 0.0141 & -0.0088 & -0.0018 & 0.0000 & 0.0102 \\
+ & (0.0053) & (0.0074) & (0.0033) & (0.0046) & (0.0034) & (0.0041) & (0.0021) & (0.0032) & (0.0013) & (0.0020) & (0.0028) & (0.0045) & (0.0142) & (0.0196) & (0.0079) & (0.0127) & (0.0091) & (0.0193) \\
+\quad Pre-trend (placebo) & 0.0093 & -0.0092 & 0.0055 & -0.0052 & 0.0014 & 0.0048 & 0.0033 & -0.0006 & 0.0020 & -0.0017 & 0.0012 & 0.0035 & 0.0049 & 0.0344 & -0.0022 & 0.0186* & -0.0149* & 0.0068 \\
+ & (0.0067) & (0.0074) & (0.0047) & (0.0033) & (0.0037) & (0.0048) & (0.0030) & (0.0028) & (0.0021) & (0.0014) & (0.0036) & (0.0046) & (0.0133) & (0.0237) & (0.0069) & (0.0099) & (0.0085) & (0.0131) \\
+\quad Observations & 20,782 & 31,676 & 26,606 & 32,502 & 15,602 & 15,694 & 20,782 & 31,676 & 26,606 & 32,502 & 15,602 & 15,694 & 20,782 & 31,676 & 26,606 & 32,502 & 15,720 & 15,768 \\
+\quad Layers $\times$ firms & 2,410 & 3,863 & 3,564 & 4,131 & --- & --- & 2,410 & 3,863 & 3,564 & 4,131 & --- & --- & 2,410 & 3,863 & 3,564 & 4,131 & --- & --- \\
+\quad Firms & 1,531 & 2,049 & 2,054 & 2,093 & 1,965 & 1,969 & 1,531 & 2,049 & 2,054 & 2,093 & 1,965 & 1,969 & 1,531 & 2,049 & 2,054 & 2,093 & 1,965 & 1,971 \\
+\quad Pre-trend F-test $p$-value & 0.031 & 0.727 & 0.099 & 0.244 & 0.816 & 0.237 & 0.028 & 0.571 & 0.118 & 0.249 & 0.864 & 0.232 & 0.690 & 0.137 & 0.686 & 0.138 & 0.097 & 0.515 \\[6pt]
+\multicolumn{19}{l}{\textit{Panel C: Gender (female / male)}} \\
+\quad Connectivity $\times$ Post & -0.0003 & 0.0000 & 0.0046* & 0.0017 & 0.0077** & 0.0048 & 0.0000 & -0.0000 & 0.0016 & 0.0020 & 0.0067** & 0.0097** & 0.0053 & -0.0126* & 0.0057 & -0.0068 & 0.0000 & 0.0102 \\
+ & (0.0040) & (0.0047) & (0.0028) & (0.0034) & (0.0034) & (0.0041) & (0.0016) & (0.0020) & (0.0010) & (0.0017) & (0.0028) & (0.0045) & (0.0074) & (0.0070) & (0.0052) & (0.0070) & (0.0091) & (0.0193) \\
+\quad Pre-trend (placebo) & -0.0001 & -0.0047 & -0.0017 & 0.0009 & 0.0014 & 0.0048 & 0.0005 & -0.0030 & -0.0003 & 0.0001 & 0.0012 & 0.0035 & -0.0084 & 0.0156 & -0.0085 & 0.0201*** & -0.0149* & 0.0068 \\
+ & (0.0061) & (0.0064) & (0.0036) & (0.0044) & (0.0037) & (0.0048) & (0.0026) & (0.0026) & (0.0015) & (0.0018) & (0.0036) & (0.0046) & (0.0121) & (0.0113) & (0.0082) & (0.0078) & (0.0085) & (0.0131) \\
+\quad Observations & 22,718 & 32,634 & 27,642 & 32,993 & 15,602 & 15,694 & 22,718 & 32,634 & 27,642 & 32,993 & 15,602 & 15,694 & 22,718 & 32,634 & 27,642 & 32,993 & 15,720 & 15,768 \\
+\quad Layers $\times$ firms & 2,638 & 4,009 & 3,636 & 4,163 & --- & --- & 2,638 & 4,009 & 3,636 & 4,163 & --- & --- & 2,638 & 4,009 & 3,636 & 4,163 & --- & --- \\
+\quad Firms & 1,603 & 2,080 & 2,061 & 2,094 & 1,965 & 1,969 & 1,603 & 2,080 & 2,061 & 2,094 & 1,965 & 1,969 & 1,603 & 2,080 & 2,061 & 2,094 & 1,965 & 1,971 \\
+\quad Pre-trend F-test $p$-value & 0.975 & 0.543 & 0.901 & 0.196 & 0.816 & 0.237 & 0.871 & 0.676 & 0.936 & 0.217 & 0.864 & 0.232 & 0.044 & 0.064 & 0.211 & 0.369 & 0.097 & 0.515 \\[6pt]
+\multicolumn{19}{l}{\textit{Panel D: Race (non-white / white)}} \\
+\quad Connectivity $\times$ Post & -0.0078* & 0.0028 & -0.0016 & 0.0068*** & 0.0078** & 0.0048 & -0.0034* & 0.0011 & -0.0005 & 0.0043*** & 0.0069** & 0.0099** & 0.0184* & 0.0270*** & 0.0113 & 0.0160* & -0.0011 & 0.0122 \\
+ & (0.0041) & (0.0038) & (0.0039) & (0.0024) & (0.0034) & (0.0041) & (0.0019) & (0.0018) & (0.0017) & (0.0012) & (0.0028) & (0.0045) & (0.0100) & (0.0082) & (0.0069) & (0.0094) & (0.0091) & (0.0194) \\
+\quad Pre-trend (placebo) & -0.0061 & 0.0056 & -0.0023 & 0.0002 & 0.0010 & 0.0049 & -0.0026 & 0.0019 & -0.0009 & -0.0003 & 0.0009 & 0.0036 & -0.0168 & -0.0128 & -0.0112 & 0.0076 & -0.0145* & 0.0062 \\
+ & (0.0043) & (0.0059) & (0.0028) & (0.0035) & (0.0037) & (0.0048) & (0.0017) & (0.0026) & (0.0012) & (0.0015) & (0.0036) & (0.0046) & (0.0142) & (0.0124) & (0.0078) & (0.0091) & (0.0084) & (0.0131) \\
+\quad Observations & 18,352 & 30,136 & 25,128 & 31,626 & 15,508 & 15,665 & 18,352 & 30,136 & 25,128 & 31,626 & 15,508 & 15,665 & 18,352 & 30,136 & 25,128 & 31,626 & 15,624 & 15,736 \\
+\quad Layers $\times$ firms & 2,101 & 3,654 & 3,416 & 4,052 & --- & --- & 2,101 & 3,654 & 3,416 & 4,052 & --- & --- & 2,101 & 3,654 & 3,416 & 4,052 & --- & --- \\
+\quad Firms & 1,411 & 1,984 & 2,042 & 2,086 & 1,953 & 1,965 & 1,411 & 1,984 & 2,042 & 2,086 & 1,953 & 1,965 & 1,411 & 1,984 & 2,042 & 2,086 & 1,953 & 1,967 \\
+\quad Pre-trend F-test $p$-value & 0.311 & 0.328 & 0.470 & 0.614 & 0.867 & 0.239 & 0.232 & 0.159 & 0.435 & 0.388 & 0.921 & 0.230 & 0.412 & 0.895 & 0.327 & 0.550 & 0.097 & 0.599 \\
 \bottomrule
 \end{tabular}}
 \begin{minipage}{\linewidth}
 \scriptsize\vspace{4pt}
-\textit{Notes:} This table reports layer-level spillover effects split by firm size, comparing small firms (below-median average December employment 2009--2011) to large firms (at or above median, corresponding to 31.7 workers). All regressions are restricted to untreated, balanced-panel firms in the Lagos sample. Connectivity is scaled to the 90th percentile of the full control sample at 2009 (same scale for both size groups) so coefficients are comparable across columns. The pre-trend (placebo) coefficient uses a fictitious treatment onset at 2010, estimated on the pre-reform period (2007--2011) only. Pre-trend F-test $p$-value tests joint significance of all pre-trend event-study coefficients. Within-firm specifications absorb firm$\times$year FE; identification exploits cross-layer variation within the same firm--year. Cross-firm specifications include microregion$\times$year, industry$\times$year, and mode$\times$year FE. Standard errors clustered at the firm level. $^{***}p<0.01$, $^{**}p<0.05$, $^{*}p<0.10$.
+\textit{Notes:} This table reports layer-level spillover effects split by firm size, comparing small firms (below-median average December employment 2009--2011) to large firms (at or above median, corresponding to 31.7 workers). All regressions are restricted to untreated, balanced-panel firms. Connectivity is scaled to the 90th percentile of the full control sample at 2009 (same scale for both size groups) so coefficients are comparable across columns. The pre-trend (placebo) coefficient tests whether connectivity predicts differential outcomes in 2009--2010 relative to 2011, using only pre-reform years (2009--2011). Pre-trend F-test $p$-value tests joint significance of all pre-trend event-study coefficients. Within-firm specifications absorb firm$\times$year FE; identification exploits cross-layer variation within the same firm--year. Cross-firm specifications include microregion$\times$year, industry$\times$year, and mode$\times$year FE. Firm-level columns (5--6) run the standard firm-level spillover regression restricted to firms present in the layer sample and the given size group; bins are computed on the full sample before the size restriction for comparability. Standard errors clustered at the firm level. $^{***}p<0.01$, $^{**}p<0.05$, $^{*}p<0.10$.
 \end{minipage}
 \end{table}
+\end{landscape}

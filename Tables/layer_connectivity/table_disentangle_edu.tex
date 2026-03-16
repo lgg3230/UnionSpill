@@ -1,0 +1,49 @@
+\begin{table}[H]
+\centering
+\caption{Disentangling layer spillover effects --- 3-bin education}
+\label{tab:disentangle_edu}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lcccccccccccc}
+\toprule\toprule
+ & \multicolumn{4}{c}{Log Dec. wage} & \multicolumn{4}{c}{Log hourly wage} & \multicolumn{4}{c}{Log employment} \\
+\cmidrule(lr){2-5} \cmidrule(lr){6-9} \cmidrule(lr){10-13}
+ & \shortstack{No HS layer \\ (1)} & \shortstack{HS layer \\ (2)} & \shortstack{Higher ed. layer \\ (3)} & \shortstack{Firm \\ (4)} & \shortstack{No HS layer \\ (5)} & \shortstack{HS layer \\ (6)} & \shortstack{Higher ed. layer \\ (7)} & \shortstack{Firm \\ (8)} & \shortstack{No HS layer \\ (9)} & \shortstack{HS layer \\ (10)} & \shortstack{Higher ed. layer \\ (11)} & \shortstack{Firm \\ (12)} \\
+\midrule
+\multicolumn{13}{l}{\textit{Panel A: Regressor $c_{\text{0\_no\_hs}}$}} \\
+\quad Connectivity $\times$ Post & 0.0015 & 0.0011 & 0.0075** & 0.0063*** & -0.0006 & 0.0015 & 0.0049*** & 0.0084*** & -0.0144 & 0.0123 & 0.0128 & 0.0073 \\
+ & (0.0048) & (0.0028) & (0.0034) & (0.0021) & (0.0019) & (0.0014) & (0.0015) & (0.0026) & (0.0090) & (0.0090) & (0.0083) & (0.0082) \\
+\quad Pre-trend (placebo) & -0.0021 & -0.0017 & 0.0050 & -0.0009 & 0.0007 & -0.0003 & 0.0013 & -0.0011 & 0.0052 & -0.0099 & 0.0060 & -0.0003 \\
+ & (0.0053) & (0.0021) & (0.0053) & (0.0025) & (0.0024) & (0.0009) & (0.0023) & (0.0024) & (0.0086) & (0.0089) & (0.0077) & (0.0062) \\
+\quad Observations & 27,239 & 28,334 & 20,292 & 29,555 & 27,239 & 28,334 & 20,292 & 29,555 & 27,239 & 28,334 & 20,292 & 29,555 \\
+\quad Firms & 3,661 & 3,653 & 2,898 & 3,713 & 3,661 & 3,653 & 2,898 & 3,713 & 3,661 & 3,653 & 2,898 & 3,713 \\
+\quad Pre-trend F-test $p$-value & 0.942 & 0.242 & 0.198 & 0.091 & 0.695 & 0.233 & 0.419 & 0.068 & 0.413 & 0.560 & 0.737 & 0.916 \\[6pt]
+\multicolumn{13}{l}{\textit{Panel B: Regressor $c_{\text{1\_hs}}$}} \\
+\quad Connectivity $\times$ Post & 0.0051 & 0.0081*** & 0.0012 & 0.0079*** & 0.0014 & 0.0045*** & 0.0028 & 0.0102*** & 0.0022 & 0.0006 & 0.0200 & 0.0064 \\
+ & (0.0035) & (0.0025) & (0.0042) & (0.0024) & (0.0014) & (0.0011) & (0.0019) & (0.0026) & (0.0093) & (0.0087) & (0.0132) & (0.0081) \\
+\quad Pre-trend (placebo) & -0.0079** & -0.0034 & 0.0130** & -0.0006 & -0.0023* & -0.0013 & 0.0051* & -0.0010 & -0.0055 & 0.0023 & -0.0021 & -0.0028 \\
+ & (0.0031) & (0.0033) & (0.0064) & (0.0023) & (0.0013) & (0.0015) & (0.0029) & (0.0024) & (0.0072) & (0.0068) & (0.0114) & (0.0056) \\
+\quad Observations & 26,996 & 31,500 & 22,475 & 32,468 & 26,996 & 31,500 & 22,475 & 32,468 & 26,996 & 31,500 & 22,475 & 32,468 \\
+\quad Firms & 3,688 & 4,060 & 3,215 & 4,079 & 3,688 & 4,060 & 3,215 & 4,079 & 3,688 & 4,060 & 3,215 & 4,079 \\
+\quad Pre-trend F-test $p$-value & 0.003 & 0.356 & 0.125 & 0.407 & 0.007 & 0.426 & 0.273 & 0.353 & 0.762 & 0.832 & 0.918 & 0.833 \\[6pt]
+\multicolumn{13}{l}{\textit{Panel C: Regressor $c_{\text{2\_higher}}$}} \\
+\quad Connectivity $\times$ Post & 0.0011 & 0.0002 & -0.0052* & 0.0008 & 0.0004 & 0.0005 & -0.0017 & 0.0018 & 0.0060 & 0.0007 & 0.0138** & 0.0038 \\
+ & (0.0014) & (0.0010) & (0.0027) & (0.0009) & (0.0005) & (0.0004) & (0.0012) & (0.0011) & (0.0040) & (0.0035) & (0.0055) & (0.0032) \\
+\quad Pre-trend (placebo) & -0.0027** & 0.0004 & 0.0091* & 0.0009 & -0.0009* & -0.0000 & 0.0045** & 0.0009 & -0.0113*** & -0.0011 & -0.0028 & -0.0041* \\
+ & (0.0013) & (0.0013) & (0.0048) & (0.0009) & (0.0005) & (0.0005) & (0.0021) & (0.0009) & (0.0034) & (0.0028) & (0.0049) & (0.0022) \\
+\quad Observations & 20,908 & 23,892 & 22,057 & 24,690 & 20,908 & 23,892 & 22,057 & 24,690 & 20,908 & 23,892 & 22,057 & 24,690 \\
+\quad Firms & 2,812 & 3,062 & 3,020 & 3,099 & 2,812 & 3,062 & 3,020 & 3,099 & 2,812 & 3,062 & 3,020 & 3,099 \\
+\quad Pre-trend F-test $p$-value & 0.214 & 0.845 & 0.091 & 0.546 & 0.328 & 0.957 & 0.081 & 0.512 & 0.005 & 0.793 & 0.396 & 0.095 \\
+\midrule
+\midrule
+\multicolumn{13}{l}{\textit{Specification}} \\
+Layer-level outcomes & \checkmark & \checkmark & \checkmark & --- & \checkmark & \checkmark & \checkmark & --- & \checkmark & \checkmark & \checkmark & --- \\
+Firm-level outcomes & --- & --- & --- & \checkmark & --- & --- & --- & \checkmark & --- & --- & --- & \checkmark \\
+Firm FE & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark \\
+Year FE & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark \\
+\bottomrule
+\end{tabular}}
+\begin{minipage}{\linewidth}
+\scriptsize\vspace{4pt}
+\textit{Notes:} This table tests which education group's connectivity to treated firms drives the spillover effect. Each panel uses a different connectivity variable as the regressor (indicated in the panel title). Within each outcome, the three layer-level columns show the outcome for workers in the indicated education group (No HS / HS / Higher ed.); the fourth column is the firm-level outcome. Layer-level regressions absorb firm FE and year FE; firm-level regressions absorb firm FE and year FE. The regressor is the focal connectivity variable interacted with a post-2012 indicator (S\'{u}mula 277 reform). All regressions are restricted to untreated, balanced-panel firms. Connectivity is scaled to the 90th percentile of the control sample at 2009. Standard errors clustered at the firm level. $^{***}p<0.01$, $^{**}p<0.05$, $^{*}p<0.10$.
+\end{minipage}
+\end{table}
