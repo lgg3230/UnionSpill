@@ -1275,7 +1275,9 @@ cap drop mi_exp_f
 bys micro_ind year: egen mi_exp_f = mean(treat_ultra) if `s_exposure'
 
 * Proportion of workers in treated firms in microregion-industry cell
-cap drop mi_workers mi_workers_t mi_exp_w
+cap drop mi_workers
+cap drop mi_workers_t
+cap drop mi_exp_w
 bys micro_ind year: egen mi_workers = total(firm_emp) if `s_exposure'
 bys micro_ind year: egen mi_workers_t = total(firm_emp * treat_ultra) if `s_exposure'
 gen mi_exp_w = mi_workers_t / mi_workers
@@ -1295,7 +1297,8 @@ local p90_exp_w = r(p90)
 di "90th percentile of mi_exp_w among spillover firms: `p90_exp_w'"
 
 * Create normalized versions
-cap drop mi_exp_f_n mi_exp_w_n
+cap drop mi_exp_f_n
+cap drop mi_exp_w_n
 gen mi_exp_f_n = mi_exp_f / `p90_exp_f'
 gen mi_exp_w_n = mi_exp_w / `p90_exp_w'
 
@@ -1477,7 +1480,8 @@ file close `fh'
 ********************************************************************************
 
 * Create interaction variables manually
-cap drop mief_n_post mief_n_plac
+cap drop mief_n_post
+cap drop mief_n_plac
 gen mief_n_post = mi_exp_f_n * treat_year
 gen mief_n_plac = mi_exp_f_n * placebo_year
 
@@ -1551,7 +1555,8 @@ file close `fh'
 ********************************************************************************
 
 * Create interaction variables manually
-cap drop mief_n_post mief_n_plac
+cap drop mief_n_post
+cap drop mief_n_plac
 gen mief_n_post = mi_exp_f_n * treat_year
 gen mief_n_plac = mi_exp_f_n * placebo_year
 
@@ -1664,7 +1669,8 @@ file close `fh'
 ********************************************************************************
 
 * Create interaction variables manually
-cap drop miew_n_post miew_n_plac
+cap drop miew_n_post
+cap drop miew_n_plac
 gen miew_n_post = mi_exp_w_n * treat_year
 gen miew_n_plac = mi_exp_w_n * placebo_year
 
@@ -1738,7 +1744,8 @@ file close `fh'
 ********************************************************************************
 
 * Create interaction variables manually
-cap drop miew_n_post miew_n_plac
+cap drop miew_n_post
+cap drop miew_n_plac
 gen miew_n_post = mi_exp_w_n * treat_year
 gen miew_n_plac = mi_exp_w_n * placebo_year
 
@@ -1879,7 +1886,8 @@ local flow_control_pre "year ib0.tf_per_emp_pre`g'#i.year"
 ********************************************************************************
 
 * Normalize post-treatment connectivity to its own P90 among spillover sample
-cap drop totaltreat_pw_post_p90 totaltreat_pw_post_norm
+cap drop totaltreat_pw_post_p90
+cap drop totaltreat_pw_post_norm
 sum totaltreat_pw_post if `s_spill' & year==2009, detail
 local p90_post = r(p90)
 gen totaltreat_pw_post_p90 = `p90_post'
@@ -1888,8 +1896,10 @@ gen totaltreat_pw_post_norm = totaltreat_pw_post / `p90_post'
 di "P90 of post-treatment connectivity: `p90_post'"
 
 * Create interactions for main regressions
-cap drop conn_post_X_treat conn_pre_X_treat
-cap drop conn_post_X_plac conn_pre_X_plac
+cap drop conn_post_X_treat
+cap drop conn_pre_X_treat
+cap drop conn_post_X_plac
+cap drop conn_pre_X_plac
 
 gen conn_post_X_treat = totaltreat_pw_post_norm * treat_year
 gen conn_pre_X_treat = totaltreat_pw_norm * treat_year
@@ -2106,8 +2116,10 @@ local base_fe_cba "identificad i.industry1#i.cba_period i.mode_base_month#i.cba_
 local flow_control_cba "cba_period ib0.tf_per_emp_pre`g'#i.cba_period"
 
 * Create CBA period interactions
-cap drop conn_post_X_postcba conn_pre_X_postcba
-cap drop conn_post_X_precba conn_pre_X_precba
+cap drop conn_post_X_postcba
+cap drop conn_pre_X_postcba
+cap drop conn_post_X_precba
+cap drop conn_pre_X_precba
 
 gen conn_post_X_postcba = totaltreat_pw_post_norm * post_treat_cba
 gen conn_pre_X_postcba = totaltreat_pw_norm * post_treat_cba

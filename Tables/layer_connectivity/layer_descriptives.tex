@@ -4,8 +4,9 @@
   \centering
   \caption{Within-Firm Variation in Layer Connectivity}
   \label{tab:layer_descriptives}
-  \resizebox{\textwidth}{!}{%
-  \begin{tabular}{p{2.4cm}p{2.8cm}cccccccccc}
+  % \resizebox{\textwidth}{!}{%
+  \tiny
+  \begin{tabular}{p{2.4cm}p{2.8cm}llcccccccc}
     \toprule\toprule
     \multicolumn{6}{l}{} & & \multicolumn{5}{c}{\textit{Variance decomposition}} \\
     \cmidrule(lr){8-12}
@@ -58,7 +59,8 @@
     \multirow{2}{*}{Race} & Non-white & 118.5 & 2,281 & 0.2558 & 0.0161 & \multirow{2}{*}{95.4\%} & \multirow{2}{*}{0.00270} & \multirow{2}{*}{0.00094} & \multirow{2}{*}{0.00176} & \multirow{2}{*}{34.7} & \multirow{2}{*}{65.3} \\
      & White & 180.4 & 2,762 & 0.2400 & 0.0144 &  &  &  &  &  &  \\
     \bottomrule
-  \end{tabular}}
+  \end{tabular}
+  % }
   \begin{tablenotes}
     \scriptsize
     \textit{Notes:} This table describes the variance decomposition of within-firm layers' connectivity. ``Avg.\ layer emp.'' is the average number of workers in each sub-layer across spillover sample firms in 2009--2011. ``Avg.\ real wage'' is the average real December wage (deflated to December 2015 BRL) within each sub-layer, also averaged over 2009--2011. ``Avg.\ flows p.w.'' is the average total worker outflows per worker in each sub-layer, averaged across year-pairs 2007--08 through 2010--11. The column ``\% firms w/ $\geq$2 layers'' reports the share of spillover sample firms with non-missing connectivity in at least two sub-layers, which is the minimum required for within-firm identification. \textit{Layer connectivity} measures the average pre-treatment worker flow from a focal firm's sub-layer to treated firms, per employee of that sub-layer, averaged across year-pairs 2007--08, 2008--09, 2009--10, and 2010--11. Variance decomposition follows the ANOVA identity $\mathrm{Var}(X) = \mathrm{E}[\mathrm{Var}(X|Y)] + \mathrm{Var}(\mathrm{E}[X|Y])$, where both components are normalized by $N - 1$ (with $N = \text{firms} \times \text{sub-layers}$) so that they sum exactly to total variance. \textit{Within-firm} captures cross-layer dispersion in connectivity within a given firm; \textit{between-firm} captures dispersion in firm-level average connectivity. \textit{Education (3-levels)} partitions workers into three groups by schooling: less than high school, high school diploma, and higher education. \textit{Education (2-levels)} merges the top two groups. \textit{Race} classifies workers as white or non-white. Panels B and C split firms by median average December employment in 2009--2011 (median: 31.7 workers).

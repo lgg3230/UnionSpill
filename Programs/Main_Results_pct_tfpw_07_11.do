@@ -114,7 +114,9 @@ cap drop treat_year
 gen byte treat_year = (year >= 2012)
 label var treat_year "Post-treatment period"
 
-cap drop cba_period pre_treat_cba post_treat_cba
+cap drop cba_period
+cap drop pre_treat_cba
+cap drop post_treat_cba
 
 gen cba_period = .
 replace cba_period = 1 if avg_file_date == earliest2009_avg - 1 & !missing(avg_file_date)
@@ -135,7 +137,8 @@ label var post_treat_cba "Post-treatment CBA period indicator"
 
 local s_spill "lagos_sample_avg==1 & treat_ultra==0 & in_balanced_panel==1"
 
-cap drop totaltreat_pw_n_p90 totaltreat_pw_norm
+cap drop totaltreat_pw_n_p90
+cap drop totaltreat_pw_norm
  sum totaltreat_pw_n if `s_spill' & year == 2009, detail
 gen totaltreat_pw_n_p90 = r(p90)
 label var totaltreat_pw_n_p90 "90th pctile of total flows to treated (spillover sample, 2009)"
@@ -145,7 +148,8 @@ label var totaltreat_pw_norm "Connectivity scaled to 90th pctile among untreated
 
 * ── b) PRE-TREATMENT MEANS FOR BASE OUTCOMES ────────────────────────────────
 
-cap drop firm_emp_pre_o firm_emp_pre
+cap drop firm_emp_pre_o
+cap drop firm_emp_pre
 quietly {
 	bys identificad: egen firm_emp_pre_o = mean(firm_emp) if inrange(year, 2009, 2011)
 	bys identificad: egen firm_emp_pre = min(firm_emp_pre_o)
@@ -165,7 +169,8 @@ foreach outcome in lr_remdezr_w lr_remdezr_h_w l_firm_emp {
 * numb_clauses pre-treatment mean (CBA period based)
 capture confirm variable numb_clauses
 if _rc == 0 {
-	cap drop numb_clauses_pre_o numb_clauses_pre
+	cap drop numb_clauses_pre_o
+	cap drop numb_clauses_pre
 	quietly {
 		bys identificad: egen numb_clauses_pre_o = mean(numb_clauses) if inrange(cba_period, 1, 2)
 		bys identificad: egen numb_clauses_pre = min(numb_clauses_pre_o)
@@ -180,7 +185,8 @@ label var l_firm_emp_pre "Log pre-treatment firm employment"
 
 * ── 4-BIN CONTROLS FOR BASE OUTCOMES ────────────────────────────────────────
 
-cap drop l_firm_emp_pre4_o l_firm_emp_pre4
+cap drop l_firm_emp_pre4_o
+cap drop l_firm_emp_pre4
 quietly {
 	egen l_firm_emp_pre4_o = cut(l_firm_emp_pre) if year == 2009 & in_balanced_panel == 1, group(4)
 	bys identificad: egen l_firm_emp_pre4 = min(l_firm_emp_pre4_o)
@@ -200,7 +206,8 @@ foreach v in lr_remdezr_w lr_remdezr_h_w numb_clauses {
 }
 
 * Totalflows per-worker pre 07-11 bins (zero-fill missing → reference category)
-cap drop totalflows_pw_pre_07_114_o totalflows_pw_pre_07_114
+cap drop totalflows_pw_pre_07_114_o
+cap drop totalflows_pw_pre_07_114
 quietly {
 	egen totalflows_pw_pre_07_114_o = cut(totalflows_pw_pre_07_11) ///
 		if year == 2009 & in_balanced_panel == 1, group(4)
@@ -222,7 +229,8 @@ cap drop geo_exp
 bys microregion (year): egen geo_exp = mean(treat_ultra)
 label var geo_exp "Share of treated among sample in a given microregion"
 
-cap drop micro_ind mic_ind_exp
+cap drop micro_ind
+cap drop mic_ind_exp
 egen micro_ind = group(microregion industry)
 bys micro_ind (year): egen mic_ind_exp = mean(treat_ultra)
 label var mic_ind_exp "Share treated within each micro-industry cell"

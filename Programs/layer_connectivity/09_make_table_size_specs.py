@@ -56,11 +56,20 @@ SIZE_LABELS = {"small": "Small", "large": "Large"}
 
 # (col_index, file_template, section_key, size)
 COLS = [
-    (0, "results_spill_layer_{layer}_size_{size}_layer_spill.csv",       "spill", "small"),
-    (1, "results_spill_layer_{layer}_size_{size}_layer_spill.csv",       "spill", "large"),
-    (2, "results_spill_layer_cross_{layer}_size_{size}_layer_spill.csv", "cross", "small"),
-    (3, "results_spill_layer_cross_{layer}_size_{size}_layer_spill.csv", "cross", "large"),
+    (0, "results_spill_layer_{layer}_size_{size}_layer_spill.csv",         "spill",     "small"),
+    (1, "results_spill_layer_{layer}_size_{size}_layer_spill.csv",         "spill",     "large"),
+    (2, "results_spill_layer_cross_{layer}_size_{size}_layer_spill.csv",   "cross",     "small"),
+    (3, "results_spill_layer_cross_{layer}_size_{size}_layer_spill.csv",   "cross",     "large"),
+    (4, "results_spill_firmrestr_{layer}_size_{size}_layer_spill.csv",     "firmrestr", "small"),
+    (5, "results_spill_firmrestr_{layer}_size_{size}_layer_spill.csv",     "firmrestr", "large"),
 ]
+
+# Firmrestr CSVs use firm-level outcome names; remap to generic layer outcome keys
+FIRMRESTR_OUTCOME_REMAP = {
+    "lr_remdezr_w":   "lr_remdezr_layer",
+    "lr_remdezr_h_w": "lr_remdezr_h_layer",
+    "l_firm_emp":     "l_layer_emp",
+}
 
 OUTCOMES = ["lr_remdezr_layer", "lr_remdezr_h_layer", "l_layer_emp"]
 OUTCOME_SHORT = ["Log Dec. wage", "Log hourly wage", "Log employment"]
@@ -85,7 +94,10 @@ for layer in LAYERS:
             continue
         df = load_csv(fpath)
         for _, row in df.iterrows():
-            key = (layer, col_idx, row["outcome"], row["row_type"])
+            outcome = row["outcome"]
+            if section_key == "firmrestr" and outcome in FIRMRESTR_OUTCOME_REMAP:
+                outcome = FIRMRESTR_OUTCOME_REMAP[outcome]
+            key = (layer, col_idx, outcome, row["row_type"])
             data[key] = row["value"]
 
 if missing_files:
@@ -129,10 +141,12 @@ def build_latex() -> str:
     lines = []
     ncols_total = 1 + len(OUTCOMES) * N_COLS  # 1 + 3*4 = 13
 
+    lines.append(r"\begin{landscape}")
     lines.append(r"\begin{table}[H]")
     lines.append(r"\centering")
     lines.append(r"\caption{Layer spillover effects by firm size}")
     lines.append(r"\label{tab:size_specs}")
+    lines.append(r"\setlength{\tabcolsep}{3pt}")
     lines.append(r"\resizebox{\textwidth}{!}{%")
     col_spec = "l" + "c" * (len(OUTCOMES) * N_COLS)
     lines.append(r"\begin{tabular}{" + col_spec + r"}")
@@ -157,6 +171,8 @@ def build_latex() -> str:
         r"\shortstack{Within-firm\\Large}",
         r"\shortstack{Cross-firm\\Small}",
         r"\shortstack{Cross-firm\\Large}",
+        r"\shortstack{Firm-level\\Small}",
+        r"\shortstack{Firm-level\\Large}",
     ]
     h2 = [""]
     for _ in OUTCOMES:
@@ -202,27 +218,32 @@ def build_latex() -> str:
         r"\textit{Notes:} This table reports layer-level spillover effects split by firm size, "
         r"comparing small firms (below-median average December employment 2009--2011) to large firms "
         r"(at or above median, corresponding to 31.7 workers). "
-        r"All regressions are restricted to untreated, balanced-panel firms in the Lagos sample. "
+        r"All regressions are restricted to untreated, balanced-panel firms. "
         r"Connectivity is scaled to the 90th percentile of the full control sample at 2009 "
         r"(same scale for both size groups) so coefficients are comparable across columns. "
-        r"The pre-trend (placebo) coefficient uses a fictitious treatment onset at 2010, "
-        r"estimated on the pre-reform period (2007--2011) only. "
+        r"The pre-trend (placebo) coefficient tests whether connectivity predicts differential "
+        r"outcomes in 2009--2010 relative to 2011, using only pre-reform years (2009--2011). "
         r"Pre-trend F-test $p$-value tests joint significance of all pre-trend event-study coefficients. "
         r"Within-firm specifications absorb firm$\times$year FE; identification exploits "
         r"cross-layer variation within the same firm--year. "
         r"Cross-firm specifications include microregion$\times$year, industry$\times$year, "
         r"and mode$\times$year FE. "
+        r"Firm-level columns (5--6) run the standard firm-level spillover regression restricted to "
+        r"firms present in the layer sample and the given size group; bins are computed on the full "
+        r"sample before the size restriction for comparability. "
         r"Standard errors clustered at the firm level. "
         r"$^{***}p<0.01$, $^{**}p<0.05$, $^{*}p<0.10$."
     )
     lines.append(r"\end{minipage}")
     lines.append(r"\end{table}")
+    lines.append(r"\end{landscape}")
     return "\n".join(lines)
 
 
 # ── Build flat CSV ───────────────────────────────────────────────────────────────
 def build_csv() -> pd.DataFrame:
-    col_labels = ["within_small", "within_large", "cross_small", "cross_large"]
+    col_labels = ["within_small", "within_large", "cross_small", "cross_large",
+                  "firmrestr_small", "firmrestr_large"]
     rows = []
     for layer in LAYERS:
         for outcome in OUTCOMES:

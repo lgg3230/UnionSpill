@@ -60,6 +60,10 @@ foreach layer in edu edu2 gender race {
 	cap drop firm_id
 	egen firm_id = group(identificad)
 
+	* Create firm×layer unit ID for cross-section FE
+	cap drop firm_layer_id
+	egen firm_layer_id = group(identificad layer_id)
+
 	* ── 2b. Merge connectivity (firm × layer, time-invariant pre-treatment) ──
 	merge m:1 identificad layer_id using ///
 		"$layer_data/final_measures/firm_layer_connectivity_`layer'.dta", ///
@@ -99,19 +103,31 @@ foreach layer in edu edu2 gender race {
 
 	local s_spill "lagos_sample_avg==1 & treat_ultra==0 & in_balanced_panel==1"
 
-	* Average 2009-2011 employment per firm
-	cap drop avg_emp_0911_o
+	* Average 2009-2011 employment per firm — deduplicate to firm×year first
+	* so each year gets equal weight regardless of how many layers exist.
+	preserve
+	keep if inrange(year, 2009, 2011)
+	bys identificad year: keep if _n == 1
+	bys identificad: egen avg_emp_0911 = mean(firm_emp)
+	keep identificad avg_emp_0911
+	bys identificad: keep if _n == 1
+	tempfile emp_avg
+	save `emp_avg'
+	restore
 	cap drop avg_emp_0911
-	bys identificad: ///
-		egen avg_emp_0911_o = mean(firm_emp) if inrange(year, 2009, 2011)
-	bys identificad: ///
-		egen avg_emp_0911 = min(avg_emp_0911_o)
-	drop avg_emp_0911_o
+	merge m:1 identificad using `emp_avg', keep(master match) nogen
 
-	* Median within spillover sample (computed at year==2009 to avoid duplicates)
-	sum avg_emp_0911 if `s_spill' & year == 2009, detail
+	* Median within spillover sample — deduplicate to FIRM level first.
+	* avg_emp_0911 is constant within firm but the layer dataset has one row per
+	* firm×layer, so a naive sum would give larger firms (more layers) extra
+	* weight, biasing the median upward and producing unequal group sizes.
+	preserve
+	keep if `s_spill' & year == 2009
+	bys identificad: keep if _n == 1
+	sum avg_emp_0911, detail
 	local med_emp = r(p50)
-	di as result "  Median avg employment 2009-2011 (spillover sample): `med_emp'"
+	restore
+	di as result "  Median avg employment 2009-2011 (spillover sample, firm-level): `med_emp'"
 
 	* Size indicator: 1 = large, 0 = small
 	cap drop size_large
@@ -179,10 +195,10 @@ foreach layer in edu edu2 gender race {
 	****************************************************************************
 
 	local conn       "layer_conn_norm"
-	local base_fe    "i.firm_id#i.year"
+	local base_fe    "i.firm_layer_id i.year i.firm_id#i.year"
 	local extra_year "ib0.layer_totalflows_pw_pre4#i.year"
 	local base_fe_cross ///
-		"i.industry1_num#i.year i.mode_base_month_num#i.year i.microregion_num#i.year"
+		"i.firm_layer_id i.year i.industry1_num#i.year i.mode_base_month_num#i.year i.microregion_num#i.year"
 
 	****************************************************************************
 	* SECTION 2h: LOOP OVER SIZE GROUPS
@@ -424,6 +440,210 @@ foreach layer in edu edu2 gender race {
 
 		di as result "Size group `size' for `layer' complete."
 	}
+
+	****************************************************************************
+	* SECTION 2i: FIRM-LEVEL RESTRICTED SPEC BY SIZE
+	* Mirrors firmrestr in 07_layer_spillover.do but restricted to small/large
+	* firms as defined by size_large above.
+	* Bins computed on FULL sample before size restriction for comparability.
+	****************************************************************************
+
+	di _newline(2)
+	di as result "-----------------------------------------------------------------------"
+	di as result "FIRM-LEVEL RESTRICTED BY SIZE — layer: `layer'"
+	di as result "-----------------------------------------------------------------------"
+
+	* ── Phase 1: Extract restricted firm sets by size ────────────────────
+	local s_spill "treat_ultra==0 & in_balanced_panel==1 & lagos_sample_avg==1"
+	foreach size in small large {
+		local size_ind = cond("`size'" == "large", 1, 0)
+		preserve
+		keep if (`s_spill') & !missing(layer_treat_pw_n) & size_large == `size_ind'
+		keep identificad
+		duplicates drop
+		count
+		di as result "  Restricted `size' firms (layer: `layer'): `r(N)'"
+		tempfile restr_firms_`size'
+		save `restr_firms_`size''
+		restore
+	}
+
+	* ── Phase 2: Load firm-level panel, compute bins on FULL sample ──────
+	import delimited "$rais_aux/totalflows_wide_2007_2011.csv", stringcols(1) clear
+	tempfile tfwide
+	save `tfwide'
+
+	use "$rais_firm/lagos_sample_sep24_pct_unionexp_ext_df2.dta", clear
+	keep if year >= 2009
+	merge m:1 identificad using `tfwide', keep(master match) nogen
+	keep if lagos_sample_avg == 1
+
+	capture confirm string variable industry1
+	if !_rc encode industry1,       gen(industry1_num)
+	else     gen industry1_num     = industry1
+
+	capture confirm string variable mode_base_month
+	if !_rc encode mode_base_month, gen(mode_base_month_num)
+	else     gen mode_base_month_num = mode_base_month
+
+	capture confirm string variable microregion
+	if !_rc encode microregion,     gen(microregion_num)
+	else     gen microregion_num   = microregion
+
+	cap drop treat_year
+	gen byte treat_year = (year >= 2012)
+	cap drop placebo_year
+	gen byte placebo_year = (year < 2011)
+
+	local s_spill_r "lagos_sample_avg==1 & treat_ultra==0 & in_balanced_panel==1"
+	sum totaltreat_pw_n if `s_spill_r' & year == 2009, detail
+	cap drop totaltreat_pw_norm_r
+	gen double totaltreat_pw_norm_r = totaltreat_pw_n / r(p90)
+	label var totaltreat_pw_norm_r "Firm connectivity (scaled to P90, full spillover sample)"
+
+	cap drop firm_emp_pre_o
+	cap drop firm_emp_pre
+	bys identificad: ///
+		egen firm_emp_pre_o = mean(firm_emp) if inrange(year, 2009, 2011)
+	bys identificad: ///
+		egen firm_emp_pre = min(firm_emp_pre_o)
+	drop firm_emp_pre_o
+	cap drop l_firm_emp_pre
+	gen double l_firm_emp_pre = ln(firm_emp_pre)
+
+	cap drop totalflows_pw_pre_07_11
+	gen double totalflows_pw_pre_07_11 = 0
+	cap drop totalflows_pw_pre_07_11_cnt
+	gen totalflows_pw_pre_07_11_cnt = 0
+	foreach yp in totalflows_pw_07_08 totalflows_pw_08_09 totalflows_pw_09_10 totalflows_pw_10_11 {
+		replace totalflows_pw_pre_07_11 = totalflows_pw_pre_07_11 + `yp' if !missing(`yp')
+		replace totalflows_pw_pre_07_11_cnt = totalflows_pw_pre_07_11_cnt + (!missing(`yp'))
+	}
+	replace totalflows_pw_pre_07_11 = totalflows_pw_pre_07_11 / totalflows_pw_pre_07_11_cnt ///
+		if totalflows_pw_pre_07_11_cnt > 0
+	replace totalflows_pw_pre_07_11 = . if totalflows_pw_pre_07_11_cnt == 0
+	drop totalflows_pw_pre_07_11_cnt
+	cap drop totalflows_pw_pre4_r_o
+	cap drop totalflows_pw_pre4_r
+	egen totalflows_pw_pre4_r_o = cut(totalflows_pw_pre_07_11) ///
+		if year == 2009 & in_balanced_panel == 1, group(4)
+	bys identificad: egen totalflows_pw_pre4_r = min(totalflows_pw_pre4_r_o)
+	drop totalflows_pw_pre4_r_o
+	replace totalflows_pw_pre4_r = 0 if missing(totalflows_pw_pre4_r)
+
+	foreach outcome in lr_remdezr_w lr_remdezr_h_w {
+		cap drop `outcome'_pre_o
+		cap drop `outcome'_pre
+		cap drop `outcome'_pre4_o
+		cap drop `outcome'_pre4
+		bys identificad: ///
+			egen `outcome'_pre_o = mean(`outcome') if inrange(year, 2009, 2011)
+		bys identificad: ///
+			egen `outcome'_pre   = min(`outcome'_pre_o)
+		drop `outcome'_pre_o
+		egen `outcome'_pre4_o = cut(`outcome'_pre) ///
+			if year == 2009 & in_balanced_panel == 1, group(4)
+		bys identificad: ///
+			egen `outcome'_pre4 = min(`outcome'_pre4_o)
+		drop `outcome'_pre4_o
+		replace `outcome'_pre4 = 0 if missing(`outcome'_pre4)
+	}
+	cap drop l_firm_emp_pre4_o
+	cap drop l_firm_emp_pre4
+	egen l_firm_emp_pre4_o = cut(l_firm_emp_pre) ///
+		if year == 2009 & in_balanced_panel == 1, group(4)
+	bys identificad: ///
+		egen l_firm_emp_pre4 = min(l_firm_emp_pre4_o)
+	drop l_firm_emp_pre4_o
+	replace l_firm_emp_pre4 = 0 if missing(l_firm_emp_pre4)
+
+	tempfile firm_panel_full
+	save `firm_panel_full'
+
+	* ── Phase 3: Loop over sizes, run firm-level regressions ─────────────
+	local conn_r    "totaltreat_pw_norm_r"
+	local base_fe_r "identificad i.industry1_num#i.year i.mode_base_month_num#i.year i.microregion_num#i.year"
+	local extra_r   "ib0.totalflows_pw_pre4_r#i.year"
+
+	foreach size in small large {
+
+		use `firm_panel_full', clear
+		merge m:1 identificad using `restr_firms_`size'', keep(match) nogen
+
+		count
+		di as result "  Firmrestr-`size' obs after size restriction: `r(N)'"
+
+		local csv_rs "$tables/layer_connectivity/results_spill_firmrestr_`layer'_size_`size'_`spec'.csv"
+		capture erase "`csv_rs'"
+		tempname fhrs
+		file open  `fhrs' using "`csv_rs'", write replace
+		file write `fhrs' "spec,section,outcome,row_type,value" _n
+		file close `fhrs'
+
+		di as result "Firmrestr-`size' CSV: `csv_rs'"
+
+		foreach outcome in lr_remdezr_w lr_remdezr_h_w l_firm_emp {
+
+			di as text "  Estimating (firmrestr-`size'): `outcome' (layer: `layer')"
+
+			local absorb_rs "`base_fe_r' ib0.`outcome'_pre4#i.year ib0.l_firm_emp_pre4#i.year `extra_r'"
+
+			* Post-treatment spillover
+			reghdfe `outcome' c.`conn_r'##i.treat_year if `s_spill_r', ///
+				absorb(`absorb_rs') vce(cluster identificad)
+
+			local b_post_rs  = _b[1.treat_year#c.`conn_r']
+			local se_post_rs = _se[1.treat_year#c.`conn_r']
+			local p_post_rs  = 2*ttail(e(df_r), abs(`b_post_rs'/`se_post_rs'))
+			local n_obs_rs   = e(N)
+			local n_firms_rs = e(N_clust)
+
+			* Pre-treatment placebo
+			reghdfe `outcome' c.`conn_r'##i.placebo_year ///
+				if `s_spill_r' & year <= 2011, ///
+				absorb(`absorb_rs') vce(cluster identificad)
+
+			local b_pre_rs  = _b[1.placebo_year#c.`conn_r']
+			local se_pre_rs = _se[1.placebo_year#c.`conn_r']
+			local p_pre_rs  = 2*ttail(e(df_r), abs(`b_pre_rs'/`se_pre_rs'))
+
+			* Stars
+			local stars_post_rs ""
+			if `p_post_rs' < 0.01                                  local stars_post_rs "***"
+			else if (`p_post_rs' < 0.05 & `p_post_rs' > 0.01)     local stars_post_rs "**"
+			else if (`p_post_rs' < 0.10 & `p_post_rs' > 0.05)     local stars_post_rs "*"
+
+			local stars_pre_rs ""
+			if `p_pre_rs' < 0.01                                   local stars_pre_rs "***"
+			else if (`p_pre_rs' < 0.05 & `p_pre_rs' > 0.01)       local stars_pre_rs "**"
+			else if (`p_pre_rs' < 0.10 & `p_pre_rs' > 0.05)       local stars_pre_rs "*"
+
+			* Event study (pre-trend F-test)
+			reghdfe `outcome' c.`conn_r'##ib2011.year if `s_spill_r', ///
+				absorb(`absorb_rs') vce(cluster identificad)
+
+			testparm c.`conn_r'#i(2009 2010).year
+			local pre_ftest_pval_rs = r(p)
+
+			* Write to CSV
+			tempname fhrs
+			file open  `fhrs' using "`csv_rs'", write append
+			file write `fhrs' `""firmrestr_`layer'_`size'";"firmrestr";"`outcome'";"main";"'    %9.4f (`b_post_rs')          `"`stars_post_rs'""' _n
+			file write `fhrs' `""firmrestr_`layer'_`size'";"firmrestr";"`outcome'";"main_se";"' %9.4f (`se_post_rs')         `"""'              _n
+			file write `fhrs' `""firmrestr_`layer'_`size'";"firmrestr";"`outcome'";"pre";"'     %9.4f (`b_pre_rs')           `"`stars_pre_rs'""' _n
+			file write `fhrs' `""firmrestr_`layer'_`size'";"firmrestr";"`outcome'";"pre_se";"'  %9.4f (`se_pre_rs')          `"""'              _n
+			file write `fhrs' `""firmrestr_`layer'_`size'";"firmrestr";"`outcome'";"n_obs";"'   %12.0fc (`n_obs_rs')         `"""'              _n
+			file write `fhrs' `""firmrestr_`layer'_`size'";"firmrestr";"`outcome'";"n_firms";"' %12.0fc (`n_firms_rs')       `"""'              _n
+			file write `fhrs' `""firmrestr_`layer'_`size'";"firmrestr";"`outcome'";"pre_pval";"'%9.4f (`pre_ftest_pval_rs')  `"""'              _n
+			file close `fhrs'
+
+			di as result "  Done (firmrestr-`size'): `outcome' (layer: `layer')"
+		}
+
+		di as result "Firmrestr size group `size' for `layer' complete."
+	}
+
+	di as result "Firm-level restricted by size for `layer' complete."
 
 	di as result "Layer `layer' complete."
 }

@@ -61,7 +61,8 @@ gen double totaltreat_pw_n_p90 = r(p90)
 gen double totaltreat_pw_norm  = totaltreat_pw_n / totaltreat_pw_n_p90
 
 * ── Pre-treatment employment ──────────────────────────────────────────────────
-cap drop firm_emp_pre_o firm_emp_pre
+cap drop firm_emp_pre_o
+cap drop firm_emp_pre
 bys identificad: egen firm_emp_pre_o = mean(firm_emp) if inrange(year, 2009, 2011)
 bys identificad: egen firm_emp_pre   = min(firm_emp_pre_o)
 drop firm_emp_pre_o

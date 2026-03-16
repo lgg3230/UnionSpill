@@ -163,7 +163,7 @@ notes_full = (
     "\\textit{Notes:} "
     "This table summarises pre-treatment (2009--2011) descriptive statistics "
     "for layer connectivity across four worker-partitioning schemes, "
-    "restricted to the spillover sample (untreated, balanced-panel firms in the Lagos sample). "
+    "restricted to the spillover sample (untreated, balanced-panel firms). "
     "Each column corresponds to a sub-layer within a given layer definition. "
     "``Avg.\\ layer employment'' is the average number of workers in the sub-layer. "
     "``Avg.\\ real wage'' is the average December real wage (deflated to December 2015 BRL). "

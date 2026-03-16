@@ -139,9 +139,11 @@ Data/stata_emp_assoc/SIC 38970 - 2016-2018.txt
 Data/RAIS_aux/2009_separations.dta
 Data/RAIS_aux/worker_estab_2009.dta
 
-# ----- Tables: track CSVs, ignore archives -----
+# ----- Tables: track .tex, ignore CSVs and archives -----
+Tables/**/*.csv
 Tables/*.zip
 Tables/**/*.zip
 
-# ----- Graphs: track PNGs, ignore Stata .gph files -----
+# ----- Graphs: track PDFs and PNGs, ignore Stata .gph files -----
+Graphs/**/*.gph
 Graphs/plots jul 31/*.gph

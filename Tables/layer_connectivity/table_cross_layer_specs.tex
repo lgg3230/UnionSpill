@@ -1,0 +1,77 @@
+\begin{table}[H]
+\centering
+\caption{Cross-layer spillover effects}
+\label{tab:cross_layer_specs}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lcccccc}
+\toprule\toprule
+ & \multicolumn{2}{c}{Log Dec.\ wage} & \multicolumn{2}{c}{Log hourly wage} & \multicolumn{2}{c}{Log employment} \\
+\cmidrule(lr){2-3} \cmidrule(lr){4-5} \cmidrule(lr){6-7}
+ & Unit + Firm$\times$year FE & Unit + Year FE & Unit + Firm$\times$year FE & Unit + Year FE & Unit + Firm$\times$year FE & Unit + Year FE \\
+\midrule
+\multicolumn{7}{l}{\textit{Panel A: 3-bin education (no HS / HS / higher)}} \\
+\quad Own connectivity $\times$ Post & -0.0043* & 0.0003 & -0.0021* & 0.0004 & 0.0153*** & 0.0097** \\
+ & (0.0026) & (0.0020) & (0.0011) & (0.0009) & (0.0047) & (0.0049) \\
+\quad Cross connectivity $\times$ Post & 0.0008 & 0.0005 & 0.0003 & 0.0004 & 0.0099*** & 0.0118*** \\
+ & (0.0012) & (0.0013) & (0.0005) & (0.0005) & (0.0021) & (0.0025) \\
+\quad Pre-trend (own) & 0.0056 & 0.0035 & 0.0034 & 0.0019 & -0.0025 & -0.0040 \\
+ & (0.0051) & (0.0031) & (0.0021) & (0.0013) & (0.0048) & (0.0041) \\
+\quad Pre-trend (cross) & 0.0013** & 0.0015** & 0.0007** & 0.0007** & -0.0032 & -0.0020 \\
+ & (0.0006) & (0.0007) & (0.0003) & (0.0003) & (0.0026) & (0.0016) \\
+\quad Observations & 76,659 & 80,796 & 76,659 & 80,796 & 76,659 & 80,796 \\
+\quad Layers $\times$ firms & 9,689 & 10,741 & 9,689 & 10,741 & 9,689 & 10,741 \\
+\quad Firms & 3,883 & 4,192 & 3,883 & 4,192 & 3,883 & 4,192 \\
+\quad Pre-trend $p$-value (cross) & 0.250 & 0.127 & 0.187 & 0.099 & 0.458 & 0.482 \\[6pt]
+\multicolumn{7}{l}{\textit{Panel B: 2-bin education (no HS / has HS)}} \\
+\quad Own connectivity $\times$ Post & -0.0023 & 0.0078*** & -0.0014 & 0.0033*** & 0.0284** & -0.0007 \\
+ & (0.0047) & (0.0022) & (0.0018) & (0.0009) & (0.0121) & (0.0068) \\
+\quad Cross connectivity $\times$ Post & -0.0027** & -0.0036*** & -0.0011*** & -0.0010*** & 0.0088*** & 0.0091*** \\
+ & (0.0012) & (0.0010) & (0.0004) & (0.0003) & (0.0020) & (0.0018) \\
+\quad Pre-trend (own) & 0.0039 & -0.0021 & 0.0024 & -0.0006 & 0.0017 & -0.0029 \\
+ & (0.0053) & (0.0024) & (0.0023) & (0.0010) & (0.0104) & (0.0050) \\
+\quad Pre-trend (cross) & -0.0004 & 0.0010 & -0.0002 & 0.0003 & -0.0041** & -0.0030* \\
+ & (0.0007) & (0.0006) & (0.0003) & (0.0003) & (0.0019) & (0.0018) \\
+\quad Observations & 52,458 & 59,573 & 52,458 & 59,573 & 52,458 & 59,573 \\
+\quad Layers $\times$ firms & 6,273 & 7,782 & 6,273 & 7,782 & 6,273 & 7,782 \\
+\quad Firms & 3,580 & 4,192 & 3,580 & 4,192 & 3,580 & 4,192 \\
+\quad Pre-trend $p$-value (cross) & 0.593 & 0.027 & 0.354 & 0.055 & 0.254 & 0.304 \\[6pt]
+\multicolumn{7}{l}{\textit{Panel C: Gender (female / male)}} \\
+\quad Own connectivity $\times$ Post & -0.0014 & 0.0045* & -0.0005 & 0.0027** & 0.0049 & 0.0055 \\
+ & (0.0033) & (0.0023) & (0.0014) & (0.0011) & (0.0050) & (0.0051) \\
+\quad Cross connectivity $\times$ Post & -0.0021 & -0.0019 & -0.0009 & -0.0006 & 0.0099*** & 0.0075** \\
+ & (0.0021) & (0.0018) & (0.0009) & (0.0008) & (0.0026) & (0.0031) \\
+\quad Pre-trend (own) & -0.0006 & -0.0003 & -0.0000 & -0.0002 & -0.0033 & -0.0036 \\
+ & (0.0050) & (0.0022) & (0.0021) & (0.0009) & (0.0099) & (0.0047) \\
+\quad Pre-trend (cross) & -0.0009 & -0.0005 & -0.0002 & -0.0002 & -0.0037* & -0.0050** \\
+ & (0.0006) & (0.0005) & (0.0003) & (0.0002) & (0.0021) & (0.0022) \\
+\quad Observations & 55,358 & 61,025 & 55,358 & 61,025 & 55,358 & 61,025 \\
+\quad Layers $\times$ firms & 6,649 & 7,884 & 6,649 & 7,884 & 6,649 & 7,884 \\
+\quad Firms & 3,684 & 4,192 & 3,684 & 4,192 & 3,684 & 4,192 \\
+\quad Pre-trend $p$-value (cross) & 0.011 & 0.267 & 0.025 & 0.201 & 0.002 & 0.011 \\[6pt]
+\multicolumn{7}{l}{\textit{Panel D: Race (non-white / white)}} \\
+\quad Own connectivity $\times$ Post & -0.0037 & 0.0030 & -0.0015 & 0.0026** & 0.0266*** & 0.0110 \\
+ & (0.0035) & (0.0026) & (0.0016) & (0.0012) & (0.0063) & (0.0068) \\
+\quad Cross connectivity $\times$ Post & 0.0012 & 0.0019** & 0.0005 & 0.0008** & 0.0041 & 0.0061* \\
+ & (0.0010) & (0.0008) & (0.0004) & (0.0003) & (0.0030) & (0.0036) \\
+\quad Pre-trend (own) & -0.0025 & -0.0017 & -0.0010 & -0.0010 & -0.0187* & -0.0069 \\
+ & (0.0037) & (0.0022) & (0.0016) & (0.0010) & (0.0107) & (0.0055) \\
+\quad Pre-trend (cross) & 0.0003 & 0.0005 & 0.0001 & 0.0003 & -0.0026 & -0.0022 \\
+ & (0.0006) & (0.0004) & (0.0002) & (0.0002) & (0.0019) & (0.0020) \\
+\quad Observations & 48,498 & 57,302 & 48,498 & 57,302 & 48,498 & 57,302 \\
+\quad Layers $\times$ firms & 5,757 & 7,587 & 5,757 & 7,587 & 5,757 & 7,587 \\
+\quad Firms & 3,397 & 4,179 & 3,397 & 4,179 & 3,397 & 4,179 \\
+\quad Pre-trend $p$-value (cross) & 0.031 & 0.077 & 0.024 & 0.018 & 0.104 & 0.085 \\
+\midrule
+\multicolumn{7}{l}{\textit{Specification}} \\
+Firm $\times$ layer (unit) FE & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark \\
+Firm $\times$ year FE & \checkmark &  & \checkmark &  & \checkmark &  \\
+Year FE &  & \checkmark &  & \checkmark &  & \checkmark \\
+Own connectivity & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark \\
+Cross connectivity & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark \\
+\bottomrule
+\end{tabular}}
+\begin{minipage}{\linewidth}
+\scriptsize\vspace{4pt}
+\textit{Notes:} This table tests whether connectivity of other layers within the same firm spills over to a focal layer's outcomes. Each observation is a firm--layer--year cell. The balanced panel includes all layers for every spillover-sample firm; firms absent from a given layer receive zero employment ($\ln(1+0)=0$) and missing wages. Own connectivity is the layer's direct per-worker connectivity to treated firms, scaled to the P90 of the spillover sample. Cross connectivity is the employment-share-weighted sum of other layers' connectivity: $\text{cross\_conn}_{i,B}=\sum_{A\neq B}\text{conn}_{i,A}\times(\bar{n}_{i,A}/\bar{n}_{i,B})$, scaled to its own P90; observations with $\bar{n}_{i,B}=0$ are dropped. Both specifications include firm$\times$layer FE (the cross-section unit FE for the firm$\times$layer panel, absorbing time-invariant heterogeneity of each firm--layer pair). The first specification additionally includes firm$\times$year FE, so identification comes from within-firm cross-layer variation in connectivity. The second specification replaces firm$\times$year FE with aggregate year FE, so identification uses cross-firm cross-layer variation over time. Pre-trend placebo uses years 2009--2010 relative to 2011. Standard errors clustered at the firm level. $^{***}p<0.01$, $^{**}p<0.05$, $^{*}p<0.10$.
+\end{minipage}
+\end{table}

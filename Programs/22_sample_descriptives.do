@@ -97,7 +97,8 @@ di as result "Creating necessary variables..."
 
 * Treatment indicators
 cap drop placebo_pre 
-cap drop placebo_year treat_year
+cap drop placebo_year
+cap drop treat_year
 gen byte placebo_pre = (year==2011)
 gen byte placebo_year = (year<2011)
 gen byte treat_year = (year>=2012)
@@ -107,7 +108,9 @@ label var placebo_year "Pre-treatment period"
 label var treat_year "Post-treatment period"
 
 * CBA periods
-cap drop cba_period pre_treat_cba post_treat_cba
+cap drop cba_period
+cap drop pre_treat_cba
+cap drop post_treat_cba
 
 gen cba_period = .
 replace cba_period = 1 if avg_file_date==earliest2009_avg-1 & !missing(avg_file_date)
@@ -121,13 +124,15 @@ gen pre_treat_cba = cond(cba_period<2,1,0)
 gen post_treat_cba = cond(cba_period>=3,1,0) if !missing(cba_period)
 
 * Normalized connectivity
-cap drop totaltreat_pw_n_p90 totaltreat_pw_norm
+cap drop totaltreat_pw_n_p90
+cap drop totaltreat_pw_norm
 quietly sum totaltreat_pw_n if `s_spill' & year==2009, detail
 gen totaltreat_pw_n_p90 = r(p90)
 gen totaltreat_pw_norm = (totaltreat_pw_n / totaltreat_pw_n_p90)
 
 * Pre-treatment firm characteristics
-cap drop firm_emp_pre_o firm_emp_pre
+cap drop firm_emp_pre_o
+cap drop firm_emp_pre
 quietly {
     bys identificad: egen firm_emp_pre_o = mean(firm_emp) if inrange(year,2009,2011)
     bys identificad: egen firm_emp_pre = min(firm_emp_pre_o)
@@ -162,7 +167,8 @@ foreach outcome in lr_remdezr_w lr_remdezr_h_w l_firm_emp {
 * Numb_clauses pre-treatment average
 capture confirm variable numb_clauses
 if _rc == 0 {
-    cap drop numb_clauses_pre_o numb_clauses_pre
+    cap drop numb_clauses_pre_o
+    cap drop numb_clauses_pre
     quietly {
         bys identificad: egen numb_clauses_pre_o = mean(numb_clauses) if inrange(cba_period,1,2)
         bys identificad: egen numb_clauses_pre = min(numb_clauses_pre_o)

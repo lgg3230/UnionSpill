@@ -53,7 +53,8 @@ replace cba_period = 4 if inrange(avg_file_date, mdy(1,1,2014), mdy(12,31,2014))
 replace cba_period = 5 if inrange(avg_file_date, mdy(1,1,2015), mdy(12,31,2015)) & cba_period==.
 replace cba_period = 6 if inrange(avg_file_date, mdy(1,1,2016), mdy(12,31,2016)) & cba_period==.
 
-cap drop pre_treat_cba post_treat_cba
+cap drop pre_treat_cba
+cap drop post_treat_cba
 gen pre_treat_cba  = cba_period<2 if !missing(cba_period)
 gen post_treat_cba = cba_period>2 if !missing(cba_period)
 
@@ -146,7 +147,8 @@ gen byte above_med = (firm_emp_2009 >  med_emp) if firm_emp_2009<.
 
 
 * --- Always-on TVFE: quartiles of totalflows_n_p0911 (built once) ---
-cap drop q4_totalflows_n_p0911_2009a q4_totalflows_n_p0911
+cap drop q4_totalflows_n_p0911_2009a
+cap drop q4_totalflows_n_p0911
 egen q4_totalflows_n_p0911_2009a  = cut(totalflows_n) if year==2009, group(4)
 bys identificad: egen q4_totalflows_n_p0911 = min(q4_totalflows_n_p0911_2009a )
 drop q4_totalflows_n_p0911_2009a 

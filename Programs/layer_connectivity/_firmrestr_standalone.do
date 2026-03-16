@@ -82,7 +82,8 @@ if !_rc encode microregion,     gen(microregion_num)
 else     gen microregion_num   = microregion
 
 * ── Step 5: Treatment period indicators ──────────────────────────────────────
-cap drop treat_year placebo_year
+cap drop treat_year
+cap drop placebo_year
 gen byte treat_year   = (year >= 2012)
 gen byte placebo_year = (year < 2011)
 
@@ -131,7 +132,8 @@ foreach outcome in lr_remdezr_w lr_remdezr_h_w {
 	replace `outcome'_pre4 = 0 if missing(`outcome'_pre4)
 }
 * l_firm_emp: _pre already created in Step 7 as ln(firm_emp_pre); only need bins
-cap drop l_firm_emp_pre4_o l_firm_emp_pre4
+cap drop l_firm_emp_pre4_o
+cap drop l_firm_emp_pre4
 egen l_firm_emp_pre4_o = cut(l_firm_emp_pre) ///
 	if year == 2009 & in_balanced_panel == 1, group(4)
 bys identificad: egen l_firm_emp_pre4 = min(l_firm_emp_pre4_o)

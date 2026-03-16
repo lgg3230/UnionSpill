@@ -127,7 +127,8 @@ replace cba_period = 4 if inrange(avg_file_date, mdy(1,1,2014), mdy(12,31,2014))
 replace cba_period = 5 if inrange(avg_file_date, mdy(1,1,2015), mdy(12,31,2015)) & cba_period==.
 replace cba_period = 6 if inrange(avg_file_date, mdy(1,1,2016), mdy(12,31,2016)) & cba_period==.
 
-cap drop pre_treat_cba post_treat_cba
+cap drop pre_treat_cba
+cap drop post_treat_cba
 gen pre_treat_cba  = cba_period<2 if !missing(cba_period)
 gen post_treat_cba = cba_period>2 if !missing(cba_period)
 

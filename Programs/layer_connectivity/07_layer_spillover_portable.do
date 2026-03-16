@@ -515,7 +515,8 @@ foreach layer in edu edu2 gender race {
 		drop `outcome'_pre4_o
 		replace `outcome'_pre4 = 0 if missing(`outcome'_pre4)
 	}
-	cap drop l_firm_emp_pre4_o l_firm_emp_pre4
+	cap drop l_firm_emp_pre4_o
+	cap drop l_firm_emp_pre4
 	egen l_firm_emp_pre4_o = cut(l_firm_emp_pre) ///
 		if year == 2009 & in_balanced_panel == 1, group(4)
 	bys identificad: ///
