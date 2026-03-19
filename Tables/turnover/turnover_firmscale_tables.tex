@@ -1,0 +1,126 @@
+\documentclass[12pt,letterpaper]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{booktabs}
+\usepackage{threeparttable}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{hyperref}
+\usepackage{float}
+
+\hypersetup{colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue}
+
+\begin{document}
+
+\begin{titlepage}
+\centering
+\vspace*{2cm}
+{\Huge\bfseries Union Spillovers:\\Employment Flow Tables\par}
+\vspace{2cm}
+{\Large Firm-Scale Specification\par}
+\vspace{0.5cm}
+{\large Counts Scaled by Firm-Specific Pretreatment Mean (2009--2011)\par}
+\vspace{1cm}
+{\large \today\par}
+\vfill
+{\large Luis Gomes\\Northwestern University\par}
+\end{titlepage}
+
+\tableofcontents
+\clearpage
+
+\begin{table}[]
+\centering
+\caption{Direct Effects of the Ultractivity Reform on Employment Flows (Firm-Scale Specification)}
+\label{tab:direct_turnover_firmscale}
+\scriptsize
+\begin{threeparttable}
+\begin{tabular}{lcccccccccccc}
+\toprule\toprule
+\begin{tabular}[c]{@{}l@{}}\textbf{Panel A:} \textit{Only Control Firms}\\ \textit{with Zero Connectivity}\end{tabular} & \begin{tabular}[c]{@{}c@{}}Hires\\(firm-sc.)\end{tabular} & \begin{tabular}[c]{@{}c@{}}Seps.\\(firm-sc.)\end{tabular} & \begin{tabular}[c]{@{}c@{}}Layoffs\\(firm-sc.)\end{tabular} & \begin{tabular}[c]{@{}c@{}}Quits\\(firm-sc.)\end{tabular} & \begin{tabular}[c]{@{}c@{}}Churn\\(firm-sc.)\end{tabular} & \begin{tabular}[c]{@{}c@{}}Ret.\\Jan--Dec\\(firm-sc.)\end{tabular} & \begin{tabular}[c]{@{}c@{}}Ret.\\YoY\\(firm-sc.)\end{tabular} & \begin{tabular}[c]{@{}c@{}}Hours\\(firm-sc.)\end{tabular} & \begin{tabular}[c]{@{}c@{}}Emp.\\(firm-sc.)\end{tabular} & \begin{tabular}[c]{@{}c@{}}Tot.Flows\\(firm-sc.)\end{tabular} & \begin{tabular}[c]{@{}c@{}}Out-\\flows\\(firm-sc.)\end{tabular} & \begin{tabular}[c]{@{}c@{}}In-\\flows\\(firm-sc.)\end{tabular} \\
+ & (1) & (2) & (3) & (4) & (5) & (6) & (7) & (8) & (9) & (10) & (11) & (12) \\
+\midrule
+Post $\times$ Treatment & $-$0.2245 & $-$0.1690** & $-$0.0386 & $-$0.0584 & $-$0.1384 & $-$0.0668 & $-$0.0819** & $-$0.1258*** & $-$0.1390*** & -- & -- & -- \\
+  & (0.1460) & (0.0800) & (0.0920) & (0.0830) & (0.0949) & (0.0419) & (0.0408) & (0.0393) & (0.0415) & -- & -- & -- \\
+  &  &  &  &  &  &  &  &  &  &  &  & \\
+Pre $\times$ Treatment & $-$0.0713** & 0.0173 & 0.0184 & 0.0041 & $-$0.0576** & 0.0371*** & 0.0249* & 0.0138 & 0.0131 & -- & -- & -- \\
+  & (0.0295) & (0.0307) & (0.0373) & (0.0501) & (0.0260) & (0.0142) & (0.0147) & (0.0090) & (0.0090) & -- & -- & -- \\
+Pre-trend $F$-test $p$-value & [0.0005] & [0.8346] & [0.3021] & [0.9582] & [0.0026] & [0.0006] & [0.0009] & [0.0564] & [0.0150] & -- & -- & -- \\
+  &  &  &  &  &  &  &  &  &  &  &  & \\
+Mean (2011) & 10.3770 & 9.5510 & 4.1005 & 2.4619 & 19.9280 & 18.2460 & 17.8389 & 1007.3086 & 24.1771 & -- & -- & -- \\
+Observations & 106{,}496 & 103{,}760 & 85{,}744 & 87{,}920 & 109{,}344 & 113{,}040 & 113{,}032 & 113{,}096 & 113{,}096 & -- & -- & -- \\
+Establishments & 13{,}312 & 12{,}970 & 10{,}718 & 10{,}990 & 13{,}668 & 14{,}130 & 14{,}129 & 14{,}137 & 14{,}137 & -- & -- & -- \\
+  &  &  &  &  &  &  &  &  &  &  &  & \\
+\midrule
+\begin{tabular}[c]{@{}l@{}}\textbf{Panel B:} \textit{Control Firms with}\\ \textit{$\leq$1\% Connectivity}\end{tabular} & \begin{tabular}[c]{@{}c@{}}Hires\\(firm-sc.)\end{tabular} & \begin{tabular}[c]{@{}c@{}}Seps.\\(firm-sc.)\end{tabular} & \begin{tabular}[c]{@{}c@{}}Layoffs\\(firm-sc.)\end{tabular} & \begin{tabular}[c]{@{}c@{}}Quits\\(firm-sc.)\end{tabular} & \begin{tabular}[c]{@{}c@{}}Churn\\(firm-sc.)\end{tabular} & \begin{tabular}[c]{@{}c@{}}Ret.\\Jan--Dec\\(firm-sc.)\end{tabular} & \begin{tabular}[c]{@{}c@{}}Ret.\\YoY\\(firm-sc.)\end{tabular} & \begin{tabular}[c]{@{}c@{}}Hours\\(firm-sc.)\end{tabular} & \begin{tabular}[c]{@{}c@{}}Emp.\\(firm-sc.)\end{tabular} & \begin{tabular}[c]{@{}c@{}}Tot.Flows\\(firm-sc.)\end{tabular} & \begin{tabular}[c]{@{}c@{}}Out-\\flows\\(firm-sc.)\end{tabular} & \begin{tabular}[c]{@{}c@{}}In-\\flows\\(firm-sc.)\end{tabular} \\
+ & (1) & (2) & (3) & (4) & (5) & (6) & (7) & (8) & (9) & (10) & (11) & (12) \\
+\midrule
+Post $\times$ Treatment & $-$0.1761* & $-$0.1265** & $-$0.0380 & $-$0.0404 & $-$0.1066* & $-$0.0941** & $-$0.1220** & $-$0.0880*** & $-$0.0954*** & -- & -- & -- \\
+  & (0.0926) & (0.0537) & (0.0600) & (0.0541) & (0.0608) & (0.0468) & (0.0620) & (0.0275) & (0.0288) & -- & -- & -- \\
+  &  &  &  &  &  &  &  &  &  &  &  & \\
+Pre $\times$ Treatment & $-$0.0530** & 0.0044 & 0.0140 & $-$0.0067 & $-$0.0444** & 0.0261** & 0.0186* & 0.0038 & 0.0042 & -- & -- & -- \\
+  & (0.0211) & (0.0215) & (0.0257) & (0.0328) & (0.0186) & (0.0107) & (0.0110) & (0.0073) & (0.0073) & -- & -- & -- \\
+Pre-trend $F$-test $p$-value & [0.0002] & [0.6204] & [0.5449] & [0.5123] & [0.0003] & [0.0005] & [0.0010] & [0.2008] & [0.0644] & -- & -- & -- \\
+  &  &  &  &  &  &  &  &  &  &  &  & \\
+Mean (2011) & 69.5255 & 66.4191 & 31.8800 & 19.0250 & 135.9446 & 111.0574 & 108.8858 & 6246.4557 & 150.4783 & -- & -- & -- \\
+Observations & 114{,}456 & 111{,}736 & 93{,}576 & 95{,}752 & 117{,}312 & 121{,}008 & 121{,}000 & 121{,}064 & 121{,}064 & -- & -- & -- \\
+Establishments & 14{,}307 & 13{,}967 & 11{,}697 & 11{,}969 & 14{,}664 & 15{,}126 & 15{,}125 & 15{,}133 & 15{,}133 & -- & -- & -- \\
+  &  &  &  &  &  &  &  &  &  &  &  & \\
+\midrule
+\begin{tabular}[c]{@{}l@{}}\textbf{Panel C:} \textit{All Untreated}\\ \textit{Control Firms}\end{tabular} & \begin{tabular}[c]{@{}c@{}}Hires\\(firm-sc.)\end{tabular} & \begin{tabular}[c]{@{}c@{}}Seps.\\(firm-sc.)\end{tabular} & \begin{tabular}[c]{@{}c@{}}Layoffs\\(firm-sc.)\end{tabular} & \begin{tabular}[c]{@{}c@{}}Quits\\(firm-sc.)\end{tabular} & \begin{tabular}[c]{@{}c@{}}Churn\\(firm-sc.)\end{tabular} & \begin{tabular}[c]{@{}c@{}}Ret.\\Jan--Dec\\(firm-sc.)\end{tabular} & \begin{tabular}[c]{@{}c@{}}Ret.\\YoY\\(firm-sc.)\end{tabular} & \begin{tabular}[c]{@{}c@{}}Hours\\(firm-sc.)\end{tabular} & \begin{tabular}[c]{@{}c@{}}Emp.\\(firm-sc.)\end{tabular} & \begin{tabular}[c]{@{}c@{}}Tot.Flows\\(firm-sc.)\end{tabular} & \begin{tabular}[c]{@{}c@{}}Out-\\flows\\(firm-sc.)\end{tabular} & \begin{tabular}[c]{@{}c@{}}In-\\flows\\(firm-sc.)\end{tabular} \\
+ & (1) & (2) & (3) & (4) & (5) & (6) & (7) & (8) & (9) & (10) & (11) & (12) \\
+\midrule
+Post $\times$ Treatment & $-$0.1357* & $-$0.0989** & $-$0.0094 & $-$0.0042 & $-$0.0867* & $-$0.0402 & $-$0.0594 & $-$0.0549** & $-$0.0610*** & -- & -- & -- \\
+  & (0.0783) & (0.0461) & (0.0547) & (0.0449) & (0.0526) & (0.0385) & (0.0456) & (0.0220) & (0.0230) & -- & -- & -- \\
+  &  &  &  &  &  &  &  &  &  &  &  & \\
+Pre $\times$ Treatment & $-$0.0346** & 0.0153 & 0.0174 & 0.0157 & $-$0.0234 & 0.0161* & 0.0094 & 0.0002 & 0.0011 & -- & -- & -- \\
+  & (0.0171) & (0.0172) & (0.0205) & (0.0263) & (0.0150) & (0.0089) & (0.0092) & (0.0063) & (0.0063) & -- & -- & -- \\
+Pre-trend $F$-test $p$-value & [0.0006] & [0.5197] & [0.3595] & [0.7588] & [0.0011] & [0.0007] & [0.0007] & [0.4310] & [0.2051] & -- & -- & -- \\
+  &  &  &  &  &  &  &  &  &  &  &  & \\
+Mean (2011) & 84.9168 & 80.1864 & 36.4545 & 22.7166 & 165.1032 & 121.4940 & 118.9433 & 7034.7741 & 168.4969 & -- & -- & -- \\
+Observations & 124{,}552 & 121{,}840 & 103{,}512 & 105{,}328 & 127{,}432 & 131{,}176 & 131{,}168 & 131{,}232 & 131{,}232 & -- & -- & -- \\
+Establishments & 15{,}569 & 15{,}230 & 12{,}939 & 13{,}166 & 15{,}929 & 16{,}397 & 16{,}396 & 16{,}404 & 16{,}404 & -- & -- & -- \\
+\bottomrule
+\end{tabular}
+\scriptsize
+\begin{tablenotes}
+\item \textit{Notes:} This table presents difference-in-differences estimates of the direct effects of Brazil's 2012 ultractivity reform on establishment employment flow counts, scaled by each establishment's own pretreatment (2009--2011) average of the same count (firm-scale specification). A coefficient of 0.10 indicates the count rose by 10\% relative to the establishment's own pretreatment baseline. Columns~(1)--(5) report firm-scaled hires, total separations, layoffs, quits, and churn count (= hires + separations). Columns~(6)--(7) report firm-scaled within-year retention count (January stayers surviving to December) and year-over-year retention count (December-to-December survivors). Columns~(8)--(9) report firm-scaled total contracted hours and December employment. Establishments with a zero pretreatment average for a given count are excluded from that outcome's regression. Mean (2011) reports the unscaled raw count mean for reference. The reform, effective September~25, 2012, extended existing collective bargaining agreements (CBAs) indefinitely upon expiration, increasing the bargaining power of workers at treated establishments---those with an active CBA on that date. The sample covers Brazilian establishments in the Lagos sample observed annually from 2009 to 2016. Post $\times$ Treatment measures the average treatment effect for 2012--2016; Pre $\times$ Treatment is a placebo test using 2009--2011 as the pre-reform period. All regressions include establishment fixed effects, year fixed effects interacted with two-digit industry, microregion, and negotiation-month indicators, and quartile-bin controls for pre-treatment per-worker pairwise worker flows (2007--2011) and pre-treatment establishment size, interacted with year fixed effects. Panel~A restricts the control group to establishments with zero pre-reform worker-flow connectivity to treated firms; Panel~B to establishments with at most 1\% connectivity; Panel~C includes all untreated establishments. Standard errors clustered at the establishment level in parentheses. *** p$<$0.01, ** p$<$0.05, * p$<$0.10.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+\clearpage
+
+\begin{table}[]
+\centering
+\caption{Spillover Effects of the Ultractivity Reform on Employment Flows (Firm-Scale Specification)}
+\label{tab:spill_turnover_firmscale}
+\scriptsize
+\begin{threeparttable}
+\begin{tabular}{lcccccccccccc}
+\toprule\toprule
+ & \begin{tabular}[c]{@{}c@{}}Hires\\(firm-sc.)\end{tabular} & \begin{tabular}[c]{@{}c@{}}Seps.\\(firm-sc.)\end{tabular} & \begin{tabular}[c]{@{}c@{}}Layoffs\\(firm-sc.)\end{tabular} & \begin{tabular}[c]{@{}c@{}}Quits\\(firm-sc.)\end{tabular} & \begin{tabular}[c]{@{}c@{}}Churn\\(firm-sc.)\end{tabular} & \begin{tabular}[c]{@{}c@{}}Ret.\\Jan--Dec\\(firm-sc.)\end{tabular} & \begin{tabular}[c]{@{}c@{}}Ret.\\YoY\\(firm-sc.)\end{tabular} & \begin{tabular}[c]{@{}c@{}}Hours\\(firm-sc.)\end{tabular} & \begin{tabular}[c]{@{}c@{}}Emp.\\(firm-sc.)\end{tabular} & \begin{tabular}[c]{@{}c@{}}Tot.Flows\\(firm-sc.)\end{tabular} & \begin{tabular}[c]{@{}c@{}}Out-\\flows\\(firm-sc.)\end{tabular} & \begin{tabular}[c]{@{}c@{}}In-\\flows\\(firm-sc.)\end{tabular} \\
+ & (1) & (2) & (3) & (4) & (5) & (6) & (7) & (8) & (9) & (10) & (11) & (12) \\
+\midrule
+Post $\times$ Connectivity & $-$0.0762** & $-$0.0353 & $-$0.0314 & $-$0.0498** & $-$0.0440** & $-$0.0428 & $-$0.0560 & $-$0.0260* & $-$0.0263* & 0.0000 & 0.0433 & $-$0.0209 \\
+  & (0.0378) & (0.0225) & (0.0323) & (0.0203) & (0.0201) & (0.0340) & (0.0482) & (0.0134) & (0.0148) & (0.0000) & (0.0450) & (0.0302) \\
+  &  &  &  &  &  &  &  &  &  &  &  & \\
+Pre $\times$ Connectivity & $-$0.0180 & $-$0.0223 & $-$0.0321* & $-$0.0376* & $-$0.0240* & 0.0075 & 0.0042 & 0.0002 & $-$0.0004 & 0.0000 & $-$0.0023 & 0.0342* \\
+  & (0.0143) & (0.0145) & (0.0188) & (0.0213) & (0.0126) & (0.0078) & (0.0087) & (0.0053) & (0.0053) & (0.0000) & (0.0239) & (0.0181) \\
+Pre-trend $F$-test $p$-value & [0.4525] & [0.2993] & [0.1681] & [0.0000] & [0.1496] & [0.4374] & [0.3481] & [0.9680] & [0.9459] & [.] & [0.0024] & [0.1353] \\
+  &  &  &  &  &  &  &  &  &  &  &  & \\
+Mean (2011) & 84.9168 & 80.1864 & 36.4545 & 22.7166 & 165.1032 & 121.4940 & 118.9433 & 7034.7741 & 168.4969 & 108.0987 & 15.3982 & 15.3829 \\
+Observations & 31{,}800 & 31{,}688 & 30{,}072 & 26{,}808 & 32{,}208 & 32{,}688 & 32{,}688 & 32{,}704 & 32{,}704 & 29{,}192 & 29{,}018 & 29{,}136 \\
+Establishments & 3{,}975 & 3{,}961 & 3{,}759 & 3{,}351 & 4{,}026 & 4{,}086 & 4{,}086 & 4{,}088 & 4{,}088 & 3{,}649 & 3{,}635 & 3{,}648 \\
+\bottomrule
+\end{tabular}
+\scriptsize
+\begin{tablenotes}
+\item \textit{Notes:} This table estimates spillover effects of Brazil's 2012 ultractivity reform on establishment employment flow counts, scaled by each establishment's own pretreatment (2009--2011) average of the same count (firm-scale specification). A coefficient of 0.10 indicates the count rose by 10\% relative to the establishment's own pretreatment baseline. Columns~(1)--(5) report firm-scaled hires, separations, layoffs, quits, and churn count. Columns~(6)--(7) report firm-scaled within-year and year-over-year retention counts. Columns~(8)--(9) report firm-scaled total contracted hours and December employment. Columns~(10)--(12) report firm-scaled total bilateral worker flows, outflows, and inflows. Mean (2011) reports the unscaled raw count mean for reference at untreated establishments connected to treated firms. Connectivity is defined as the share of an establishment's pre-reform workforce (2007--2011) that overlapped with a treated firm's workforce, normalized to the 90th percentile of the spillover sample distribution. The sample is restricted to untreated establishments in the Lagos sample participating in a balanced panel. Post $\times$ Connectivity captures the average spillover effect for 2012--2016; Pre $\times$ Connectivity is a placebo test using 2009--2011. All regressions include establishment fixed effects, year fixed effects interacted with two-digit industry, microregion, and negotiation-month indicators, and quartile-bin controls for pre-treatment per-worker pairwise worker flows (2007--2011) and pre-treatment establishment size, interacted with year fixed effects. Standard errors clustered at the establishment level in parentheses. *** p$<$0.01, ** p$<$0.05, * p$<$0.10.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+\clearpage
+
+\end{document}

@@ -209,7 +209,11 @@ label var mic_ind_exp "Share treated within each micro-industry cell"
 
 di as result "Creating composition pre-treatment bins..."
 
-global composition_outcomes "avg_tenure male_prop white_prop prop_nhs prop_hs prop_sup avg_age"
+cap drop prop_hs_plus
+gen double prop_hs_plus = prop_hs + prop_sup
+label var prop_hs_plus "Share with at least high school diploma"
+
+global composition_outcomes "avg_tenure male_prop white_prop prop_nhs prop_hs prop_sup prop_hs_plus avg_age"
 
 foreach v of global composition_outcomes {
 
@@ -244,7 +248,7 @@ di as result "==================================================================
 
 local spec       "composition"
 local conn       "totaltreat_pw_norm"
-local base_fe    "identificad i.industry1#i.year i.mode_base_month#i.year i.microregion#i.year"
+local base_fe    "identificad i.year i.industry1#i.year i.mode_base_month#i.year i.microregion#i.year"
 local extra_year "ib0.totalflows_pw_pre_07_114#i.year"
 
 * ── SAMPLE MACROS ───────────────────────────────────────────────────────────

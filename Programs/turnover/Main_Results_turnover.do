@@ -47,7 +47,7 @@ di as result "Merging turnover data..."
 preserve
 	import delimited "$rais_firm/corrected_turnover_sample.csv", clear
 	keep identificad year separations_u avg_emp turnover_u ///
-	     layoff_rate_u quit_rate_u hiring_rate_u retention_u hired_u total_hours
+	     layoff_rate_u quit_rate_u hiring_rate_u retention_u retention_yoy_u hired_u total_hours
 	tostring identificad, replace format(%014.0f) force
 	tempfile turnover
 	save `turnover'
@@ -166,7 +166,8 @@ quietly {
 }
 
 foreach outcome in lr_remdezr_w lr_remdezr_h_w l_firm_emp {
-	cap drop `outcome'_pre_o `outcome'_pre
+	cap drop `outcome'_pre_o
+	cap drop `outcome'_pre
 	quietly {
 		bys identificad: egen `outcome'_pre_o = mean(`outcome') if inrange(year, 2009, 2011)
 		bys identificad: egen `outcome'_pre = min(`outcome'_pre_o)
@@ -234,20 +235,22 @@ label var mic_ind_exp "Share treated within each micro-industry cell"
 di as result "Creating turnover pre-treatment bins..."
 
 * Direct-effects outcomes (6): present for both treated and untreated firms
-global turnover_outcomes "retention_u hiring_rate_u turnover_u quit_rate_u layoff_rate_u churn_rate_u l_total_hours"
+global turnover_outcomes "retention_u retention_yoy_u hiring_rate_u turnover_u quit_rate_u layoff_rate_u churn_rate_u l_total_hours l_firm_emp"
 * Flow outcomes (3): total bilateral flows, outflows, inflows (all firms)
 global flow_outcomes     "totalflows_pw outflows_pw inflows_pw"
 
 foreach v of global turnover_outcomes {
 
-	cap drop `v'_pre_o `v'_pre
+	cap drop `v'_pre_o
+	cap drop `v'_pre
 	quietly {
 		bys identificad: egen `v'_pre_o = mean(`v') if inrange(year, 2009, 2011)
 		bys identificad: egen `v'_pre = min(`v'_pre_o)
 		drop `v'_pre_o
 	}
 
-	cap drop `v'_pre4_o `v'_pre4
+	cap drop `v'_pre4_o
+	cap drop `v'_pre4
 	quietly {
 		egen `v'_pre4_o = cut(`v'_pre) if year == 2009 & in_balanced_panel == 1, group(4)
 		bys identificad: egen `v'_pre4 = min(`v'_pre4_o)
@@ -260,14 +263,16 @@ foreach v of global turnover_outcomes {
 
 foreach v of global flow_outcomes {
 
-	cap drop `v'_pre_o `v'_pre
+	cap drop `v'_pre_o
+	cap drop `v'_pre
 	quietly {
 		bys identificad: egen `v'_pre_o = mean(`v') if inrange(year, 2009, 2011)
 		bys identificad: egen `v'_pre = min(`v'_pre_o)
 		drop `v'_pre_o
 	}
 
-	cap drop `v'_pre4_o `v'_pre4
+	cap drop `v'_pre4_o
+	cap drop `v'_pre4
 	quietly {
 		egen `v'_pre4_o = cut(`v'_pre) ///
 			if year == 2009 & in_balanced_panel == 1, group(4)
@@ -293,7 +298,7 @@ di as result "==================================================================
 local spec       "turnover"
 local conn       "totaltreat_pw_norm"
 local base_fe    "identificad i.industry1#i.year i.mode_base_month#i.year i.microregion#i.year"
-local extra_year "ib0.totalflows_pw_pre4#i.year"
+local extra_year "ib0.totalflows_pw_pre_07_114#i.year"
 
 * ── SAMPLE MACROS ───────────────────────────────────────────────────────────
 

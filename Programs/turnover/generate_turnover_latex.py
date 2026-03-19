@@ -134,12 +134,12 @@ def notes_spill(outcome_desc):
 # ── Outcome group definition ─────────────────────────────────────────────────
 
 DIRECT_OUTCOMES = [
-    "retention_u", "hiring_rate_u", "turnover_u",
-    "quit_rate_u", "layoff_rate_u", "churn_rate_u", "l_total_hours",
+    "retention_u", "retention_yoy_u", "hiring_rate_u", "turnover_u",
+    "quit_rate_u", "layoff_rate_u", "churn_rate_u", "l_total_hours", "l_firm_emp",
 ]
 DIRECT_HEADERS = [
-    r"Retention\\Rate", r"Hiring\\Rate", r"Sep.\\Rate",
-    r"Quit\\Rate", r"Layoff\\Rate", r"Churn\\Rate", r"Log\\Hours",
+    r"Retention\\Rate", r"YoY\\Retention", r"Hiring\\Rate", r"Sep.\\Rate",
+    r"Quit\\Rate", r"Layoff\\Rate", r"Churn\\Rate", r"Log\\Hours", r"Log\\Emp.",
 ]
 
 SPILL_OUTCOMES = DIRECT_OUTCOMES + [

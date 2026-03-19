@@ -128,12 +128,13 @@ OUTCOME_GROUPS = [
         ),
         outcomes=[
             "avg_tenure", "male_prop", "white_prop",
-            "prop_nhs", "prop_hs", "prop_sup",
+            "prop_nhs", "prop_hs", "prop_sup", "prop_hs_plus",
             "avg_age",
         ],
         col_headers=[
             r"Avg.\\Tenure", r"Male\\Share", r"White\\Share",
             r"No High\\School", r"High\\School", r"College+",
+            r"HS or\\Above",
             r"Avg.\\Age",
         ],
         direct_notes=notes_direct(
@@ -340,52 +341,15 @@ def main():
         g["spill"]   = spill
 
     doc = []
-    doc.append(r"""\documentclass[12pt,letterpaper]{article}
-
-\usepackage[margin=1in]{geometry}
-\usepackage{booktabs}
-\usepackage{threeparttable}
-\usepackage{graphicx}
-\usepackage{amsmath}
-\usepackage{amssymb}
-\usepackage{hyperref}
-\usepackage{float}
-
-\hypersetup{colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue}
-
-\begin{document}
-
-\begin{titlepage}
-\centering
-\vspace*{2cm}
-{\Huge\bfseries Union Spillovers:\\Workforce Composition Tables\par}
-\vspace{2cm}
-{\Large Tenure, Gender, Race, Education, and Average Age\par}
-\vspace{0.5cm}
-{\large tfpw\_07\_11 Specification\par}
-\vspace{1cm}
-{\large \today\par}
-\vfill
-{\large Luis Gomes\\Northwestern University\par}
-\end{titlepage}
-
-\tableofcontents
-\clearpage
-""")
 
     table_count = 0
     for g in OUTCOME_GROUPS:
         doc.append(make_direct_table(g))
         doc.append("")
-        doc.append(r"\clearpage")
         doc.append("")
         doc.append(make_spill_table(g))
         doc.append("")
-        doc.append(r"\clearpage")
-        doc.append("")
         table_count += 2
-
-    doc.append(r"\end{document}")
 
     content = "\n".join(doc)
     with open(output_file, "w") as f:

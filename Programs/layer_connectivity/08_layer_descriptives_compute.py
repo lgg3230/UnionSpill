@@ -150,6 +150,9 @@ for group_name, firm_set in GROUPS.items():
         # Fraction with >= 2 layers
         frac_ge2 = (wide_all.notna().sum(axis=1) >= 2).sum() / n_spill
 
+        # Fraction with >= 1 worker in each specific layer
+        frac_ge1 = {lid: wide_all[lid].notna().sum() / n_spill for lid in layer_ids}
+
         # Decomposition on firms with all layers
         wide = wide_all.dropna()
         stats = anova_decomp(wide, layer_ids)
@@ -179,6 +182,7 @@ for group_name, firm_set in GROUPS.items():
                 "layer_id":            layer_id,
                 "formal_layer":        meta["labels"][layer_id],
                 "frac_ge2_layers":     frac_ge2,
+                "frac_ge1_layer":      frac_ge1[layer_id],
                 "mean_conn":           sub.mean(),
                 "avg_layer_emp":       avg_layer_emp.get(layer_id, float("nan")),
                 "avg_layer_wage":      avg_layer_wage.get(layer_id, float("nan")),

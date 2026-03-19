@@ -327,6 +327,32 @@ stata-mp -b do Programs/07d_bilateral_pretreatment.do
 ~/.conda/envs/venv_python312/bin/python Programs/07d_bilateral_pretreatment_coefplot.py
 ```
 
+## ⚠️ Stata Coding Rules — MUST FOLLOW
+
+### cap drop: ONE variable per line — NO EXCEPTIONS
+
+`cap drop x y z` **silently fails** in Stata — only the first variable is dropped.
+This is a hard rule. Every `cap drop` must be on its own line, always.
+
+```stata
+* WRONG — NEVER DO THIS
+cap drop x y z
+cap drop treat_year placebo_year
+cap drop l_firm_emp_pre4_o l_firm_emp_pre4
+
+* CORRECT — ALWAYS DO THIS
+cap drop x
+cap drop y
+cap drop z
+cap drop treat_year
+cap drop placebo_year
+cap drop l_firm_emp_pre4_o
+cap drop l_firm_emp_pre4
+```
+
+This has caused real bugs: `cap drop totalflows_pw outflows_pw inflows_pw` silently kept
+`totalflows_pw`, causing R²=1.0000 instead of R²≈0.44 in panel regressions.
+
 ## Notes on Singleton Fixed Effects
 
 Both Stata reghdfe and pyfixest automatically detect and drop singleton fixed effects (observations where an FE level appears only once). In the bilateral connectivity data, there are typically 2 singleton observations that get dropped.
