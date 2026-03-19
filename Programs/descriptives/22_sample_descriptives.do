@@ -439,7 +439,7 @@ foreach tver in 1 2 {
 
 	* Panel D
 	file write `fh' "Mean dec wages"       ";" %9.2f (`mean_wage_g1')      ";" %9.2f (`mean_wage_g2')      ";" %9.2f (`mean_wage_g3')      ";" %9.2f (`mean_wage_g4')      ";" %9.2f (`mean_wage_g5')      _n
-	file write `fh' "Mean of median wages" ";" %9.2f (`mean_med_wage_g1')  ";" %9.2f (`mean_med_wage_g2')  ";" %9.2f (`mean_med_wage_g3')  ";" %9.2f (`mean_med_wage_g4')  ";" %9.2f (`mean_med_wage_g5')  _n
+	file write `fh' "Mean median wages" ";" %9.2f (`mean_med_wage_g1')  ";" %9.2f (`mean_med_wage_g2')  ";" %9.2f (`mean_med_wage_g3')  ";" %9.2f (`mean_med_wage_g4')  ";" %9.2f (`mean_med_wage_g5')  _n
 	file write `fh' "Mean clause count"    ";" %9.2f (`mean_clauses_g1')   ";" %9.2f (`mean_clauses_g2')   ";" %9.2f (`mean_clauses_g3')   ";" %9.2f (`mean_clauses_g4')   ";" %9.2f (`mean_clauses_g5')   _n
 
 	* Panel E

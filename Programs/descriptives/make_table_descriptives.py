@@ -94,7 +94,7 @@ PANEL_C = [
 
 PANEL_D = [
     ("Mean dec wages",       "Mean wages (2015, BRL)",       "wage"),
-    ("Mean of median wages", "Mean of within-firm median",   "wage"),
+    ("Mean median wages", "Mean median wages",   "wage"),
     ("Mean clause count",    "Mean clause count",            "clauses"),
 ]
 
