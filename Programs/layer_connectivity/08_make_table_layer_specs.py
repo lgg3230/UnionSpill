@@ -75,10 +75,9 @@ SPECS = [
         "sublabel":    "firm FE",
         "file_tpl":    "results_spill_firmrestr_{layer}_lbal_layer_spill.csv",
         "section_key": "firmrestr",
-        "outcomes":    ["lr_remdezr_w", "lr_remdezr_h_w", "l_firm_emp"],
+        "outcomes":    ["lr_remdezr_w", "l_firm_emp"],
         "outcome_labels": {
             "lr_remdezr_w":   "Log Dec. wage (firm avg.)",
-            "lr_remdezr_h_w": "Log hourly wage (firm avg.)",
             "l_firm_emp":     "Log employment (firm)",
         },
     },
@@ -99,9 +98,8 @@ LAYER_GROUPS = {
 
 OUTCOME_ORDER = [
     # (generic label, spec1_outcome, spec2_outcome, spec3_outcome)
-    ("Log Dec. wage",   "lr_remdezr_layer", "lr_remdezr_layer", "lr_remdezr_w"),
-    ("Log hourly wage", None,               None,               "lr_remdezr_h_w"),
-    ("Log employment",  "l_layer_emp",      "l_layer_emp",      "l_firm_emp"),
+    ("Log Dec. wage",  "lr_remdezr_layer", "lr_remdezr_layer", "lr_remdezr_w"),
+    ("Log employment", "l_layer_emp",      "l_layer_emp",      "l_firm_emp"),
 ]
 
 STAT_ROWS = [
@@ -176,7 +174,6 @@ n_spec = len(SPECS)
 # Shorter outcome labels for column headers
 OUTCOME_SHORT = [
     "Log Dec. wage",
-    "Log hourly wage",
     "Log employment",
 ]
 
@@ -306,8 +303,7 @@ def build_latex(layers_subset: list, caption: str, label: str) -> str:
         r"each observation is a firm--layer--year cell, and the connectivity measure captures the share "
         r"of that layer's outflows reaching treated firms. "
         r"Columns " + firm_cols + r" use \textit{firm-level} outcomes and the aggregate firm-level connectivity, "
-        r"restricted to the subset of firms present in the layer sample. "
-        r"Layer-level hourly wages are omitted in this balanced-layer version, so the corresponding within-firm and cross-firm cells are blank."
+        r"restricted to the subset of firms present in the layer sample."
     )
     lines.append(r"")
     lines.append(
