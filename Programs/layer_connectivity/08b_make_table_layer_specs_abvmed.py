@@ -1,20 +1,25 @@
 """
-Assemble comparison table across layer spillover specifications.
+Assemble comparison table across layer spillover specifications
+(above-median both layers restriction).
 
-Reads CSVs produced by 07b_layer_spillover.do and outputs:
-  Tables/layer_connectivity/table_layer_specs_lbal.tex
-  Tables/layer_connectivity/table_layer_specs_lbal.csv
+Reads CSVs produced by 07c_layer_spillover.do and outputs:
+  Tables/layer_connectivity/table_layer_specs_abvmed.tex
+  Tables/layer_connectivity/table_layer_specs_abvmed.csv
+  Tables/layer_connectivity/table_layer_specs_abvmed_edu.tex
+  Tables/layer_connectivity/table_layer_specs_abvmed_edu.csv
+  Tables/layer_connectivity/table_layer_specs_abvmed_demog.tex
+  Tables/layer_connectivity/table_layer_specs_abvmed_demog.csv
 
 Specs included:
   (1) Within-firm FE     — firm×year FE, layer connectivity
-                           results_spill_layer_{edu2,gender,race}_lbal_layer_spill.csv
+                           results_spill_layer_{edu2,gender,race}_abvmed_layer_spill.csv
   (2) Cross-firm FE      — micro×year + industry×year + mode×year FE
-                           results_spill_layer_cross_{edu2,gender,race}_lbal_layer_spill.csv
+                           results_spill_layer_cross_{edu2,gender,race}_abvmed_layer_spill.csv
   (3) Firm-level restr.  — firm-level outcomes, standard FE, restricted sample
-                           results_spill_firmrestr_{edu2,gender,race}_lbal_layer_spill.csv
+                           results_spill_firmrestr_{edu2,gender,race}_abvmed_layer_spill.csv
 
 Usage:
-  ~/.conda/envs/venv_python312/bin/python Programs/layer_connectivity/08_make_table_layer_specs.py
+  ~/.conda/envs/venv_python312/bin/python Programs/layer_connectivity/08b_make_table_layer_specs_abvmed.py
 """
 
 from pathlib import Path
@@ -51,7 +56,7 @@ SPECS = [
     {
         "label":       "(1) Within-firm FE",
         "sublabel":    "firm$\\times$year FE",
-        "file_tpl":    "results_spill_layer_{layer}_lbal_layer_spill.csv",
+        "file_tpl":    "results_spill_layer_{layer}_abvmed_layer_spill.csv",
         "section_key": "spill",
         "outcomes":    ["lr_remdezr_layer", "l_layer_emp"],
         "outcome_labels": {
@@ -62,7 +67,7 @@ SPECS = [
     {
         "label":       "(2) Cross-firm FE",
         "sublabel":    "micro$\\times$yr + ind$\\times$yr + mode$\\times$yr",
-        "file_tpl":    "results_spill_layer_cross_{layer}_lbal_layer_spill.csv",
+        "file_tpl":    "results_spill_layer_cross_{layer}_abvmed_layer_spill.csv",
         "section_key": "cross",
         "outcomes":    ["lr_remdezr_layer", "l_layer_emp"],
         "outcome_labels": {
@@ -73,7 +78,7 @@ SPECS = [
     {
         "label":       "(3) Firm-level (restricted)",
         "sublabel":    "firm FE",
-        "file_tpl":    "results_spill_firmrestr_{layer}_lbal_layer_spill.csv",
+        "file_tpl":    "results_spill_firmrestr_{layer}_abvmed_layer_spill.csv",
         "section_key": "firmrestr",
         "outcomes":    ["lr_remdezr_w", "lr_remdezr_h_w", "l_firm_emp"],
         "outcome_labels": {
@@ -129,7 +134,7 @@ for layer in LAYERS:
             data[key] = row["value"]
 
 if missing_files:
-    print("WARNING — missing files (run 07b_layer_spillover.do first):")
+    print("WARNING — missing files (run 07c_layer_spillover.do first):")
     for f in missing_files:
         print(f"  {f}")
     if len(missing_files) == len(LAYERS) * len(SPECS):
@@ -143,7 +148,6 @@ def get(layer, si, outcome, row_type, default="--"):
 
 
 def fmt_coef(val_str: str) -> str:
-    """Return value string stripped of spaces."""
     return val_str.strip() if val_str.strip() != "--" else "--"
 
 
@@ -166,14 +170,12 @@ def fmt_stat(val_str: str, row_type: str) -> str:
         except ValueError:
             return v
     else:
-        # n_obs, n_firms — strip trailing spaces
         return v.strip()
 
 
 # ── Build LaTeX ────────────────────────────────────────────────────────────────
 n_spec = len(SPECS)
 
-# Shorter outcome labels for column headers
 OUTCOME_SHORT = [
     "Log Dec. wage",
     "Log hourly wage",
@@ -183,7 +185,6 @@ OUTCOME_SHORT = [
 def build_latex(layers_subset: list, caption: str, label: str) -> str:
     lines = []
     n_outcomes = len(OUTCOME_ORDER)
-    # Panels = layers; columns = outcomes × specs
     ncols = 1 + n_outcomes * n_spec  # 1 + 3*3 = 10
 
     lines.append(r"\begin{table}[H]")
@@ -209,7 +210,7 @@ def build_latex(layers_subset: list, caption: str, label: str) -> str:
         col += n_spec
     lines.append(" ".join(cmi))
 
-    # Header row 2 — sequential numbering (1)–(n_outcomes*n_spec)
+    # Header row 2 — sequential numbering
     header2 = [""]
     for col_num in range(1, n_outcomes * n_spec + 1):
         header2.append(f"({col_num})")
@@ -218,7 +219,6 @@ def build_latex(layers_subset: list, caption: str, label: str) -> str:
 
     # One panel per layer bin specification
     for li, layer in enumerate(layers_subset):
-        # Panel header
         panel_letter = chr(ord("A") + li)
         lines.append(
             r"\multicolumn{" + str(ncols) + r"}{l}{\textit{Panel "
@@ -234,13 +234,11 @@ def build_latex(layers_subset: list, caption: str, label: str) -> str:
                     cells.append(fmt_fn(get(layer, si, out_per_spec[si], row_type)))
             return cells
 
-        # Coefficient and SE rows
         lines.append(" & ".join(row_cells(r"\quad Connectivity $\times$ Post", "main", fmt_coef)) + r" \\")
         lines.append(" & ".join(row_cells("", "main_se", fmt_se)) + r" \\")
         lines.append(" & ".join(row_cells(r"\quad Pre-trend (placebo)", "pre", fmt_coef)) + r" \\")
         lines.append(" & ".join(row_cells("", "pre_se", fmt_se)) + r" \\")
 
-        # Stat rows
         for ri, (row_type, stat_label) in enumerate(STAT_ROWS):
             stat_cells = [r"\quad " + stat_label]
             for oi, (_, out0, out1, out2) in enumerate(OUTCOME_ORDER):
@@ -258,7 +256,7 @@ def build_latex(layers_subset: list, caption: str, label: str) -> str:
 
     lines.append(r"\midrule")
 
-    # Checkmark panel — specs (1)(2)(3) repeat identically across outcome groups
+    # Checkmark panel
     lines.append(r"\multicolumn{" + str(ncols) + r"}{l}{\textit{Specification}} \\")
 
     CHECKMARK_ROWS = [
@@ -283,7 +281,9 @@ def build_latex(layers_subset: list, caption: str, label: str) -> str:
     lines.append(
         r"\textit{Notes:} This table compares spillover effects of layer-level connectivity to treated firms "
         r"across three specifications and three worker-partitioning schemes. "
-        r"All regressions are restricted to untreated firms in the balanced firm panel and, for layer-level specifications, "
+        r"The sample is restricted to firms which had both layers with above-median average layer employment "
+        r"in the pre-treatment period (2009--2011). "
+        r"All regressions are further restricted to untreated firms in the balanced firm panel and, for layer-level specifications, "
         r"to firms with positive employment in all layers in all years 2009--2016. "
         r"Connectivity is scaled to the 90th percentile of the control sample at 2009 and is "
         r"interacted with a post-2012 indicator (S\'{u}mula 277 reform). The pre-trend (placebo) coefficient "
@@ -293,13 +293,10 @@ def build_latex(layers_subset: list, caption: str, label: str) -> str:
         r"coefficients; small values indicate detectable pre-trends."
     )
     lines.append(r"")
-    # Build sequential column references for notes
+    n_outcomes = len(OUTCOME_ORDER)
     within_cols  = ", ".join(f"({1 + oi*n_spec})"     for oi in range(n_outcomes))
     cross_cols   = ", ".join(f"({2 + oi*n_spec})"     for oi in range(n_outcomes))
     firm_cols    = ", ".join(f"({3 + oi*n_spec})"     for oi in range(n_outcomes))
-    layer_cols   = ", ".join(
-        f"({1 + oi*n_spec}) and ({2 + oi*n_spec})" for oi in range(n_outcomes)
-    )
     lines.append(
         r"\textit{Outcome levels.} Columns " + within_cols + r" and " + cross_cols
         + r" use \textit{layer-level} outcomes: "
@@ -365,17 +362,17 @@ def build_csv(layers_subset: list) -> pd.DataFrame:
 TABLES.mkdir(parents=True, exist_ok=True)
 
 CAPTIONS = {
-    "edu":   "Layer spillover effects with balanced layer panels --- education layers",
-    "demog": "Layer spillover effects with balanced layer panels --- demographic layers",
+    "edu":   "Layer spillover effects, above-median both layers --- education layers",
+    "demog": "Layer spillover effects, above-median both layers --- demographic layers",
 }
 LABELS = {
-    "edu":   "tab:layer_specs_lbal_edu",
-    "demog": "tab:layer_specs_lbal_demog",
+    "edu":   "tab:layer_specs_abvmed_edu",
+    "demog": "tab:layer_specs_abvmed_demog",
 }
 
 for group_key, (layers_subset, _) in LAYER_GROUPS.items():
-    tex_out = TABLES / f"table_layer_specs_lbal_{group_key}.tex"
-    csv_out = TABLES / f"table_layer_specs_lbal_{group_key}.csv"
+    tex_out = TABLES / f"table_layer_specs_abvmed_{group_key}.tex"
+    csv_out = TABLES / f"table_layer_specs_abvmed_{group_key}.csv"
 
     tex = build_latex(layers_subset, CAPTIONS[group_key], LABELS[group_key])
     tex_out.write_text(tex)
@@ -389,10 +386,10 @@ for group_key, (layers_subset, _) in LAYER_GROUPS.items():
     print(df_out.to_string(index=False))
     print()
 
-# Also keep the combined table for backwards compatibility
-tex_out_all = TABLES / "table_layer_specs_lbal.tex"
-csv_out_all = TABLES / "table_layer_specs_lbal.csv"
-tex_all = build_latex(LAYERS, "Layer spillover effects with balanced layer panels --- specification comparison", "tab:layer_specs_lbal")
+# Combined table
+tex_out_all = TABLES / "table_layer_specs_abvmed.tex"
+csv_out_all = TABLES / "table_layer_specs_abvmed.csv"
+tex_all = build_latex(LAYERS, "Layer spillover effects, above-median both layers --- specification comparison", "tab:layer_specs_abvmed")
 tex_out_all.write_text(tex_all)
 df_all = build_csv(LAYERS)
 df_all.to_csv(csv_out_all, index=False)

@@ -1,0 +1,67 @@
+\begin{table}[H]
+\centering
+\caption{Horse race across binary layers}
+\label{tab:horse_race_binary}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lcccccc}
+\toprule\toprule
+ & \multicolumn{3}{c}{Log Dec.\ wage} & \multicolumn{3}{c}{Log employment} \\
+\cmidrule(lr){2-4}\cmidrule(lr){5-7}
+ & Group 1 & Group 2 & Firm & Group 1 & Group 2 & Firm \\
+\midrule
+\multicolumn{7}{l}{\textit{Panel A: 2-bin education (no HS / has HS)}} \\
+ & No HS & Has HS & Firm & No HS & Has HS & Firm \\
+$c_{\text{no\_hs}} \times \text{Post}$ & -0.0015 & 0.0023 & 0.0034 & -0.0209** & 0.0108 & 0.0036 \\
+ & (0.0053) & (0.0022) & (0.0022) & (0.0093) & (0.0078) & (0.0075) \\
+$c_{\text{has\_hs}} \times \text{Post}$ & 0.0062 & 0.0066** & 0.0058** & 0.0144* & 0.0045 & 0.0078 \\
+ & (0.0040) & (0.0028) & (0.0026) & (0.0086) & (0.0092) & (0.0077) \\
+Pre: $c_{\text{no\_hs}}$ & 0.0030 & 0.0005 & -0.0006 & 0.0133 & -0.0102 & 0.0005 \\
+ & (0.0064) & (0.0027) & (0.0026) & (0.0096) & (0.0081) & (0.0062) \\
+Pre: $c_{\text{has\_hs}}$ & -0.0080* & -0.0023 & -0.0007 & -0.0154* & 0.0048 & -0.0026 \\
+ & (0.0041) & (0.0039) & (0.0026) & (0.0083) & (0.0078) & (0.0056) \\
+Observations & 26,786 & 28,539 & 29,095 & 26,786 & 28,539 & 29,095 \\
+Firms & 3,602 & 3,642 & 3,654 & 3,602 & 3,642 & 3,654 \\
+Pre-F $p$: $c_{\text{no\_hs}}$ & 0.519 & 0.036 & 0.082 & 0.085 & 0.424 & 0.932 \\
+Pre-F $p$: $c_{\text{has\_hs}}$ & 0.002 & 0.391 & 0.953 & 0.152 & 0.818 & 0.863 \\
+\\[4pt]
+\multicolumn{7}{l}{\textit{Panel B: Gender (female / male)}} \\
+ & Female & Male & Firm & Female & Male & Firm \\
+$c_{\text{female}} \times \text{Post}$ & -0.0010 & 0.0016 & 0.0015 & 0.0019 & 0.0037 & 0.0062* \\
+ & (0.0041) & (0.0011) & (0.0011) & (0.0055) & (0.0033) & (0.0034) \\
+$c_{\text{male}} \times \text{Post}$ & 0.0024 & 0.0069*** & 0.0036** & 0.0052 & 0.0136** & 0.0032 \\
+ & (0.0030) & (0.0023) & (0.0017) & (0.0058) & (0.0065) & (0.0057) \\
+Pre: $c_{\text{female}}$ & 0.0036 & -0.0001 & 0.0008 & 0.0046 & 0.0006 & 0.0007 \\
+ & (0.0047) & (0.0013) & (0.0014) & (0.0059) & (0.0029) & (0.0022) \\
+Pre: $c_{\text{male}}$ & -0.0027 & -0.0026 & 0.0007 & -0.0028 & -0.0084 & -0.0020 \\
+ & (0.0030) & (0.0030) & (0.0023) & (0.0053) & (0.0075) & (0.0044) \\
+Observations & 28,456 & 28,950 & 29,723 & 28,456 & 28,950 & 29,723 \\
+Firms & 3,704 & 3,722 & 3,734 & 3,704 & 3,722 & 3,734 \\
+Pre-F $p$: $c_{\text{female}}$ & 0.271 & 0.612 & 0.751 & 0.887 & 0.869 & 0.940 \\
+Pre-F $p$: $c_{\text{male}}$ & 0.243 & 0.586 & 0.843 & 0.490 & 0.366 & 0.745 \\
+\\[4pt]
+\multicolumn{7}{l}{\textit{Panel C: Race (white / nonwhite)}} \\
+ & White & Nonwhite & Firm & White & Nonwhite & Firm \\
+$c_{\text{white}} \times \text{Post}$ & 0.0071 & 0.0089*** & 0.0077*** & 0.0006 & -0.0161 & -0.0018 \\
+ & (0.0048) & (0.0034) & (0.0023) & (0.0093) & (0.0106) & (0.0077) \\
+$c_{\text{nonwhite}} \times \text{Post}$ & 0.0026 & 0.0001 & 0.0008 & -0.0048 & 0.0250*** & -0.0013 \\
+ & (0.0018) & (0.0039) & (0.0013) & (0.0037) & (0.0066) & (0.0033) \\
+Pre: $c_{\text{white}}$ & -0.0014 & 0.0043 & 0.0017 & -0.0051 & 0.0248*** & 0.0025 \\
+ & (0.0043) & (0.0036) & (0.0023) & (0.0082) & (0.0080) & (0.0053) \\
+Pre: $c_{\text{nonwhite}}$ & 0.0000 & -0.0032 & -0.0003 & 0.0033 & -0.0144 & 0.0005 \\
+ & (0.0010) & (0.0034) & (0.0008) & (0.0021) & (0.0088) & (0.0020) \\
+Observations & 26,744 & 25,149 & 27,639 & 26,744 & 25,149 & 27,639 \\
+Firms & 3,461 & 3,428 & 3,481 & 3,461 & 3,428 & 3,481 \\
+Pre-F $p$: $c_{\text{white}}$ & 0.044 & 0.727 & 0.469 & 0.766 & 0.015 & 0.888 \\
+Pre-F $p$: $c_{\text{nonwhite}}$ & 0.935 & 0.999 & 0.974 & 0.390 & 0.422 & 0.977 \\
+\midrule
+Firm FE & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark \\
+Year FE & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark \\
+Layer-level & \checkmark & \checkmark & --- & \checkmark & \checkmark & --- \\
+Firm-level & --- & --- & \checkmark & --- & --- & \checkmark \\
+\bottomrule
+\end{tabular}}
+\begin{minipage}{\linewidth}
+\scriptsize\vspace{4pt}
+\textit{Notes:} Each panel reports horse-race regressions that include both layer-connectivity variables simultaneously. Columns (1)--(2) and (4)--(5) are layer-level regressions by outcome layer; columns (3) and (6) are firm-level regressions. All regressions are restricted to untreated firms in the balanced firm panel, but do not require balanced layer presence across all years. Connectivity is scaled to the 90th percentile of the control sample at 2009. Standard errors clustered at the firm level. $^{***}p<0.01$, $^{**}p<0.05$, $^{*}p<0.10$.
+\end{minipage}
+\end{table}
