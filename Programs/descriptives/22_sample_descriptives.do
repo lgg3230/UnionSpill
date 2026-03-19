@@ -311,15 +311,16 @@ foreach tver in 1 2 {
 			cap drop _temp_med
 			gen double _temp_med = exp(lr_remdezr_w_p50)
 			sum _temp_med if `cond' `yr_cond', meanonly
+			local mean_med_wage_g`g' = r(mean)
 			drop _temp_med
 		}
 		else {
 			cap drop _temp_med
 			gen double _temp_med = exp(lr_remdezr_w_p50_pre)
 			sum _temp_med if `cond' `yr_cond', meanonly
+			local mean_med_wage_g`g' = r(mean)
 			drop _temp_med
 		}
-		local mean_med_wage_g`g' = r(mean)
 
 		* ── 8. Mean clause count (CBA period 1) ──────────────────────────────
 		* CBA clause count is a pre-treatment characteristic; same for both
