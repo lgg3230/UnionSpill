@@ -1,0 +1,36 @@
+\begin{table}[H]
+\centering
+\caption{Horse race: $c_{\text{female}}$ vs.\ $c_{\text{male}}$ simultaneously (cross-firm FE, above-median both layers)}
+\label{tab:horse_race_gender_xfirm_abvmed}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lcccccc}
+\toprule\toprule
+ & \multicolumn{3}{c}{Log Dec.\ wage} & \multicolumn{3}{c}{Log employment} \\
+\cmidrule(lr){2-4}\cmidrule(lr){5-7}
+ & \shortstack{Female \\ (1)} & \shortstack{Male \\ (2)} & \shortstack{Firm \\ (3)} & \shortstack{Female \\ (4)} & \shortstack{Male \\ (5)} & \shortstack{Firm \\ (6)} \\
+\midrule
+$c_{\text{female}} \times \text{Post}$ & -0.0055 & -0.0023 & -0.0010 & 0.0494 & 0.0354 & 0.0513 \\
+ & (0.0145) & (0.0113) & (0.0102) & (0.0426) & (0.0375) & (0.0355) \\
+$c_{\text{male}} \times \text{Post}$ & 0.0066 & 0.0074 & 0.0069 & -0.0388 & 0.0041 & -0.0042 \\
+ & (0.0109) & (0.0089) & (0.0070) & (0.0306) & (0.0328) & (0.0296) \\
+Pre: $c_{\text{female}}$ & 0.0146 & 0.0264** & 0.0201** & -0.0442 & -0.0301 & -0.0356 \\
+ & (0.0144) & (0.0109) & (0.0095) & (0.0337) & (0.0278) & (0.0264) \\
+Pre: $c_{\text{male}}$ & -0.0211** & -0.0056 & -0.0111 & 0.0475** & 0.0094 & 0.0339 \\
+ & (0.0105) & (0.0097) & (0.0084) & (0.0234) & (0.0266) & (0.0221) \\
+Observations & 10,688 & 10,705 & 10,746 & 10,688 & 10,705 & 10,746 \\
+Firms & 1,347 & 1,346 & 1,347 & 1,347 & 1,346 & 1,347 \\
+Pre-F $p$: $c_{\text{female}}$ & 0.349 & 0.041 & 0.105 & 0.019 & 0.105 & 0.113 \\
+Pre-F $p$: $c_{\text{male}}$ & 0.013 & 0.221 & 0.372 & 0.116 & 0.651 & 0.306 \\
+\midrule
+Microregion $\times$ Year FE & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark \\
+Industry $\times$ Year FE & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark \\
+Mode $\times$ Year FE & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark \\
+Layer-level & \checkmark & \checkmark & --- & \checkmark & \checkmark & --- \\
+Firm-level & --- & --- & \checkmark & --- & --- & \checkmark \\
+\bottomrule
+\end{tabular}}
+\begin{minipage}{\linewidth}
+\scriptsize\vspace{4pt}
+\textit{Notes:} This table includes both gender layer connectivity variables ($c_{\text{female}}$ and $c_{\text{male}}$) simultaneously in each regression. The sample is restricted to firms which had both layers with above-median average layer employment in the pre-treatment period (2009--2011). Columns (1)--(2) and (4)--(5) are layer-level regressions restricted to the indicated worker layer and absorb microregion$\times$year, industry$\times$year, and mode$\times$year fixed effects. Columns (3) and (6) are firm-level regressions that collapse to firm$\times$year and absorb microregion$\times$year, industry$\times$year, and mode$\times$year fixed effects. The post-treatment indicator equals one for years $\geq 2012$ (S\'{u}mula 277 reform). All regressions are restricted to untreated, balanced-panel firms. Connectivity is scaled to the 90th percentile of the control sample at 2009. Standard errors clustered at the firm level. $^{***}p<0.01$, $^{**}p<0.05$, $^{*}p<0.10$.
+\end{minipage}
+\end{table}

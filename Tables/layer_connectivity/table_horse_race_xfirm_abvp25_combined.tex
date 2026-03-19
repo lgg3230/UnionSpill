@@ -1,0 +1,72 @@
+\begin{table}[H]
+\centering
+\caption{Horse race: layer connectivity simultaneously (cross-firm FE, above-p25 both layers)}
+\label{tab:horse_race_xfirm_abvp25_combined}
+\scriptsize
+\begin{threeparttable}
+\begin{tabular}{lcccccc}
+\toprule\toprule
+ & \multicolumn{3}{c}{Log Dec.\ wage} & \multicolumn{3}{c}{Log employment} \\
+\cmidrule(lr){2-4}\cmidrule(lr){5-7}
+ & (1) & (2) & (3) & (4) & (5) & (6) \\
+\midrule
+\multicolumn{7}{l}{\textit{Panel A: Education (no HS / has HS)}} \\
+\quad & \textit{No HS} & \textit{Has HS} & \textit{Firm} & \textit{No HS} & \textit{Has HS} & \textit{Firm} \\[-2pt]
+\cmidrule(lr){2-4}\cmidrule(lr){5-7}
+\quad $c_{\text{no\_hs}} \times \text{Post}$ & -0.0007 & 0.0048 & 0.0089 & -0.0080 & 0.0007 & -0.0054 \\
+ & (0.0080) & (0.0043) & (0.0055) & (0.0202) & (0.0172) & (0.0165) \\
+\quad $c_{\text{has\_hs}} \times \text{Post}$ & 0.0000 & 0.0023 & -0.0017 & -0.0113 & -0.0113 & -0.0036 \\
+ & (0.0073) & (0.0051) & (0.0053) & (0.0223) & (0.0207) & (0.0178) \\
+\quad Pre: $c_{\text{no\_hs}}$ & 0.0104 & 0.0022 & 0.0031 & 0.0010 & -0.0109 & -0.0203 \\
+ & (0.0079) & (0.0042) & (0.0041) & (0.0158) & (0.0096) & (0.0146) \\
+\quad Pre: $c_{\text{has\_hs}}$ & -0.0116* & -0.0003 & -0.0022 & 0.0142 & 0.0229* & 0.0316** \\
+ & (0.0064) & (0.0050) & (0.0044) & (0.0167) & (0.0131) & (0.0137) \\
+\quad Observations & 16,582 & 16,880 & 16,930 & 16,582 & 16,880 & 16,930 \\
+\quad Firms & 2,124 & 2,124 & 2,124 & 2,124 & 2,124 & 2,124 \\
+\quad Pre-F $p$: $c_{\text{no\_hs}}$ & 0.391 & 0.868 & 0.609 & 0.892 & 0.292 & 0.247 \\
+\quad Pre-F $p$: $c_{\text{has\_hs}}$ & 0.056 & 0.969 & 0.810 & 0.559 & 0.082 & 0.048 \\
+\\[-2pt]
+\multicolumn{7}{l}{\textit{Panel B: Gender (female / male)}} \\
+\quad & \textit{Female} & \textit{Male} & \textit{Firm} & \textit{Female} & \textit{Male} & \textit{Firm} \\[-2pt]
+\cmidrule(lr){2-4}\cmidrule(lr){5-7}
+\quad $c_{\text{female}} \times \text{Post}$ & -0.0042 & -0.0096 & -0.0039 & 0.0079 & 0.0069 & 0.0043 \\
+ & (0.0064) & (0.0059) & (0.0047) & (0.0189) & (0.0165) & (0.0162) \\
+\quad $c_{\text{male}} \times \text{Post}$ & 0.0098 & 0.0163*** & 0.0108** & -0.0006 & 0.0065 & 0.0163 \\
+ & (0.0072) & (0.0059) & (0.0050) & (0.0214) & (0.0210) & (0.0205) \\
+\quad Pre: $c_{\text{female}}$ & 0.0036 & 0.0122* & 0.0057 & -0.0106 & -0.0052 & -0.0051 \\
+ & (0.0076) & (0.0064) & (0.0055) & (0.0177) & (0.0129) & (0.0122) \\
+\quad Pre: $c_{\text{male}}$ & -0.0081 & -0.0027 & 0.0023 & 0.0117 & 0.0033 & 0.0035 \\
+ & (0.0081) & (0.0057) & (0.0054) & (0.0190) & (0.0187) & (0.0168) \\
+\quad Observations & 16,801 & 16,899 & 16,948 & 16,801 & 16,899 & 16,948 \\
+\quad Firms & 2,125 & 2,125 & 2,125 & 2,125 & 2,125 & 2,125 \\
+\quad Pre-F $p$: $c_{\text{female}}$ & 0.108 & 0.062 & 0.158 & 0.725 & 0.540 & 0.568 \\
+\quad Pre-F $p$: $c_{\text{male}}$ & 0.211 & 0.682 & 0.898 & 0.677 & 0.562 & 0.392 \\
+\\[-2pt]
+\multicolumn{7}{l}{\textit{Panel C: Race (non-white / white)}} \\
+\quad & \textit{Non-white} & \textit{White} & \textit{Firm} & \textit{Non-white} & \textit{White} & \textit{Firm} \\[-2pt]
+\cmidrule(lr){2-4}\cmidrule(lr){5-7}
+\quad $c_{\text{nonwhite}} \times \text{Post}$ & 0.0055 & 0.0064 & 0.0055 & 0.0448* & 0.0307 & 0.0333** \\
+ & (0.0062) & (0.0041) & (0.0039) & (0.0236) & (0.0194) & (0.0169) \\
+\quad $c_{\text{white}} \times \text{Post}$ & 0.0051 & -0.0072 & -0.0028 & -0.0262 & -0.0373* & -0.0251 \\
+ & (0.0065) & (0.0051) & (0.0048) & (0.0221) & (0.0195) & (0.0159) \\
+\quad Pre: $c_{\text{nonwhite}}$ & -0.0022 & 0.0050 & -0.0001 & -0.0414** & -0.0150 & -0.0158 \\
+ & (0.0063) & (0.0047) & (0.0036) & (0.0192) & (0.0125) & (0.0102) \\
+\quad Pre: $c_{\text{white}}$ & -0.0039 & 0.0038 & 0.0060 & 0.0410** & 0.0280** & 0.0237* \\
+ & (0.0071) & (0.0049) & (0.0041) & (0.0183) & (0.0139) & (0.0121) \\
+\quad Observations & 15,925 & 16,096 & 16,263 & 15,925 & 16,096 & 16,263 \\
+\quad Firms & 2,045 & 2,045 & 2,045 & 2,045 & 2,045 & 2,045 \\
+\quad Pre-F $p$: $c_{\text{nonwhite}}$ & 0.748 & 0.145 & 0.381 & 0.038 & 0.356 & 0.283 \\
+\quad Pre-F $p$: $c_{\text{white}}$ & 0.492 & 0.475 & 0.342 & 0.022 & 0.119 & 0.036 \\
+\midrule
+Microregion $\times$ Year FE & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark \\
+Industry $\times$ Year FE & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark \\
+Mode $\times$ Year FE & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark \\
+Layer-level & \checkmark & \checkmark & --- & \checkmark & \checkmark & --- \\
+Firm-level & --- & --- & \checkmark & --- & --- & \checkmark \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}[flushleft]
+\item \textit{Notes:} Each panel includes both layer connectivity variables simultaneously. Panel A partitions workers by 2-bin education (no HS / has HS); Panel B by gender (female / male); Panel C by race (non-white / white). The sample is restricted to firms where both layers had above-p25 average employment in the pre-treatment period (2009--2011), where p25 is the 25th percentile of average pre-treatment layer employment across firms with both layers present. Columns (1)--(2) and (4)--(5) are layer-level regressions restricted to the indicated worker layer; columns (3) and (6) are firm-level regressions collapsed to firm$\times$year. All specifications absorb microregion$\times$year, industry$\times$year, and mode$\times$year fixed effects. The post-treatment indicator equals one for years $\geq 2012$ (S\'{u}mula 277 reform). All regressions restricted to untreated, balanced-panel firms. Connectivity scaled to the 90th percentile of the control sample at 2009. Standard errors clustered at the firm level. $^{***}p<0.01$, $^{**}p<0.05$, $^{*}p<0.10$.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}

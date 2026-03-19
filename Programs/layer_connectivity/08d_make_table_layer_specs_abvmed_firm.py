@@ -1,25 +1,25 @@
 """
 Assemble comparison table across layer spillover specifications
-(above-median both layers restriction).
+(above-median firm-level employment restriction).
 
-Reads CSVs produced by 07c_layer_spillover.do and outputs:
-  Tables/layer_connectivity/table_layer_specs_abvmed.tex
-  Tables/layer_connectivity/table_layer_specs_abvmed.csv
-  Tables/layer_connectivity/table_layer_specs_abvmed_edu.tex
-  Tables/layer_connectivity/table_layer_specs_abvmed_edu.csv
-  Tables/layer_connectivity/table_layer_specs_abvmed_demog.tex
-  Tables/layer_connectivity/table_layer_specs_abvmed_demog.csv
+Reads CSVs produced by 07e_layer_spillover.do and outputs:
+  Tables/layer_connectivity/table_layer_specs_abvmed_firm.tex
+  Tables/layer_connectivity/table_layer_specs_abvmed_firm.csv
+  Tables/layer_connectivity/table_layer_specs_abvmed_firm_edu.tex
+  Tables/layer_connectivity/table_layer_specs_abvmed_firm_edu.csv
+  Tables/layer_connectivity/table_layer_specs_abvmed_firm_demog.tex
+  Tables/layer_connectivity/table_layer_specs_abvmed_firm_demog.csv
 
 Specs included:
   (1) Within-firm FE     — firm×year FE, layer connectivity
-                           results_spill_layer_{edu2,gender,race}_abvmed_layer_spill.csv
+                           results_spill_layer_{edu2,gender,race}_abvmed_firm_layer_spill.csv
   (2) Cross-firm FE      — micro×year + industry×year + mode×year FE
-                           results_spill_layer_cross_{edu2,gender,race}_abvmed_layer_spill.csv
+                           results_spill_layer_cross_{edu2,gender,race}_abvmed_firm_layer_spill.csv
   (3) Firm-level restr.  — firm-level outcomes, standard FE, restricted sample
-                           results_spill_firmrestr_{edu2,gender,race}_abvmed_layer_spill.csv
+                           results_spill_firmrestr_{edu2,gender,race}_abvmed_firm_layer_spill.csv
 
 Usage:
-  ~/.conda/envs/venv_python312/bin/python Programs/layer_connectivity/08b_make_table_layer_specs_abvmed.py
+  ~/.conda/envs/venv_python312/bin/python Programs/layer_connectivity/08d_make_table_layer_specs_abvmed_firm.py
 """
 
 from pathlib import Path
@@ -56,7 +56,7 @@ SPECS = [
     {
         "label":       "(1) Within-firm FE",
         "sublabel":    "firm$\\times$year FE",
-        "file_tpl":    "results_spill_layer_{layer}_abvmed_layer_spill.csv",
+        "file_tpl":    "results_spill_layer_{layer}_abvmed_firm_layer_spill.csv",
         "section_key": "spill",
         "outcomes":    ["lr_remdezr_layer", "l_layer_emp"],
         "outcome_labels": {
@@ -67,7 +67,7 @@ SPECS = [
     {
         "label":       "(2) Cross-firm FE",
         "sublabel":    "micro$\\times$yr + ind$\\times$yr + mode$\\times$yr",
-        "file_tpl":    "results_spill_layer_cross_{layer}_abvmed_layer_spill.csv",
+        "file_tpl":    "results_spill_layer_cross_{layer}_abvmed_firm_layer_spill.csv",
         "section_key": "cross",
         "outcomes":    ["lr_remdezr_layer", "l_layer_emp"],
         "outcome_labels": {
@@ -78,7 +78,7 @@ SPECS = [
     {
         "label":       "(3) Firm-level (restricted)",
         "sublabel":    "firm FE",
-        "file_tpl":    "results_spill_firmrestr_{layer}_abvmed_layer_spill.csv",
+        "file_tpl":    "results_spill_firmrestr_{layer}_abvmed_firm_layer_spill.csv",
         "section_key": "firmrestr",
         "outcomes":    ["lr_remdezr_w", "l_firm_emp"],
         "outcome_labels": {
@@ -132,7 +132,7 @@ for layer in LAYERS:
             data[key] = row["value"]
 
 if missing_files:
-    print("WARNING — missing files (run 07c_layer_spillover.do first):")
+    print("WARNING — missing files (run 07e_layer_spillover.do first):")
     for f in missing_files:
         print(f"  {f}")
     if len(missing_files) == len(LAYERS) * len(SPECS):
@@ -182,7 +182,7 @@ OUTCOME_SHORT = [
 def build_latex(layers_subset: list, caption: str, label: str) -> str:
     lines = []
     n_outcomes = len(OUTCOME_ORDER)
-    ncols = 1 + n_outcomes * n_spec  # 1 + 3*3 = 10
+    ncols = 1 + n_outcomes * n_spec  # 1 + 3*3 = 10 (but n_outcomes=2, n_spec=3 → 7)
 
     lines.append(r"\begin{table}[H]")
     lines.append(r"\centering")
@@ -282,8 +282,9 @@ def build_latex(layers_subset: list, caption: str, label: str) -> str:
     lines.append(
         r"\item \textit{Notes:} This table compares spillover effects of layer-level connectivity to treated firms "
         r"across three specifications and three worker-partitioning schemes. "
-        r"The sample is restricted to firms which had both layers with above-median average layer employment "
-        r"in the pre-treatment period (2009--2011). "
+        r"The sample is restricted to firms whose total average December employment in the "
+        r"pre-treatment period (2009--2011) is above the median across layer-balanced-panel firms "
+        r"in the Lagos sample. All layers of qualifying firms are kept. "
         r"All regressions are further restricted to untreated firms in the balanced firm panel and, for layer-level specifications, "
         r"to firms with positive employment in all layers in all years 2009--2016. "
         r"Connectivity is scaled to the 90th percentile of the control sample at 2009 and is "
@@ -344,17 +345,17 @@ def build_csv(layers_subset: list) -> pd.DataFrame:
 TABLES.mkdir(parents=True, exist_ok=True)
 
 CAPTIONS = {
-    "edu":   "Layer spillover effects, above-median both layers --- education layers",
-    "demog": "Layer spillover effects, above-median both layers --- demographic layers",
+    "edu":   "Layer spillover effects, above-median firm employment --- education layers",
+    "demog": "Layer spillover effects, above-median firm employment --- demographic layers",
 }
 LABELS = {
-    "edu":   "tab:layer_specs_abvmed_edu",
-    "demog": "tab:layer_specs_abvmed_demog",
+    "edu":   "tab:layer_specs_abvmed_firm_edu",
+    "demog": "tab:layer_specs_abvmed_firm_demog",
 }
 
 for group_key, (layers_subset, _) in LAYER_GROUPS.items():
-    tex_out = TABLES / f"table_layer_specs_abvmed_{group_key}.tex"
-    csv_out = TABLES / f"table_layer_specs_abvmed_{group_key}.csv"
+    tex_out = TABLES / f"table_layer_specs_abvmed_firm_{group_key}.tex"
+    csv_out = TABLES / f"table_layer_specs_abvmed_firm_{group_key}.csv"
 
     tex = build_latex(layers_subset, CAPTIONS[group_key], LABELS[group_key])
     tex_out.write_text(tex)
@@ -369,9 +370,9 @@ for group_key, (layers_subset, _) in LAYER_GROUPS.items():
     print()
 
 # Combined table
-tex_out_all = TABLES / "table_layer_specs_abvmed.tex"
-csv_out_all = TABLES / "table_layer_specs_abvmed.csv"
-tex_all = build_latex(LAYERS, "Layer spillover effects, above-median both layers --- specification comparison", "tab:layer_specs_abvmed")
+tex_out_all = TABLES / "table_layer_specs_abvmed_firm.tex"
+csv_out_all = TABLES / "table_layer_specs_abvmed_firm.csv"
+tex_all = build_latex(LAYERS, "Layer spillover effects, above-median firm employment --- specification comparison", "tab:layer_specs_abvmed_firm")
 tex_out_all.write_text(tex_all)
 df_all = build_csv(LAYERS)
 df_all.to_csv(csv_out_all, index=False)

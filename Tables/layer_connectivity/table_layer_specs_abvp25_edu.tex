@@ -1,0 +1,35 @@
+\begin{table}[H]
+\centering
+\caption{Layer spillover effects, above-p25 both layers --- education layers}
+\label{tab:layer_specs_abvp25_edu}
+\scriptsize
+\begin{threeparttable}
+\begin{tabular}{lcccccc}
+\toprule\toprule
+ & \multicolumn{3}{c}{Log Dec. wage} & \multicolumn{3}{c}{Log employment} \\
+\cmidrule(lr){2-4} \cmidrule(lr){5-7}
+ & (1) & (2) & (3) & (4) & (5) & (6) \\
+\midrule
+\multicolumn{7}{l}{\textit{Panel A: 2-bin education (no HS / has HS)}} \\
+\quad Connectivity $\times$ Post & -0.0079 & 0.0036 & 0.0024 & 0.0066 & -0.0213 & -0.0159 \\
+ & (0.0074) & (0.0033) & (0.0041) & (0.0206) & (0.0152) & (0.0166) \\
+\quad Pre-trend (placebo) & 0.0051 & 0.0007 & 0.0022 & 0.0136 & 0.0139* & 0.0110 \\
+ & (0.0068) & (0.0037) & (0.0043) & (0.0162) & (0.0076) & (0.0081) \\
+\quad Observations & 32,224 & 32,224 & 15,208 & 32,224 & 32,224 & 15,208 \\
+\quad Layers $\times$ firms & 4,028 & 4,028 & --- & 4,028 & 4,028 & --- \\
+\quad Firms & 2,014 & 2,014 & 1,901 & 2,014 & 2,014 & 1,901 \\
+\quad Pre-trend F-test $p$-value & 0.403 & 0.726 & 0.439 & 0.699 & 0.186 & 0.390 \\
+\midrule
+\multicolumn{7}{l}{\textit{Specification}} \\
+Layer-level outcomes & \checkmark & \checkmark & --- & \checkmark & \checkmark & --- \\
+Firm-level outcomes & --- & --- & \checkmark & --- & --- & \checkmark \\
+Firm $\times$ year FE & \checkmark & --- & --- & \checkmark & --- & --- \\
+Firm-level FE & --- & \checkmark & --- & --- & \checkmark & --- \\
+Firm FE & --- & --- & \checkmark & --- & --- & \checkmark \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}[flushleft]
+\item \textit{Notes:} This table compares spillover effects of layer-level connectivity to treated firms across three specifications and three worker-partitioning schemes. The sample is restricted to firms which had both layers with above-p25 average layer employment in the pre-treatment period (2009--2011), where p25 refers to the 25th percentile of average pre-treatment layer employment across firms with both layers present. All regressions are further restricted to untreated firms in the balanced firm panel and, for layer-level specifications, to firms with positive employment in all layers in all years 2009--2016. Connectivity is scaled to the 90th percentile of the control sample at 2009 and is interacted with a post-2012 indicator (S\'{u}mula 277 reform). The pre-trend (placebo) coefficient tests whether connectivity predicts differential outcomes in 2009--2010 relative to 2011, using only pre-reform years (2009--2011). The pre-trend F-test $p$-value tests the joint significance of all pre-trend event-study coefficients; small values indicate detectable pre-trends. \textit{Outcome levels.} Columns (1), (4) and (2), (5) use \textit{layer-level} outcomes: each observation is a firm--layer--year cell, and the connectivity measure captures the share of that layer's outflows reaching treated firms. Columns (3), (6) use \textit{firm-level} outcomes and the aggregate firm-level connectivity, restricted to the subset of firms present in the layer sample. \textit{Fixed effects.} Columns (1), (4) (within-firm) absorb firm$\times$year FE; identification comes from cross-layer variation within the same firm--year. Columns (2), (5) (cross-firm) include firm-level FE: microregion$\times$year, industry$\times$year, and mode$\times$year. Columns (3), (6) (firm-level) include firm FE and year FE. \textit{Layer definitions.} Panel A: 2-bin education (no HS / has HS). Panel B: gender (female / male). Panel C: race (non-white / white). Standard errors clustered at the firm level. $^{***}p<0.01$, $^{**}p<0.05$, $^{*}p<0.10$.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}

@@ -1,0 +1,36 @@
+\begin{table}[H]
+\centering
+\caption{Horse race: $c_{\text{no\_hs}}$ vs.\ $c_{\text{has\_hs}}$ simultaneously (cross-firm FE, above-median both layers)}
+\label{tab:horse_race_edu2_xfirm_abvmed}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lcccccc}
+\toprule\toprule
+ & \multicolumn{3}{c}{Log Dec.\ wage} & \multicolumn{3}{c}{Log employment} \\
+\cmidrule(lr){2-4}\cmidrule(lr){5-7}
+ & \shortstack{No HS \\ (1)} & \shortstack{Has HS \\ (2)} & \shortstack{Firm \\ (3)} & \shortstack{No HS \\ (4)} & \shortstack{Has HS \\ (5)} & \shortstack{Firm \\ (6)} \\
+\midrule
+$c_{\text{no\_hs}} \times \text{Post}$ & 0.0134 & 0.0008 & 0.0082 & 0.0210 & -0.0709 & -0.0616 \\
+ & (0.0095) & (0.0079) & (0.0076) & (0.0491) & (0.0546) & (0.0494) \\
+$c_{\text{has\_hs}} \times \text{Post}$ & -0.0114 & -0.0068 & -0.0129 & -0.0716 & 0.0100 & 0.0107 \\
+ & (0.0103) & (0.0090) & (0.0087) & (0.0482) & (0.0520) & (0.0438) \\
+Pre: $c_{\text{no\_hs}}$ & 0.0033 & 0.0113 & 0.0065 & 0.0323 & -0.0448 & -0.0042 \\
+ & (0.0099) & (0.0083) & (0.0075) & (0.0360) & (0.0314) & (0.0245) \\
+Pre: $c_{\text{has\_hs}}$ & -0.0083 & -0.0090 & -0.0050 & 0.0003 & 0.0421 & 0.0179 \\
+ & (0.0109) & (0.0091) & (0.0078) & (0.0370) & (0.0323) & (0.0275) \\
+Observations & 9,937 & 10,040 & 10,060 & 9,937 & 10,040 & 10,060 \\
+Firms & 1,261 & 1,261 & 1,261 & 1,261 & 1,261 & 1,261 \\
+Pre-F $p$: $c_{\text{no\_hs}}$ & 0.749 & 0.089 & 0.184 & 0.670 & 0.076 & 0.173 \\
+Pre-F $p$: $c_{\text{has\_hs}}$ & 0.725 & 0.557 & 0.609 & 0.898 & 0.358 & 0.245 \\
+\midrule
+Microregion $\times$ Year FE & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark \\
+Industry $\times$ Year FE & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark \\
+Mode $\times$ Year FE & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark \\
+Layer-level & \checkmark & \checkmark & --- & \checkmark & \checkmark & --- \\
+Firm-level & --- & --- & \checkmark & --- & --- & \checkmark \\
+\bottomrule
+\end{tabular}}
+\begin{minipage}{\linewidth}
+\scriptsize\vspace{4pt}
+\textit{Notes:} This table includes both 2-bin education layer connectivity variables ($c_{\text{no\_hs}}$ and $c_{\text{has\_hs}}$) simultaneously in each regression. The sample is restricted to firms which had both layers with above-median average layer employment in the pre-treatment period (2009--2011). Columns (1)--(2) and (4)--(5) are layer-level regressions restricted to the indicated worker layer and absorb microregion$\times$year, industry$\times$year, and mode$\times$year fixed effects. Columns (3) and (6) are firm-level regressions that collapse to firm$\times$year and absorb microregion$\times$year, industry$\times$year, and mode$\times$year fixed effects. The post-treatment indicator equals one for years $\geq 2012$ (S\'{u}mula 277 reform). All regressions are restricted to untreated, balanced-panel firms. Connectivity is scaled to the 90th percentile of the control sample at 2009. Standard errors clustered at the firm level. $^{***}p<0.01$, $^{**}p<0.05$, $^{*}p<0.10$.
+\end{minipage}
+\end{table}

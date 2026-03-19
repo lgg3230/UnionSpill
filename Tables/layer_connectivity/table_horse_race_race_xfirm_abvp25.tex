@@ -1,0 +1,36 @@
+\begin{table}[H]
+\centering
+\caption{Horse race: $c_{\text{nonwhite}}$ vs.\ $c_{\text{white}}$ simultaneously (cross-firm FE, above-p25 both layers)}
+\label{tab:horse_race_race_xfirm_abvp25}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lcccccc}
+\toprule\toprule
+ & \multicolumn{3}{c}{Log Dec.\ wage} & \multicolumn{3}{c}{Log employment} \\
+\cmidrule(lr){2-4}\cmidrule(lr){5-7}
+ & \shortstack{Non-white \\ (1)} & \shortstack{White \\ (2)} & \shortstack{Firm \\ (3)} & \shortstack{Non-white \\ (4)} & \shortstack{White \\ (5)} & \shortstack{Firm \\ (6)} \\
+\midrule
+$c_{\text{nonwhite}} \times \text{Post}$ & 0.0055 & 0.0064 & 0.0055 & 0.0448* & 0.0307 & 0.0333** \\
+ & (0.0062) & (0.0041) & (0.0039) & (0.0236) & (0.0194) & (0.0169) \\
+$c_{\text{white}} \times \text{Post}$ & 0.0051 & -0.0072 & -0.0028 & -0.0262 & -0.0373* & -0.0251 \\
+ & (0.0065) & (0.0051) & (0.0048) & (0.0221) & (0.0195) & (0.0159) \\
+Pre: $c_{\text{nonwhite}}$ & -0.0022 & 0.0050 & -0.0001 & -0.0414** & -0.0150 & -0.0158 \\
+ & (0.0063) & (0.0047) & (0.0036) & (0.0192) & (0.0125) & (0.0102) \\
+Pre: $c_{\text{white}}$ & -0.0039 & 0.0038 & 0.0060 & 0.0410** & 0.0280** & 0.0237* \\
+ & (0.0071) & (0.0049) & (0.0041) & (0.0183) & (0.0139) & (0.0121) \\
+Observations & 15,925 & 16,096 & 16,263 & 15,925 & 16,096 & 16,263 \\
+Firms & 2,045 & 2,045 & 2,045 & 2,045 & 2,045 & 2,045 \\
+Pre-F $p$: $c_{\text{nonwhite}}$ & 0.748 & 0.145 & 0.381 & 0.038 & 0.356 & 0.283 \\
+Pre-F $p$: $c_{\text{white}}$ & 0.492 & 0.475 & 0.342 & 0.022 & 0.119 & 0.036 \\
+\midrule
+Microregion $\times$ Year FE & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark \\
+Industry $\times$ Year FE & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark \\
+Mode $\times$ Year FE & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark \\
+Layer-level & \checkmark & \checkmark & --- & \checkmark & \checkmark & --- \\
+Firm-level & --- & --- & \checkmark & --- & --- & \checkmark \\
+\bottomrule
+\end{tabular}}
+\begin{minipage}{\linewidth}
+\scriptsize\vspace{4pt}
+\textit{Notes:} This table includes both race layer connectivity variables ($c_{\text{nonwhite}}$ and $c_{\text{white}}$) simultaneously in each regression. The sample is restricted to firms which had both layers with above-p25 average layer employment in the pre-treatment period (2009--2011), where p25 refers to the 25th percentile of average pre-treatment layer employment across firms with both layers present. Columns (1)--(2) and (4)--(5) are layer-level regressions restricted to the indicated worker layer and absorb microregion$\times$year, industry$\times$year, and mode$\times$year fixed effects. Columns (3) and (6) are firm-level regressions that collapse to firm$\times$year and absorb microregion$\times$year, industry$\times$year, and mode$\times$year fixed effects. The post-treatment indicator equals one for years $\geq 2012$ (S\'{u}mula 277 reform). All regressions are restricted to untreated, balanced-panel firms. Connectivity is scaled to the 90th percentile of the control sample at 2009. Standard errors clustered at the firm level. $^{***}p<0.01$, $^{**}p<0.05$, $^{*}p<0.10$.
+\end{minipage}
+\end{table}
