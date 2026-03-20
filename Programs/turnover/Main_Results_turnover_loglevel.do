@@ -19,7 +19,9 @@
 *          results_direct_panelB_turnover_loglevel.csv
 *          results_direct_panelC_turnover_loglevel.csv
 *          results_spill_turnover_loglevel.csv
-* NOTE:    Flow outcomes (totalflows_pw, outflows_pw, inflows_pw) excluded.
+* NOTE:    All flow outcomes (totalflows/outflows/inflows, rates and log-counts)
+*          included in spillover section only, with absorb = base_fe + l_firm_emp_pre4#year
+*          (outcome_pre4#year dropped — those bins absorb the flow outcomes themselves).
 * Panels:  A (zero-connectivity controls), B (<=1% connectivity controls),
 *          C (all untreated controls), D (spillover effects)
 ********************************************************************************
@@ -270,12 +272,37 @@ gen double ll_inflows = ln(inflows) if inflows > 0
 label var ll_inflows "Log inflow count"
 
 global turnover_loglevel_spill_extra "ll_totalflows ll_outflows ll_inflows"
+global turnover_loglevel_spill_rates "totalflows_pw outflows_pw inflows_pw"
 
 * ── d) PRE-TREATMENT MEANS + 4-BIN CONTROLS FOR LOG LEVEL OUTCOMES ────────────
 
 di as result "Creating log level pre-treatment bins..."
 
 foreach v of global turnover_loglevel_outcomes {
+
+	cap drop `v'_pre_o
+	cap drop `v'_pre
+	quietly {
+		bys identificad: egen `v'_pre_o = mean(`v') if inrange(year, 2009, 2011)
+		bys identificad: egen `v'_pre = min(`v'_pre_o)
+		drop `v'_pre_o
+	}
+
+	cap drop `v'_pre4_o
+	cap drop `v'_pre4
+	quietly {
+		egen `v'_pre4_o = cut(`v'_pre) if year == 2009 & in_balanced_panel == 1, group(4)
+		bys identificad: egen `v'_pre4 = min(`v'_pre4_o)
+		drop `v'_pre4_o
+		replace `v'_pre4 = 0 if missing(`v'_pre4)
+	}
+}
+
+* Pre-treatment bins for rate flow outcomes (spill-only)
+foreach v of global turnover_loglevel_spill_rates {
+
+	* skip totalflows_pw — pre4 bins already created above
+	if "`v'" == "totalflows_pw" continue
 
 	cap drop `v'_pre_o
 	cap drop `v'_pre
@@ -460,12 +487,13 @@ di as result "------------------------------------------------------------------
 
 local csv_spill "$tables/turnover/results_spill_turnover_loglevel.csv"
 
-foreach outcome in $turnover_loglevel_outcomes $turnover_loglevel_spill_extra {
+foreach outcome in $turnover_loglevel_outcomes $turnover_loglevel_spill_extra $turnover_loglevel_spill_rates {
 
 	di as text "  Estimating: `outcome' (spillover)"
 
-	* Flow outcomes: no pre-treatment totalflows per worker control (circular)
-	if inlist("`outcome'", "ll_totalflows", "ll_outflows", "ll_inflows") {
+	* All flow outcomes (rates and log-counts): no extra_year
+	if inlist("`outcome'", "totalflows_pw", "outflows_pw", "inflows_pw", ///
+	          "ll_totalflows", "ll_outflows", "ll_inflows") {
 		local absorb "`base_fe' ib0.`outcome'_pre4#i.year ib0.l_firm_emp_pre4#i.year"
 	}
 	else {

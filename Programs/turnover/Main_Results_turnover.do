@@ -394,8 +394,8 @@ foreach panel in A B C {
 		capture testparm 1.treat_ultra#i(2009 2010).year
 		local pre_ftest_pval = cond(_rc == 0, r(p), .)
 
-		* Baseline mean (untreated control group, 2009)
-		quietly sum `outcome' if `s_use_pre' & year == 2009
+		* Baseline mean (untreated control group, avg 2009-2011)
+		quietly sum `outcome' if `s_use_pre' & inrange(year, 2009, 2011)
 		local mean_pre_val = r(mean)
 
 		* Write
@@ -493,8 +493,8 @@ foreach outcome in $turnover_outcomes $flow_outcomes {
 	capture testparm c.`conn'#i(2009 2010).year
 	local pre_ftest_pval = cond(_rc == 0, r(p), .)
 
-	* Baseline mean (spillover sample, 2009)
-	quietly sum `outcome' if `s_spill' & year == 2009
+	* Baseline mean (spillover sample, avg 2009-2011)
+	quietly sum `outcome' if `s_spill' & inrange(year, 2009, 2011)
 	local mean_pre_val = r(mean)
 
 	* Write

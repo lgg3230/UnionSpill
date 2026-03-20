@@ -1,4 +1,4 @@
-* Test: do ll_totalflows and fs_totalflows produce non-zero coefs
+* Test: does ll_totalflows produce non-zero coefs
 * when extra_year = totalflows_pw_pre_07_114 is included?
 
 set more off
@@ -106,29 +106,6 @@ quietly {
 di as result _newline "=== ll_totalflows with full absorb (including extra_year) ==="
 local absorb "`base_fe' ib0.ll_totalflows_pre4#i.year ib0.l_firm_emp_pre4#i.year `extra_year'"
 reghdfe ll_totalflows c.`conn'##i.treat_year if `s_spill', absorb(`absorb') vce(cluster identificad)
-di "b_post = " _b[1.treat_year#c.`conn'] "  se = " _se[1.treat_year#c.`conn'] "  R2 = " e(r2)
-
-* ── 2. fs_totalflows ─────────────────────────────────────────────────────────
-cap drop fm_totalflows_o fm_totalflows fs_totalflows totalflows_pre_o totalflows_pre totalflows_pre4_o totalflows_pre4
-quietly {
-    bys identificad: egen fm_totalflows_o = mean(totalflows) if inrange(year, 2009, 2011)
-    bys identificad: egen fm_totalflows   = min(fm_totalflows_o)
-    drop fm_totalflows_o
-}
-gen double fs_totalflows = totalflows / fm_totalflows if fm_totalflows > 0 & !missing(fm_totalflows)
-quietly {
-    bys identificad: egen totalflows_pre_o = mean(totalflows) if inrange(year, 2009, 2011)
-    bys identificad: egen totalflows_pre   = min(totalflows_pre_o)
-    drop totalflows_pre_o
-    egen totalflows_pre4_o = cut(totalflows_pre) if year == 2009 & in_balanced_panel == 1, group(4)
-    bys identificad: egen totalflows_pre4  = min(totalflows_pre4_o)
-    drop totalflows_pre4_o
-    replace totalflows_pre4 = 0 if missing(totalflows_pre4)
-}
-
-di as result _newline "=== fs_totalflows with full absorb (including extra_year) ==="
-local absorb "`base_fe' ib0.totalflows_pre4#i.year ib0.l_firm_emp_pre4#i.year `extra_year'"
-reghdfe fs_totalflows c.`conn'##i.treat_year if `s_spill', absorb(`absorb') vce(cluster identificad)
 di "b_post = " _b[1.treat_year#c.`conn'] "  se = " _se[1.treat_year#c.`conn'] "  R2 = " e(r2)
 
 di as result _newline "Done."

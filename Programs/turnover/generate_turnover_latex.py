@@ -230,8 +230,8 @@ def panel_section(pdata, outcomes, panel_bold, panel_italic, col_headers,
     lines.append(row + r" \\")
     lines.append(blank)
 
-    # Baseline mean (2009)
-    row = r"Mean (2009)" + "".join(
+    # Baseline mean (2009-2011)
+    row = r"Mean (2009--2011)" + "".join(
         " & " + get_val(pdata, o, "mean_pre") for o in outcomes)
     lines.append(row + r" \\")
 
@@ -356,8 +356,8 @@ def make_spill_table(group):
     lines.append(row + r" \\")
     lines.append(blank)
 
-    # Baseline mean (2009)
-    row = r"Mean (2009)" + "".join(
+    # Baseline mean (2009-2011)
+    row = r"Mean (2009--2011)" + "".join(
         " & " + get_val(pdata, o, "mean_pre") for o in outcomes)
     lines.append(row + r" \\")
 

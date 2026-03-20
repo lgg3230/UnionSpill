@@ -135,8 +135,8 @@ DIRECT_HEADERS = [
     r"Log\\Hours", r"Log\\Emp.",
 ]
 
-SPILL_OUTCOMES  = DIRECT_OUTCOMES + ["ll_totalflows", "ll_outflows", "ll_inflows"]
-SPILL_HEADERS   = DIRECT_HEADERS  + [r"Log\\Tot.\\Flows", r"Log\\Out-\\flows", r"Log\\In-\\flows"]
+SPILL_OUTCOMES  = DIRECT_OUTCOMES
+SPILL_HEADERS   = DIRECT_HEADERS
 
 OUTCOME_GROUPS = [
     dict(
@@ -169,13 +169,12 @@ OUTCOME_GROUPS = [
             r"establishment employment flow counts (log level specification). "
             r"All outcomes are logs of raw headcounts rather than rates. "
             r"Columns~(1)--(5) report log hires, log total separations, "
-            r"log layoffs, log quits, and log churn count. "
+            r"log layoffs, log quits, and log churn count "
+            r"(= hires + separations). "
             r"Columns~(6)--(7) report log within-year and year-over-year "
             r"retention counts. "
             r"Columns~(8)--(9) report log total contracted hours and "
-            r"log December employment. "
-            r"Columns~(10)--(12) report log total bilateral worker flows, "
-            r"log outflows, and log inflows",
+            r"log December employment",
         ),
     ),
 ]
