@@ -1,0 +1,67 @@
+\documentclass[12pt,letterpaper]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{booktabs}
+\usepackage{threeparttable}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{hyperref}
+\usepackage{float}
+
+\hypersetup{colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue}
+
+\begin{document}
+
+\begin{table}[H]
+\centering
+\caption{Spillover Effects (IV and OLS)}
+\label{tab:spill_iv_ols_late_early}
+\footnotesize
+\begin{threeparttable}
+\begin{tabular}{lcc@{\hskip 0.8cm}cc@{\hskip 0.8cm}cc}
+\toprule\toprule
+& \multicolumn{2}{c}{\begin{tabular}[c]{@{}c@{}}Log \\ Wages\end{tabular}}& \multicolumn{2}{c}{\begin{tabular}[c]{@{}c@{}}Log Hourly \\ Wages\end{tabular}}& \multicolumn{2}{c}{\begin{tabular}[c]{@{}c@{}}Log \\ Employment\end{tabular}} \\
+\cmidrule(lr){2-3} \cmidrule(lr){4-5} \cmidrule(lr){6-7}
+& IV & OLS& IV & OLS& IV & OLS \\
+& (1) & (2)& (3) & (4)& (5) & (6) \\
+\midrule
+Post $\times$ Connectivity & 0.0448** & 0.0029 & 0.0542** & 0.0049** & $-$0.0070 & 0.0005 \\
+ & (0.0220) & (0.0027) & (0.0230) & (0.0025) & (0.0729) & (0.0115) \\
+&&&&&&&\\
+Pre-treatment & 0.0015 & 0.0042 & $-$0.0017 & 0.0041 & 0.0188 & $-$0.0067 \\
+ & (0.0194) & (0.0046) & (0.0186) & (0.0047) & (0.0456) & (0.0128) \\
+&&&&&&&\\
+Observations & 32258 & 32487 & 32258 & 32487 & 32464 & 32696 \\
+Establishments & 4054 & 4083 & 4054 & 4083 & 4058 & 4087 \\
+\bottomrule
+\end{tabular}
+\scriptsize
+\begin{tablenotes}
+\item \textit{Notes:} This table presents spillover effects of the ultractivity reform on control establishments using \textit{late} pre-treatment connectivity (average per-worker flow share to treated firms across year-pairs 2009--10 and 2010--11), instrumented by \textit{early} pre-treatment connectivity (year-pairs 2007--08 and 2008--09). Both connectivity measures are normalized so that a value of 1 corresponds to the 90th percentile of the spillover sample distribution. Post $\times$ Connectivity measures the differential effect in years 2012--2016 for establishments at the 90th percentile of connectivity relative to those with zero connectivity. Pre-treatment tests for differential pre-trends (2009--2011). All regressions include establishment fixed effects, year fixed effects interacted with two-digit industry, microregion, and negotiation-month indicators, and quartile-bin controls for pre-treatment per-worker pairwise worker flows (2007--2011) and pre-treatment establishment size, interacted with year fixed effects. Standard errors clustered at the establishment level are in parentheses. * $p<0.10$, ** $p<0.05$, *** $p<0.01$.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+\clearpage
+
+\begin{table}[!htbp]
+\centering
+\caption{First Stage: Instrument Strength}
+\label{tab:iv_firststage_late_early}
+\footnotesize
+\begin{threeparttable}
+\begin{tabular}{lcccc}
+\toprule\toprule
+& \begin{tabular}[c]{@{}c@{}}First-Stage\\Coefficient\end{tabular}& \begin{tabular}[c]{@{}c@{}}Std.\\Error\end{tabular}& \begin{tabular}[c]{@{}c@{}}KP rk Wald\\F-statistic\end{tabular}& \begin{tabular}[c]{@{}c@{}}Observations\end{tabular} \\
+\midrule
+\begin{tabular}[c]{@{}c@{}}Early Connectivity\\(Instrument)\end{tabular} & 0.0514*** & (0.0162) & 10.07 & 32448 \\
+\bottomrule
+\end{tabular}
+\scriptsize
+\begin{tablenotes}
+\item \textit{Notes:} This table reports first-stage results for the instrumental variables specification. The endogenous regressor is late pre-treatment connectivity (year-pairs 2009--10 and 2010--11) interacted with the post-treatment indicator; the instrument is the analogous interaction with early pre-treatment connectivity (year-pairs 2007--08 and 2008--09). The first-stage coefficient and standard error are obtained from a direct estimation of the first stage using \texttt{reghdfe} with establishment fixed effects and controls for industry, microregion, negotiation month, pre-treatment outcomes, and per-worker pairwise flows (all interacted with year indicators). Standard errors are clustered at the establishment level. The Kleibergen--Paap rk Wald F-statistic assesses instrument strength under heteroskedasticity and clustering. * $p<0.10$, ** $p<0.05$, *** $p<0.01$.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+\end{document}
