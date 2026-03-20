@@ -92,8 +92,8 @@ def notes_direct(outcome_desc):
         r"Panel~A restricts the control group to establishments with zero "
         r"pre-reform worker-flow connectivity to treated firms; Panel~B to "
         r"at most 1\%; Panel~C includes all untreated establishments. "
-        r"Mean (2009) is the unweighted sample mean for untreated control firms "
-        r"in the baseline year. "
+        r"Mean (2009--2011) is the unweighted mean of the firm-level pretreatment "
+        r"average (2009--2011) for untreated control firms. "
         r"Standard errors clustered at the establishment level in parentheses. " +
         _STARS
     )
@@ -108,8 +108,8 @@ def notes_spill(outcome_desc):
         r"Post $\times$ Connectivity captures the average spillover effect for "
         r"2012--2016; Pre $\times$ Connectivity is a placebo test using 2009--2011. " +
         _CONTROLS + r" "
-        r"Mean (2009) is the unweighted sample mean for the spillover sample "
-        r"in the baseline year. "
+        r"Mean (2009--2011) is the unweighted sample mean for the spillover sample "
+        r"averaged over the pre-treatment period. "
         r"Standard errors clustered at the establishment level in parentheses. " +
         _STARS
     )
@@ -186,7 +186,7 @@ def panel_section(pdata, outcomes, panel_bold, panel_italic, col_headers,
     lines.append(row + r" \\")
     lines.append(blank)
 
-    row = r"Mean (2011)" + "".join(
+    row = r"Mean (2009--2011)" + "".join(
         " & " + get_val(pdata, o, "mean_pre") for o in outcomes)
     lines.append(row + r" \\")
     row = "Observations" + "".join(
@@ -298,7 +298,7 @@ def make_spill_table(group):
     lines.append(row + r" \\")
     lines.append(blank)
 
-    row = r"Mean (2011)" + "".join(
+    row = r"Mean (2009--2011)" + "".join(
         " & " + get_val(pdata, o, "mean_pre") for o in outcomes)
     lines.append(row + r" \\")
     row = "Observations" + "".join(
