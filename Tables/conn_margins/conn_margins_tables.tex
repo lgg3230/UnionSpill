@@ -1,0 +1,168 @@
+\documentclass[12pt,letterpaper]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{booktabs}
+\usepackage{threeparttable}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{hyperref}
+\usepackage{float}
+
+\hypersetup{colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue}
+
+\begin{document}
+
+\begin{titlepage}
+\centering
+\vspace*{2cm}
+{\Huge\bfseries Union Spillovers:\\Connectivity Margins Analysis\par}
+\vspace{2cm}
+{\Large Extensive vs.\ Intensive Margin of Worker-Flow Connectivity\par}
+\vspace{1cm}
+{\large \today\par}
+\vfill
+{\large Luis de Azevedo-Gomes \& Guilherme Neri\\Northwestern University\par}
+\end{titlepage}
+
+\tableofcontents
+\clearpage
+
+\begin{table}[]
+\centering
+\caption{Connectivity Margins and Spillover Effects of the Ultractivity Reform}
+\label{tab:conn_margins}
+\scriptsize
+\begin{threeparttable}
+\begin{tabular}{lcccc}
+\toprule\toprule
+\begin{tabular}[c]{@{}l@{}}\textbf{Panel A:} \textit{Extensive Margin}\\ \textit{Binary; Full Sample}\end{tabular} & \begin{tabular}[c]{@{}c@{}}Log\\Wages\end{tabular} & \begin{tabular}[c]{@{}c@{}}Log Hourly\\Wages\end{tabular} & \begin{tabular}[c]{@{}c@{}}Log\\Employment\end{tabular} & \begin{tabular}[c]{@{}c@{}}Clause\\Count\end{tabular} \\
+ & (1) & (2) & (3) & (4) \\
+\midrule
+Post $\times$ Any Connection & 0.0094 & 0.0067 & $-$0.0113 & 0.1548 \\
+  & (0.0067) & (0.0069) & (0.0227) & (0.3721) \\
+  &  &  &  & \\
+Pre $\times$ Any Connection & $-$0.0081 & $-$0.0074 & 0.0340** & $-$0.0048 \\
+  & (0.0066) & (0.0073) & (0.0163) & (0.4767) \\
+Pre-trend $F$-test $p$-value & [0.2420] & [0.4004] & [0.0804] & [0.9831] \\
+  &  &  &  & \\
+Observations & 32{,}495 & 32{,}495 & 32{,}704 & 19{,}693 \\
+Establishments & 4{,}084 & 4{,}084 & 4{,}088 & 4{,}142 \\
+  &  &  &  & \\
+\midrule
+\begin{tabular}[c]{@{}l@{}}\textbf{Panel B:} \textit{Intensive Margin}\\ \textit{Continuous; Positive-Conn Sample}\end{tabular} & \begin{tabular}[c]{@{}c@{}}Log\\Wages\end{tabular} & \begin{tabular}[c]{@{}c@{}}Log Hourly\\Wages\end{tabular} & \begin{tabular}[c]{@{}c@{}}Log\\Employment\end{tabular} & \begin{tabular}[c]{@{}c@{}}Clause\\Count\end{tabular} \\
+ & (5) & (6) & (7) & (8) \\
+\midrule
+Post $\times$ Connectivity & 0.0015 & 0.0040 & 0.0057 & $-$0.2106 \\
+  & (0.0025) & (0.0025) & (0.0095) & (0.1431) \\
+  &  &  &  & \\
+Pre $\times$ Connectivity & 0.0055* & 0.0042 & $-$0.0076 & 0.6004** \\
+  & (0.0032) & (0.0032) & (0.0085) & (0.2649) \\
+Pre-trend $F$-test $p$-value & [0.2198] & [0.3789] & [0.6644] & [0.0254] \\
+  &  &  &  & \\
+Observations & 17{,}008 & 17{,}008 & 17{,}120 & 10{,}273 \\
+Establishments & 2{,}137 & 2{,}137 & 2{,}140 & 2{,}197 \\
+  &  &  &  & \\
+\midrule
+\begin{tabular}[c]{@{}l@{}}\textbf{Panel C:} \textit{Saturated Model}\\ \textit{Extensive + Intensive; Full Sample}\end{tabular} & \begin{tabular}[c]{@{}c@{}}Log\\Wages\end{tabular} & \begin{tabular}[c]{@{}c@{}}Log Hourly\\Wages\end{tabular} & \begin{tabular}[c]{@{}c@{}}Log\\Employment\end{tabular} & \begin{tabular}[c]{@{}c@{}}Clause\\Count\end{tabular} \\
+ & (9) & (10) & (11) & (12) \\
+\midrule
+Post $\times$ Any Connection & 0.0047 & $-$0.0004 & $-$0.0135 & 0.1560 \\
+  & (0.0072) & (0.0074) & (0.0248) & (0.3959) \\
+Post $\times$ Connectivity & 0.0044* & 0.0067*** & 0.0022 & $-$0.0012 \\
+  & (0.0024) & (0.0025) & (0.0089) & (0.1246) \\
+  &  &  &  & \\
+Pre $\times$ Any Connection & $-$0.0118* & $-$0.0106 & 0.0409** & $-$0.4079 \\
+  & (0.0068) & (0.0076) & (0.0180) & (0.5197) \\
+Pre $\times$ Connectivity & 0.0036 & 0.0030 & $-$0.0066 & 0.3806* \\
+  & (0.0027) & (0.0027) & (0.0071) & (0.2203) \\
+Pre-trend $F$-test: Any Connection & [0.0856] & [0.1803] & [0.0644] & [0.4164] \\
+Pre-trend $F$-test: Connectivity & [0.3875] & [0.4691] & [0.5765] & [0.0778] \\
+  &  &  &  & \\
+Observations & 32{,}495 & 32{,}495 & 32{,}704 & 19{,}693 \\
+Establishments & 4{,}084 & 4{,}084 & 4{,}088 & 4{,}142 \\
+\bottomrule
+\end{tabular}
+\scriptsize
+\begin{tablenotes}
+\item \textit{Notes:} \textit{Panel~A} replaces continuous connectivity with a binary indicator (any connection vs.\ none) on the full untreated sample. \textit{Panel~B} restricts the sample to establishments with positive connectivity and runs the baseline continuous specification. \textit{Panel~C} includes both the binary indicator and continuous connectivity interacted with post on the full untreated sample (note: Conn\,$\times$\,Pos\,$\equiv$\,Conn, so the triple interaction is omitted). The clause count column uses CBA negotiation periods rather than calendar years; the pre-trend test uses CBA period~1 vs.\ the base period~2. All regressions include establishment fixed effects interacted with two-digit industry, microregion, and negotiation-month indicators by year (or CBA period), and quartile-bin controls for pre-treatment per-worker pairwise worker flows (2007--2011) and pre-treatment establishment size. Standard errors clustered at the establishment level in parentheses. *** p$<$0.01, ** p$<$0.05, * p$<$0.10.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+\clearpage
+
+\begin{table}[]
+\centering
+\caption{Connectivity Margins and Wage Spillovers: Extensive, Intensive, and Saturated Specifications}
+\label{tab:conn_margins_wages}
+\scriptsize
+\begin{threeparttable}
+\begin{tabular}{lcccccc}
+\toprule\toprule
+ & \multicolumn{2}{c}{\textbf{Panel A: Extensive}} & \multicolumn{2}{c}{\textbf{Panel B: Intensive}} & \multicolumn{2}{c}{\textbf{Panel C: Saturated}} \\
+ & \multicolumn{2}{c}{\textit{Binary; Full Sample}} & \multicolumn{2}{c}{\textit{Continuous; Pos-Conn Sample}} & \multicolumn{2}{c}{\textit{Extensive + Intensive; Full Sample}} \\
+\cmidrule(lr){2-3}\cmidrule(lr){4-5}\cmidrule(lr){6-7}
+ & \begin{tabular}[c]{@{}c@{}}Log\\Wages\end{tabular} & \begin{tabular}[c]{@{}c@{}}Log Hourly\\Wages\end{tabular} & \begin{tabular}[c]{@{}c@{}}Log\\Wages\end{tabular} & \begin{tabular}[c]{@{}c@{}}Log Hourly\\Wages\end{tabular} & \begin{tabular}[c]{@{}c@{}}Log\\Wages\end{tabular} & \begin{tabular}[c]{@{}c@{}}Log Hourly\\Wages\end{tabular} \\
+ & (1) & (2) & (3) & (4) & (5) & (6) \\
+\midrule
+Post $\times$ Any Connection & 0.0094 & 0.0067 & -- & -- & 0.0047 & $-$0.0004 \\
+  & (0.0067) & (0.0069) & &  & (0.0072) & (0.0074) \\
+Post $\times$ Connectivity & -- & -- & 0.0015 & 0.0040 & 0.0044* & 0.0067*** \\
+  & &  & (0.0025) & (0.0025) & (0.0024) & (0.0025) \\
+ & & & & & & \\
+Pre $\times$ Any Connection & $-$0.0081 & $-$0.0074 & -- & -- & $-$0.0118* & $-$0.0106 \\
+  & (0.0066) & (0.0073) & &  & (0.0068) & (0.0076) \\
+Pre $\times$ Connectivity & -- & -- & 0.0055* & 0.0042 & 0.0036 & 0.0030 \\
+  & &  & (0.0032) & (0.0032) & (0.0027) & (0.0027) \\
+Pre-trend $F$: Any Connection & [0.2420] & [0.4004] & -- & -- & [0.0856] & [0.1803] \\
+Pre-trend $F$: Connectivity & -- & -- & [0.2198] & [0.3789] & [0.3875] & [0.4691] \\
+ & & & & & & \\
+Observations & 32{,}495 & 32{,}495 & 17{,}008 & 17{,}008 & 32{,}495 & 32{,}495 \\
+Establishments & 4{,}084 & 4{,}084 & 2{,}137 & 2{,}137 & 4{,}084 & 4{,}084 \\
+\bottomrule
+\end{tabular}
+\scriptsize
+\begin{tablenotes}
+\item \textit{Notes:} \textit{Panel~A} replaces continuous connectivity with a binary indicator on the full untreated sample. \textit{Panel~B} restricts to establishments with positive connectivity and runs the baseline continuous specification. \textit{Panel~C} includes both the binary indicator and continuous connectivity interacted with post on the full untreated sample. All regressions include establishment fixed effects interacted with two-digit industry, microregion, and negotiation-month indicators by year (or CBA period), and quartile-bin controls for pre-treatment per-worker pairwise worker flows (2007--2011) and pre-treatment establishment size. Standard errors clustered at the establishment level in parentheses. *** p$<$0.01, ** p$<$0.05, * p$<$0.10.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+\clearpage
+
+\begin{table}[]
+\centering
+\caption{Connectivity Margins and Wage Spillovers of the Ultractivity Reform}
+\label{tab:conn_margins_wages_v2}
+\footnotesize
+\begin{tabular}{lcccccc}
+\toprule\toprule
+ & \multicolumn{2}{c}{\textbf{Panel A: Extensive}} & \multicolumn{2}{c}{\textbf{Panel B: Intensive}} & \multicolumn{2}{c}{\textbf{Panel C: Saturated}} \\
+ & \multicolumn{2}{c}{\textit{Binary; Full Sample}} & \multicolumn{2}{c}{\textit{Continuous; Pos-Conn Sample}} & \multicolumn{2}{c}{\textit{Extensive + Intensive; Full Sample}} \\
+\cmidrule(lr){2-3}\cmidrule(lr){4-5}\cmidrule(lr){6-7}
+ & \begin{tabular}[c]{@{}c@{}}Log\\Wages\end{tabular} & \begin{tabular}[c]{@{}c@{}}Log Hourly\\Wages\end{tabular} & \begin{tabular}[c]{@{}c@{}}Log\\Wages\end{tabular} & \begin{tabular}[c]{@{}c@{}}Log Hourly\\Wages\end{tabular} & \begin{tabular}[c]{@{}c@{}}Log\\Wages\end{tabular} & \begin{tabular}[c]{@{}c@{}}Log Hourly\\Wages\end{tabular} \\
+ & (1) & (2) & (3) & (4) & (5) & (6) \\
+\midrule
+Post $\times$ Any Connection & 0.0094 & 0.0067 & -- & -- & 0.0047 & $-$0.0004 \\
+  & (0.0067) & (0.0069) & &  & (0.0072) & (0.0074) \\
+Post $\times$ Connectivity & -- & -- & 0.0015 & 0.0040 & 0.0044* & 0.0067*** \\
+  & &  & (0.0025) & (0.0025) & (0.0024) & (0.0025) \\
+ & & & & & & \\
+Observations & 32{,}495 & 32{,}495 & 17{,}008 & 17{,}008 & 32{,}495 & 32{,}495 \\
+Establishments & 4{,}084 & 4{,}084 & 2{,}137 & 2{,}137 & 4{,}084 & 4{,}084 \\
+\midrule
+Pre-trend (placebo): Any Connection & $-$0.0081 & $-$0.0074 & -- & -- & $-$0.0118* & $-$0.0106 \\
+  & (0.0066) & (0.0073) & &  & (0.0068) & (0.0076) \\
+Pre-trend (placebo): Connectivity & -- & -- & 0.0055* & 0.0042 & 0.0036 & 0.0030 \\
+  & &  & (0.0032) & (0.0032) & (0.0027) & (0.0027) \\
+\bottomrule\bottomrule
+\end{tabular}
+\begin{minipage}{\linewidth}
+\footnotesize\vspace{4pt}
+\textit{Notes:} \textit{Panel~A} replaces continuous connectivity with a binary indicator (any connection vs.\ none) on the full untreated sample. \textit{Panel~B} restricts to establishments with positive connectivity and runs the baseline continuous specification. \textit{Panel~C} includes both the binary indicator and continuous connectivity interacted with post on the full untreated sample. Pre-trend (placebo) reports coefficients from pooled placebo regressions estimated on pre-treatment data only (2009--2010 relative to 2011). All regressions include establishment fixed effects interacted with two-digit industry, microregion, and negotiation-month indicators by year (or CBA period), and quartile-bin controls for pre-treatment per-worker pairwise worker flows (2007--2011) and pre-treatment establishment size. Standard errors clustered at the establishment level in parentheses. *** p$<$0.01, ** p$<$0.05, * p$<$0.10.
+\end{minipage}
+\end{table}
+
+\clearpage
+
+\end{document}
