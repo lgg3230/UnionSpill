@@ -27,7 +27,8 @@
 capture log close
 local d = subinstr("`c(current_date)'"," ","_",.)
 local t = subinstr("`c(current_time)'",":","",.)
-log using "$logs/conn_margins_`d'_`t'.log", replace text
+cap mkdir "$logs/conn_margins"
+log using "$logs/conn_margins/conn_margins_`d'_`t'.log", replace text
 
 di "Started: `c(current_date)' `c(current_time)'"
 di "Stata version: `c(stata_version)'"
