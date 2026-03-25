@@ -48,7 +48,7 @@ def load_csv(filepath):
     return data
 
 
-def format_value(raw, is_se=False, is_count=False, is_pval=False):
+def format_value(raw, is_se=False, is_count=False, is_pval=False, is_cl_se=False):
     raw = raw.strip()
     if raw in ("--", ""):
         return "--"
@@ -63,6 +63,8 @@ def format_value(raw, is_se=False, is_count=False, is_pval=False):
     stars   = match.group(2) or ""
     if num_str.startswith("-"):
         num_str = r"$-$" + num_str[1:]
+    if is_cl_se:
+        return f"[{num_str}]"
     return f"({num_str})" if is_se else f"{num_str}{stars}"
 
 
@@ -85,12 +87,21 @@ _CONTROLS = (
     r"*** p$<$0.01, ** p$<$0.05, * p$<$0.10."
 )
 
-def make_notes(include_cba=False):
+def make_notes(include_cba=False, include_panelD=False):
     cba = (
         r"The clause count column uses CBA negotiation periods rather than "
         r"calendar years; the pre-trend test uses CBA period~1 vs.\ the base "
         r"period~2. "
     ) if include_cba else ""
+    panelD = (
+        r"\textit{Panel~D} replicates Panel~B but residualizes the outcome on "
+        r"the full untreated sample before running the second-step regression "
+        r"on positive-connectivity establishments. "
+        r"Standard errors in parentheses are bootstrapped (B\,=\,200 "
+        r"establishment-level resamples) to account for two-step estimation "
+        r"uncertainty; naive cluster standard errors are shown in brackets. "
+        r"Stars follow the bootstrap standard errors. "
+    ) if include_panelD else ""
     return (
         r"\textit{Panel~A} replaces continuous connectivity with a binary "
         r"indicator (any connection vs.\ none) on the full untreated sample. "
@@ -100,6 +111,7 @@ def make_notes(include_cba=False):
         r"connectivity interacted with post on the full untreated sample "
         r"(note: Conn\,$\times$\,Pos\,$\equiv$\,Conn, so the triple interaction "
         r"is omitted). " +
+        panelD +
         cba +
         _CONTROLS
     )
@@ -286,9 +298,60 @@ def panel_C_section(data, outcomes, col_headers):
     return lines
 
 
+# ── Panel D: full-sample residualization + bootstrap SE ──────────────────────
+
+def panel_D_section(data, outcomes, col_headers, offset):
+    n = len(outcomes)
+    lines = []
+
+    lines.append(blank_row(n))
+    lines.append(r"\midrule")
+    col_hdrs = " & ".join(hdr(h) for h in col_headers)
+    lines.append(
+        panel_cell(r"\textbf{Panel D:} \textit{Full-Sample Residualization}",
+                   r"\textit{Continuous; Positive-Conn Sample; Bootstrap SE}") +
+        " & " + col_hdrs + r" \\"
+    )
+    nums = " & ".join(f"({i+1+offset})" for i in range(n))
+    lines.append(" & " + nums + r" \\")
+    lines.append(r"\midrule")
+
+    # Post coefficient + bootstrap SE (parentheses) + cluster SE (brackets)
+    row = r"Post $\times$ Connectivity" + "".join(
+        " & " + get_val(data, o, "main") for o in outcomes)
+    lines.append(row + r" \\")
+    row = "".join(" & " + get_val(data, o, "main_se", is_se=True) for o in outcomes)
+    lines.append(" " + row + r" \\")
+    row = "".join(" & " + get_val(data, o, "main_se_cl", is_cl_se=True) for o in outcomes)
+    lines.append(" " + row + r" \\")
+    lines.append(blank_row(n))
+
+    # Pre coefficient + bootstrap SE + cluster SE
+    row = r"Pre $\times$ Connectivity" + "".join(
+        " & " + get_val(data, o, "pre") for o in outcomes)
+    lines.append(row + r" \\")
+    row = "".join(" & " + get_val(data, o, "pre_se", is_se=True) for o in outcomes)
+    lines.append(" " + row + r" \\")
+    row = "".join(" & " + get_val(data, o, "pre_se_cl", is_cl_se=True) for o in outcomes)
+    lines.append(" " + row + r" \\")
+    row = r"Pre-trend $F$-test $p$-value" + "".join(
+        " & " + get_val(data, o, "pre_pval", is_pval=True) for o in outcomes)
+    lines.append(row + r" \\")
+    lines.append(blank_row(n))
+
+    row = "Observations" + "".join(
+        " & " + get_val(data, o, "n_obs", is_count=True) for o in outcomes)
+    lines.append(row + r" \\")
+    row = "Establishments" + "".join(
+        " & " + get_val(data, o, "n_estab", is_count=True) for o in outcomes)
+    lines.append(row + r" \\")
+
+    return lines
+
+
 # ── Full table builder ────────────────────────────────────────────────────────
 
-def make_table(caption, label, outcomes, col_headers, ex1, ex2, ex3, notes):
+def make_table(caption, label, outcomes, col_headers, ex1, ex2, ex3, notes, ex4=None):
     n        = len(outcomes)
     col_spec = "l" + "c" * n
 
@@ -296,6 +359,8 @@ def make_table(caption, label, outcomes, col_headers, ex1, ex2, ex3, notes):
     lines += panel_A_section(ex1, outcomes, col_headers)
     lines += panel_B_section(ex2, outcomes, col_headers)
     lines += panel_C_section(ex3, outcomes, col_headers)
+    if ex4 is not None:
+        lines += panel_D_section(ex4, outcomes, col_headers, offset=3 * n)
     lines += table_postamble(notes)
 
     return "\n".join(lines)
@@ -649,23 +714,27 @@ def main():
     ex1_file = tables_dir / "results_conn_margins_ex1.csv"
     ex2_file = tables_dir / "results_conn_margins_ex2.csv"
     ex3_file = tables_dir / "results_conn_margins_ex3.csv"
+    ex4_file = tables_dir / "results_conn_margins_ex4.csv"
 
     ex1 = load_csv(ex1_file)
     ex2 = load_csv(ex2_file)
     ex3 = load_csv(ex3_file)
+    ex4 = load_csv(ex4_file)
 
     outcomes    = ["lr_remdezr_w", "lr_remdezr_h_w", "l_firm_emp", "numb_clauses"]
     col_headers = [
         r"Log\\Wages", r"Log Hourly\\Wages", r"Log\\Employment", r"Clause\\Count",
     ]
 
+    has_ex4 = bool(ex4)
     table = make_table(
         caption=r"Connectivity Margins and Spillover Effects of the Ultractivity Reform",
         label="tab:conn_margins",
         outcomes=outcomes,
         col_headers=col_headers,
         ex1=ex1, ex2=ex2, ex3=ex3,
-        notes=make_notes(include_cba=True),
+        notes=make_notes(include_cba=True, include_panelD=has_ex4),
+        ex4=ex4 if has_ex4 else None,
     )
 
     doc = []
@@ -722,7 +791,7 @@ def main():
         f.write(content)
 
     print(f"Generated {output_file}")
-    print("  Table 1: conn_margins (Panels A/B/C stacked × 4 outcomes)")
+    print("  Table 1: conn_margins (Panels A/B/C[/D] stacked × 4 outcomes)")
     print("  Table 2: conn_margins_wages (Panels A/B/C side-by-side × 2 wage outcomes)")
     print("  Table 3: conn_margins_wages_v2 (side-by-side, no F-tests, placebo at bottom)")
 

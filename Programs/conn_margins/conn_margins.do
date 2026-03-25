@@ -256,7 +256,7 @@ local s_spill_pos "`s_spill' & totaltreat_pw_n > 0"
 
 * ── INITIALIZE OUTPUT CSV FILES ──────────────────────────────────────────────
 
-foreach ex in ex1 ex2 ex3 {
+foreach ex in ex1 ex2 ex3 ex4 {
 	capture erase "$tables/conn_margins/results_conn_margins_`ex'.csv"
 	tempname fh
 	file open `fh' using "$tables/conn_margins/results_conn_margins_`ex'.csv", write replace
@@ -699,6 +699,225 @@ if _rc == 0 {
 	file close `fh'
 
 	di as result "  Ex3 numb_clauses done."
+}
+
+*===============================================================================
+* EXERCISE 4: FULL-SAMPLE RESIDUALIZATION + INTENSIVE MARGIN (ROBUSTNESS)
+* Step 1: Residualize outcome on the FULL untreated sample, absorbing the same
+*         FEs (including pre-treatment bin controls) as the main spec. FE
+*         estimates are thus identified from all untreated firms, not only from
+*         the positive-connectivity subsample.
+* Step 2: Regress the residualized outcome on connectivity × treat_year in the
+*         positive-connectivity subsample.
+*
+* Standard errors are obtained by bootstrapping the full two-step procedure
+* (B=200 replications, resampling establishments with replacement). This
+* corrects for the generated-regressors problem: naive cluster SEs from step 2
+* ignore sampling variance in the step-1 FE estimates, creating a small
+* downward bias (primarily from establishment FEs with T ≈ 8; industry×year
+* and other high-level FEs contribute negligibly). Point estimates are
+* consistent regardless.
+*
+* Reduce `local B' for exploratory runs; increase to 500+ for publication.
+*===============================================================================
+
+local B 200   // bootstrap replications
+
+di _newline(2)
+di as result "-----------------------------------------------------------------------"
+di as result "EXERCISE 4: Full-sample residualization + intensive margin (bootstrap SE)"
+di as result "-----------------------------------------------------------------------"
+
+foreach outcome in $cm_outcomes {
+
+	* FEs to absorb in step 1 (same set as main spec)
+	local absorb_e "`base_fe' ib0.`outcome'_pre4#i.year ib0.l_firm_emp_pre4#i.year `extra_year'"
+
+	* ── STEP 1: Residualize on full untreated sample ─────────────────────────
+	di as text "  Ex4: `outcome' — step 1 residualize"
+	cap drop e_`outcome'
+	reghdfe `outcome' if `s_spill', absorb(`absorb_e') residuals(e_`outcome')
+
+	* ── STEP 2 (point estimates): regress residuals on positive-conn sample ───
+	* Post-treatment
+	qui regress e_`outcome' c.`conn'##i.treat_year if `s_spill_pos', ///
+		vce(cluster identificad)
+	local b_post     = _b[1.treat_year#c.`conn']
+	local se_post_cl = _se[1.treat_year#c.`conn']
+	local n_obs      = e(N)
+	local n_estab    = e(N_clust)
+
+	* Pre-treatment placebo
+	qui regress e_`outcome' c.`conn'##i.placebo_year ///
+		if `s_spill_pos' & year <= 2011, vce(cluster identificad)
+	local b_pre    = _b[1.placebo_year#c.`conn']
+	local se_pre_cl = _se[1.placebo_year#c.`conn']
+
+	* Event-study F-test (cluster SE acceptable — correction is second-order)
+	qui regress e_`outcome' c.`conn'##ib2011.year if `s_spill_pos', ///
+		vce(cluster identificad)
+	testparm c.`conn'#i(2009 2010).year
+	local pre_ftest_pval = r(p)
+
+	* ── BOOTSTRAP: resample establishments, re-run full two-step ─────────────
+	di as text "  Ex4: `outcome' — bootstrap (B=`B')"
+	matrix bs_post = J(`B', 1, .)
+	matrix bs_pre  = J(`B', 1, .)
+	local b_ok = 0
+
+	forvalues b = 1/`B' {
+		preserve
+		qui bsample, cluster(identificad)
+
+		cap drop _e_bs
+		qui cap reghdfe `outcome' if `s_spill', absorb(`absorb_e') residuals(_e_bs)
+		if !_rc {
+			qui cap regress _e_bs c.`conn'##i.treat_year if `s_spill_pos'
+			if !_rc matrix bs_post[`b', 1] = _b[1.treat_year#c.`conn']
+
+			qui cap regress _e_bs c.`conn'##i.placebo_year ///
+				if `s_spill_pos' & year <= 2011
+			if !_rc matrix bs_pre[`b', 1] = _b[1.placebo_year#c.`conn']
+
+			local b_ok = `b_ok' + 1
+		}
+		restore
+	}
+	di as text "  Bootstrap: `b_ok'/`B' successful iterations"
+
+	* Bootstrap SE = std dev of bootstrap coefficient distribution
+	mata: st_numscalar("_bs_se_post", sqrt(variance( ///
+		select(st_matrix("bs_post"), rownonmissing(st_matrix("bs_post")) :> 0))[1,1]))
+	mata: st_numscalar("_bs_se_pre",  sqrt(variance( ///
+		select(st_matrix("bs_pre"),  rownonmissing(st_matrix("bs_pre"))  :> 0))[1,1]))
+	local bs_se_post_v = _bs_se_post
+	local bs_se_pre_v  = _bs_se_pre
+
+	* Stars based on bootstrap SE (z-test)
+	local p_post_bs = 2*(1-normal(abs(`b_post'/`bs_se_post_v')))
+	local p_pre_bs  = 2*(1-normal(abs(`b_pre'/`bs_se_pre_v')))
+
+	local stars_post ""
+	if `p_post_bs' < 0.01                               local stars_post "***"
+	else if (`p_post_bs' < 0.05 & `p_post_bs' > 0.01)  local stars_post "**"
+	else if (`p_post_bs' < 0.10 & `p_post_bs' > 0.05)  local stars_post "*"
+
+	local stars_pre ""
+	if `p_pre_bs' < 0.01                               local stars_pre "***"
+	else if (`p_pre_bs' < 0.05 & `p_pre_bs' > 0.01)   local stars_pre "**"
+	else if (`p_pre_bs' < 0.10 & `p_pre_bs' > 0.05)   local stars_pre "*"
+
+	* Write CSV — bootstrap SEs in main_se/pre_se; cluster SEs in _cl rows
+	tempname fh
+	file open `fh' using "$tables/conn_margins/results_conn_margins_ex4.csv", write append
+	file write `fh' `""`spec'";"ex4";"`outcome'";"main";"'      %9.4f (`b_post')       `"`stars_post'""' _n
+	file write `fh' `""`spec'";"ex4";"`outcome'";"main_se";"'   %9.4f (`bs_se_post_v') `"""'             _n
+	file write `fh' `""`spec'";"ex4";"`outcome'";"main_se_cl";"' %9.4f (`se_post_cl')  `"""'             _n
+	file write `fh' `""`spec'";"ex4";"`outcome'";"pre";"'       %9.4f (`b_pre')        `"`stars_pre'""'  _n
+	file write `fh' `""`spec'";"ex4";"`outcome'";"pre_se";"'    %9.4f (`bs_se_pre_v')  `"""'             _n
+	file write `fh' `""`spec'";"ex4";"`outcome'";"pre_se_cl";"' %9.4f (`se_pre_cl')    `"""'             _n
+	file write `fh' `""`spec'";"ex4";"`outcome'";"pre_pval";"'  %9.4f (`pre_ftest_pval') `"""'           _n
+	file write `fh' `""`spec'";"ex4";"`outcome'";"n_obs";"'     %12.0fc (`n_obs')      `"""'             _n
+	file write `fh' `""`spec'";"ex4";"`outcome'";"n_estab";"'   %12.0fc (`n_estab')    `"""'             _n
+	file close `fh'
+
+	di as result "  Ex4 `outcome' done."
+}
+
+* ── numb_clauses (CBA-period structure) ──────────────────────────────────────
+capture confirm variable numb_clauses
+if _rc == 0 {
+
+	di as text "  Ex4: numb_clauses — step 1 residualize"
+
+	local absorb_cba_e "`base_fe_cba' ib0.numb_clauses_pre4#i.cba_period ib0.l_firm_emp_pre4#i.cba_period `extra_cba'"
+
+	* Step 1
+	cap drop e_numb_clauses
+	reghdfe numb_clauses if `s_spill' & !missing(cba_period), ///
+		absorb(`absorb_cba_e') residuals(e_numb_clauses)
+
+	* Step 2 point estimates
+	qui regress e_numb_clauses c.`conn'##post_treat_cba ///
+		if `s_spill_pos' & !missing(cba_period), vce(cluster identificad)
+	local b_post     = _b[1.post_treat_cba#c.`conn']
+	local se_post_cl = _se[1.post_treat_cba#c.`conn']
+	local n_obs      = e(N)
+	local n_estab    = e(N_clust)
+
+	qui regress e_numb_clauses c.`conn'##pre_treat_cba ///
+		if `s_spill_pos' & !missing(cba_period) & cba_period <= 2, ///
+		vce(cluster identificad)
+	local b_pre     = _b[1.pre_treat_cba#c.`conn']
+	local se_pre_cl = _se[1.pre_treat_cba#c.`conn']
+
+	qui regress e_numb_clauses c.`conn'##ib2.cba_period ///
+		if `s_spill_pos' & !missing(cba_period), vce(cluster identificad)
+	testparm c.`conn'#1.cba_period
+	local pre_ftest_pval = r(p)
+
+	* Bootstrap
+	di as text "  Ex4: numb_clauses — bootstrap (B=`B')"
+	matrix bs_post = J(`B', 1, .)
+	matrix bs_pre  = J(`B', 1, .)
+	local b_ok = 0
+
+	forvalues b = 1/`B' {
+		preserve
+		qui bsample, cluster(identificad)
+
+		cap drop _e_bs
+		qui cap reghdfe numb_clauses if `s_spill' & !missing(cba_period), ///
+			absorb(`absorb_cba_e') residuals(_e_bs)
+		if !_rc {
+			qui cap regress _e_bs c.`conn'##post_treat_cba ///
+				if `s_spill_pos' & !missing(cba_period)
+			if !_rc matrix bs_post[`b', 1] = _b[1.post_treat_cba#c.`conn']
+
+			qui cap regress _e_bs c.`conn'##pre_treat_cba ///
+				if `s_spill_pos' & !missing(cba_period) & cba_period <= 2
+			if !_rc matrix bs_pre[`b', 1] = _b[1.pre_treat_cba#c.`conn']
+
+			local b_ok = `b_ok' + 1
+		}
+		restore
+	}
+	di as text "  Bootstrap: `b_ok'/`B' successful iterations"
+
+	mata: st_numscalar("_bs_se_post", sqrt(variance( ///
+		select(st_matrix("bs_post"), rownonmissing(st_matrix("bs_post")) :> 0))[1,1]))
+	mata: st_numscalar("_bs_se_pre",  sqrt(variance( ///
+		select(st_matrix("bs_pre"),  rownonmissing(st_matrix("bs_pre"))  :> 0))[1,1]))
+	local bs_se_post_v = _bs_se_post
+	local bs_se_pre_v  = _bs_se_pre
+
+	local p_post_bs = 2*(1-normal(abs(`b_post'/`bs_se_post_v')))
+	local p_pre_bs  = 2*(1-normal(abs(`b_pre'/`bs_se_pre_v')))
+
+	local stars_post ""
+	if `p_post_bs' < 0.01                               local stars_post "***"
+	else if (`p_post_bs' < 0.05 & `p_post_bs' > 0.01)  local stars_post "**"
+	else if (`p_post_bs' < 0.10 & `p_post_bs' > 0.05)  local stars_post "*"
+
+	local stars_pre ""
+	if `p_pre_bs' < 0.01                               local stars_pre "***"
+	else if (`p_pre_bs' < 0.05 & `p_pre_bs' > 0.01)   local stars_pre "**"
+	else if (`p_pre_bs' < 0.10 & `p_pre_bs' > 0.05)   local stars_pre "*"
+
+	tempname fh
+	file open `fh' using "$tables/conn_margins/results_conn_margins_ex4.csv", write append
+	file write `fh' `""`spec'";"ex4";"numb_clauses";"main";"'      %9.4f (`b_post')       `"`stars_post'""' _n
+	file write `fh' `""`spec'";"ex4";"numb_clauses";"main_se";"'   %9.4f (`bs_se_post_v') `"""'             _n
+	file write `fh' `""`spec'";"ex4";"numb_clauses";"main_se_cl";"' %9.4f (`se_post_cl')  `"""'             _n
+	file write `fh' `""`spec'";"ex4";"numb_clauses";"pre";"'       %9.4f (`b_pre')        `"`stars_pre'""'  _n
+	file write `fh' `""`spec'";"ex4";"numb_clauses";"pre_se";"'    %9.4f (`bs_se_pre_v')  `"""'             _n
+	file write `fh' `""`spec'";"ex4";"numb_clauses";"pre_se_cl";"' %9.4f (`se_pre_cl')    `"""'             _n
+	file write `fh' `""`spec'";"ex4";"numb_clauses";"pre_pval";"'  %9.4f (`pre_ftest_pval') `"""'           _n
+	file write `fh' `""`spec'";"ex4";"numb_clauses";"n_obs";"'     %12.0fc (`n_obs')      `"""'             _n
+	file write `fh' `""`spec'";"ex4";"numb_clauses";"n_estab";"'   %12.0fc (`n_estab')    `"""'             _n
+	file close `fh'
+
+	di as result "  Ex4 numb_clauses done."
 }
 
 di _newline(2)
