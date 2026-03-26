@@ -144,10 +144,27 @@ quietly {
 	drop e_post_o
 }
 
+* ── Firm-level averages of raw log wages ─────────────────────────────────────
+cap drop raw_pre_o
+cap drop raw_pre
+cap drop raw_post_o
+cap drop raw_post
+quietly {
+	bys identificad: egen raw_pre_o = mean(lr_remdezr_w) ///
+		if inrange(year, 2009, 2011) & `s_spill'
+	bys identificad: egen raw_pre = min(raw_pre_o)
+	drop raw_pre_o
+
+	bys identificad: egen raw_post_o = mean(lr_remdezr_w) ///
+		if inrange(year, 2012, 2016) & `s_spill'
+	bys identificad: egen raw_post = min(raw_post_o)
+	drop raw_post_o
+}
+
 * ── Collapse to one row per firm ──────────────────────────────────────────────
 keep if `s_spill'
 bys identificad (year): keep if _n == 1
-keep identificad conn_firm e_pre e_post
+keep identificad conn_firm e_pre e_post raw_pre raw_post
 
 drop if missing(conn_firm) | missing(e_pre) | missing(e_post)
 
@@ -156,10 +173,12 @@ di as result "Firms in scatter data: " _N
 export delimited "$tables/conn_margins/scatter_resid_wages.csv", replace
 di as result "Exported → Tables/conn_margins/scatter_resid_wages.csv"
 
-* ── Auto-run Python plot ──────────────────────────────────────────────────────
+* ── Auto-run Python plots ─────────────────────────────────────────────────────
 if "`c(username)'" == "lgg3230" {
 	shell ~/.conda/envs/venv_python312/bin/python "$programs/conn_margins/conn_margins_scatter.py"
+	shell ~/.conda/envs/venv_python312/bin/python "$programs/conn_margins/conn_margins_scatter_raw.py"
 }
 else {
 	shell python3 "$programs/conn_margins/conn_margins_scatter.py"
+	shell python3 "$programs/conn_margins/conn_margins_scatter_raw.py"
 }
