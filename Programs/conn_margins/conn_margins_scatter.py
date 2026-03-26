@@ -2,7 +2,7 @@
 """
 Binned scatter: residualized log wages vs. normalized connectivity.
 Two panels: pre-treatment (2009-2011) and post-treatment (2012-2016).
-100 equal-frequency bins; fitted OLS line.
+200 equal-frequency bins; fitted OLS line.
 """
 
 import numpy as np
@@ -19,9 +19,11 @@ graphs_dir.mkdir(parents=True, exist_ok=True)
 
 df = pd.read_csv(tables_dir / "scatter_resid_wages.csv")
 df = df.dropna(subset=["conn_firm", "e_pre", "e_post"])
-print(f"Firms loaded: {len(df):,}")
+p99 = df["conn_firm"].quantile(0.99)
+df = df[df["conn_firm"] <= p99]
+print(f"Firms loaded (trimmed at p99={p99:.4f}): {len(df):,}")
 
-N_BINS = 100
+N_BINS = 200
 
 
 # ── Helpers ───────────────────────────────────────────────────────────────────

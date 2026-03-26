@@ -19,7 +19,9 @@ graphs_dir.mkdir(parents=True, exist_ok=True)
 
 df = pd.read_csv(tables_dir / "scatter_resid_wages.csv")
 df = df.dropna(subset=["conn_firm", "raw_pre", "raw_post"])
-print(f"Firms loaded: {len(df):,}")
+p99 = df["conn_firm"].quantile(0.99)
+df = df[df["conn_firm"] <= p99]
+print(f"Firms loaded (trimmed at p99={p99:.4f}): {len(df):,}")
 
 N_BINS = 200
 
