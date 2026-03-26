@@ -80,11 +80,27 @@ Pre-trend $F$-test: Connectivity & [0.3875] & [0.4691] & [0.5765] & [0.0778] \\
   &  &  &  & \\
 Observations & 32{,}495 & 32{,}495 & 32{,}704 & 19{,}693 \\
 Establishments & 4{,}084 & 4{,}084 & 4{,}088 & 4{,}142 \\
+  &  &  &  & \\
+\midrule
+\begin{tabular}[c]{@{}l@{}}\textbf{Panel D:} \textit{Full-Sample Residualization}\\ \textit{Continuous; Positive-Conn Sample; Bootstrap SE}\end{tabular} & \begin{tabular}[c]{@{}c@{}}Log\\Wages\end{tabular} & \begin{tabular}[c]{@{}c@{}}Log Hourly\\Wages\end{tabular} & \begin{tabular}[c]{@{}c@{}}Log\\Employment\end{tabular} & \begin{tabular}[c]{@{}c@{}}Clause\\Count\end{tabular} \\
+ & (13) & (14) & (15) & (16) \\
+\midrule
+Post $\times$ Connectivity & 0.0032** & 0.0046*** & 0.0012 & 0.0024 \\
+  & (0.0015) & (0.0015) & (0.0058) & (0.0721) \\
+  & [0.0017] & [0.0018] & [0.0072] & [0.0873] \\
+  &  &  &  & \\
+Pre $\times$ Connectivity & 0.0021 & 0.0018 & $-$0.0035 & 0.2572* \\
+  & (0.0016) & (0.0017) & (0.0046) & (0.1345) \\
+  & [0.0019] & [0.0020] & [0.0051] & [0.1496] \\
+Pre-trend $F$-test $p$-value & [0.5238] & [0.6338] & [0.6913] & [0.0858] \\
+  &  &  &  & \\
+Observations & 17{,}518 & 17{,}518 & 17{,}632 & 10{,}555 \\
+Establishments & 2{,}201 & 2{,}201 & 2{,}204 & 2{,}230 \\
 \bottomrule
 \end{tabular}
 \scriptsize
 \begin{tablenotes}
-\item \textit{Notes:} \textit{Panel~A} replaces continuous connectivity with a binary indicator (any connection vs.\ none) on the full untreated sample. \textit{Panel~B} restricts the sample to establishments with positive connectivity and runs the baseline continuous specification. \textit{Panel~C} includes both the binary indicator and continuous connectivity interacted with post on the full untreated sample (note: Conn\,$\times$\,Pos\,$\equiv$\,Conn, so the triple interaction is omitted). The clause count column uses CBA negotiation periods rather than calendar years; the pre-trend test uses CBA period~1 vs.\ the base period~2. All regressions include establishment fixed effects interacted with two-digit industry, microregion, and negotiation-month indicators by year (or CBA period), and quartile-bin controls for pre-treatment per-worker pairwise worker flows (2007--2011) and pre-treatment establishment size. Standard errors clustered at the establishment level in parentheses. *** p$<$0.01, ** p$<$0.05, * p$<$0.10.
+\item \textit{Notes:} \textit{Panel~A} replaces continuous connectivity with a binary indicator (any connection vs.\ none) on the full untreated sample. \textit{Panel~B} restricts the sample to establishments with positive connectivity and runs the baseline continuous specification. \textit{Panel~C} includes both the binary indicator and continuous connectivity interacted with post on the full untreated sample (note: Conn\,$\times$\,Pos\,$\equiv$\,Conn, so the triple interaction is omitted). \textit{Panel~D} replicates Panel~B but residualizes the outcome on the full untreated sample before running the second-step regression on positive-connectivity establishments. Standard errors in parentheses are bootstrapped (B\,=\,200 establishment-level resamples) to account for two-step estimation uncertainty; naive cluster standard errors are shown in brackets. Stars follow the bootstrap standard errors. The clause count column uses CBA negotiation periods rather than calendar years; the pre-trend test uses CBA period~1 vs.\ the base period~2. All regressions include establishment fixed effects interacted with two-digit industry, microregion, and negotiation-month indicators by year (or CBA period), and quartile-bin controls for pre-treatment per-worker pairwise worker flows (2007--2011) and pre-treatment establishment size. Standard errors clustered at the establishment level in parentheses. *** p$<$0.01, ** p$<$0.05, * p$<$0.10.
 \end{tablenotes}
 \end{threeparttable}
 \end{table}
