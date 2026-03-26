@@ -62,6 +62,7 @@ def get(d, key, **kwargs):
 data = load_csv(tables_dir / "results_spill_trim_robustness.csv")
 base = data.get("baseline", {})
 trim = data.get("trim", {})
+wins = data.get("winsorized", {})
 
 # ── Build table ───────────────────────────────────────────────────────────────
 
@@ -80,11 +81,11 @@ lines.append(r"\centering" + "\n")
 lines.append(r"\caption{Robustness: dropping top-1\% connectivity firms --- Main spillover regression}" + "\n")
 lines.append(r"\label{tab:spill_trim}" + "\n")
 lines.append(r"\begin{threeparttable}" + "\n")
-lines.append(r"\begin{tabular}{lcc}" + "\n")
+lines.append(r"\begin{tabular}{lccc}" + "\n")
 lines.append(r"\toprule" + "\n")
 
 # Headers
-lines.append(row("", "Baseline", "Trimmed (p99)"))
+lines.append(row("", "Baseline", "Trimmed (p99)", "Winsorized (p99)"))
 lines.append(r"\midrule" + "\n")
 
 # Post coefficient
@@ -92,11 +93,13 @@ lines.append(row(
     r"Post $\times$ Connectivity",
     get(base, "main"),
     get(trim, "main"),
+    get(wins, "main"),
 ))
 lines.append(row(
     "",
     get(base, "main_se", is_se=True),
     get(trim, "main_se", is_se=True),
+    get(wins, "main_se", is_se=True),
 ))
 
 lines.append(r"\\[-4pt]" + "\n")
@@ -106,11 +109,13 @@ lines.append(row(
     r"Pre-trend",
     get(base, "pre"),
     get(trim, "pre"),
+    get(wins, "pre"),
 ))
 lines.append(row(
     "",
     get(base, "pre_se", is_se=True),
     get(trim, "pre_se", is_se=True),
+    get(wins, "pre_se", is_se=True),
 ))
 
 lines.append(r"\midrule" + "\n")
@@ -120,6 +125,7 @@ lines.append(row(
     r"Pre-trend $p$-value",
     get(base, "pre_pval", is_pval=True),
     get(trim, "pre_pval", is_pval=True),
+    get(wins, "pre_pval", is_pval=True),
 ))
 
 lines.append(r"\midrule" + "\n")
@@ -129,11 +135,13 @@ lines.append(row(
     "Observations",
     get(base, "n_obs", is_count=True),
     get(trim, "n_obs", is_count=True),
+    get(wins, "n_obs", is_count=True),
 ))
 lines.append(row(
     "Establishments",
     get(base, "n_estab", is_count=True),
     get(trim, "n_estab", is_count=True),
+    get(wins, "n_estab", is_count=True),
 ))
 
 lines.append(r"\bottomrule" + "\n")
@@ -142,9 +150,12 @@ lines.append(r"\end{tabular}" + "\n")
 lines.append(r"\begin{tablenotes}[flushleft]\footnotesize" + "\n")
 lines.append(
     r"\item \textit{Notes:} Outcome is log December wages (lr\_remdezr\_w). "
-    r"Both columns use the full untreated sample. "
-    r"The trimmed column drops the 41 establishments (top 1\%) "
-    r"with normalized connectivity $\geq 4.44\times$ the 90th percentile. "
+    r"All columns use the full untreated sample and the same fixed effects. "
+    r"\textit{Trimmed} drops the 41 establishments ($\approx$1\%) "
+    r"with normalized connectivity $\geq 5.26\times$ the 90th percentile "
+    r"(predominantly tiny branches of multi-establishment firms). "
+    r"\textit{Winsorized} retains all establishments but caps normalized "
+    r"connectivity at the same p99 threshold. "
     r"The specification includes establishment, industry$\times$year, "
     r"bargaining-month$\times$year, and microregion$\times$year fixed effects, "
     r"plus 4-bin pre-treatment controls for wages, employment, and total flows, "

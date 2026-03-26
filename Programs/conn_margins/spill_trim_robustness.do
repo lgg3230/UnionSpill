@@ -96,6 +96,12 @@ bys identificad: egen trim_ok_min = min(trim_ok)
 drop trim_ok
 rename trim_ok_min trim_ok
 
+* ── Winsorized connectivity (cap at p99, keep all firms) ─────────────────────
+
+cap drop totaltreat_pw_norm_w
+gen double totaltreat_pw_norm_w = min(totaltreat_pw_norm, `p99_conn')
+label var totaltreat_pw_norm_w "Connectivity winsorized at p99 of s_spill sample"
+
 * ── Pre-treatment means & 4-bin controls ─────────────────────────────────────
 
 local outcome "lr_remdezr_w"
@@ -161,25 +167,31 @@ file close `fh'
 
 * ── Helper macro for writing results ─────────────────────────────────────────
 
-* (run twice: once for "baseline", once for "trim")
+* (run three times: baseline, trimmed, winsorized)
 
-foreach sample_label in baseline trim {
+foreach sample_label in baseline trim winsorized {
 
 	if "`sample_label'" == "baseline" {
-		local s_use "`s_spill'"
+		local s_use  "`s_spill'"
+		local conn_use "`conn'"
+	}
+	else if "`sample_label'" == "trim" {
+		local s_use  "`s_spill' & trim_ok == 1"
+		local conn_use "`conn'"
 	}
 	else {
-		local s_use "`s_spill' & trim_ok == 1"
+		local s_use  "`s_spill'"
+		local conn_use "totaltreat_pw_norm_w"
 	}
 
-	di as result "--- `sample_label' sample ---"
+	di as result "--- `sample_label' ---"
 
 	* Post-treatment
-	reghdfe `outcome' c.`conn'##i.treat_year if `s_use', ///
+	reghdfe `outcome' c.`conn_use'##i.treat_year if `s_use', ///
 		absorb(`absorb') vce(cluster identificad)
 
-	local b_post  = _b[1.treat_year#c.`conn']
-	local se_post = _se[1.treat_year#c.`conn']
+	local b_post  = _b[1.treat_year#c.`conn_use']
+	local se_post = _se[1.treat_year#c.`conn_use']
 	local p_post  = 2*ttail(e(df_r), abs(`b_post'/`se_post'))
 	local n_obs   = e(N)
 	local n_estab = e(N_clust)
@@ -190,11 +202,11 @@ foreach sample_label in baseline trim {
 	else if (`p_post' < 0.10 & `p_post' > 0.05) local stars_post "*"
 
 	* Pre-treatment placebo
-	reghdfe `outcome' c.`conn'##i.placebo_year if `s_use' & year <= 2011, ///
+	reghdfe `outcome' c.`conn_use'##i.placebo_year if `s_use' & year <= 2011, ///
 		absorb(`absorb') vce(cluster identificad)
 
-	local b_pre  = _b[1.placebo_year#c.`conn']
-	local se_pre = _se[1.placebo_year#c.`conn']
+	local b_pre  = _b[1.placebo_year#c.`conn_use']
+	local se_pre = _se[1.placebo_year#c.`conn_use']
 	local p_pre  = 2*ttail(e(df_r), abs(`b_pre'/`se_pre'))
 
 	local stars_pre ""
@@ -203,9 +215,9 @@ foreach sample_label in baseline trim {
 	else if (`p_pre' < 0.10 & `p_pre' > 0.05)  local stars_pre "*"
 
 	* Event study F-test
-	reghdfe `outcome' c.`conn'##ib2011.year if `s_use', ///
+	reghdfe `outcome' c.`conn_use'##ib2011.year if `s_use', ///
 		absorb(`absorb') vce(cluster identificad)
-	testparm c.`conn'#i(2009 2010).year
+	testparm c.`conn_use'#i(2009 2010).year
 	local pre_ftest_pval = r(p)
 
 	* Write
