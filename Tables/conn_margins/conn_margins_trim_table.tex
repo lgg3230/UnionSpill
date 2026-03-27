@@ -1,0 +1,41 @@
+\documentclass[12pt]{article}
+\usepackage{booktabs,threeparttable,float,geometry}
+\geometry{margin=1in}
+\begin{document}
+
+\begin{table}[H]
+\centering
+\caption{Robustness: dropping top-1\% connectivity firms --- Log wages (lr\_remdezr\_w)}
+\label{tab:trim_robustness}
+\begin{threeparttable}
+\begin{tabular}{lcccccc}
+\toprule
+ & \multicolumn{2}{c}{Panel A: Extensive} & \multicolumn{2}{c}{Panel B: Intensive} & \multicolumn{2}{c}{Panel C: Saturated} \\
+\cmidrule(lr){2-3}\cmidrule(lr){4-5}\cmidrule(lr){6-7}
+ & Baseline & Trimmed & Baseline & Trimmed & Baseline & Trimmed \\
+\midrule
+Post $\times$ Connectivity & 0.0094 & 0.0079 & 0.0015 & 0.0003 & 0.0047 & 0.0059 \\
+ & (0.0067) & (0.0068) & (0.0025) & (0.0057) & (0.0072) & (0.0078) \\
+\\[-4pt]
+Post $\times$ Conn.\ (continuous) &  &  &  &  & 0.0044* & 0.0025 \\
+ &  &  &  &  & (0.0024) & (0.0050) \\
+\midrule
+Pre-trend & -0.0081 & -0.0089 & 0.0055* & 0.0026 & -0.0118* & -0.0129* \\
+ & (0.0066) & (0.0066) & (0.0032) & (0.0060) & (0.0068) & (0.0073) \\
+\\[-4pt]
+Pre-trend (continuous) &  &  &  &  & 0.0036 & 0.0050 \\
+ &  &  &  &  & (0.0027) & (0.0053) \\
+\midrule
+Pre-trend $p$-value & [0.2420] & [0.2215] & [0.2198] & [0.8161] & [0.0856] & [0.1936] \\
+\midrule
+Observations & 32{,}495 & 32{,}161 & 17{,}008 & 16{,}690 & 32{,}495 & 32{,}161 \\
+Establishments & 4{,}084 & 4{,}042 & 2{,}137 & 2{,}097 & 4{,}084 & 4{,}042 \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}[flushleft]\footnotesize
+\item \textit{Notes:} Outcome is log December wages (lr\_remdezr\_w). Panels A--C reproduce the connectivity margins exercises on the full sample (baseline) and after dropping establishments in the top 1\% of normalized connectivity ($\geq 4.44\times$ the 90th percentile), which are predominantly tiny branches of multi-establishment firms. All specifications include establishment, industry$\times$year, bargaining-month$\times$year, and microregion$\times$year fixed effects, plus 4-bin pre-treatment controls interacted with year. Standard errors clustered at the establishment level in parentheses. $p$-values in brackets are from a joint $F$-test on pre-period interactions. $^{*}p<0.10$, $^{**}p<0.05$, $^{***}p<0.01$.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+\end{document}
