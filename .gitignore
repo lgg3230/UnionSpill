@@ -155,5 +155,6 @@ Tables/**/*.zip
 # ----- Graphs: track PDFs and PNGs, ignore Stata .gph files -----
 Graphs/**/*.gph
 Graphs/plots jul 31/*.gph
-UnionSpill-paper/
-UnionSpill-paper/
+
+# ----- Nested repo (old cluster sync copy — not part of this repo) -----
+UnionSpill/

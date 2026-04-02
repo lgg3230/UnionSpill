@@ -1,0 +1,33 @@
+\documentclass[12pt]{article}
+\usepackage{booktabs,threeparttable,float,geometry}
+\geometry{margin=1in}
+\begin{document}
+
+\begin{table}[H]
+\centering
+\caption{Robustness: dropping top-1\% connectivity firms --- Main spillover regression}
+\label{tab:spill_trim}
+\begin{threeparttable}
+\begin{tabular}{lccc}
+\toprule
+ & Baseline & Trimmed (p99) & Winsorized (p99) \\
+\midrule
+Post $\times$ Connectivity & 0.0051** & 0.0046 & 0.0068* \\
+ & (0.0023) & (0.0043) & (0.0036) \\
+\\[-4pt]
+Pre-trend & 0.0020 & 0.0004 & 0.0037 \\
+ & (0.0025) & (0.0047) & (0.0042) \\
+\midrule
+Pre-trend $p$-value & [0.7351] & [0.4439] & [0.6313] \\
+\midrule
+Observations & 32{,}495 & 32{,}161 & 32{,}495 \\
+Establishments & 4{,}084 & 4{,}042 & 4{,}084 \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}[flushleft]\footnotesize
+\item \textit{Notes:} Outcome is log December wages (lr\_remdezr\_w). All columns use the full untreated sample and the same fixed effects. \textit{Trimmed} drops the 41 establishments ($\approx$1\%) with normalized connectivity $\geq 5.26\times$ the 90th percentile (predominantly tiny branches of multi-establishment firms). \textit{Winsorized} retains all establishments but caps normalized connectivity at the same p99 threshold. The specification includes establishment, industry$\times$year, bargaining-month$\times$year, and microregion$\times$year fixed effects, plus 4-bin pre-treatment controls for wages, employment, and total flows, each interacted with year. Standard errors clustered at the establishment level in parentheses. $p$-value in brackets is from a joint $F$-test on the 2009 and 2010 pre-period connectivity interactions. $^{*}p<0.10$, $^{**}p<0.05$, $^{***}p<0.01$.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+\end{document}
