@@ -27,7 +27,7 @@
 \tableofcontents
 \clearpage
 
-\begin{table}[]
+\begin{table}[H]
 \centering
 \caption{Connectivity Margins and Spillover Effects of the Ultractivity Reform}
 \label{tab:conn_margins}
@@ -63,27 +63,8 @@ Observations & 17{,}008 & 17{,}008 & 17{,}120 & 10{,}273 \\
 Establishments & 2{,}137 & 2{,}137 & 2{,}140 & 2{,}197 \\
   &  &  &  & \\
 \midrule
-\begin{tabular}[c]{@{}l@{}}\textbf{Panel C:} \textit{Saturated Model}\\ \textit{Extensive + Intensive; Full Sample}\end{tabular} & \begin{tabular}[c]{@{}c@{}}Log\\Wages\end{tabular} & \begin{tabular}[c]{@{}c@{}}Log Hourly\\Wages\end{tabular} & \begin{tabular}[c]{@{}c@{}}Log\\Employment\end{tabular} & \begin{tabular}[c]{@{}c@{}}Clause\\Count\end{tabular} \\
+\begin{tabular}[c]{@{}l@{}}\textbf{Panel C:} \textit{Full-Sample Residualization}\\ \textit{Continuous; Positive-Conn Sample; Bootstrap SE}\end{tabular} & \begin{tabular}[c]{@{}c@{}}Log\\Wages\end{tabular} & \begin{tabular}[c]{@{}c@{}}Log Hourly\\Wages\end{tabular} & \begin{tabular}[c]{@{}c@{}}Log\\Employment\end{tabular} & \begin{tabular}[c]{@{}c@{}}Clause\\Count\end{tabular} \\
  & (9) & (10) & (11) & (12) \\
-\midrule
-Post $\times$ Any Connection & 0.0047 & $-$0.0004 & $-$0.0135 & 0.1560 \\
-  & (0.0072) & (0.0074) & (0.0248) & (0.3959) \\
-Post $\times$ Connectivity & 0.0044* & 0.0067*** & 0.0022 & $-$0.0012 \\
-  & (0.0024) & (0.0025) & (0.0089) & (0.1246) \\
-  &  &  &  & \\
-Pre $\times$ Any Connection & $-$0.0118* & $-$0.0106 & 0.0409** & $-$0.4079 \\
-  & (0.0068) & (0.0076) & (0.0180) & (0.5197) \\
-Pre $\times$ Connectivity & 0.0036 & 0.0030 & $-$0.0066 & 0.3806* \\
-  & (0.0027) & (0.0027) & (0.0071) & (0.2203) \\
-Pre-trend $F$-test: Any Connection & [0.0856] & [0.1803] & [0.0644] & [0.4164] \\
-Pre-trend $F$-test: Connectivity & [0.3875] & [0.4691] & [0.5765] & [0.0778] \\
-  &  &  &  & \\
-Observations & 32{,}495 & 32{,}495 & 32{,}704 & 19{,}693 \\
-Establishments & 4{,}084 & 4{,}084 & 4{,}088 & 4{,}142 \\
-  &  &  &  & \\
-\midrule
-\begin{tabular}[c]{@{}l@{}}\textbf{Panel D:} \textit{Full-Sample Residualization}\\ \textit{Continuous; Positive-Conn Sample; Bootstrap SE}\end{tabular} & \begin{tabular}[c]{@{}c@{}}Log\\Wages\end{tabular} & \begin{tabular}[c]{@{}c@{}}Log Hourly\\Wages\end{tabular} & \begin{tabular}[c]{@{}c@{}}Log\\Employment\end{tabular} & \begin{tabular}[c]{@{}c@{}}Clause\\Count\end{tabular} \\
- & (13) & (14) & (15) & (16) \\
 \midrule
 Post $\times$ Connectivity & 0.0032** & 0.0046*** & 0.0012 & 0.0024 \\
   & (0.0015) & (0.0015) & (0.0058) & (0.0721) \\
@@ -100,7 +81,43 @@ Establishments & 2{,}201 & 2{,}201 & 2{,}204 & 2{,}230 \\
 \end{tabular}
 \scriptsize
 \begin{tablenotes}
-\item \textit{Notes:} \textit{Panel~A} replaces continuous connectivity with a binary indicator (any connection vs.\ none) on the full untreated sample. \textit{Panel~B} restricts the sample to establishments with positive connectivity and runs the baseline continuous specification. \textit{Panel~C} includes both the binary indicator and continuous connectivity interacted with post on the full untreated sample (note: Conn\,$\times$\,Pos\,$\equiv$\,Conn, so the triple interaction is omitted). \textit{Panel~D} replicates Panel~B but residualizes the outcome on the full untreated sample before running the second-step regression on positive-connectivity establishments. Standard errors in parentheses are bootstrapped (B\,=\,200 establishment-level resamples) to account for two-step estimation uncertainty; naive cluster standard errors are shown in brackets. Stars follow the bootstrap standard errors. The clause count column uses CBA negotiation periods rather than calendar years; the pre-trend test uses CBA period~1 vs.\ the base period~2. All regressions include establishment fixed effects interacted with two-digit industry, microregion, and negotiation-month indicators by year (or CBA period), and quartile-bin controls for pre-treatment per-worker pairwise worker flows (2007--2011) and pre-treatment establishment size. Standard errors clustered at the establishment level in parentheses. *** p$<$0.01, ** p$<$0.05, * p$<$0.10.
+\item \textit{Notes:} \textit{Panel~A} replaces continuous connectivity with a binary indicator (any connection vs.\ none) on the full untreated sample. \textit{Panel~B} restricts the sample to establishments with positive connectivity and runs the baseline continuous specification. \textit{Panel~C} replicates Panel~B but residualizes the outcome on the full untreated sample before running the second-step regression on positive-connectivity establishments. Standard errors in parentheses are bootstrapped (B\,=\,200 establishment-level resamples) to account for two-step estimation uncertainty; naive cluster standard errors are shown in brackets. Stars follow the bootstrap standard errors. The clause count column uses CBA negotiation periods rather than calendar years; the pre-trend test uses CBA period~1 vs.\ the base period~2. All regressions include establishment fixed effects interacted with two-digit industry, microregion, and negotiation-month indicators by year (or CBA period), and quartile-bin controls for pre-treatment per-worker pairwise worker flows (2007--2011) and pre-treatment establishment size. Standard errors clustered at the establishment level in parentheses. *** p$<$0.01, ** p$<$0.05, * p$<$0.10.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+\clearpage
+
+\begin{table}[H]
+\centering
+\caption{Saturated Model: Extensive and Intensive Connectivity Margins}
+\label{tab:conn_margins_saturated}
+\scriptsize
+\begin{threeparttable}
+\begin{tabular}{lcccc}
+\toprule\toprule
+\begin{tabular}[c]{@{}l@{}}\textbf{Panel A:} \textit{Saturated Model}\\ \textit{Extensive + Intensive; Full Sample}\end{tabular} & \begin{tabular}[c]{@{}c@{}}Log\\Wages\end{tabular} & \begin{tabular}[c]{@{}c@{}}Log Hourly\\Wages\end{tabular} & \begin{tabular}[c]{@{}c@{}}Log\\Employment\end{tabular} & \begin{tabular}[c]{@{}c@{}}Clause\\Count\end{tabular} \\
+ & (1) & (2) & (3) & (4) \\
+\midrule
+Post $\times$ Any Connection & 0.0047 & $-$0.0004 & $-$0.0135 & 0.1560 \\
+  & (0.0072) & (0.0074) & (0.0248) & (0.3959) \\
+Post $\times$ Connectivity & 0.0044* & 0.0067*** & 0.0022 & $-$0.0012 \\
+  & (0.0024) & (0.0025) & (0.0089) & (0.1246) \\
+  &  &  &  & \\
+Pre $\times$ Any Connection & $-$0.0118* & $-$0.0106 & 0.0409** & $-$0.4079 \\
+  & (0.0068) & (0.0076) & (0.0180) & (0.5197) \\
+Pre $\times$ Connectivity & 0.0036 & 0.0030 & $-$0.0066 & 0.3806* \\
+  & (0.0027) & (0.0027) & (0.0071) & (0.2203) \\
+Pre-trend $F$-test: Any Connection & [0.0856] & [0.1803] & [0.0644] & [0.4164] \\
+Pre-trend $F$-test: Connectivity & [0.3875] & [0.4691] & [0.5765] & [0.0778] \\
+  &  &  &  & \\
+Observations & 32{,}495 & 32{,}495 & 32{,}704 & 19{,}693 \\
+Establishments & 4{,}084 & 4{,}084 & 4{,}088 & 4{,}142 \\
+\bottomrule
+\end{tabular}
+\scriptsize
+\begin{tablenotes}
+\item \textit{Notes:} This table presents the saturated specification that includes both the binary any-connection indicator and continuous connectivity interacted with post on the full untreated sample (note: Conn\,$\times$\,Pos\,$\equiv$\,Conn, so the triple interaction is omitted). All regressions include establishment fixed effects interacted with two-digit industry, microregion, and negotiation-month indicators by year (or CBA period), and quartile-bin controls for pre-treatment per-worker pairwise worker flows (2007--2011) and pre-treatment establishment size. Standard errors clustered at the establishment level in parentheses. *** p$<$0.01, ** p$<$0.05, * p$<$0.10.
 \end{tablenotes}
 \end{threeparttable}
 \end{table}
