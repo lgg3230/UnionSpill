@@ -1,0 +1,30 @@
+\begin{table}[H]
+\centering
+\caption{Direct Effects: Robustness to Workforce Demographic Controls}
+\label{tab:direct_demo_combined}
+\scriptsize
+\begin{threeparttable}
+\begin{tabular}{lccc}
+\toprule\toprule
+\textbf{Dependent Var: Log Wages} & (1) & (2) & (3) \\ \midrule
+ &  &  & \\
+Post $\times$ Treated & 0.0262*** & 0.0260*** & 0.0259*** \\
+ & (0.0049) & (0.0049) & (0.0049) \\
+ &  &  & \\
+Pre $\times$ Treated & $-$0.0001 & $-$0.0000 & $-$0.0001 \\
+ & (0.0046) & (0.0046) & (0.0046) \\
+ &  &  & \\
+Num Obs & 112{,}679 & 112{,}679 & 112{,}679 \\
+Num Establishments & 14{,}134 & 14{,}134 & 14{,}134 \\ \midrule
+ &  &  & \\
+\textbf{Demographic Controls $\times$ Year} & & & \\
+Quartile bins (absorbed) &   & \checkmark &   \\
+Linear (covariate)       &   &   & \checkmark \\
+\bottomrule
+\end{tabular}
+\scriptsize
+\begin{tablenotes}
+\item \textit{Notes:} This table tests whether the direct effect of Brazil's 2012 ultractivity reform on log wages is robust to controlling for pre-treatment workforce demographics. The sample is Panel~A: treated establishments and untreated establishments with zero pre-treatment worker flows to treated firms (i.e., the zero-connectivity control group), restricted to the Lagos balanced panel. Column~(1) is the baseline specification. Column~(2) adds quartile-bin controls (absorbed as fixed effects, interacted with year) for gender (\% male), race (\% white), education (\% with at least high school), average age, and average tenure. Column~(3) adds the same five characteristics as continuous linear controls interacted with year dummies. All specifications include establishment fixed effects, year fixed effects interacted with two-digit industry, microregion, and negotiation-month indicators, and quartile-bin controls for pre-treatment log wages, log employment, and per-worker pairwise flows (2007--2011), each interacted with year. Standard errors clustered at the establishment level in parentheses. *** p$<$0.01, ** p$<$0.05, * p$<$0.10.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}

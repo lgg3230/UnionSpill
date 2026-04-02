@@ -1,0 +1,68 @@
+\begin{table}[H]
+\centering
+\caption{Robustness to Bin Count: Direct Effects (Panel B: $\leq$1\% Connectivity Controls)}
+\label{tab:rob_direct_bins_B}
+\scriptsize
+\begin{threeparttable}
+\begin{tabular}{lcccc}
+\toprule\toprule
+ & \begin{tabular}[c]{@{}c@{}}$N = 10$\\\textit{bins}\end{tabular} & \begin{tabular}[c]{@{}c@{}}$N = 20$\\\textit{bins}\end{tabular} & \begin{tabular}[c]{@{}c@{}}$N = 50$\\\textit{bins}\end{tabular} & \begin{tabular}[c]{@{}c@{}}$N = 100$\\\textit{bins}\end{tabular} \\
+\midrule
+\multicolumn{5}{l}{\textbf{Panel A:} Log Wages} \\
+\midrule
+Post $\times$ Treatment & 0.0196*** & 0.0190*** & 0.0177*** & 0.0170*** \\
+  & (0.0038) & (0.0037) & (0.0037) & (0.0038) \\
+  &  &  &  & \\
+Pre $\times$ Treatment & 0.0049 & 0.0049 & 0.0046 & 0.0050 \\
+  & (0.0035) & (0.0035) & (0.0035) & (0.0036) \\
+Pre-trend $p$-value & [0.1614] & [0.1639] & [0.1935] & [0.1612] \\
+  &  &  &  & \\
+Observations & 120{,}617 & 120{,}617 & 120{,}609 & 120{,}609 \\
+Establishments & 15{,}129 & 15{,}129 & 15{,}128 & 15{,}128 \\
+  &  &  &  & \\
+\midrule
+\multicolumn{5}{l}{\textbf{Panel B:} Log Hourly Wages} \\
+\midrule
+Post $\times$ Treatment & 0.0233*** & 0.0231*** & 0.0225*** & 0.0217*** \\
+  & (0.0039) & (0.0039) & (0.0039) & (0.0039) \\
+  &  &  &  & \\
+Pre $\times$ Treatment & 0.0059 & 0.0058 & 0.0059 & 0.0070* \\
+  & (0.0041) & (0.0041) & (0.0041) & (0.0042) \\
+Pre-trend $p$-value & [0.1527] & [0.1582] & [0.1544] & [0.0906] \\
+  &  &  &  & \\
+Observations & 120{,}617 & 120{,}617 & 120{,}609 & 120{,}609 \\
+Establishments & 15{,}129 & 15{,}129 & 15{,}128 & 15{,}128 \\
+  &  &  &  & \\
+\midrule
+\multicolumn{5}{l}{\textbf{Panel C:} Log Employment} \\
+\midrule
+Post $\times$ Treatment & $-$0.0026 & $-$0.0022 & $-$0.0007 & $-$0.0012 \\
+  & (0.0125) & (0.0124) & (0.0125) & (0.0124) \\
+  &  &  &  & \\
+Pre $\times$ Treatment & 0.0034 & 0.0040 & 0.0041 & 0.0042 \\
+  & (0.0088) & (0.0089) & (0.0089) & (0.0089) \\
+Pre-trend $p$-value & [0.6971] & [0.6516] & [0.6435] & [0.6397] \\
+  &  &  &  & \\
+Observations & 121{,}064 & 121{,}064 & 121{,}056 & 121{,}056 \\
+Establishments & 15{,}133 & 15{,}133 & 15{,}132 & 15{,}132 \\
+  &  &  &  & \\
+\midrule
+\multicolumn{5}{l}{\textbf{Panel D:} Clause Count} \\
+\midrule
+Post $\times$ Treatment & 1.3447*** & 1.1130*** & 1.2333*** & 1.0727*** \\
+  & (0.2679) & (0.2697) & (0.2740) & (0.2724) \\
+  &  &  &  & \\
+Pre $\times$ Treatment & 0.2591 & 0.1813 & 0.0571 & 0.0113 \\
+  & (0.2913) & (0.2949) & (0.3042) & (0.2968) \\
+Pre-trend $p$-value & [0.3737] & [0.5387] & [0.8512] & [0.9696] \\
+  &  &  &  & \\
+Observations & 77{,}947 & 77{,}947 & 77{,}942 & 77{,}942 \\
+Establishments & 15{,}171 & 15{,}171 & 15{,}171 & 15{,}171 \\
+\bottomrule
+\end{tabular}
+\scriptsize
+\begin{tablenotes}
+\item \textit{Notes:} This table assesses the sensitivity of direct treatment-effect estimates to the choice of bin count $N \in \{10, 20, 50, 100\}$. Control group: establishments with \textbf{at most 1\%} pre-reform connectivity to treated firms (Panel~B). Post $\times$ Treatment measures the average treatment effect for 2012--2016; Pre $\times$ Treatment is a placebo test. The clause count outcome uses CBA negotiation periods. All regressions include establishment fixed effects, year fixed effects interacted with two-digit industry, microregion, and negotiation-month indicators, and $N$-bin controls for pre-treatment per-worker pairwise flows (2007--2011) and pre-treatment log employment interacted with year fixed effects. Pre-trend $p$-value is from the pre-treatment placebo DiD regression. Standard errors clustered at the establishment level in parentheses. *** p$<$0.01, ** p$<$0.05, * p$<$0.10.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}

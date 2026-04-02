@@ -2,16 +2,21 @@
 """
 PROJECT: UNION SPILLOVERS
 AUTHOR: LUIS GOMES
-PROGRAM: COMBINED COEFFICIENT PLOTS - GRAVITY + PRETREATMENT
+PROGRAM: FIGURE A2 — COMBINED COEFFICIENT PLOTS (STANDALONE)
 
-Creates a single 2x2 figure comparing gravity (post-treatment) and pretreatment specifications:
-  - Top row: Proximity measures (left=gravity, right=pretreat)
-  - Bottom row: Dummy variables (left=gravity, right=pretreat)
+Creates a single 2x2 figure comparing connectivity and late connectivity specifications:
+  - Top row: Proximity measures (left=connectivity, right=late connectivity)
+  - Bottom row: Dummy variables (left=connectivity, right=late connectivity)
 
 Key features:
-  - Top-aligned: gravity (8 vars) aligns with top 8 of pretreat (9 vars)
+  - Top-aligned: connectivity (9 vars) aligns with top 9 of late connectivity (10 vars)
   - Shared x-axis scales within each row for easy coefficient comparison
   - Single legend at bottom of figure
+
+All input data and output figure live in the same folder as this script.
+
+Run:
+    ~/.conda/envs/venv_python312/bin/python Programs/conn_descriptives/figure_A2/figure_A2.py
 """
 
 import pandas as pd
@@ -30,23 +35,17 @@ mpl.rcParams['pdf.fonttype'] = 42
 mpl.rcParams['ps.fonttype'] = 42
 
 # ==============================================================================
-# PATHS
+# PATHS — all relative to this script's folder
 # ==============================================================================
 
-BASE_DIR = Path("/kellogg/proj/lgg3230/UnionSpill")
-RAIS_AUX = BASE_DIR / "Data" / "RAIS_aux"
-GRAPHS = BASE_DIR / "Graphs" / "connectivity"
+HERE = Path(__file__).resolve().parent
 
-# 06 regression: predicting pre-treatment connectivity with gravity measures (split files)
-GRAVITY_UNIV_FILE = RAIS_AUX / "coef_connectivity_univ.csv"
-GRAVITY_MULTI_FILE = RAIS_AUX / "coef_connectivity_multi.csv"
+CONN_UNIV_FILE       = HERE / "coef_connectivity_univ.csv"
+CONN_MULTI_FILE      = HERE / "coef_connectivity_multi.csv"
+LATE_CONN_UNIV_FILE  = HERE / "coef_late_connectivity_univ.csv"
+LATE_CONN_MULTI_FILE = HERE / "coef_late_connectivity_multi.csv"
 
-# 07d regression: predicting late-pre connectivity with early connectivity + proximity (split files)
-PRETREAT_UNIV_FILE = RAIS_AUX / "coef_late_connectivity_univ.csv"
-PRETREAT_MULTI_FILE = RAIS_AUX / "coef_late_connectivity_multi.csv"
-
-# Output
-OUTPUT_FILE = GRAPHS / "coefplot_bilateral_combined.pdf"
+OUTPUT_FILE = HERE / "coefplot_bilateral_combined.pdf"
 
 # ==============================================================================
 # VARIABLE DEFINITIONS
@@ -72,8 +71,8 @@ VAR_LABELS = {
     "same_industry_micro": "Industry ×\nmicroregion",
 }
 
-# Gravity variables (8 proximity, 4 dummies)
-GRAVITY_PROXIMITY_VARS = [
+# Connectivity variables (9 proximity, 4 dummies)
+CONN_PROXIMITY_VARS = [
     "z_cep_proximity",
     "z_turnover_proximity",
     "z_size_proximity",
@@ -85,8 +84,8 @@ GRAVITY_PROXIMITY_VARS = [
     "z_clauses_proximity",
 ]
 
-# Pretreat variables (9 proximity including early connectivity, 4 dummies)
-PRETREAT_PROXIMITY_VARS = [
+# Late connectivity variables (10 proximity including early connectivity, 4 dummies)
+LATE_CONN_PROXIMITY_VARS = [
     "z_bilateral_conn_early_pre",
     "z_cep_proximity",
     "z_turnover_proximity",
@@ -114,19 +113,17 @@ COLORS = {"univariate": "#2166AC", "multivariate": "#B2182B"}
 # DATA LOADING
 # ==============================================================================
 
-def load_gravity_data():
-    """Load gravity coefficients (06 regression: pre-treatment connectivity)."""
-    # Combine univariate and multivariate from split files
-    univ = pd.read_csv(GRAVITY_UNIV_FILE)
-    multi = pd.read_csv(GRAVITY_MULTI_FILE)
+def load_conn_data():
+    """Load connectivity coefficients (dep var: pre-treatment connectivity)."""
+    univ  = pd.read_csv(CONN_UNIV_FILE)
+    multi = pd.read_csv(CONN_MULTI_FILE)
     return pd.concat([univ, multi], ignore_index=True)
 
 
-def load_pretreat_data():
-    """Load pretreatment coefficients."""
-    # Combine univariate and multivariate from split files
-    univ = pd.read_csv(PRETREAT_UNIV_FILE)
-    multi = pd.read_csv(PRETREAT_MULTI_FILE)
+def load_late_conn_data():
+    """Load late connectivity coefficients (dep var: late pre-treatment connectivity)."""
+    univ  = pd.read_csv(LATE_CONN_UNIV_FILE)
+    multi = pd.read_csv(LATE_CONN_MULTI_FILE)
     return pd.concat([univ, multi], ignore_index=True)
 
 
@@ -161,10 +158,8 @@ def plot_coefficients(ax, df, var_list, y_offset=0, max_y_vars=None, swap_vars=N
 
     # Get ordered variables
     if forced_order is not None:
-        # Use forced order, keeping only vars present in var_list and data
         available = set(df_filtered["variable"].unique())
         ordered_vars = [v for v in forced_order if v in available and v in var_list]
-        # Append any remaining vars not in forced_order at the end
         for v in var_list:
             if v in available and v not in ordered_vars:
                 ordered_vars.append(v)
@@ -258,51 +253,51 @@ def sync_xlim(ax1, ax2, padding=0.05):
 
 def main():
     print("=" * 70)
-    print("CREATING COMBINED COEFFICIENT PLOT (GRAVITY + PRETREAT)")
+    print("CREATING FIGURE A2: COMBINED COEFFICIENT PLOT")
     print("=" * 70)
 
     # Load data
     print("\nLoading data...")
-    gravity_df = load_gravity_data()
-    pretreat_df = load_pretreat_data()
-    print(f"  Gravity: {len(gravity_df)} rows")
-    print(f"  Pretreat: {len(pretreat_df)} rows")
+    conn_df      = load_conn_data()
+    late_conn_df = load_late_conn_data()
+    print(f"  Connectivity: {len(conn_df)} rows")
+    print(f"  Late connectivity: {len(late_conn_df)} rows")
 
     # Create 2x2 figure with height ratios proportional to number of variables
-    # Top row: 10 proximity vars (pretreat), Bottom row: 4 dummy vars
+    # Top row: 10 proximity vars (late conn), Bottom row: 4 dummy vars
     fig, axes = plt.subplots(2, 2, figsize=(14, 10),
                               gridspec_kw={'height_ratios': [10, 4]})
 
     # Subplot references
-    ax_grav_prox = axes[0, 0]  # Top-left: Gravity proximity
-    ax_pre_prox = axes[0, 1]   # Top-right: Pretreat proximity
-    ax_grav_dum = axes[1, 0]   # Bottom-left: Gravity dummies
-    ax_pre_dum = axes[1, 1]    # Bottom-right: Pretreat dummies
+    ax_conn_prox      = axes[0, 0]  # Top-left:     Connectivity proximity
+    ax_late_prox      = axes[0, 1]  # Top-right:    Late connectivity proximity
+    ax_conn_dum       = axes[1, 0]  # Bottom-left:  Connectivity dummies
+    ax_late_dum       = axes[1, 1]  # Bottom-right: Late connectivity dummies
 
     # =========================================================================
     # TOP ROW: Proximity measures (top-aligned)
     # =========================================================================
     print("\nPlotting proximity measures...")
 
-    # Pretreat has 10 vars, gravity has 9 -> gravity needs offset of 1
-    n_prox_max = len(PRETREAT_PROXIMITY_VARS)  # 10
-    n_grav_prox = len(GRAVITY_PROXIMITY_VARS)  # 9
-    grav_prox_offset = n_prox_max - n_grav_prox  # 1
+    # Late conn has 10 vars, conn has 9 -> conn needs offset of 1
+    n_prox_max   = len(LATE_CONN_PROXIMITY_VARS)  # 10
+    n_conn_prox  = len(CONN_PROXIMITY_VARS)        # 9
+    conn_prox_offset = n_prox_max - n_conn_prox    # 1
 
-    # Plot gravity proximity (with offset for top alignment)
-    grav_order = plot_coefficients(ax_grav_prox, gravity_df, GRAVITY_PROXIMITY_VARS,
-                                   y_offset=grav_prox_offset, max_y_vars=n_prox_max)
+    # Plot connectivity proximity (with offset for top alignment)
+    conn_order = plot_coefficients(ax_conn_prox, conn_df, CONN_PROXIMITY_VARS,
+                                   y_offset=conn_prox_offset, max_y_vars=n_prox_max)
 
-    # Build pretreat order: Early Conn. at bottom (y=0), then same as gravity above
-    pretreat_order = ["z_bilateral_conn_early_pre"] + list(grav_order)
+    # Build late conn order: Early Conn. at bottom (y=0), then same as conn above
+    late_conn_order = ["z_bilateral_conn_early_pre"] + list(conn_order)
 
-    # Plot pretreat proximity (no offset, forced to match gravity order)
-    plot_coefficients(ax_pre_prox, pretreat_df, PRETREAT_PROXIMITY_VARS,
+    # Plot late connectivity proximity (no offset, forced to match conn order)
+    plot_coefficients(ax_late_prox, late_conn_df, LATE_CONN_PROXIMITY_VARS,
                       y_offset=0, max_y_vars=n_prox_max,
-                      forced_order=pretreat_order)
+                      forced_order=late_conn_order)
 
     # Synchronize x-limits for proximity row
-    sync_xlim(ax_grav_prox, ax_pre_prox)
+    sync_xlim(ax_conn_prox, ax_late_prox)
 
     # =========================================================================
     # BOTTOM ROW: Dummy variables (same vars, no offset needed)
@@ -311,15 +306,15 @@ def main():
 
     n_dum = len(DUMMY_VARS)
 
-    dum_order = plot_coefficients(ax_grav_dum, gravity_df, DUMMY_VARS,
+    dum_order = plot_coefficients(ax_conn_dum, conn_df, DUMMY_VARS,
                                    y_offset=0, max_y_vars=n_dum)
 
-    plot_coefficients(ax_pre_dum, pretreat_df, DUMMY_VARS,
+    plot_coefficients(ax_late_dum, late_conn_df, DUMMY_VARS,
                       y_offset=0, max_y_vars=n_dum,
                       forced_order=dum_order)
 
     # Synchronize x-limits for dummies row
-    sync_xlim(ax_grav_dum, ax_pre_dum)
+    sync_xlim(ax_conn_dum, ax_late_dum)
 
     # =========================================================================
     # COLUMN TITLES (at very top, with panel labels)
@@ -334,18 +329,18 @@ def main():
     # =========================================================================
     # ROW SUBTITLES (above each plot)
     # =========================================================================
-    ax_grav_prox.set_title("Continuous Proximity Measures", fontsize=13, fontweight="bold", pad=8)
-    ax_pre_prox.set_title("Continuous Proximity Measures", fontsize=13, fontweight="bold", pad=8)
-    ax_grav_dum.set_title("Same-Category Dummies", fontsize=13, fontweight="bold", pad=8)
-    ax_pre_dum.set_title("Same-Category Dummies", fontsize=13, fontweight="bold", pad=8)
+    ax_conn_prox.set_title("Continuous Proximity Measures", fontsize=13, fontweight="bold", pad=8)
+    ax_late_prox.set_title("Continuous Proximity Measures", fontsize=13, fontweight="bold", pad=8)
+    ax_conn_dum.set_title("Same-Category Dummies", fontsize=13, fontweight="bold", pad=8)
+    ax_late_dum.set_title("Same-Category Dummies", fontsize=13, fontweight="bold", pad=8)
 
     # =========================================================================
     # X-AXIS LABELS (on both rows)
     # =========================================================================
-    ax_grav_prox.set_xlabel("Coefficient", fontsize=12, fontweight="bold")
-    ax_pre_prox.set_xlabel("Coefficient", fontsize=12, fontweight="bold")
-    ax_grav_dum.set_xlabel("Coefficient", fontsize=12, fontweight="bold")
-    ax_pre_dum.set_xlabel("Coefficient", fontsize=12, fontweight="bold")
+    ax_conn_prox.set_xlabel("Coefficient", fontsize=12, fontweight="bold")
+    ax_late_prox.set_xlabel("Coefficient", fontsize=12, fontweight="bold")
+    ax_conn_dum.set_xlabel("Coefficient", fontsize=12, fontweight="bold")
+    ax_late_dum.set_xlabel("Coefficient", fontsize=12, fontweight="bold")
 
     # =========================================================================
     # SINGLE LEGEND (below entire figure)
@@ -377,9 +372,8 @@ def main():
     # LAYOUT AND SAVE
     # =========================================================================
     plt.tight_layout()
-    plt.subplots_adjust(bottom=0.08, top=0.90, hspace=0.35)  # Room for legend, column titles, and row spacing
+    plt.subplots_adjust(bottom=0.08, top=0.90, hspace=0.35)
 
-    GRAPHS.mkdir(parents=True, exist_ok=True)
     fig.savefig(OUTPUT_FILE, dpi=1000, bbox_inches="tight", facecolor="white")
     plt.close(fig)
 

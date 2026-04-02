@@ -3,10 +3,10 @@
 08 MERGE: Combine per-task regression results into 4 CSVs for the coefplot.
 
 Reads individual result_*.csv from bilateral_combined_results/ and writes:
-- bilateral_pretreat_gravity_coefficients_univariate.csv
-- bilateral_pretreat_gravity_coefficients_multivariate.csv
-- bilateral_pretreatment_coefficients_univariate.csv
-- bilateral_pretreatment_coefficients_multivariate.csv
+- coef_connectivity_univ.csv
+- coef_connectivity_multi.csv
+- coef_late_connectivity_univ.csv
+- coef_late_connectivity_multi.csv
 - bilateral_gravity_6yr_coefficients_univariate.csv
 - bilateral_gravity_6yr_coefficients_multivariate.csv
 - bilateral_pretreatment_6yr_coefficients_univariate.csv
@@ -23,10 +23,10 @@ OUTPUT_DIR = Path('/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/RAIS_aux')
 
 # Output filenames matching 06_bilateral_coefplot_combined.py expectations
 OUTPUT_MAP = {
-    ('gravity', 'univariate'): 'bilateral_pretreat_gravity_coefficients_univariate.csv',
-    ('gravity', 'multivariate'): 'bilateral_pretreat_gravity_coefficients_multivariate.csv',
-    ('pretreat', 'univariate'): 'bilateral_pretreatment_coefficients_univariate.csv',
-    ('pretreat', 'multivariate'): 'bilateral_pretreatment_coefficients_multivariate.csv',
+    ('gravity', 'univariate'): 'coef_connectivity_univ.csv',
+    ('gravity', 'multivariate'): 'coef_connectivity_multi.csv',
+    ('pretreat', 'univariate'): 'coef_late_connectivity_univ.csv',
+    ('pretreat', 'multivariate'): 'coef_late_connectivity_multi.csv',
     ('gravity_6yr', 'univariate'): 'bilateral_gravity_6yr_coefficients_univariate.csv',
     ('gravity_6yr', 'multivariate'): 'bilateral_gravity_6yr_coefficients_multivariate.csv',
     ('pretreat_6yr', 'univariate'): 'bilateral_pretreatment_6yr_coefficients_univariate.csv',

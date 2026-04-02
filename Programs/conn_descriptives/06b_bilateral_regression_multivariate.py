@@ -8,7 +8,7 @@ Predicts pre-treatment bilateral connectivity (2007-2011) using gravity/proximit
 - Multivariate specification only (no parallel processing)
 
 Input: /tmp/bilateral_pairs_enhanced.parquet (271M directed pairs)
-Output: Data/RAIS_aux/bilateral_pretreat_gravity_coefficients_multivariate.csv
+Output: Data/RAIS_aux/coef_connectivity_multi.csv
 """
 
 import os
@@ -33,7 +33,7 @@ warnings.filterwarnings('ignore')
 # ==============================================================================
 
 INPUT_PARQUET = Path('/tmp/bilateral_pairs_enhanced.parquet')
-OUTPUT_CSV = Path('/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/RAIS_aux/bilateral_pretreat_gravity_coefficients_multivariate.csv')
+OUTPUT_CSV = Path('/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/RAIS_aux/coef_connectivity_multi.csv')
 
 # Dependent variable: full pre-treatment connectivity
 DEP_VAR = 'z_bilateral_conn_pw'

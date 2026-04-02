@@ -14,7 +14,7 @@ Re-standardizes dep var and early connectivity over the full 271M sample
 (fixes bug where these were standardized over ~62K connected pairs only).
 
 Input: Data/RAIS_aux/bilateral_pairs_enhanced.parquet (271M directed pairs)
-Output: Data/RAIS_aux/bilateral_pretreatment_coefficients_multivariate.csv
+Output: Data/RAIS_aux/coef_late_connectivity_multi.csv
 """
 
 import os
@@ -39,7 +39,7 @@ warnings.filterwarnings('ignore')
 # ==============================================================================
 
 INPUT_PARQUET = Path('/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/RAIS_aux/bilateral_pairs_enhanced.parquet')
-OUTPUT_CSV = Path('/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/RAIS_aux/bilateral_pretreatment_coefficients_multivariate.csv')
+OUTPUT_CSV = Path('/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/RAIS_aux/coef_late_connectivity_multi.csv')
 
 # Dependent variable: late pre-treatment connectivity (2009-2011)
 DEP_VAR = 'z_bilateral_conn_late_pre'

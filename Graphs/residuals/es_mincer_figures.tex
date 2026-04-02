@@ -1,0 +1,87 @@
+\documentclass[12pt,letterpaper]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{booktabs}
+\usepackage{threeparttable}
+
+\begin{document}
+
+% ─────────────────────────────────────────────────────────────────────────────
+% Figure 1: Event study — Mincer-residualized wages (direct + spillover)
+% ─────────────────────────────────────────────────────────────────────────────
+
+\begin{figure}[H]
+\begin{threeparttable}
+    \centering
+    \begin{subfigure}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Results - Tables and Figures/Plots_Feb242026/es_mincer_direct.pdf}
+        \caption{Direct effect (Panel A)}
+        \label{fig:es_mincer_direct}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Results - Tables and Figures/Plots_Feb242026/es_mincer_spill.pdf}
+        \caption{Spillover effect}
+        \label{fig:es_mincer_spill}
+    \end{subfigure}
+    \caption{Event Study: Residualized Log December Wage}
+    \label{fig:es_mincer}
+    \begin{tablenotes}
+        \small
+        \item This figure shows dynamic DiD coefficients for the
+        Mincer-residualized log December wage. Panel~(a) compares treated firms
+        against zero-connectivity controls (Panel~A sample); Panel~(b) shows
+        spillover coefficients from interacting annual dummies with
+        pre-treatment connectivity to treated firms, scaled to the 90th
+        percentile. The wage outcome is residualized on \texttt{cell\_id},
+        \texttt{cell\_id}$\times$age polynomial controls. Base year is 2011;
+        dashed vertical line marks the onset of treatment. 95\% confidence
+        intervals based on standard errors clustered at the firm level.
+    \end{tablenotes}
+\end{threeparttable}
+\end{figure}
+
+\clearpage
+
+% ─────────────────────────────────────────────────────────────────────────────
+% Figure 2: Event study overlay — residualized vs. raw log wage
+% ─────────────────────────────────────────────────────────────────────────────
+
+\begin{figure}[H]
+\begin{threeparttable}
+    \centering
+    \begin{subfigure}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Results - Tables and Figures/Plots_Feb242026/es_mincer_direct_overlay.pdf}
+        \caption{Direct effect (Panel A)}
+        \label{fig:es_mincer_direct_overlay}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Results - Tables and Figures/Plots_Feb242026/es_mincer_spill_overlay.pdf}
+        \caption{Spillover effect}
+        \label{fig:es_mincer_spill_overlay}
+    \end{subfigure}
+    \caption{Event Study: Residualized vs.\ Raw Log December Wage}
+    \label{fig:es_mincer_overlay}
+    \begin{tablenotes}
+        \small
+        \item This figure overlays dynamic DiD coefficients for the
+        Mincer-residualized wage (blue squares) and the raw log December wage
+        (red circles). The residualized wage is purged of
+        \texttt{cell\_id} and \texttt{cell\_id}$\times$age polynomial controls.
+        Panels, samples, and specifications are as in
+        Figure~\ref{fig:es_mincer}. 95\% confidence intervals based on
+        standard errors clustered at the firm level.
+    \end{tablenotes}
+\end{threeparttable}
+\end{figure}
+
+\end{document}

@@ -3,7 +3,7 @@
 07da MERGE: Combine per-variable univariate regression results from SLURM array job.
 
 Reads individual CSVs from pretreat_univariate_results/ and merges into
-bilateral_pretreatment_coefficients_univariate.csv
+coef_late_connectivity_univ.csv
 
 Usage: python Programs/07da_merge.py
 """
@@ -12,7 +12,7 @@ import pandas as pd
 from pathlib import Path
 
 RESULTS_DIR = Path('/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/RAIS_aux/pretreat_univariate_results')
-OUTPUT_CSV = Path('/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/RAIS_aux/bilateral_pretreatment_coefficients_univariate.csv')
+OUTPUT_CSV = Path('/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/RAIS_aux/coef_late_connectivity_univ.csv')
 
 def main():
     csv_files = sorted(RESULTS_DIR.glob('result_*.csv'))

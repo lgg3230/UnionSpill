@@ -1,0 +1,40 @@
+\begin{table}[H]
+\centering
+\caption{Spillover Effects: Robustness to Local Industry $\times$ Microregion Exposure}
+\label{tab:spill_micro_ind}
+\scriptsize
+\begin{threeparttable}
+\begin{tabular}{lccccccccc}
+\toprule\toprule
+\textbf{Dependent Var: Log Wages} & (1) & (2) & (3) & (4) & (5) & (6) & (7) & (8) & (9) \\ \midrule
+ &  &  &  &  &  &  &  &  & \\
+Post $\times$ Connectivity & 0.0051** & 0.0025 & 0.0024 & 0.0045** & 0.0045** &  & 0.0048** & 0.0046** &  \\
+ & (0.0023) & (0.0031) & (0.0029) & (0.0022) & (0.0022) &  & (0.0022) & (0.0022) &  \\
+ &  &  &  &  &  &  &  &  & \\
+Pre $\times$ Connectivity & 0.0020 & 0.0013 & 0.0013 & 0.0019 & 0.0019 &  & 0.0019 & 0.0018 &  \\
+ & (0.0025) & (0.0034) & (0.0035) & (0.0026) & (0.0026) &  & (0.0026) & (0.0026) &  \\
+ &  &  &  &  &  &  &  &  & \\
+Post $\times$ Local Exp. &  &  &  &  & 0.0288*** & 0.0297*** &  & 0.0237*** & 0.0246*** \\
+ &  &  &  &  & (0.0076) & (0.0076) &  & (0.0084) & (0.0083) \\
+ &  &  &  &  &  &  &  &  & \\
+Pre $\times$ Local Exp. &  &  &  &  & 0.0042 & 0.0045 &  & 0.0082 & 0.0086 \\
+ &  &  &  &  & (0.0071) & (0.0070) &  & (0.0076) & (0.0075) \\
+ &  &  &  &  &  &  &  &  & \\
+Num Obs & 32{,}495 & 21{,}275 & 32{,}490 & 32{,}495 & 32{,}495 & 32{,}495 & 32{,}495 & 32{,}495 & 32{,}495 \\
+Num Establishments & 4{,}084 & 2{,}678 & 4{,}084 & 4{,}084 & 4{,}084 & 4{,}084 & 4{,}084 & 4{,}084 & 4{,}084 \\ \midrule
+ &  &  &  &  &  &  &  &  & \\
+\textbf{Additional Controls} &  &  &  &  &  &  &  &  &  \\
+Micro-Ind $\times$ Year FE &  & \checkmark &  &  &  &  &  &  &  \\
+Micro-Ind $\times$ Post FE &  &  & \checkmark &  &  &  &  &  &  \\
+Local Exp.\ (firms) $\times$ Year &  &  &  & \checkmark &  &  &  &  &  \\
+Local Exp.\ (firms) $\times$ Post &  &  &  &  & \checkmark & \checkmark &  &  &  \\
+Local Exp.\ (wkrs) $\times$ Year &  &  &  &  &  &  & \checkmark &  &  \\
+Local Exp.\ (wkrs) $\times$ Post &  &  &  &  &  &  &  & \checkmark & \checkmark \\
+\bottomrule
+\end{tabular}
+\scriptsize
+\begin{tablenotes}
+\item \textit{Notes:} Spillover effects controlling for treatment intensity within microregion$\times$industry cells. Column~(1) shows baseline results. Columns~(2)--(3) include microregion$\times$industry FE interacted with year or post-reform indicator. Columns~(4)--(5) control for \textit{Local Exposure (firms)} $=$ share of treated establishments in each microregion$\times$industry cell, either interacted with year FE or with the post-reform indicator. Column~(6) includes local exposure (firms) interacted with post, without connectivity. Columns~(7)--(8) control for \textit{Local Exposure (workers)} $=$ share of employment in treated establishments within the cell, interacted with year FE or the post-reform indicator. Column~(9) includes local exposure (workers) interacted with post, without connectivity. Both connectivity and local exposure measures are normalized by their 90th percentile among spillover establishments, so coefficients represent the effect of moving from the 0th to the 90th percentile of each measure. All specifications include establishment FE and time-varying controls for microregion, industry, negotiation months, pretreatment wages, employment, and per-worker pairwise flows (2007--2011), each interacted with year. Standard errors clustered at the establishment level in parentheses. *** p$<$0.01, ** p$<$0.05, * p$<$0.10.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}

@@ -345,8 +345,8 @@ foreach panel in A B C {
 		testparm 1.treat_ultra#i(2009 2010).year
 		local pre_ftest_pval = r(p)
 
-		* Baseline mean (untreated control group, 2011)
-		quietly sum `outcome' if `s_use_pre' & year == 2011
+		* Baseline mean (untreated control group, firm avg 2009-2011)
+		quietly sum `outcome'_pre if `s_use_pre' & year == 2009
 		local mean_pre_val = r(mean)
 
 		* Write
@@ -416,8 +416,8 @@ foreach outcome of global composition_outcomes {
 	testparm c.`conn'#i(2009 2010).year
 	local pre_ftest_pval = r(p)
 
-	* Baseline mean (spillover sample, 2011)
-	quietly sum `outcome' if `s_spill' & year == 2011
+	* Baseline mean (spillover sample, firm avg 2009-2011)
+	quietly sum `outcome'_pre if `s_spill' & year == 2009
 	local mean_pre_val = r(mean)
 
 	* Write

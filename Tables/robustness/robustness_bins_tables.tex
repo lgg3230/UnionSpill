@@ -1,0 +1,68 @@
+\begin{table}[H]
+\centering
+\caption{Robustness to Bin Count: Spillover Effects}
+\label{tab:rob_spill_bins}
+\scriptsize
+\begin{threeparttable}
+\begin{tabular}{lcccc}
+\toprule\toprule
+ & \begin{tabular}[c]{@{}c@{}}$N = 10$\\\textit{bins}\end{tabular} & \begin{tabular}[c]{@{}c@{}}$N = 20$\\\textit{bins}\end{tabular} & \begin{tabular}[c]{@{}c@{}}$N = 50$\\\textit{bins}\end{tabular} & \begin{tabular}[c]{@{}c@{}}$N = 100$\\\textit{bins}\end{tabular} \\
+\midrule
+\multicolumn{5}{l}{\textbf{Panel A:} Log Wages} \\
+\midrule
+Post $\times$ Connectivity & 0.0056** & 0.0053** & 0.0053** & 0.0046* \\
+  & (0.0024) & (0.0024) & (0.0025) & (0.0026) \\
+  &  &  &  & \\
+Pre $\times$ Connectivity & 0.0017 & 0.0016 & 0.0016 & 0.0013 \\
+  & (0.0026) & (0.0026) & (0.0026) & (0.0025) \\
+Pre-trend $p$-value & [0.5052] & [0.5510] & [0.5289] & [0.6097] \\
+  &  &  &  & \\
+Observations & 32{,}495 & 32{,}495 & 32{,}495 & 32{,}495 \\
+Establishments & 4{,}084 & 4{,}084 & 4{,}084 & 4{,}084 \\
+  &  &  &  & \\
+\midrule
+\multicolumn{5}{l}{\textbf{Panel B:} Log Hourly Wages} \\
+\midrule
+Post $\times$ Connectivity & 0.0074*** & 0.0072*** & 0.0074*** & 0.0065*** \\
+  & (0.0024) & (0.0024) & (0.0023) & (0.0024) \\
+  &  &  &  & \\
+Pre $\times$ Connectivity & 0.0014 & 0.0011 & 0.0011 & 0.0011 \\
+  & (0.0026) & (0.0026) & (0.0026) & (0.0026) \\
+Pre-trend $p$-value & [0.5867] & [0.6740] & [0.6748] & [0.6864] \\
+  &  &  &  & \\
+Observations & 32{,}495 & 32{,}495 & 32{,}495 & 32{,}495 \\
+Establishments & 4{,}084 & 4{,}084 & 4{,}084 & 4{,}084 \\
+  &  &  &  & \\
+\midrule
+\multicolumn{5}{l}{\textbf{Panel C:} Log Employment} \\
+\midrule
+Post $\times$ Connectivity & 0.0020 & 0.0014 & 0.0031 & 0.0051 \\
+  & (0.0081) & (0.0080) & (0.0083) & (0.0084) \\
+  &  &  &  & \\
+Pre $\times$ Connectivity & $-$0.0004 & 0.0001 & $-$0.0007 & $-$0.0026 \\
+  & (0.0065) & (0.0065) & (0.0064) & (0.0063) \\
+Pre-trend $p$-value & [0.9487] & [0.9912] & [0.9083] & [0.6817] \\
+  &  &  &  & \\
+Observations & 32{,}704 & 32{,}704 & 32{,}704 & 32{,}704 \\
+Establishments & 4{,}088 & 4{,}088 & 4{,}088 & 4{,}088 \\
+  &  &  &  & \\
+\midrule
+\multicolumn{5}{l}{\textbf{Panel D:} Clause Count} \\
+\midrule
+Post $\times$ Connectivity & 0.0039 & $-$0.0262 & 0.0568 & 0.0699 \\
+  & (0.1160) & (0.1171) & (0.1134) & (0.1156) \\
+  &  &  &  & \\
+Pre $\times$ Connectivity & 0.3467* & 0.3814** & 0.2223 & 0.2262 \\
+  & (0.1984) & (0.1810) & (0.1711) & (0.1692) \\
+Pre-trend $p$-value & [0.0806] & [0.0351] & [0.1939] & [0.1814] \\
+  &  &  &  & \\
+Observations & 19{,}693 & 19{,}693 & 19{,}693 & 19{,}693 \\
+Establishments & 4{,}142 & 4{,}142 & 4{,}142 & 4{,}142 \\
+\bottomrule
+\end{tabular}
+\scriptsize
+\begin{tablenotes}
+\item \textit{Notes:} This table assesses the sensitivity of spillover estimates to the choice of bin count $N \in \{10, 20, 50, 100\}$. Each column corresponds to a different bin count; each panel corresponds to a different outcome. The sample is restricted to untreated establishments in the Lagos balanced panel. Connectivity is per-worker pairwise flows to treated firms (2007--2011), normalized to the 90th percentile. Post $\times$ Connectivity captures the average spillover effect for 2012--2016; Pre $\times$ Connectivity is a placebo test using 2009--2011. The clause count outcome uses CBA negotiation periods rather than calendar years. All regressions include establishment fixed effects, year fixed effects interacted with two-digit industry, microregion, and negotiation-month indicators, and $N$-bin controls for pre-treatment per-worker pairwise flows (2007--2011) and pre-treatment log employment interacted with year fixed effects. Pre-trend $p$-value is from the pre-treatment placebo DiD regression. Standard errors clustered at the establishment level in parentheses. *** p$<$0.01, ** p$<$0.05, * p$<$0.10.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
