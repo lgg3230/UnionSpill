@@ -119,6 +119,23 @@ cap drop e_lr_remdezr_w
 di as result "Residualizing lr_remdezr_w on full untreated sample..."
 reghdfe lr_remdezr_w if `s_spill', absorb(`absorb_e') residuals(e_lr_remdezr_w)
 
+* ── Residualize connectivity (no firm FE — conn is time-invariant) ───────────
+* Same controls as wages but drop identificad to avoid perfect collinearity.
+local absorb_conn "i.industry1#i.year i.mode_base_month#i.year i.microregion#i.year ib0.lr_remdezr_w_pre4#i.year ib0.l_firm_emp_pre4#i.year ib0.totalflows_pw_pre_07_114#i.year"
+
+cap drop e_conn
+di as result "Residualizing totaltreat_pw_norm (no firm FE)..."
+reghdfe totaltreat_pw_norm if `s_spill', absorb(`absorb_conn') residuals(e_conn)
+
+* ── Export full panel for DiD scatter (all firm-years, no averaging) ─────────
+preserve
+	keep if `s_spill'
+	keep identificad year totaltreat_pw_norm e_conn e_lr_remdezr_w
+	drop if missing(e_conn) | missing(e_lr_remdezr_w)
+	export delimited "$tables/conn_margins/scatter_resid_wages_panel.csv", replace
+	di as result "Exported → Tables/conn_margins/scatter_resid_wages_panel.csv (" _N " obs)"
+restore
+
 * ── Firm-level averages of residuals ─────────────────────────────────────────
 * Connectivity is time-invariant: use value from any year
 cap drop conn_firm
@@ -177,8 +194,10 @@ di as result "Exported → Tables/conn_margins/scatter_resid_wages.csv"
 if "`c(username)'" == "lgg3230" {
 	shell ~/.conda/envs/venv_python312/bin/python "$programs/conn_margins/conn_margins_scatter.py"
 	shell ~/.conda/envs/venv_python312/bin/python "$programs/conn_margins/conn_margins_scatter_raw.py"
+	shell ~/.conda/envs/venv_python312/bin/python "$programs/conn_margins/conn_margins_scatter_did.py"
 }
 else {
 	shell python3 "$programs/conn_margins/conn_margins_scatter.py"
 	shell python3 "$programs/conn_margins/conn_margins_scatter_raw.py"
+	shell python3 "$programs/conn_margins/conn_margins_scatter_did.py"
 }
