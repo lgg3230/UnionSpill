@@ -1,0 +1,52 @@
+\begin{table}[!htbp]
+\centering
+\caption{Spillover Effects: Above-Threshold vs.\ Zero-Connectivity Firms}
+\label{tab:conn_margins_thresholds_vs_zero}
+\scriptsize
+\begin{tabular}{lcccc}
+\toprule\toprule
+ & \textbf{Above Median} & \textbf{Above p65} & \textbf{Above p75} & \textbf{Above p90} \\
+ & (1) & (2) & (3) & (4) \\
+\midrule
+\multicolumn{5}{l}{\textit{\textbf{Panel A: Log Wages}}} \\
+\midrule
+Post $\times$ Above Threshold & 0.0068 & 0.0036 & 0.0111 & 0.0093 \\
+  & (0.0068) & (0.0075) & (0.0084) & (0.0123) \\
+  & & & & \\
+Pre $\times$ Above Threshold & $-$0.0070 & $-$0.0035 & $-$0.0013 & $-$0.0013 \\
+  & (0.0067) & (0.0074) & (0.0083) & (0.0117) \\
+Pre-trend $F$-test $p$-value & [0.3544] & [0.3679] & [0.6386] & [0.7619] \\
+  & & & & \\
+$N$ establishments & 3,920 & 3,280 & 2,852 & 2,228 \\
+$N$ observations & 31,184 & 26,081 & 22,681 & 17,724 \\
+\midrule
+\multicolumn{5}{l}{\textit{\textbf{Panel B: Log Hourly Wages}}} \\
+\midrule
+Post $\times$ Above Threshold & 0.0042 & 0.0030 & 0.0097 & 0.0095 \\
+  & (0.0070) & (0.0076) & (0.0086) & (0.0125) \\
+  & & & & \\
+Pre $\times$ Above Threshold & $-$0.0066 & $-$0.0036 & 0.0002 & $-$0.0038 \\
+  & (0.0074) & (0.0081) & (0.0090) & (0.0125) \\
+Pre-trend $F$-test $p$-value & [0.4892] & [0.4719] & [0.6502] & [0.8385] \\
+  & & & & \\
+$N$ establishments & 3,920 & 3,280 & 2,852 & 2,228 \\
+$N$ observations & 31,184 & 26,081 & 22,681 & 17,724 \\
+\midrule
+\multicolumn{5}{l}{\textit{\textbf{Panel C: Log Employment}}} \\
+\midrule
+Post $\times$ Above Threshold & $-$0.0133 & $-$0.0170 & $-$0.0255 & $-$0.0077 \\
+  & (0.0231) & (0.0254) & (0.0288) & (0.0400) \\
+  & & & & \\
+Pre $\times$ Above Threshold & 0.0292* & 0.0164 & 0.0060 & $-$0.0001 \\
+  & (0.0164) & (0.0182) & (0.0206) & (0.0277) \\
+Pre-trend $F$-test $p$-value & [0.1736] & [0.6003] & [0.8961] & [0.9929] \\
+  & & & & \\
+$N$ establishments & 3,924 & 3,283 & 2,855 & 2,231 \\
+$N$ observations & 31,392 & 26,264 & 22,840 & 17,848 \\
+\bottomrule\bottomrule
+\end{tabular}
+\begin{minipage}{\linewidth}
+\footnotesize\vspace{4pt}
+\textit{Notes:} This table replicates Table~\ref{tab:conn_margins_thresholds} but restricts the comparison group to establishments with strictly zero pre-treatment connectivity to treated firms. In each column, firms with positive connectivity below the indicated threshold are excluded, so the coefficient on \textit{Post~$\times$~Above Threshold} captures the differential post-reform wage or employment change of high-connectivity establishments relative to unconnected establishments only. Each column defines a binary indicator equal to one if a firm's normalized connectivity exceeds the indicated percentile of the 2009 spillover-sample distribution. All regressions include establishment fixed effects interacted with two-digit industry, microregion, and base negotiation-month indicators by year, and quartile-bin controls for pre-treatment per-worker pairwise worker flows (2007--2011) and pre-treatment establishment size. Standard errors clustered at the establishment level in parentheses. *** $p<0.01$, ** $p<0.05$, * $p<0.10$.
+\end{minipage}
+\end{table}

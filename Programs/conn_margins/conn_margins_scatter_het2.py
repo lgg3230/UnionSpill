@@ -1,12 +1,11 @@
 #!/usr/bin/env python3
 """
-Heterogeneous effects scatter: firm-level DiD (avg_post_resid - avg_pre_resid)
+Heterogeneous effects scatter (variant 2): firm-level DiD (avg_post_resid - avg_pre_resid)
 vs. residualized connectivity. Equal-frequency bins + LOWESS fit.
-A straight line = homogeneous effect; curvature = heterogeneity.
-OLS reference line shown with slope ≈ DiD coefficient.
+Each firm plotted at its own y value, x smoothed to bin average.
 
 Input:  Tables/conn_margins/scatter_resid_wages_panel.csv
-Output: Graphs/conn_margins/scatter_resid_wages_het.{pdf,png}
+Output: Graphs/conn_margins/scatter_resid_wages_het2.{pdf,png}
 """
 
 import numpy as np
@@ -54,11 +53,11 @@ N_BINS = 200
 
 firms_s = firms.copy()
 firms_s["bin"] = pd.qcut(firms_s["e_conn"], q=N_BINS, labels=False, duplicates="drop")
-# Average only y within each bin; keep each firm's actual x
-bin_mean_y = firms_s.groupby("bin")["diff"].mean()
-firms_s["diff_binned"] = firms_s["bin"].map(bin_mean_y)
-bx = firms_s["e_conn"].values
-by = firms_s["diff_binned"].values
+# Average only x within each bin; keep each firm's actual y
+bin_mean_x = firms_s.groupby("bin")["e_conn"].mean()
+firms_s["e_conn_binned"] = firms_s["bin"].map(bin_mean_x)
+bx = firms_s["e_conn_binned"].values
+by = firms_s["diff"].values
 
 # LOWESS
 smoothed = lowess(by, bx, frac=0.4, return_sorted=True)
@@ -74,9 +73,9 @@ print(f"OLS slope: {ols_coef[0]:.4f}  (should ≈ DiD coefficient)")
 
 fig, ax = plt.subplots(figsize=(7, 4.5))
 
-# Binned scatter
+# Scatter
 ax.scatter(bx, by, s=18, color="#999999", alpha=1.0, zorder=2, linewidths=0,
-           label="Firms (y = bin avg, 200 equal-freq. bins)")
+           label="Firms (x = bin avg, 200 equal-freq. bins)")
 
 # LOWESS
 ax.plot(smoothed[:, 0], smoothed[:, 1], color="#0072B2", linewidth=2.2,
@@ -106,10 +105,10 @@ ax.legend(
 
 fig.tight_layout(rect=[0, 0.08, 1, 1])
 
-out_pdf = graphs_dir / "scatter_resid_wages_het.pdf"
+out_pdf = graphs_dir / "scatter_resid_wages_het2.pdf"
 fig.savefig(out_pdf, bbox_inches="tight")
 print(f"Saved: {out_pdf}")
 
-out_png = graphs_dir / "scatter_resid_wages_het.png"
+out_png = graphs_dir / "scatter_resid_wages_het2.png"
 fig.savefig(out_png, dpi=160, bbox_inches="tight")
 print(f"Saved: {out_png}")

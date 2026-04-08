@@ -1,0 +1,52 @@
+\begin{table}[!htbp]
+\centering
+\caption{Spillover Effects by Connectivity Threshold}
+\label{tab:conn_margins_thresholds}
+\scriptsize
+\begin{tabular}{lcccc}
+\toprule\toprule
+ & \textbf{Above Median} & \textbf{Above p65} & \textbf{Above p75} & \textbf{Above p90} \\
+ & (1) & (2) & (3) & (4) \\
+\midrule
+\multicolumn{5}{l}{\textit{\textbf{Panel A: Log Wages}}} \\
+\midrule
+Post $\times$ Above Threshold & 0.0015 & $-$0.0022 & 0.0075 & 0.0090 \\
+  & (0.0062) & (0.0060) & (0.0066) & (0.0090) \\
+  & & & & \\
+Pre $\times$ Above Threshold & $-$0.0028 & 0.0055 & 0.0056 & $-$0.0020 \\
+  & (0.0062) & (0.0057) & (0.0062) & (0.0087) \\
+Pre-trend $F$-test $p$-value & [0.8881] & [0.4002] & [0.6566] & [0.8228] \\
+  & & & & \\
+$N$ establishments & 4,084 & 4,084 & 4,084 & 4,084 \\
+$N$ observations & 32,495 & 32,495 & 32,495 & 32,495 \\
+\midrule
+\multicolumn{5}{l}{\textit{\textbf{Panel B: Log Hourly Wages}}} \\
+\midrule
+Post $\times$ Above Threshold & $-$0.0011 & $-$0.0004 & 0.0094 & 0.0141 \\
+  & (0.0065) & (0.0061) & (0.0068) & (0.0095) \\
+  & & & & \\
+Pre $\times$ Above Threshold & $-$0.0024 & 0.0045 & 0.0069 & $-$0.0023 \\
+  & (0.0068) & (0.0060) & (0.0066) & (0.0092) \\
+Pre-trend $F$-test $p$-value & [0.9054] & [0.4822] & [0.5632] & [0.9464] \\
+  & & & & \\
+$N$ establishments & 4,084 & 4,084 & 4,084 & 4,084 \\
+$N$ observations & 32,495 & 32,495 & 32,495 & 32,495 \\
+\midrule
+\multicolumn{5}{l}{\textit{\textbf{Panel C: Log Employment}}} \\
+\midrule
+Post $\times$ Above Threshold & $-$0.0081 & $-$0.0252 & $-$0.0177 & 0.0433 \\
+  & (0.0222) & (0.0225) & (0.0252) & (0.0325) \\
+  & & & & \\
+Pre $\times$ Above Threshold & 0.0153 & 0.0146 & 0.0024 & $-$0.0263 \\
+  & (0.0166) & (0.0161) & (0.0184) & (0.0245) \\
+Pre-trend $F$-test $p$-value & [0.5697] & [0.6629] & [0.7625] & [0.5636] \\
+  & & & & \\
+$N$ establishments & 4,088 & 4,088 & 4,088 & 4,088 \\
+$N$ observations & 32,704 & 32,704 & 32,704 & 32,704 \\
+\bottomrule\bottomrule
+\end{tabular}
+\begin{minipage}{\linewidth}
+\footnotesize\vspace{4pt}
+\textit{Notes:} This table examines whether the wage and employment spillovers from Brazil's Ultractivity Reform (S\'umula 277, 2012) are concentrated among untreated establishments with high pre-treatment worker-flow exposure to directly affected firms. Each column replaces the continuous connectivity measure with a binary indicator equal to one if a firm's normalized connectivity exceeds the indicated percentile of the connectivity distribution among untreated establishments in 2009, and zero otherwise. \textit{Post~$\times$~Above Threshold} is the coefficient on the interaction of the above-threshold dummy with a post-2012 indicator in a two-way fixed effects regression estimated on the untreated sample. \textit{Pre~$\times$~Above Threshold} is the analogous placebo coefficient estimated on pre-treatment data (2009--2011) only. The pre-trend $F$-test $p$-value is from a joint test of the above-threshold $\times$ year interactions for 2009 and 2010 relative to 2011 in an event-study specification. All regressions include establishment fixed effects interacted with two-digit industry, microregion, and base negotiation-month indicators by year, and quartile-bin controls for pre-treatment per-worker pairwise worker flows (2007--2011) and pre-treatment establishment size. Standard errors clustered at the establishment level in parentheses. *** $p<0.01$, ** $p<0.05$, * $p<0.10$.
+\end{minipage}
+\end{table}
