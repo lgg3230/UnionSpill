@@ -1,0 +1,45 @@
+\begin{table}[!htbp]
+\centering
+\caption{Direct Effects on Labor Outcomes, Excluding Prefix 10877926 Firms}
+\label{tab:labor_prefix_direct}
+\scriptsize
+\begin{tabular}{lccc}
+\toprule
+ & Monthly wage & Hourly wage & Employment \\
+\midrule
+\multicolumn{4}{l}{\textbf{Panel A}}\\
+\multicolumn{4}{l}{\textit{Control group: zero connectivity untreated firms}}\\
+Post $\times$ Treatment & 0.0244*** & 0.0270*** & 0.0015\\
+ & (0.0049) & (0.0051) & (0.0153)\\
+Pre $\times$ Treatment & 0.0018 & 0.0006 & 0.0171*\\
+ & (0.0046) & (0.0055) & (0.0102)\\
+Pre-trend p-value & [0.3950] & [0.4515] & [0.0383]\\
+$N$ establishments & 14{,}110 & 14{,}110 & 14{,}113\\
+$N$ observations & 112{,}487 & 112{,}487 & 112{,}904\\
+\addlinespace
+\multicolumn{4}{l}{\textbf{Panel B}}\\
+\multicolumn{4}{l}{\textit{Control group: untreated firms with connectivity $\leq 1\%$}}\\
+Post $\times$ Treatment & 0.0189*** & 0.0223*** & $-$0.0031\\
+ & (0.0038) & (0.0039) & (0.0125)\\
+Pre $\times$ Treatment & 0.0061* & 0.0067 & 0.0042\\
+ & (0.0035) & (0.0041) & (0.0088)\\
+Pre-trend p-value & [0.0751] & [0.0807] & [0.3708]\\
+$N$ establishments & 15{,}105 & 15{,}105 & 15{,}109\\
+$N$ observations & 120{,}425 & 120{,}425 & 120{,}872\\
+\addlinespace
+\multicolumn{4}{l}{\textbf{Panel C}}\\
+\multicolumn{4}{l}{\textit{Control group: all untreated firms}}\\
+Post $\times$ Treatment & 0.0171*** & 0.0195*** & 0.0034\\
+ & (0.0032) & (0.0033) & (0.0111)\\
+Pre $\times$ Treatment & 0.0050* & 0.0057 & $-$0.0006\\
+ & (0.0030) & (0.0035) & (0.0076)\\
+Pre-trend p-value & [0.0654] & [0.0694] & [0.5831]\\
+$N$ establishments & 16{,}366 & 16{,}366 & 16{,}372\\
+$N$ observations & 130{,}452 & 130{,}452 & 130{,}976\\
+\bottomrule
+\end{tabular}
+\begin{minipage}{\linewidth}
+\footnotesize\vspace{4pt}
+\textit{Notes:} This table re-estimates the year-based direct-effect specification from \texttt{Main\_Results\_pct\_tfpw\_07\_11.do}, excluding all firms whose \texttt{identificad} starts with \texttt{10877926}. Monthly wage is \texttt{lr\_remdezr\_w}; hourly wage is \texttt{lr\_remdezr\_h\_w}. All specifications include establishment fixed effects, year interactions with industry, negotiation month, and microregion, and quartile-bin controls for the pre-treatment outcome, pre-treatment log employment, and average per-worker worker flows during 2007--2011. Standard errors clustered by establishment are in parentheses. *** p$<$0.01, ** p$<$0.05, * p$<$0.10.
+\end{minipage}
+\end{table}

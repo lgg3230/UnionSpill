@@ -1,0 +1,42 @@
+\begin{table}[H]
+\centering
+\caption{Robustness of Labor Spillover Estimates to Clause-Count Outlier Firms}
+\label{tab:labor_combined_spillover}
+\scriptsize
+\begin{tabular}{lccc}
+\toprule
+ & Monthly wage & Hourly wage & Employment \\
+\midrule
+\multicolumn{4}{l}{\textbf{(1) Baseline}}\\
+Post $\times$ Connectivity & 0.0051** & 0.0066*** & 0.0004\\
+ & (0.0023) & (0.0023) & (0.0081)\\
+Pre $\times$ Connectivity & 0.0020 & 0.0016 & $-$0.0012\\
+ & (0.0025) & (0.0026) & (0.0063)\\
+Pre-trend p-value & [0.7281] & [0.7922] & [0.8662]\\
+$N$ establishments & 4{,}084 & 4{,}084 & 4{,}088\\
+$N$ observations & 32{,}495 & 32{,}495 & 32{,}704\\
+\addlinespace
+\multicolumn{4}{l}{\textbf{(2) Drop top-1\% period-1 clause-count firms}}\\
+Post $\times$ Connectivity & 0.0039* & 0.0060** & 0.0003\\
+ & (0.0024) & (0.0025) & (0.0091)\\
+Pre $\times$ Connectivity & 0.0034 & 0.0027 & $-$0.0005\\
+ & (0.0028) & (0.0028) & (0.0072)\\
+Pre-trend p-value & [0.4455] & [0.5443] & [0.8834]\\
+$N$ establishments & 4{,}046 & 4{,}046 & 4{,}050\\
+$N$ observations & 32{,}191 & 32{,}191 & 32{,}400\\
+\addlinespace
+\multicolumn{4}{l}{\textbf{(3) Drop prefix-10877926 firms}}\\
+Post $\times$ Connectivity & 0.0041* & 0.0061** & 0.0000\\
+ & (0.0024) & (0.0026) & (0.0091)\\
+Pre $\times$ Connectivity & 0.0034 & 0.0027 & $-$0.0008\\
+ & (0.0028) & (0.0028) & (0.0072)\\
+Pre-trend p-value & [0.4442] & [0.5361] & [0.8828]\\
+$N$ establishments & 4{,}059 & 4{,}059 & 4{,}063\\
+$N$ observations & 32{,}295 & 32{,}295 & 32{,}504\\
+\bottomrule
+\end{tabular}
+\begin{minipage}{\linewidth}
+\footnotesize\vspace{4pt}
+\textit{Notes:} This table re-estimates the year-based spillover specification across three samples. \textbf{(1)} Full spillover sample (untreated, balanced-panel firms). \textbf{(2)} Drops 44 firms whose \texttt{cba\_period\,=\,1} \texttt{numb\_clauses} is at or above the 99th-percentile cross-sectional cutoff (118 clauses). \textbf{(3)} Drops firms with CNPJ prefix 10877926, which account for a disproportionate share of the cross-sectional clause count. Connectivity is normalized by the 90th percentile of the 2009 spillover-sample distribution. Monthly wage is \texttt{lr\_remdezr\_w}; hourly wage is \texttt{lr\_remdezr\_h\_w}. All specifications include establishment fixed effects and year interactions with industry, negotiation month, and microregion, plus quartile-bin controls for pre-treatment outcome, pre-treatment log employment, and average per-worker flows during 2007--2011. Standard errors clustered by establishment in parentheses. *** p$<$0.01, ** p$<$0.05, * p$<$0.10.
+\end{minipage}
+\end{table}
