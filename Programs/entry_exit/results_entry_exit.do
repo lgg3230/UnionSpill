@@ -45,14 +45,10 @@ local spec      "entry_exit"
 local conn      "totaltreat_pw_norm"
 
 * Fixed effects: firm + industry×year + microregion×year + base_month×year
-* base_month×year is included in the main DiD and placebo specs.
-* For event-study regressions, mode_base_month is excluded to avoid
-* severe MWFE convergence slowdowns (8 year×treat dummies + 88 base_month×year
-* FEs creates a near-ill-conditioned demeaning problem).
+* mode_base_month is always included. Event-study regressions use tolerance(1e-2)
+* to keep MWFE convergence fast under the expanded FE set.
 local base_fe      "identificad i.industry1#i.year i.microregion#i.year i.mode_base_month#i.year"
 local base_fe_cba  "identificad i.industry1#i.cba_period i.microregion#i.cba_period i.mode_base_month#i.cba_period"
-local base_fe_es   "identificad i.industry1#i.year i.microregion#i.year"
-local base_fe_cba_es "identificad i.industry1#i.cba_period i.microregion#i.cba_period"
 local extra_year   "ib0.totalflows_pw_pre_07_114#i.year"
 local extra_cba    "ib0.totalflows_pw_pre_07_114#i.cba_period"
 
@@ -137,9 +133,9 @@ foreach samp in full pre {
         di _newline(1)
         di as result "--- Panel `panel' | `samp_label' ---"
 
-        * ── YEAR-BASED OUTCOMES: l_firm_emp, lr_remdezr_w ───────────────────
+        * ── YEAR-BASED OUTCOMES: l_firm_emp, lr_remdezr_w, lr_remdezr_h_w ──────
 
-        foreach outcome in l_firm_emp lr_remdezr_w {
+        foreach outcome in l_firm_emp lr_remdezr_w lr_remdezr_h_w {
 
             di as text "  Estimating: `outcome' (Panel `panel', `samp')"
 
@@ -336,7 +332,7 @@ foreach samp in full pre {
 
     * ── YEAR-BASED OUTCOMES ──────────────────────────────────────────────────
 
-    foreach outcome in l_firm_emp lr_remdezr_w {
+    foreach outcome in l_firm_emp lr_remdezr_w lr_remdezr_h_w {
 
         di as text "  Estimating: `outcome' (spillover, `samp')"
 
@@ -372,10 +368,9 @@ foreach samp in full pre {
         else if `p_pre' < 0.10 & `p_pre' >= 0.05    local stars_pre "*"
 
         * Event-study F-test for pre-trend
-        * (absorb_es omits mode_base_month to avoid MWFE convergence slowdown)
-        local absorb_spill_es "`base_fe_es' ib0.`outcome'_pre4#i.year ib0.l_firm_emp_pre4#i.year `extra_year'"
+        local absorb_spill_es "`base_fe' ib0.`outcome'_pre4#i.year ib0.l_firm_emp_pre4#i.year `extra_year'"
         reghdfe `outcome' c.`conn'##ib2011.year if `s_spill', ///
-            absorb(`absorb_spill_es') vce(cluster identificad)
+            absorb(`absorb_spill_es') vce(cluster identificad) tolerance(1e-2)
         capture testparm c.`conn'#i(2009 2010).year
         local pre_ftest_pval = cond(_rc==0, r(p), .)
 
@@ -458,11 +453,10 @@ foreach samp in full pre {
         else if `p_pre' < 0.10 & `p_pre' >= 0.05    local stars_pre "*"
 
         * Event-study F-test for pre-trend
-        * (absorb_cba_es omits mode_base_month to avoid MWFE convergence slowdown)
-        local absorb_spill_cba_es "`base_fe_cba_es' ib0.numb_clauses_pre4#i.cba_period ib0.l_firm_emp_pre4#i.cba_period `extra_cba'"
+        local absorb_spill_cba_es "`base_fe_cba' ib0.numb_clauses_pre4#i.cba_period ib0.l_firm_emp_pre4#i.cba_period `extra_cba'"
         reghdfe numb_clauses c.`conn'##ib2.cba_period ///
             if `s_spill' & !missing(cba_period), ///
-            absorb(`absorb_spill_cba_es') vce(cluster identificad)
+            absorb(`absorb_spill_cba_es') vce(cluster identificad) tolerance(1e-2)
         testparm c.`conn'#1.cba_period
         local pre_ftest_pval = r(p)
 

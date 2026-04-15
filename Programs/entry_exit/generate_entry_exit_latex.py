@@ -5,9 +5,11 @@ Produces LaTeX tables for the entry/exit exercise.
 
 For each of panels A, B, C (direct effects) and D (spillover effects):
   - Reads the two CSV files (full unbalanced panel; firms present all pretreat years)
-  - Generates one table with 6 columns: 3 outcomes × 2 panel samples
-    Columns: (1) l_firm_emp [full], (2) lr_remdezr_w [full], (3) numb_clauses [full]
-             (4) l_firm_emp [pretreat], (5) lr_remdezr_w [pretreat], (6) numb_clauses [pretreat]
+  - Generates one table with 8 columns: 4 outcomes × 2 panel samples
+    Columns: (1) l_firm_emp [full], (2) lr_remdezr_w [full],
+             (3) lr_remdezr_h_w [full], (4) numb_clauses [full]
+             (5) l_firm_emp [pretreat], (6) lr_remdezr_w [pretreat],
+             (7) lr_remdezr_h_w [pretreat], (8) numb_clauses [pretreat]
 
 Outputs:
   Tables/entry_exit/direct_panelA_entry_exit.tex
@@ -105,14 +107,11 @@ def write_table(
     is_spill=False,
     note_extra="",
 ):
-    outcomes = ["l_firm_emp", "lr_remdezr_w", "numb_clauses"]
-    col_labels = [
-        r"\multicolumn{3}{c}{Full unbalanced panel}",
-        r"\multicolumn{3}{c}{Present all pre-treat yrs}",
-    ]
+    outcomes = ["l_firm_emp", "lr_remdezr_w", "lr_remdezr_h_w", "numb_clauses"]
     out_labels = [
         r"\shortstack{Log\\employment}",
         r"\shortstack{Log real\\wage}",
+        r"\shortstack{Log hourly\\wage}",
         r"\shortstack{CBA\\clauses}",
     ]
 
@@ -130,15 +129,15 @@ def write_table(
     a(r"\centering")
     a(r"\scriptsize")
     a(r"\caption{" + panel_label + r"}")
-    a(r"\begin{tabular}{lcccccc}")
+    a(r"\begin{tabular}{lcccccccc}")
     a(r"\toprule")
 
     # Two-tier header
     a(
-        r"& \multicolumn{3}{c}{Full unbalanced panel}"
-        r" & \multicolumn{3}{c}{Present all pre-treat yrs} \\"
+        r"& \multicolumn{4}{c}{Full unbalanced panel}"
+        r" & \multicolumn{4}{c}{Present all pre-treat yrs} \\"
     )
-    a(r"\cmidrule(lr){2-4} \cmidrule(lr){5-7}")
+    a(r"\cmidrule(lr){2-5} \cmidrule(lr){6-9}")
     a(
         "& "
         + r" & ".join(out_labels)
@@ -146,7 +145,7 @@ def write_table(
         + r" & ".join(out_labels)
         + r" \\"
     )
-    a(r"& (1) & (2) & (3) & (4) & (5) & (6) \\")
+    a(r"& (1) & (2) & (3) & (4) & (5) & (6) & (7) & (8) \\")
     a(r"\midrule")
 
     def row_vals(d, row_type):
@@ -221,10 +220,12 @@ def write_table(
         r" 2009, 2010, and 2011, but allows subsequent exit."
         + spill_note +
         r" Outcomes: log December employment (\textit{Log employment}),"
-        r" log real December earnings computed from the worker-level dataset"
-        r" (\textit{Log real wage}),"
-        r" and the number of clauses in the relevant collective bargaining agreement"
-        r" (\textit{CBA clauses}), which is only defined for firms with a CBA."
+        r" log real December earnings (\textit{Log real wage}),"
+        r" log real hourly earnings (\textit{Log hourly wage})---both wage measures"
+        r" computed from the worker-level dataset---and the number of clauses in the"
+        r" relevant collective bargaining agreement (\textit{CBA clauses}), which is"
+        r" only defined for firms with a CBA."
+        r" Hourly wage is unavailable for exiting firms not in the balanced sample."
         r" Fixed effects absorb firm, industry $\times$ year, microregion $\times$ year,"
         r" and CBA base month $\times$ year."
         r" The CBA-clauses specification uses CBA-period fixed effects in place of year fixed effects."
@@ -264,10 +265,11 @@ def write_direct_combined(fout, panels_data):
 
     panels_data: list of (panel_label, data_full, data_pre) in order A, B, C.
     """
-    outcomes = ["l_firm_emp", "lr_remdezr_w", "numb_clauses"]
+    outcomes = ["l_firm_emp", "lr_remdezr_w", "lr_remdezr_h_w", "numb_clauses"]
     out_labels = [
         r"\shortstack{Log\\employment}",
         r"\shortstack{Log real\\wage}",
+        r"\shortstack{Log hourly\\wage}",
         r"\shortstack{CBA\\clauses}",
     ]
 
@@ -278,15 +280,15 @@ def write_direct_combined(fout, panels_data):
     a(r"\centering")
     a(r"\scriptsize")
     a(r"\caption{Direct Effects}")
-    a(r"\begin{tabular}{lcccccc}")
+    a(r"\begin{tabular}{lcccccccc}")
     a(r"\toprule")
 
     # Column header (printed once at top)
     a(
-        r"& \multicolumn{3}{c}{Full unbalanced panel}"
-        r" & \multicolumn{3}{c}{Present all pre-treat yrs} \\"
+        r"& \multicolumn{4}{c}{Full unbalanced panel}"
+        r" & \multicolumn{4}{c}{Present all pre-treat yrs} \\"
     )
-    a(r"\cmidrule(lr){2-4} \cmidrule(lr){5-7}")
+    a(r"\cmidrule(lr){2-5} \cmidrule(lr){6-9}")
     a(
         "& "
         + " & ".join(out_labels)
@@ -294,7 +296,7 @@ def write_direct_combined(fout, panels_data):
         + " & ".join(out_labels)
         + r" \\"
     )
-    a(r"& (1) & (2) & (3) & (4) & (5) & (6) \\")
+    a(r"& (1) & (2) & (3) & (4) & (5) & (6) & (7) & (8) \\")
 
     def coef_cells(d, row_type):
         cells = []
@@ -324,7 +326,7 @@ def write_direct_combined(fout, panels_data):
     for panel_label, data_full, data_pre in panels_data:
         a(r"\midrule")
         a(
-            r"\multicolumn{7}{l}{\textit{"
+            r"\multicolumn{9}{l}{\textit{"
             + panel_label
             + r"}} \\"
         )
@@ -364,10 +366,12 @@ def write_direct_combined(fout, panels_data):
         r" Panel A restricts control firms to those with zero pre-treatment worker flows to"
         r" treated firms; Panel B allows up to 1\%; Panel C uses all untreated firms."
         r" Outcomes: log December employment (\textit{Log employment}),"
-        r" log real December earnings computed from the worker-level dataset"
-        r" (\textit{Log real wage}),"
-        r" and the number of clauses in the relevant collective bargaining agreement"
-        r" (\textit{CBA clauses}), which is only defined for firms with a CBA."
+        r" log real December earnings (\textit{Log real wage}),"
+        r" log real hourly earnings (\textit{Log hourly wage})---both wage measures"
+        r" computed from the worker-level dataset---and the number of clauses in the"
+        r" relevant collective bargaining agreement (\textit{CBA clauses}), which is"
+        r" only defined for firms with a CBA."
+        r" Hourly wage is unavailable for exiting firms not in the balanced sample."
         r" Fixed effects absorb firm, industry $\times$ year, microregion $\times$ year,"
         r" and CBA base month $\times$ year."
         r" The CBA-clauses specification uses CBA-period fixed effects in place of year fixed effects."

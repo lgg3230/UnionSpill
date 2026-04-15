@@ -1,4 +1,6 @@
 .claude/
+!.claude/commands/
+!.claude/commands/**
 .vscode/
 *.log
 __pycache__/

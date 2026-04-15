@@ -2,27 +2,26 @@
 \centering
 \scriptsize
 \caption{Spillover Effects}
-\begin{tabular}{lcccccc}
+\begin{tabular}{lcccccccc}
 \toprule
-& \multicolumn{3}{c}{Full unbalanced panel} & \multicolumn{3}{c}{Present all pre-treat yrs} \\
-\cmidrule(lr){2-4} \cmidrule(lr){5-7}
-& \shortstack{Log\\employment} & \shortstack{Log real\\wage} & \shortstack{CBA\\clauses} & \shortstack{Log\\employment} & \shortstack{Log real\\wage} & \shortstack{CBA\\clauses} \\
-& (1) & (2) & (3) & (4) & (5) & (6) \\
+& \multicolumn{4}{c}{Full unbalanced panel} & \multicolumn{4}{c}{Present all pre-treat yrs} \\
+\cmidrule(lr){2-5} \cmidrule(lr){6-9}
+& \shortstack{Log\\employment} & \shortstack{Log real\\wage} & \shortstack{Log hourly\\wage} & \shortstack{CBA\\clauses} & \shortstack{Log\\employment} & \shortstack{Log real\\wage} & \shortstack{Log hourly\\wage} & \shortstack{CBA\\clauses} \\
+& (1) & (2) & (3) & (4) & (5) & (6) & (7) & (8) \\
 \midrule
-Connectivity $\times$ Post & 0.0094 & 0.0057*** & 0.0132 & -0.0072 & 0.0060*** & 0.0132 \\
-& (0.0104) & (0.0018) & (0.1209) & (0.0077) & (0.0020) & (0.1209) \\[3pt]
-Connectivity $\times$ Pre & -0.0017 & 0.0053** & 0.3633 & -0.0018 & 0.0054** & 0.3633 \\
-& (0.0101) & (0.0023) & (0.2216) & (0.0101) & (0.0023) & (0.2216) \\[3pt]
+Connectivity $\times$ Post & 0.0094 & 0.0057*** & 0.0059** & 0.0132 & -0.0072 & 0.0060*** & 0.0059** & 0.0132 \\
+& (0.0104) & (0.0018) & (0.0024) & (0.1209) & (0.0077) & (0.0020) & (0.0024) & (0.1209) \\[3pt]
+Connectivity $\times$ Pre & -0.0017 & 0.0053** & 0.0030 & 0.3633 & -0.0018 & 0.0054** & 0.0030 & 0.3633 \\
+& (0.0101) & (0.0023) & (0.0025) & (0.2216) & (0.0101) & (0.0023) & (0.0025) & (0.2216) \\[3pt]
 \midrule
-Observations & 38,459 & 38,074 & 21,386 & 38,052 & 37,675 & 21,386 \\
-Establishments & 5,114 & 5,106 & 4,578 & 5,041 & 5,033 & 4,578 \\
-Pre-trend $p$-val & 0.363 & 0.063 & 0.104 & 0.843 & 0.045 & 0.104 \\
+Observations & 38,459 & 38,074 & 35,213 & 21,386 & 38,052 & 37,675 & 35,213 & 21,386 \\
+Establishments & 5,114 & 5,106 & 4,517 & 4,578 & 5,041 & 5,033 & 4,517 & 4,578 \\
+Pre-trend $p$-val & 0.358 & 0.151 & 0.465 & 0.096 & 0.846 & 0.058 & 0.465 & 0.096 \\
 \bottomrule
 \end{tabular}
 \begin{minipage}{\textwidth}
 \footnotesize
 \medskip
-\textit{Notes}: This table reports difference-in-differences estimates using an unbalanced panel. \textit{Full unbalanced panel} includes all firms in the Lagos sample that appear in at least one year during 2009--2016. \textit{Present all pre-treat yrs} restricts to firms observed in every year of 2009, 2010, and 2011, but allows subsequent exit. The spillover regressor is a firm's pre-treatment exposure to treated firms, measured as pairwise per-worker flows from 2007--2011, normalized to the 90th percentile of the spillover sample in 2009. Outcomes: log December employment (\textit{Log employment}), log real December earnings computed from the worker-level dataset (\textit{Log real wage}), and the number of clauses in the relevant collective bargaining agreement (\textit{CBA clauses}), which is only defined for firms with a CBA. Fixed effects absorb firm, industry $\times$ year, microregion $\times$ year, and CBA base month $\times$ year. The CBA-clauses specification uses CBA-period fixed effects in place of year fixed effects. All specifications include pre-treatment quartile bins of the outcome and of log employment interacted with year (CBA period) fixed effects, and quartile bins of 2007--2011 average pairwise total flows interacted with year fixed effects. Exiting firms that are not in the balanced sample have their industry and CBA base month inferred from the CBA dataset and CNAE 2.0 codes in the RAIS 2009 establishment file. Standard errors clustered at the establishment level. Significance: $^{*}p{<}0.10$, $^{**}p{<}0.05$, $^{***}p{<}0.01$.
+\textit{Notes}: This table reports difference-in-differences estimates using an unbalanced panel. \textit{Full unbalanced panel} includes all firms in the Lagos sample that appear in at least one year during 2009--2016. \textit{Present all pre-treat yrs} restricts to firms observed in every year of 2009, 2010, and 2011, but allows subsequent exit. The spillover regressor is a firm's pre-treatment exposure to treated firms, measured as pairwise per-worker flows from 2007--2011, normalized to the 90th percentile of the spillover sample in 2009. Outcomes: log December employment (\textit{Log employment}), log real December earnings (\textit{Log real wage}), log real hourly earnings (\textit{Log hourly wage})---both wage measures computed from the worker-level dataset---and the number of clauses in the relevant collective bargaining agreement (\textit{CBA clauses}), which is only defined for firms with a CBA. Hourly wage is unavailable for exiting firms not in the balanced sample. Fixed effects absorb firm, industry $\times$ year, microregion $\times$ year, and CBA base month $\times$ year. The CBA-clauses specification uses CBA-period fixed effects in place of year fixed effects. All specifications include pre-treatment quartile bins of the outcome and of log employment interacted with year (CBA period) fixed effects, and quartile bins of 2007--2011 average pairwise total flows interacted with year fixed effects. Exiting firms that are not in the balanced sample have their industry and CBA base month inferred from the CBA dataset and CNAE 2.0 codes in the RAIS 2009 establishment file. Standard errors clustered at the establishment level. Significance: $^{*}p{<}0.10$, $^{**}p{<}0.05$, $^{***}p{<}0.01$.
 \end{minipage}
 \end{table}
-

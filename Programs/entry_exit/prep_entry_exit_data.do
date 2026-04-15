@@ -302,6 +302,25 @@ quietly {
 }
 label var lr_remdezr_w_pre4 "Quartile bin of pre-treatment log real wage (0=ref)"
 
+cap drop lr_remdezr_h_w_pre_o
+cap drop lr_remdezr_h_w_pre
+quietly {
+    bys identificad: egen lr_remdezr_h_w_pre_o = mean(lr_remdezr_h_w) if inrange(year,2009,2011)
+    bys identificad: egen lr_remdezr_h_w_pre   = min(lr_remdezr_h_w_pre_o)
+    drop lr_remdezr_h_w_pre_o
+}
+label var lr_remdezr_h_w_pre "Pre-treatment mean log real hourly wage (avg 2009-2011)"
+
+cap drop lr_remdezr_h_w_pre4_o
+cap drop lr_remdezr_h_w_pre4
+quietly {
+    egen lr_remdezr_h_w_pre4_o = cut(lr_remdezr_h_w_pre) if year == 2009, group(4)
+    bys identificad: egen lr_remdezr_h_w_pre4 = min(lr_remdezr_h_w_pre4_o)
+    drop lr_remdezr_h_w_pre4_o
+    replace lr_remdezr_h_w_pre4 = 0 if missing(lr_remdezr_h_w_pre4)
+}
+label var lr_remdezr_h_w_pre4 "Quartile bin of pre-treatment log real hourly wage (0=ref)"
+
 * numb_clauses pre-treatment bins (CBA firms only)
 capture confirm variable numb_clauses
 if _rc == 0 {
@@ -349,6 +368,7 @@ foreach v in treat_ultra microregion industry1 mode_base_month ///
              present_all_pretreat present_all_analysis ///
              l_firm_emp_pre l_firm_emp_pre4 ///
              lr_remdezr_w_pre lr_remdezr_w_pre4 ///
+             lr_remdezr_h_w_pre lr_remdezr_h_w_pre4 ///
              totalflows_pw_pre_07_114 {
     capture confirm variable `v'
     if _rc == 0 {
