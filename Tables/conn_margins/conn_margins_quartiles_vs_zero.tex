@@ -1,0 +1,40 @@
+\begin{table}[H]
+\centering
+\caption{Spillover Effects by Connectivity Quartile vs.\ Zero-Connectivity Firms}
+\label{tab:conn_margins_quartiles_vs_zero}
+\scriptsize
+\begin{tabular}{lcccc}
+\toprule\toprule
+ & \textbf{Q1 (bottom)} & \textbf{Q2} & \textbf{Q3} & \textbf{Q4 (top)} \\
+ & (1) & (2) & (3) & (4) \\
+\midrule
+\multicolumn{5}{l}{\textit{\textbf{Panel A: Log December Wages}}} \\
+\midrule
+Post $\times$ Connectivity Group & 0.0047 & $-$0.0174* & $-$0.0027 & 0.0066 \\
+  & (0.0129) & (0.0106) & (0.0108) & (0.0106) \\
+  & & & & \\
+Pre $\times$ Connectivity Group & $-$0.0034 & $-$0.0195** & 0.0018 & 0.0030 \\
+  & (0.0105) & (0.0096) & (0.0099) & (0.0108) \\
+Pre-trend $F$-test $p$-value & [0.6730] & [0.0800] & [0.7867] & [0.6507] \\
+  & & & & \\
+$N$ establishments & 2,382 & 2,372 & 2,356 & 2,386 \\
+$N$ observations & 18,948 & 18,869 & 18,738 & 18,976 \\
+\midrule
+\multicolumn{5}{l}{\textit{\textbf{Panel B: Log Hourly Wages}}} \\
+\midrule
+Post $\times$ Connectivity Group & $-$0.0038 & $-$0.0206* & $-$0.0040 & 0.0045 \\
+  & (0.0132) & (0.0112) & (0.0108) & (0.0109) \\
+  & & & & \\
+Pre $\times$ Connectivity Group & $-$0.0041 & $-$0.0244** & 0.0060 & 0.0004 \\
+  & (0.0128) & (0.0108) & (0.0108) & (0.0116) \\
+Pre-trend $F$-test $p$-value & [0.8565] & [0.0599] & [0.7548] & [0.6965] \\
+  & & & & \\
+$N$ establishments & 2,382 & 2,372 & 2,356 & 2,386 \\
+$N$ observations & 18,948 & 18,869 & 18,738 & 18,976 \\
+\bottomrule\bottomrule
+\end{tabular}
+\begin{minipage}{\linewidth}
+\footnotesize\vspace{4pt}
+\textit{Notes:} This table presents difference-in-differences estimates comparing each quartile of the positive-connectivity distribution against establishments with strictly zero pre-treatment connectivity to treated firms. Connectivity quartile thresholds are computed among spillover-sample establishments with positive connectivity ($\text{totaltreat\_pw\_n} > 0$) in 2009. Q1 (bottom quartile) through Q4 (top quartile) partition the positive-connectivity mass; each column's reference group is the zero-connectivity group. The coefficient \textit{Post~$\times$~Connectivity Group} captures the differential post-reform change in wages relative to unconnected establishments. All regressions include establishment fixed effects interacted with two-digit industry, microregion, and base negotiation-month indicators by year, and quartile-bin controls for pre-treatment per-worker pairwise worker flows (2007--2011) and pre-treatment establishment size. Standard errors clustered at the establishment level in parentheses. Pre-trend $F$-test $p$-value (in brackets) tests joint significance of the 2009--2010 interaction terms from the event-study specification. *** $p<0.01$, ** $p<0.05$, * $p<0.10$.
+\end{minipage}
+\end{table}

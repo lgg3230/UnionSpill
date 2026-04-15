@@ -28,6 +28,7 @@
 *     (1) Full unbalanced panel
 *     (2) Firms present in all pretreatment years (2009-2011)
 *   Outputs CSVs to Tables/entry_exit/; event-study PDFs to Graphs/entry_exit/.
+*
 ********************************************************************************
 
 // DIRECTORIES — must match 00_master.do globals
@@ -49,7 +50,7 @@ local run_041    = 0   // set to 1 to re-run CBA+RAIS merge
 local run_matlab = 0   // set to 1 to re-run MATLAB connectivity
 local run_05     = 0   // set to 1 to re-run connectivity aggregation
 local run_prep   = 0   // prep_entry_exit_data.do (panel already built)
-local run_results = 1  // results_entry_exit.do
+local run_results = 0  // results_entry_exit.do
 
 // ── Stage 1: Merge CBA + RAIS (unbalanced) ───────────────────────────────────
 
@@ -88,7 +89,7 @@ if `run_results' {
     do "$programs/entry_exit/results_entry_exit.do"
 }
 
-// ── Stage 6: LaTeX tables ─────────────────────────────────────────────────────
+// ── Stage 6: LaTeX tables (main results) ─────────────────────────────────────
 
 if `run_results' {
     shell ~/.conda/envs/venv_python312/bin/python ///
@@ -96,4 +97,4 @@ if `run_results' {
 }
 
 shell source /gpfs/kellogg/proj/lgg3230/UnionSpill/Programs/notify.sh && ///
-    notify "Entry/exit pipeline done" "Stages 4-6 completed for `d'"
+    notify "Entry/exit pipeline done" "Stages completed for `d'"

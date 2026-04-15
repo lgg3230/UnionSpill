@@ -8,14 +8,27 @@
 *   wage_clauses
 *   emp_clauses
 *   other_clauses
+*   wage_clause_prop
+*   emp_clause_prop
+*   other_clause_prop
 *
 * Output:
 *   Tables/clause_types/results_direct_panelA_clause_counts_tfpw_07_11.csv
 *   Tables/clause_types/results_direct_panelB_clause_counts_tfpw_07_11.csv
 *   Tables/clause_types/results_direct_panelC_clause_counts_tfpw_07_11.csv
 *   Tables/clause_types/results_spill_clause_counts_tfpw_07_11.csv
+*   Tables/clause_types/results_direct_panelA_clause_props_tfpw_07_11.csv
+*   Tables/clause_types/results_direct_panelB_clause_props_tfpw_07_11.csv
+*   Tables/clause_types/results_direct_panelC_clause_props_tfpw_07_11.csv
+*   Tables/clause_types/results_spill_clause_props_tfpw_07_11.csv
 *   Tables/clause_types/clause_count_direct_effects.tex
 *   Tables/clause_types/clause_count_spillover_effects.tex
+*   Tables/clause_types/clause_prop_direct_effects.tex
+*   Tables/clause_types/clause_prop_spillover_effects.tex
+*   Tables/clause_types/numb_clause_spill_pretrend_diagnostics.csv
+*   Tables/clause_types/numb_clause_spill_pretrend_top_connectivity.csv
+*   Tables/clause_types/numb_clause_spill_pretrend_top_delta.csv
+*   Tables/clause_types/numb_clause_spill_pretrend_top_influence_candidates.csv
 ********************************************************************************
 
 capture log close
@@ -69,6 +82,9 @@ di as result "Sample size after restrictions: " _N
 cap drop wage_clauses
 cap drop emp_clauses
 cap drop other_clauses
+cap drop wage_clause_prop
+cap drop emp_clause_prop
+cap drop other_clause_prop
 gen int wage_clauses  = 0
 gen int emp_clauses   = 0
 gen int other_clauses = 0
@@ -91,6 +107,14 @@ foreach v of local clause_vars {
 label var wage_clauses  "Count of wage-related clauses"
 label var emp_clauses   "Count of employment clauses"
 label var other_clauses "Count of other clauses"
+
+gen double wage_clause_prop  = wage_clauses / numb_clauses if numb_clauses > 0 & !missing(numb_clauses)
+gen double emp_clause_prop   = emp_clauses / numb_clauses if numb_clauses > 0 & !missing(numb_clauses)
+gen double other_clause_prop = other_clauses / numb_clauses if numb_clauses > 0 & !missing(numb_clauses)
+
+label var wage_clause_prop  "Wage clauses as share of all clauses"
+label var emp_clause_prop   "Employment clauses as share of all clauses"
+label var other_clause_prop "Other clauses as share of all clauses"
 
 ********************************************************************************
 * SECTION 3: VARIABLE CREATION
@@ -156,7 +180,7 @@ quietly {
 	drop l_firm_emp_pre4_o
 }
 
-foreach v in numb_clauses wage_clauses emp_clauses other_clauses {
+foreach v in numb_clauses wage_clauses emp_clauses other_clauses wage_clause_prop emp_clause_prop other_clause_prop {
 	cap drop `v'_pre_o
 	cap drop `v'_pre
 	quietly {
@@ -191,7 +215,9 @@ quietly {
 local spec "clause_counts_tfpw_07_11"
 local conn "totaltreat_pw_norm"
 
-local outcomes "numb_clauses wage_clauses emp_clauses other_clauses"
+local count_outcomes "numb_clauses wage_clauses emp_clauses other_clauses"
+local prop_outcomes "wage_clause_prop emp_clause_prop other_clause_prop"
+local outcomes "`count_outcomes' `prop_outcomes'"
 local base_fe_cba "identificad i.industry1#i.cba_period i.mode_base_month#i.cba_period i.microregion#i.cba_period"
 local extra_cba  "ib0.totalflows_pw_pre_07_114#i.cba_period"
 
@@ -209,11 +235,23 @@ foreach panel in A B C {
 	file open `fh' using "$tables/clause_types/results_direct_panel`panel'_clause_counts_tfpw_07_11.csv", write replace
 	file write `fh' "spec;section;outcome;row_type;value" _n
 	file close `fh'
+
+	capture erase "$tables/clause_types/results_direct_panel`panel'_clause_props_tfpw_07_11.csv"
+	tempname fh
+	file open `fh' using "$tables/clause_types/results_direct_panel`panel'_clause_props_tfpw_07_11.csv", write replace
+	file write `fh' "spec;section;outcome;row_type;value" _n
+	file close `fh'
 }
 
 capture erase "$tables/clause_types/results_spill_clause_counts_tfpw_07_11.csv"
 tempname fh
 file open `fh' using "$tables/clause_types/results_spill_clause_counts_tfpw_07_11.csv", write replace
+file write `fh' "spec;section;outcome;row_type;value" _n
+file close `fh'
+
+capture erase "$tables/clause_types/results_spill_clause_props_tfpw_07_11.csv"
+tempname fh
+file open `fh' using "$tables/clause_types/results_spill_clause_props_tfpw_07_11.csv", write replace
 file write `fh' "spec;section;outcome;row_type;value" _n
 file close `fh'
 
@@ -241,11 +279,17 @@ foreach panel in A B C {
 		local section "direct_C"
 	}
 
-	local csv_out "$tables/clause_types/results_direct_panel`panel'_clause_counts_tfpw_07_11.csv"
+	local csv_count_out "$tables/clause_types/results_direct_panel`panel'_clause_counts_tfpw_07_11.csv"
+	local csv_prop_out "$tables/clause_types/results_direct_panel`panel'_clause_props_tfpw_07_11.csv"
 
 	foreach outcome of local outcomes {
 
 		di as text "  Estimating: `outcome' (Panel `panel')"
+
+		local csv_out "`csv_count_out'"
+		if inlist("`outcome'", "wage_clause_prop", "emp_clause_prop", "other_clause_prop") {
+			local csv_out "`csv_prop_out'"
+		}
 
 		local absorb_cba "`base_fe_cba' ib0.`outcome'_pre4#i.cba_period ib0.l_firm_emp_pre4#i.cba_period `extra_cba'"
 
@@ -306,10 +350,16 @@ di as result "SPILLOVER EFFECTS"
 di as result "-----------------------------------------------------------------------"
 
 local csv_spill "$tables/clause_types/results_spill_clause_counts_tfpw_07_11.csv"
+local csv_spill_prop "$tables/clause_types/results_spill_clause_props_tfpw_07_11.csv"
 
 foreach outcome of local outcomes {
 
 	di as text "  Estimating: `outcome' (spillover)"
+
+	local csv_out "`csv_spill'"
+	if inlist("`outcome'", "wage_clause_prop", "emp_clause_prop", "other_clause_prop") {
+		local csv_out "`csv_spill_prop'"
+	}
 
 	local absorb_cba "`base_fe_cba' ib0.`outcome'_pre4#i.cba_period ib0.l_firm_emp_pre4#i.cba_period `extra_cba'"
 
@@ -348,7 +398,7 @@ foreach outcome of local outcomes {
 	local pre_ftest_pval = r(p)
 
 	tempname fh
-	file open `fh' using "`csv_spill'", write append
+	file open `fh' using "`csv_out'", write append
 	file write `fh' `""`spec'";"spill";"`outcome'";"main";"' %9.4f (`b_post') `"`stars_post'""' _n
 	file write `fh' `""`spec'";"spill";"`outcome'";"main_se";"' %9.4f (`se_post') `"""' _n
 	file write `fh' `""`spec'";"spill";"`outcome'";"pre";"' %9.4f (`b_pre') `"`stars_pre'""' _n
@@ -358,6 +408,141 @@ foreach outcome of local outcomes {
 	file write `fh' `""`spec'";"spill";"`outcome'";"pre_pval";"' %9.4f (`pre_ftest_pval') `"""' _n
 	file close `fh'
 }
+
+********************************************************************************
+* SECTION 8: NUMB_CLAUSES SPILLOVER PRE-TREND OUTLIER DIAGNOSTICS
+********************************************************************************
+
+di _newline(2)
+di as result "-----------------------------------------------------------------------"
+di as result "NUMB_CLAUSES SPILLOVER PRE-TREND DIAGNOSTICS"
+di as result "-----------------------------------------------------------------------"
+
+cap drop numb_precell
+cap drop numb_pre_early
+cap drop numb_pre_late
+cap drop numb_pre_delta
+cap drop abs_numb_pre_delta
+cap drop influence_candidate_score
+
+bys identificad pre_treat_cba: egen numb_precell = mean(numb_clauses) ///
+	if `s_spill' & !missing(cba_period) & cba_period <= 2
+bys identificad: egen numb_pre_early = max(cond(pre_treat_cba == 1, numb_precell, .))
+bys identificad: egen numb_pre_late = max(cond(pre_treat_cba == 0, numb_precell, .))
+gen double numb_pre_delta = numb_pre_early - numb_pre_late ///
+	if !missing(numb_pre_early, numb_pre_late)
+gen double abs_numb_pre_delta = abs(numb_pre_delta)
+gen double influence_candidate_score = abs_numb_pre_delta * `conn'
+
+local diag_base_if "`s_spill' & !missing(cba_period) & cba_period <= 2"
+local diag_absorb "`base_fe_cba' ib0.numb_clauses_pre4#i.cba_period ib0.l_firm_emp_pre4#i.cba_period `extra_cba'"
+
+tempname diagpost
+tempfile diag_results
+postfile `diagpost' str40 diagnostic str80 restriction double cutoff b se p n_obs n_estab ///
+	using `diag_results', replace
+
+quietly reghdfe numb_clauses c.`conn'##pre_treat_cba ///
+	if `diag_base_if', ///
+	absorb(`diag_absorb') vce(cluster identificad)
+local b = _b[1.pre_treat_cba#c.`conn']
+local se = _se[1.pre_treat_cba#c.`conn']
+local pval = 2*ttail(e(df_r), abs(`b'/`se'))
+post `diagpost' ("baseline") ("none") (.) (`b') (`se') (`pval') (e(N)) (e(N_clust))
+
+quietly summarize `conn' if `diag_base_if', detail
+local conn_p90 = r(p90)
+local conn_p95 = r(p95)
+local conn_p99 = r(p99)
+
+foreach pct in 99 95 90 {
+	local cutoff = `conn_p`pct''
+	local dropped = 100 - `pct'
+	quietly reghdfe numb_clauses c.`conn'##pre_treat_cba ///
+		if `diag_base_if' & `conn' <= `cutoff', ///
+		absorb(`diag_absorb') vce(cluster identificad)
+	local b = _b[1.pre_treat_cba#c.`conn']
+	local se = _se[1.pre_treat_cba#c.`conn']
+	local pval = 2*ttail(e(df_r), abs(`b'/`se'))
+	post `diagpost' ("trim_connectivity") ("drop top `dropped' pct of connectivity") ///
+		(`cutoff') (`b') (`se') (`pval') (e(N)) (e(N_clust))
+}
+
+quietly summarize numb_clauses if `diag_base_if', detail
+local numb_p95 = r(p95)
+local numb_p99 = r(p99)
+
+foreach pct in 99 95 {
+	local cutoff = `numb_p`pct''
+	quietly reghdfe numb_clauses c.`conn'##pre_treat_cba ///
+		if `diag_base_if' & numb_clauses <= `cutoff', ///
+		absorb(`diag_absorb') vce(cluster identificad)
+	local b = _b[1.pre_treat_cba#c.`conn']
+	local se = _se[1.pre_treat_cba#c.`conn']
+	local pval = 2*ttail(e(df_r), abs(`b'/`se'))
+	post `diagpost' ("trim_clause_count") ("drop observations above p`pct' numb_clauses") ///
+		(`cutoff') (`b') (`se') (`pval') (e(N)) (e(N_clust))
+}
+
+quietly summarize abs_numb_pre_delta if `diag_base_if', detail
+local delta_p90 = r(p90)
+local delta_p95 = r(p95)
+local delta_p99 = r(p99)
+
+foreach pct in 99 95 90 {
+	local cutoff = `delta_p`pct''
+	quietly reghdfe numb_clauses c.`conn'##pre_treat_cba ///
+		if `diag_base_if' & (missing(abs_numb_pre_delta) | abs_numb_pre_delta <= `cutoff'), ///
+		absorb(`diag_absorb') vce(cluster identificad)
+	local b = _b[1.pre_treat_cba#c.`conn']
+	local se = _se[1.pre_treat_cba#c.`conn']
+	local pval = 2*ttail(e(df_r), abs(`b'/`se'))
+	post `diagpost' ("trim_pre_delta") ("drop firms above p`pct' absolute pre-period clause change") ///
+		(`cutoff') (`b') (`se') (`pval') (e(N)) (e(N_clust))
+}
+
+postclose `diagpost'
+
+preserve
+	use `diag_results', clear
+	export delimited using "$tables/clause_types/numb_clause_spill_pretrend_diagnostics.csv", replace
+restore
+
+preserve
+	keep if `diag_base_if'
+	bys identificad: keep if _n == 1
+	keep identificad `conn' numb_pre_early numb_pre_late numb_pre_delta ///
+		abs_numb_pre_delta influence_candidate_score firm_emp_pre industry1 ///
+		microregion mode_base_month totalflows_pw_pre_07_11
+	gsort -`conn'
+	gen rank_conn = _n
+	keep if rank_conn <= 50
+	export delimited using "$tables/clause_types/numb_clause_spill_pretrend_top_connectivity.csv", replace
+restore
+
+preserve
+	keep if `diag_base_if' & !missing(abs_numb_pre_delta)
+	bys identificad: keep if _n == 1
+	keep identificad `conn' numb_pre_early numb_pre_late numb_pre_delta ///
+		abs_numb_pre_delta influence_candidate_score firm_emp_pre industry1 ///
+		microregion mode_base_month totalflows_pw_pre_07_11
+	gsort -abs_numb_pre_delta
+	gen rank_abs_delta = _n
+	keep if rank_abs_delta <= 50
+	export delimited using "$tables/clause_types/numb_clause_spill_pretrend_top_delta.csv", replace
+restore
+
+preserve
+	keep if `diag_base_if' & !missing(influence_candidate_score)
+	bys identificad: keep if _n == 1
+	keep identificad `conn' numb_pre_early numb_pre_late numb_pre_delta ///
+		abs_numb_pre_delta influence_candidate_score firm_emp_pre industry1 ///
+		microregion mode_base_month totalflows_pw_pre_07_11
+	gsort -influence_candidate_score
+	gen rank_influence_candidate = _n
+	keep if rank_influence_candidate <= 50
+	export delimited using "$tables/clause_types/numb_clause_spill_pretrend_top_influence_candidates.csv", replace
+restore
 
 di as result "All clause-count regressions complete."
 log close
