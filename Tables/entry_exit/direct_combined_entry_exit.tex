@@ -1,0 +1,51 @@
+\begin{table}[H]
+\centering
+\scriptsize
+\caption{Direct Effects}
+\begin{tabular}{lcccccc}
+\toprule
+& \multicolumn{3}{c}{Full unbalanced panel} & \multicolumn{3}{c}{Present all pre-treat yrs} \\
+\cmidrule(lr){2-4} \cmidrule(lr){5-7}
+& \shortstack{Log\\employment} & \shortstack{Log real\\wage} & \shortstack{CBA\\clauses} & \shortstack{Log\\employment} & \shortstack{Log real\\wage} & \shortstack{CBA\\clauses} \\
+& (1) & (2) & (3) & (4) & (5) & (6) \\
+\midrule
+\multicolumn{7}{l}{\textit{Panel A: Zero-connectivity controls}} \\
+\midrule
+Treated $\times$ Post & -0.0137 & 0.0217*** & 1.5314*** & -0.0102 & 0.0251*** & 1.5314*** \\
+& (0.0145) & (0.0047) & (0.2915) & (0.0146) & (0.0046) & (0.2915) \\[3pt]
+Treated $\times$ Pre & 0.0161* & 0.0029 & 0.0730 & 0.0148 & 0.0032 & 0.0730 \\
+& (0.0097) & (0.0045) & (0.3313) & (0.0097) & (0.0045) & (0.3313) \\[3pt]
+\midrule
+Observations & 126,697 & 125,847 & 77,517 & 126,021 & 125,200 & 77,517 \\
+Establishments & 16,516 & 16,496 & 15,306 & 16,404 & 16,388 & 15,306 \\
+Pre-trend $p$-val & 0.123 & 0.315 & 0.882 & 0.220 & 0.424 & 0.882 \\
+\midrule
+\multicolumn{7}{l}{\textit{Panel B: Low-connectivity controls ($\leq$1\%)}} \\
+\midrule
+Treated $\times$ Post & -0.0108 & 0.0170*** & 1.3728*** & -0.0074 & 0.0194*** & 1.3728*** \\
+& (0.0125) & (0.0037) & (0.2572) & (0.0125) & (0.0036) & (0.2572) \\[3pt]
+Treated $\times$ Pre & 0.0070 & 0.0078** & 0.3168 & 0.0057 & 0.0079** & 0.3168 \\
+& (0.0085) & (0.0035) & (0.2796) & (0.0085) & (0.0035) & (0.2796) \\[3pt]
+\midrule
+Observations & 135,024 & 134,116 & 82,345 & 134,322 & 133,443 & 82,345 \\
+Establishments & 17,588 & 17,566 & 16,326 & 17,472 & 17,454 & 16,326 \\
+Pre-trend $p$-val & 0.415 & 0.016 & 0.265 & 0.633 & 0.057 & 0.265 \\
+\midrule
+\multicolumn{7}{l}{\textit{Panel C: All untreated firms}} \\
+\midrule
+Treated $\times$ Post & 0.0073 & 0.0148*** & 1.4164*** & 0.0102 & 0.0170*** & 1.4164*** \\
+& (0.0111) & (0.0031) & (0.2233) & (0.0111) & (0.0030) & (0.2233) \\[3pt]
+Treated $\times$ Pre & -0.0040 & 0.0062** & 0.2082 & -0.0050 & 0.0062** & 0.2082 \\
+& (0.0075) & (0.0030) & (0.2323) & (0.0075) & (0.0030) & (0.2323) \\[3pt]
+\midrule
+Observations & 147,593 & 146,543 & 89,345 & 146,693 & 145,675 & 89,345 \\
+Establishments & 19,251 & 19,227 & 17,808 & 19,097 & 19,077 & 17,808 \\
+Pre-trend $p$-val & 0.713 & 0.017 & 0.421 & 0.689 & 0.066 & 0.421 \\
+\bottomrule
+\end{tabular}
+\begin{minipage}{\textwidth}
+\footnotesize
+\medskip
+\textit{Notes}: This table reports difference-in-differences estimates using an unbalanced panel. \textit{Full unbalanced panel} includes all firms in the Lagos sample that appear in at least one year during 2009--2016. \textit{Present all pre-treat yrs} restricts to firms observed in every year of 2009, 2010, and 2011, but allows subsequent exit. Panel A restricts control firms to those with zero pre-treatment worker flows to treated firms; Panel B allows up to 1\%; Panel C uses all untreated firms. Outcomes: log December employment (\textit{Log employment}), log real December earnings computed from the worker-level dataset (\textit{Log real wage}), and the number of clauses in the relevant collective bargaining agreement (\textit{CBA clauses}), which is only defined for firms with a CBA. Fixed effects absorb firm, industry $\times$ year, microregion $\times$ year, and CBA base month $\times$ year. The CBA-clauses specification uses CBA-period fixed effects in place of year fixed effects. All specifications include pre-treatment quartile bins of the outcome and of log employment interacted with year (CBA period) fixed effects, and quartile bins of 2007--2011 average pairwise total flows interacted with year fixed effects. Exiting firms not in the balanced sample have their industry inferred from CNAE 2.0 codes in the RAIS 2009 establishment file. Standard errors clustered at the establishment level. Significance: $^{*}p{<}0.10$, $^{**}p{<}0.05$, $^{***}p{<}0.01$.
+\end{minipage}
+\end{table}

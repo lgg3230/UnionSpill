@@ -81,13 +81,16 @@ foreach ds in old new {
 use `old_data', clear
 append using `new_data'
 
+* Neutral counter for collapse (avoids conflict with by-variables)
+gen byte _one = 1
+
 ********************************************************************************
 ** PART 5 — Comparison table 1: Observation and firm counts
 ********************************************************************************
 
 * Total obs per sample × year
 preserve
-    collapse (count) n_obs = identificad, by(sample year)
+    collapse (count) n_obs = _one, by(sample year)
     list, sep(0)
     export delimited "$tables/compare_obs_by_year.csv", replace
 restore
@@ -95,7 +98,7 @@ restore
 * Unique firms per sample
 preserve
     bys sample identificad: keep if _n == 1
-    collapse (count) n_firms = identificad, by(sample)
+    collapse (count) n_firms = _one, by(sample)
     list
     export delimited "$tables/compare_firm_counts.csv", replace
 restore
@@ -103,7 +106,7 @@ restore
 * Treatment breakdown per sample
 preserve
     bys sample identificad: keep if _n == 1
-    collapse (count) n_firms = identificad (sum) n_treat = treat_ultra, by(sample)
+    collapse (count) n_firms = _one (sum) n_treat = treat_ultra, by(sample)
     gen n_control = n_firms - n_treat
     list
     export delimited "$tables/compare_treat_counts.csv", replace
@@ -112,7 +115,7 @@ restore
 * Firms present in all 8 years vs not
 preserve
     bys sample identificad: keep if _n == 1
-    collapse (sum) n_full_panel = present_all_years (count) n_firms = identificad, by(sample)
+    collapse (sum) n_full_panel = present_all_years (count) n_firms = _one, by(sample)
     gen share_full_panel = n_full_panel / n_firms
     list
     export delimited "$tables/compare_panel_balance.csv", replace
@@ -193,7 +196,7 @@ preserve
     tab treat_ultra exiter,    row
     tab treat_ultra always_in, row
 
-    collapse (count) n_firms = identificad ///
+    collapse (count) n_firms = _one ///
              (sum) n_entrant = entrant n_exiter = exiter n_always = always_in ///
              , by(treat_ultra)
     list, sep(0)
@@ -225,7 +228,8 @@ preserve
     replace status = "both"     if in_old == 1 & in_new == 1
 
     tab status
-    collapse (count) n = identificad (mean) treat_ultra, by(status)
+    gen byte _one = 1
+    collapse (count) n = _one (mean) treat_ultra, by(status)
     list, sep(0)
     export delimited "$tables/compare_firm_overlap.csv", replace
 restore
