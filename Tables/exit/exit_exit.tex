@@ -1,0 +1,29 @@
+\begin{table}[H]
+\centering
+\scriptsize
+\caption{Firm Survival}
+\begin{tabular}{lcccc}
+\toprule
+& \multicolumn{2}{c}{Direct} & \multicolumn{2}{c}{Spillover} \\
+\cmidrule(lr){2-3} \cmidrule(lr){4-5}
+& \shortstack{Full\\unbalanced} & \shortstack{Present all\\pre-treat yrs} & \shortstack{Full\\unbalanced} & \shortstack{Present all\\pre-treat yrs} \\
+& (1) & (2) & (3) & (4) \\
+\midrule
+$\beta_{\text{post}}$ & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+& (0.0000) & (0.0000) & (0.0000) & (0.0000) \\[3pt]
+$\beta_{\text{pre}}$ & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+& (0.0000) & (0.0000) & (0.0000) & (0.0000) \\[3pt]
+\midrule
+Observations & 147,593 & 146,693 & 38,459 & 38,052 \\
+Establishments & 19,251 & 19,097 & 5,114 & 5,041 \\
+Pre-trend $p$-val & --- & --- & --- & --- \\
+\midrule
+& \multicolumn{2}{c}{Regressor: Treated} & \multicolumn{2}{c}{Regressor: Connectivity} \\
+\bottomrule
+\end{tabular}
+\begin{minipage}{\textwidth}
+\footnotesize
+\medskip
+\textit{Notes}: This table reports difference-in-differences estimates where the outcome is a dummy equal to one if the firm has real observations in a given year (i.e., has not exited the dataset). \textit{Full unbalanced panel} includes all firms in the Lagos sample that appear in at least one year during 2009--2016. \textit{Present all pre-treat yrs} restricts to firms observed in every year of 2009, 2010, and 2011. Columns (1)--(2) report the coefficient on Treated $\times$ Post (or Pre) from the direct specification; columns (3)--(4) report the coefficient on Connectivity $\times$ Post (or Pre) from the spillover specification, where connectivity is the firm's pre-treatment exposure to treated firms (pairwise per-worker flows 2007--2011, normalized to the 90th percentile of the spillover sample in 2009). All specifications include firm fixed effects, industry $\times$ year, microregion $\times$ year, and CBA base month $\times$ year fixed effects. Pre-treatment quartile bins of log employment and of 2007--2011 average pairwise total flows per worker are interacted with year fixed effects. Specifications include only the interaction term (not the main effects of the treatment indicator or year), as the main effects are absorbed by the firm and year-interacted fixed effects. Pre-trend $p$-val is from an F-test on the 2009 and 2010 interaction coefficients in the event-study regression. A dash (---) indicates the test is not identified: in the \textit{Present all pre-treat yrs} sample all firms have \texttt{present\_in\_year}$=1$ in every pre-treatment year by construction, so the pre-treatment interaction coefficients are collinear and cannot be estimated. Standard errors clustered at the establishment level. Significance: $^{*}p{<}0.10$, $^{**}p{<}0.05$, $^{***}p{<}0.01$.
+\end{minipage}
+\end{table}
