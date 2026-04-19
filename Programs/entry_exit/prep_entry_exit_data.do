@@ -361,8 +361,11 @@ cap drop placebo_year
 gen byte treat_year   = (year >= 2012)
 gen byte placebo_year = (year <  2011)
 
-* Fill firm-level constants forward/backward into padded rows
-* (only constants that are the same for all years of a firm)
+* Fill firm-level constants into padded rows using pre-treatment observations as source
+* (year <= 2011 & present_in_year == 1). Entrant firms with no pre-treatment presence
+* remain missing and are naturally excluded from the LPM regressions.
+* NOTE: the previous bys (present_in_year v) approach was broken — padded rows
+* (present_in_year=0) sorted first, so v[1] was always missing.
 foreach v in treat_ultra microregion industry1 mode_base_month ///
              in_balanced_panel lagos_sample_unbal_avg ///
              present_all_pretreat present_all_analysis ///
@@ -372,9 +375,11 @@ foreach v in treat_ultra microregion industry1 mode_base_month ///
              totalflows_pw_pre_07_114 {
     capture confirm variable `v'
     if _rc == 0 {
-        * Sort so non-missing comes first, then carry to missing
-        bys identificad (present_in_year `v'): ///
-            replace `v' = `v'[1] if missing(`v') & !missing(`v'[1])
+        gen double _src_fill = `v' if year <= 2011 & present_in_year == 1
+        bys identificad: egen double _val_fill = min(_src_fill)
+        replace `v' = _val_fill if missing(`v') & !missing(_val_fill)
+        cap drop _src_fill
+        cap drop _val_fill
     }
 }
 
@@ -382,8 +387,24 @@ foreach v in treat_ultra microregion industry1 mode_base_month ///
 foreach v in numb_clauses_pre numb_clauses_pre4 {
     capture confirm variable `v'
     if _rc == 0 {
-        bys identificad (present_in_year `v'): ///
-            replace `v' = `v'[1] if missing(`v') & !missing(`v'[1])
+        gen double _src_fill = `v' if year <= 2011 & present_in_year == 1
+        bys identificad: egen double _val_fill = min(_src_fill)
+        replace `v' = _val_fill if missing(`v') & !missing(_val_fill)
+        cap drop _src_fill
+        cap drop _val_fill
+    }
+}
+
+* Fill connectivity measures into padded rows using pre-treatment observations only
+* (year <= 2011 & present_in_year == 1 as source; entrant firms remain missing)
+foreach v in totaltreat_pw_n totaltreat_pw_norm {
+    capture confirm variable `v'
+    if _rc == 0 {
+        gen double _pretreat_val = `v' if year <= 2011 & present_in_year == 1
+        bys identificad: egen double _fill_val = min(_pretreat_val)
+        replace `v' = _fill_val if missing(`v') & !missing(_fill_val)
+        cap drop _pretreat_val
+        cap drop _fill_val
     }
 }
 

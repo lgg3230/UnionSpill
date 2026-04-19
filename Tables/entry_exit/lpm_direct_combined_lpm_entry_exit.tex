@@ -1,0 +1,49 @@
+\begin{table}[H]
+\centering
+\scriptsize
+\caption{Direct Effects: Firm Presence (LPM)}
+\begin{tabular}{lcc}
+\toprule
+& \shortstack{Full\\unbalanced panel} & \shortstack{Present all\\pre-treat yrs} \\
+& (1) & (2) \\
+\midrule
+\multicolumn{3}{l}{\textit{Panel A: Zero-connectivity controls}} \\
+\midrule
+Treated $\times$ Post & 0.0149*** & 0.0168*** \\
+& (0.0046) & (0.0045) \\[3pt]
+Treated $\times$ Pre & -0.0093*** & 0.0000 \\
+& (0.0025) & (0.0000) \\[3pt]
+\midrule
+Observations   & 132,126 & 131,230 \\
+Establishments & 16,516 & 16,404 \\
+Pre-trend $p$-val & 0.001 & 0.259 \\
+\midrule
+\multicolumn{3}{l}{\textit{Panel B: Low-connectivity controls ($\leq$1\%)}} \\
+\midrule
+Treated $\times$ Post & 0.0065* & 0.0078** \\
+& (0.0036) & (0.0035) \\[3pt]
+Treated $\times$ Pre & -0.0065*** & 0.0000 \\
+& (0.0018) & (0.0000) \\[3pt]
+\midrule
+Observations   & 140,702 & 139,774 \\
+Establishments & 17,588 & 17,472 \\
+Pre-trend $p$-val & 0.001 & 0.593 \\
+\midrule
+\multicolumn{3}{l}{\textit{Panel C: All untreated firms}} \\
+\midrule
+Treated $\times$ Post & 0.0110*** & 0.0131*** \\
+& (0.0029) & (0.0028) \\[3pt]
+Treated $\times$ Pre & -0.0115*** & 0.0000 \\
+& (0.0018) & (0.0000) \\[3pt]
+\midrule
+Observations   & 154,008 & 152,776 \\
+Establishments & 19,251 & 19,097 \\
+Pre-trend $p$-val & 0.000 & 0.367 \\
+\bottomrule
+\end{tabular}
+\begin{minipage}{\textwidth}
+\footnotesize
+\medskip
+\textit{Notes}: This table reports linear probability model estimates of firm presence ($\mathbf{1}[\text{firm active in year } t]$) using the full firm $\times$ year balanced panel, including firm-year cells where the firm is absent. \textit{Full unbalanced panel} includes all firms in the Lagos sample. \textit{Present all pre-treat yrs} restricts to firms observed in every year of 2009--2011, isolating the exit margin. Panel A restricts control firms to those with zero pre-treatment worker flows to treated firms; Panel B allows up to 1\%; Panel C uses all untreated firms. Fixed effects absorb firm, industry $\times$ year, microregion $\times$ year, and CBA base month $\times$ year. All specifications include pre-treatment quartile bins of log employment and of 2007--2011 average pairwise total flows interacted with year fixed effects. FE variables for absent firm-years are filled from each firm's pre-treatment real observations. Standard errors clustered at the establishment level. Significance: $^{*}p{<}0.10$, $^{**}p{<}0.05$, $^{***}p{<}0.01$.
+\end{minipage}
+\end{table}

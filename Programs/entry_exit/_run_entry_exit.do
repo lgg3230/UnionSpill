@@ -51,6 +51,7 @@ local run_matlab = 0   // set to 1 to re-run MATLAB connectivity
 local run_05     = 0   // set to 1 to re-run connectivity aggregation
 local run_prep   = 0   // prep_entry_exit_data.do (panel already built)
 local run_results = 0  // results_entry_exit.do
+local run_lpm    = 0   // lpm_entry_exit.do + generate_lpm_latex.py
 
 // ── Stage 1: Merge CBA + RAIS (unbalanced) ───────────────────────────────────
 
@@ -94,6 +95,14 @@ if `run_results' {
 if `run_results' {
     shell ~/.conda/envs/venv_python312/bin/python ///
         "$programs/entry_exit/generate_entry_exit_latex.py"
+}
+
+// ── Stage 7: LPM (firm presence) ─────────────────────────────────────────────
+
+if `run_lpm' {
+    do "$programs/entry_exit/lpm_entry_exit.do"
+    shell ~/.conda/envs/venv_python312/bin/python ///
+        "$programs/entry_exit/generate_lpm_latex.py"
 }
 
 shell source /gpfs/kellogg/proj/lgg3230/UnionSpill/Programs/notify.sh && ///
