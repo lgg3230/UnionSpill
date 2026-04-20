@@ -1,0 +1,27 @@
+\begin{table}[H]
+\centering
+\caption{CBA Content Similarity and Connectivity: Bilateral Flow-Weighted Reference}
+\scriptsize
+\setlength{\tabcolsep}{8pt}
+\begin{tabular}{lcccc}
+\hline\hline
+ & (1) & (2) & (3) & (4) \\
+ & \textbf{Cosine} & \textbf{Bray-Curtis} & \textbf{Total Var.} & \textbf{Jaccard} \\
+\hline
+\multicolumn{5}{l}{\textit{Post-treatment}} \\
+Connectivity $\times$ Post & 0.0133*** & 0.0083*** & 0.0102*** & 0.0104*** \\
+ & (0.0039) & (0.0028) & (0.0031) & (0.0029) \\
+\multicolumn{5}{l}{\textit{Pre-treatment placebo}} \\
+Connectivity $\times$ Pre & -0.0048 & -0.0033 & -0.0030 & -0.0022 \\
+ & (0.0030) & (0.0023) & (0.0024) & (0.0022) \\
+\hline
+Observations &        6,943 &        6,943 &        6,943 &        6,943 \\
+Establishments &        1,652 &        1,652 &        1,652 &        1,652 \\
+Pre-trend $p$-value & 0.085 & 0.145 & 0.196 & 0.343 \\
+\hline\hline
+\end{tabular}
+\begin{minipage}{\linewidth}
+\smallskip
+\scriptsize\textit{Notes:} This table reports spillover-effect estimates of CBA content similarity on connectivity. For each untreated firm $i$ and CBA period $t$, the outcome is the similarity between firm $i$'s clause vector and a \emph{flow-weighted average} of the clause vectors of treated firms with pre-treatment worker flows to $i$; the weights are proportional to the bilateral worker-flow volume. Only untreated firms with at least one treated counterpart in the bilateral flow data enter the sample. Connectivity is scaled to 1 at the 90th percentile of the spillover sample. All specifications include establishment, industry $\times$ period, mode-month $\times$ period, and microregion $\times$ period fixed effects, with pre-treatment bins of the outcome, log employment, and total flows absorbed. Standard errors clustered at the establishment level. *\,$p<0.10$, **\,$p<0.05$, ***\,$p<0.01$.
+\end{minipage}
+\end{table}
