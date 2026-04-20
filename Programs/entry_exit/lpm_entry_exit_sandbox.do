@@ -262,7 +262,7 @@ foreach samp in full pre {
     * Event-study F-test for pre-trend
     reghdfe present_in_year c.`conn'##ib2011.year if `s_spill', ///
         absorb(`absorb') vce(cluster identificad) tolerance(1e-2)
-    capture testparm c.`conn'#i(2009 2010).year
+    capture testparm 2009.year#c.`conn' 2010.year#c.`conn'
     local pre_ftest_pval = cond(_rc==0, r(p), .)
 
     * Write CSV
