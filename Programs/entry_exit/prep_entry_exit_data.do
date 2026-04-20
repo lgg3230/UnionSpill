@@ -352,6 +352,22 @@ if _rc == 0 {
 * fillin creates all firm×year combinations; _fillin=1 for new rows
 fillin identificad year
 
+* diagnostics: are firms entering/exiting?
+bysort year: tab _fillin // ->  detects in which year there are more or less observations
+// pattern is clear: in 2009 there where zero firms with fillin==1, this means that no obs 
+// were added that year -> there is net exit of firms
+
+* all firms have connectivity in 2009?
+
+count if missing(totaltreat_pw_n) & year==2009 // -> there are 5
+
+* all firms have positive employmetn in 2009?
+
+count if firm_emp>0 & !missing(l_firm_emp)  & year==2009 // yes, they do
+
+
+
+
 replace present_in_year = 0 if _fillin == 1
 drop _fillin
 

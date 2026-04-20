@@ -69,7 +69,7 @@ foreach panel in A B C {
         capture erase "$tables/lpm_direct_panel`panel'_`samp'_`spec'.csv"
         tempname fh
         file open `fh' using "$tables/lpm_direct_panel`panel'_`samp'_`spec'.csv", write replace
-        file write `fh' "spec,section,outcome,row_type,value" _n
+        file write `fh' "spec;section;outcome;row_type;value" _n
         file close `fh'
     }
 }
@@ -78,7 +78,7 @@ foreach samp in full pre {
     capture erase "$tables/lpm_spill_`samp'_`spec'.csv"
     tempname fh
     file open `fh' using "$tables/lpm_spill_`samp'_`spec'.csv", write replace
-    file write `fh' "spec,section,outcome,row_type,value" _n
+    file write `fh' "spec;section;outcome;row_type;value" _n
     file close `fh'
 }
 
@@ -178,7 +178,7 @@ foreach samp in full pre {
         estimates store _es_d_tmp
         local post_coef_s = string(`b_post', "%9.4f")
         local post_se_s   = string(`se_post', "%9.4f")
-        local pre_pval_s  = string(`p_pre', "%9.3f")
+        local pre_pval_s  = string(`pre_ftest_pval', "%9.3f")
 
         coefplot _es_d_tmp, ///
             keep(1.treat_ultra#2009.year 1.treat_ultra#2010.year 1.treat_ultra#2011.year ///
@@ -281,16 +281,16 @@ foreach samp in full pre {
     estimates store _es_s_tmp
     local post_coef_s = string(`b_post', "%9.4f")
     local post_se_s   = string(`se_post', "%9.4f")
-    local pre_pval_s  = string(`p_pre', "%9.3f")
+    local pre_pval_s  = string(`pre_ftest_pval', "%9.3f")
 
     coefplot _es_s_tmp, ///
-        keep(c.`conn'#2009.year c.`conn'#2010.year c.`conn'#2011.year ///
-             c.`conn'#2012.year c.`conn'#2013.year c.`conn'#2014.year ///
-             c.`conn'#2015.year c.`conn'#2016.year) ///
-        coeflabels(c.`conn'#2009.year="2009" c.`conn'#2010.year="2010" ///
-                   c.`conn'#2011.year="2011" c.`conn'#2012.year="2012" ///
-                   c.`conn'#2013.year="2013" c.`conn'#2014.year="2014" ///
-                   c.`conn'#2015.year="2015" c.`conn'#2016.year="2016") ///
+        keep(2009.year#c.`conn' 2010.year#c.`conn' 2011.year#c.`conn' ///
+             2012.year#c.`conn' 2013.year#c.`conn' 2014.year#c.`conn' ///
+             2015.year#c.`conn' 2016.year#c.`conn') ///
+        coeflabels(2009.year#c.`conn'="2009" 2010.year#c.`conn'="2010" ///
+                   2011.year#c.`conn'="2011" 2012.year#c.`conn'="2012" ///
+                   2013.year#c.`conn'="2013" 2014.year#c.`conn'="2014" ///
+                   2015.year#c.`conn'="2015" 2016.year#c.`conn'="2016") ///
         vert omitted baselevels yline(0) xline(3.75, lpattern(dash)) ///
         ytitle("Dynamic DiD × connectivity coefficients", size(small)) ///
         note("Pre-trend F-test p-value = `pre_pval_s'") ///
