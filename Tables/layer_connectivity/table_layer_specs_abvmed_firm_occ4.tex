@@ -1,0 +1,36 @@
+\begin{table}[H]
+\centering
+\caption{Layer spillover effects, above-median firm employment --- occupation layers (CBO 2002)}
+\label{tab:layer_specs_abvmed_firm_occ4}
+\scriptsize
+\begin{threeparttable}
+\begin{tabular}{lcccccc}
+\toprule\toprule
+ & \multicolumn{3}{c}{Log Dec. wage} & \multicolumn{3}{c}{Log employment} \\
+\cmidrule(lr){2-4} \cmidrule(lr){5-7}
+ & \shortstack{1 \\ firm$\times$year FE} & \shortstack{2 \\ micro$\times$yr + ind$\times$yr + mode$\times$yr} & \shortstack{3 \\ firm FE} & \shortstack{1 \\ firm$\times$year FE} & \shortstack{2 \\ micro$\times$yr + ind$\times$yr + mode$\times$yr} & \shortstack{3 \\ firm FE} \\
+ & (1) & (2) & (3) & (4) & (5) & (6) \\
+\midrule
+\multicolumn{7}{l}{\textit{Occupation layers (CBO 2002): Managers / High-skill / Bur.\ lower / Low-skill}} \\
+ & -0.0062* & -0.0063** & 0.0045 & 0.0099* & 0.0093* & 0.0114 \\
+ & (0.0032) & (0.0026) & (0.0041) & (0.0052) & (0.0052) & (0.0194) \\
+ & 0.0044 & 0.0048 & 0.0052 & -0.0070 & -0.0050 & 0.0064 \\
+ & (0.0038) & (0.0031) & (0.0048) & (0.0062) & (0.0059) & (0.0132) \\
+\quad Observations & 58,606 & 58,894 & 15,654 & 58,606 & 58,894 & 15,728 \\
+\quad Layers $\times$ firms & 7,596 & 7,719 & --- & 7,596 & 7,719 & --- \\
+\quad Firms & 2,075 & 2,086 & 1,964 & 2,075 & 2,086 & 1,966 \\
+\quad Pre-trend F-test $p$-value & 0.378 & 0.591 & 0.215 & 0.119 & 0.062 & 0.546 \\
+\midrule
+\multicolumn{7}{l}{\textit{Specification}} \\
+Layer-level outcomes & \checkmark & \checkmark & --- & \checkmark & \checkmark & --- \\
+Firm-level outcomes & --- & --- & \checkmark & --- & --- & \checkmark \\
+Firm $\times$ year FE & \checkmark & --- & --- & \checkmark & --- & --- \\
+Firm-level FE & --- & \checkmark & --- & --- & \checkmark & --- \\
+Firm FE & --- & --- & \checkmark & --- & --- & \checkmark \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}[flushleft]
+\item \textit{Notes:} This table reports spillover effects of layer-level connectivity to treated firms for an occupation-based partition following the CBO 2002 first digit: Managers (digit~1), Frontline High-Skills (digits~2--3), Bureaucrat Lower (digit~4), Frontline Low-Skills (digit~5+). The sample is restricted to firms above the median pre-treatment employment (2009--2011). All regressions are restricted to untreated firms in the balanced firm panel. Connectivity is scaled to the 90th percentile of the control sample at 2009. The regression pools all four occupation layers (firm$\times$layer$\times$year observations). Columns (1), (4) (within-firm) absorb firm$\times$year FE; columns (2), (5) (cross-firm) use microregion$\times$year, industry$\times$year, and mode$\times$year FE; columns (3), (6) (firm-level) run at the firm level on the layer-sample subset. Standard errors clustered at the firm level. $^{***}p<0.01$, $^{**}p<0.05$, $^{*}p<0.10$.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
