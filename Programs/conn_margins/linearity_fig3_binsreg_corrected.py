@@ -77,11 +77,17 @@ with warnings.catch_warnings():
     warnings.simplefilter("ignore")
     res = binsreg.binsreg("y", "x", w=w_cols, data=df_bs,
                           noplot=True, nbins=50, cb=(3, 3))
+    tst = binsreg.binstest("y", "x", w=w_cols, data=df_bs,
+                           testmodelpoly=1, nsims=2000, simsseed=42, simsgrid=50)
 
 d    = res.data_plot[0]
 dots = d.dots
 cb   = d.cb
 print(f"Bins: {len(dots)}")
+
+p_val = float(tst.testpoly.pval[0])
+t_stat = float(tst.testpoly.stat[0])
+print(f"Linearity test — stat: {t_stat:.4f}, p-value: {p_val:.4f}")
 
 # ── OLS with same controls ────────────────────────────────────────────────────
 
@@ -118,6 +124,11 @@ ax.axhline(0, color="gray", linewidth=0.5, linestyle="--", alpha=0.4)
 ax.axvline(0, color="gray", linewidth=0.5, linestyle="--", alpha=0.4)
 ax.set_xlim(-0.15, 3)
 ax.set_ylim(0, 0.25)
+
+p_str = f"$p = {p_val:.3f}$" if p_val >= 0.001 else "$p < 0.001$"
+ax.text(0.98, 0.97, f"Linearity test: {p_str}",
+        transform=ax.transAxes, ha="right", va="top",
+        fontsize=9, style="italic")
 
 ax.set_xlabel("Connectivity to treated firms (normalized)", fontsize=11)
 ax.set_ylabel("Post \u2212 Pre log wages (raw DiD)", fontsize=11)

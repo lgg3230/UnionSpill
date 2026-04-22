@@ -59,11 +59,17 @@ df_bs = pd.DataFrame({"y": y, "x": x_jitter})
 with warnings.catch_warnings():
     warnings.simplefilter("ignore")
     res = binsreg.binsreg("y", "x", data=df_bs, noplot=True, nbins=50, cb=(3, 3))
+    tst = binsreg.binstest("y", "x", data=df_bs,
+                           testmodelpoly=1, nsims=2000, simsseed=42, simsgrid=50)
 d = res.data_plot[0]
 
 dots = d.dots
 ci   = d.cb
 print(f"Bins: {len(dots)}")
+
+p_val = float(tst.testpoly.pval[0])
+t_stat = float(tst.testpoly.stat[0])
+print(f"Linearity test — stat: {t_stat:.4f}, p-value: {p_val:.4f}")
 
 # ── OLS + analytical 95% CI ───────────────────────────────────────────────────
 
@@ -96,6 +102,11 @@ ax.plot(x_grid, pr.predicted_mean, color=RED, linewidth=1.8, zorder=5,
 ax.axhline(0, color="gray", linewidth=0.5, linestyle="--", alpha=0.4)
 ax.axvline(0, color="gray", linewidth=0.5, linestyle="--", alpha=0.4)
 ax.set_xlim(x_lo, x_hi)
+
+p_str = f"$p = {p_val:.3f}$" if p_val >= 0.001 else "$p < 0.001$"
+ax.text(0.98, 0.97, f"Linearity test: {p_str}",
+        transform=ax.transAxes, ha="right", va="top",
+        fontsize=9, style="italic")
 
 ax.set_xlabel("Residualized connectivity to treated firms", fontsize=11)
 ax.set_ylabel("Post \u2212 Pre residualized log wages", fontsize=11)
