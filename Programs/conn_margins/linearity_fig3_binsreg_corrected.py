@@ -122,7 +122,7 @@ ax.plot(x_grid, pr.predicted_mean, color=RED, linewidth=1.8, zorder=5,
 
 ax.axhline(0, color="gray", linewidth=0.5, linestyle="--", alpha=0.4)
 ax.axvline(0, color="gray", linewidth=0.5, linestyle="--", alpha=0.4)
-ax.set_xlim(-0.15, 3)
+ax.set_xlim(-0.15, 2.5)
 ax.set_ylim(0, 0.25)
 
 p_str = f"$p = {p_val:.3f}$" if p_val >= 0.001 else "$p < 0.001$"
