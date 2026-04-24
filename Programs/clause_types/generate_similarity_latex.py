@@ -19,8 +19,11 @@ df["value"] = df["value"].str.strip('"')
 outcomes = ["cosine", "bray_curtis", "total_variation", "jaccard"]
 col_labels = ["Cosine", "Bray-Curtis", "Total Var.", "Jaccard"]
 
-def get(outcome, row_type, default=""):
-    rows = df[(df.outcome == outcome) & (df.row_type == row_type)]
+base_spec  = "cba_similarity_tfpw_07_11"
+union_spec = "cba_similarity_tfpw_07_11_union"
+
+def get(outcome, row_type, spec, default=""):
+    rows = df[(df.spec == spec) & (df.outcome == outcome) & (df.row_type == row_type)]
     return rows["value"].iloc[0] if len(rows) > 0 else default
 
 def fmt_coef(val):
@@ -53,35 +56,24 @@ def fmt_pval(val):
         return str(val)
 
 # ── Build table ───────────────────────────────────────────────────────────────
+ncols = len(outcomes) + 1
 col_spec = "l" + "c" * len(outcomes)
 col_header = " & " + " & ".join([f"({i+1})" for i in range(len(outcomes))]) + r" \\"
 col_labels_row = " & " + " & ".join([r"\textbf{" + lbl + r"}" for lbl in col_labels]) + r" \\"
 
-rows_main = []
-for o in outcomes:
-    rows_main.append(fmt_coef(get(o, "main")))
-rows_main_se = []
-for o in outcomes:
-    rows_main_se.append(fmt_se(get(o, "main_se")))
+def panel_rows(spec):
+    return dict(
+        main    = [fmt_coef(get(o, "main",    spec)) for o in outcomes],
+        main_se = [fmt_se(  get(o, "main_se", spec)) for o in outcomes],
+        pre     = [fmt_coef(get(o, "pre",     spec)) for o in outcomes],
+        pre_se  = [fmt_se(  get(o, "pre_se",  spec)) for o in outcomes],
+        n       = [fmt_n(   get(o, "n_obs",   spec)) for o in outcomes],
+        nest    = [fmt_n(   get(o, "n_estab", spec)) for o in outcomes],
+        pval    = [fmt_pval(get(o, "pre_pval",spec)) for o in outcomes],
+    )
 
-rows_pre = []
-for o in outcomes:
-    rows_pre.append(fmt_coef(get(o, "pre")))
-rows_pre_se = []
-for o in outcomes:
-    rows_pre_se.append(fmt_se(get(o, "pre_se")))
-
-rows_n = []
-for o in outcomes:
-    rows_n.append(fmt_n(get(o, "n_obs")))
-
-rows_nest = []
-for o in outcomes:
-    rows_nest.append(fmt_n(get(o, "n_estab")))
-
-rows_pval = []
-for o in outcomes:
-    rows_pval.append(fmt_pval(get(o, "pre_pval")))
+base  = panel_rows(base_spec)
+union = panel_rows(union_spec)
 
 def row(label, cells, bold=False):
     label_tex = r"\textbf{" + label + r"}" if bold else label
@@ -98,16 +90,29 @@ lines = [
     col_header,
     col_labels_row,
     r"\hline",
-    r"\multicolumn{5}{l}{\textit{Post-treatment}} \\",
-    row(r"Connectivity $\times$ Post", rows_main),
-    row("", rows_main_se),
-    r"\multicolumn{5}{l}{\textit{Pre-treatment placebo}} \\",
-    row(r"Connectivity $\times$ Pre", rows_pre),
-    row("", rows_pre_se),
+    rf"\multicolumn{{{ncols}}}{{l}}{{\textit{{Panel A: Baseline}}}} \\",
+    rf"\multicolumn{{{ncols}}}{{l}}{{\textit{{Post-treatment}}}} \\",
+    row(r"Connectivity $\times$ Post", base["main"]),
+    row("", base["main_se"]),
+    rf"\multicolumn{{{ncols}}}{{l}}{{\textit{{Pre-treatment placebo}}}} \\",
+    row(r"Connectivity $\times$ Pre", base["pre"]),
+    row("", base["pre_se"]),
     r"\hline",
-    row("Observations",  rows_n),
-    row("Establishments", rows_nest),
-    row("Pre-trend $p$-value", rows_pval),
+    row("Observations",       base["n"]),
+    row("Establishments",     base["nest"]),
+    row("Pre-trend $p$-value", base["pval"]),
+    r"\hline",
+    rf"\multicolumn{{{ncols}}}{{l}}{{\textit{{Panel B: Adding union $\times$ period FE}}}} \\",
+    rf"\multicolumn{{{ncols}}}{{l}}{{\textit{{Post-treatment}}}} \\",
+    row(r"Connectivity $\times$ Post", union["main"]),
+    row("", union["main_se"]),
+    rf"\multicolumn{{{ncols}}}{{l}}{{\textit{{Pre-treatment placebo}}}} \\",
+    row(r"Connectivity $\times$ Pre", union["pre"]),
+    row("", union["pre_se"]),
+    r"\hline",
+    row("Observations",       union["n"]),
+    row("Establishments",     union["nest"]),
+    row("Pre-trend $p$-value", union["pval"]),
     r"\hline\hline",
     r"\end{tabular}",
     r"\begin{minipage}{\linewidth}",
@@ -120,10 +125,11 @@ lines = [
      r"to the bilateral worker-flow volume. Only untreated firms with at least one "
      r"treated counterpart in the bilateral flow data enter the sample. "
      r"Connectivity is scaled to 1 at the 90th percentile of "
-     r"the spillover sample. All specifications include establishment, "
+     r"the spillover sample. Panel A includes establishment, "
      r"industry $\times$ period, mode-month $\times$ period, and "
      r"microregion $\times$ period fixed effects, with pre-treatment bins of "
      r"the outcome, log employment, and total flows absorbed. "
+     r"Panel B additionally absorbs union $\times$ period fixed effects. "
      r"Standard errors clustered at the establishment level. "
      r"*\,$p<0.10$, **\,$p<0.05$, ***\,$p<0.01$."),
     r"\end{minipage}",

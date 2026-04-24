@@ -256,10 +256,11 @@ foreach v of local ln_sim_outcomes {
 * SECTION 7: SPECIFICATION MACROS (identical to clause_types.do)
 ********************************************************************************
 
-local spec       "cba_similarity_avg_tfpw_07_11"
-local conn       "totaltreat_pw_norm"
-local base_fe_cba "identificad i.industry1#i.cba_period i.mode_base_month#i.cba_period i.microregion#i.cba_period"
-local extra_cba   "ib0.totalflows_pw_pre_07_114#i.cba_period"
+local spec             "cba_similarity_avg_tfpw_07_11"
+local conn             "totaltreat_pw_norm"
+local base_fe_cba      "identificad i.industry1#i.cba_period i.mode_base_month#i.cba_period i.microregion#i.cba_period"
+local base_fe_cba_union "identificad i.industry1#i.cba_period i.mode_base_month#i.cba_period i.microregion#i.cba_period i.mode_union#i.cba_period"
+local extra_cba        "ib0.totalflows_pw_pre_07_114#i.cba_period"
 
 ********************************************************************************
 * SECTION 8: INITIALIZE OUTPUT CSV FILE
@@ -288,56 +289,67 @@ di as result "------------------------------------------------------------------
 
 local csv_spill "$tables/clause_types/results_spill_cba_similarity_avg_tfpw_07_11.csv"
 
-foreach outcome of local sim_outcomes {
+foreach fe_variant in base union {
+	if "`fe_variant'" == "base" {
+		local cur_base_fe "`base_fe_cba'"
+		local cur_spec    "`spec'"
+	}
+	else {
+		local cur_base_fe "`base_fe_cba_union'"
+		local cur_spec    "`spec'_union"
+	}
 
-	di as text "  Estimating: `outcome' (spillover)"
+	foreach outcome of local sim_outcomes {
 
-	local absorb_cba "`base_fe_cba' ib0.`outcome'_pre4#i.cba_period ib0.l_firm_emp_pre4#i.cba_period `extra_cba'"
+		di as text "  Estimating: `outcome' (spillover, `fe_variant')"
 
-	reghdfe `outcome' c.`conn'##post_treat_cba ///
-		if `s_spill' & !missing(cba_period) & !missing(`outcome'), ///
-		absorb(`absorb_cba') vce(cluster identificad)
+		local absorb_cba "`cur_base_fe' ib0.`outcome'_pre4#i.cba_period ib0.l_firm_emp_pre4#i.cba_period `extra_cba'"
 
-	local b_post  = _b[1.post_treat_cba#c.`conn']
-	local se_post = _se[1.post_treat_cba#c.`conn']
-	local p_post  = 2*ttail(e(df_r), abs(`b_post'/`se_post'))
-	local n_obs   = e(N)
-	local n_estab = e(N_clust)
+		reghdfe `outcome' c.`conn'##post_treat_cba ///
+			if `s_spill' & !missing(cba_period) & !missing(`outcome'), ///
+			absorb(`absorb_cba') vce(cluster identificad)
 
-	reghdfe `outcome' c.`conn'##pre_treat_cba ///
-		if `s_spill' & !missing(cba_period) & cba_period <= 2 & !missing(`outcome'), ///
-		absorb(`absorb_cba') vce(cluster identificad)
+		local b_post  = _b[1.post_treat_cba#c.`conn']
+		local se_post = _se[1.post_treat_cba#c.`conn']
+		local p_post  = 2*ttail(e(df_r), abs(`b_post'/`se_post'))
+		local n_obs   = e(N)
+		local n_estab = e(N_clust)
 
-	local b_pre  = _b[1.pre_treat_cba#c.`conn']
-	local se_pre = _se[1.pre_treat_cba#c.`conn']
-	local p_pre  = 2*ttail(e(df_r), abs(`b_pre'/`se_pre'))
+		reghdfe `outcome' c.`conn'##pre_treat_cba ///
+			if `s_spill' & !missing(cba_period) & cba_period <= 2 & !missing(`outcome'), ///
+			absorb(`absorb_cba') vce(cluster identificad)
 
-	local stars_post ""
-	if `p_post' < 0.01                           local stars_post "***"
-	else if (`p_post' < 0.05 & `p_post' > 0.01) local stars_post "**"
-	else if (`p_post' < 0.10 & `p_post' > 0.05) local stars_post "*"
+		local b_pre  = _b[1.pre_treat_cba#c.`conn']
+		local se_pre = _se[1.pre_treat_cba#c.`conn']
+		local p_pre  = 2*ttail(e(df_r), abs(`b_pre'/`se_pre'))
 
-	local stars_pre ""
-	if `p_pre' < 0.01                            local stars_pre "***"
-	else if (`p_pre' < 0.05 & `p_pre' > 0.01)   local stars_pre "**"
-	else if (`p_pre' < 0.10 & `p_pre' > 0.05)   local stars_pre "*"
+		local stars_post ""
+		if `p_post' < 0.01                           local stars_post "***"
+		else if (`p_post' < 0.05 & `p_post' > 0.01) local stars_post "**"
+		else if (`p_post' < 0.10 & `p_post' > 0.05) local stars_post "*"
 
-	reghdfe `outcome' c.`conn'##ib2.cba_period ///
-		if `s_spill' & !missing(cba_period) & !missing(`outcome'), ///
-		absorb(`absorb_cba') vce(cluster identificad)
-	testparm c.`conn'#1.cba_period
-	local pre_ftest_pval = r(p)
+		local stars_pre ""
+		if `p_pre' < 0.01                            local stars_pre "***"
+		else if (`p_pre' < 0.05 & `p_pre' > 0.01)   local stars_pre "**"
+		else if (`p_pre' < 0.10 & `p_pre' > 0.05)   local stars_pre "*"
 
-	tempname fh
-	file open `fh' using "`csv_spill'", write append
-	file write `fh' `""`spec'";"spill";"`outcome'";"main";"'   %9.4f (`b_post') `"`stars_post'"' _n
-	file write `fh' `""`spec'";"spill";"`outcome'";"main_se";"' %9.4f (`se_post') _n
-	file write `fh' `""`spec'";"spill";"`outcome'";"pre";"'    %9.4f (`b_pre') `"`stars_pre'"'  _n
-	file write `fh' `""`spec'";"spill";"`outcome'";"pre_se";"'  %9.4f (`se_pre') _n
-	file write `fh' `""`spec'";"spill";"`outcome'";"n_obs";"'   %12.0fc (`n_obs') _n
-	file write `fh' `""`spec'";"spill";"`outcome'";"n_estab";"' %12.0fc (`n_estab') _n
-	file write `fh' `""`spec'";"spill";"`outcome'";"pre_pval";"' %9.4f (`pre_ftest_pval') _n
-	file close `fh'
+		reghdfe `outcome' c.`conn'##ib2.cba_period ///
+			if `s_spill' & !missing(cba_period) & !missing(`outcome'), ///
+			absorb(`absorb_cba') vce(cluster identificad)
+		testparm c.`conn'#1.cba_period
+		local pre_ftest_pval = r(p)
+
+		tempname fh
+		file open `fh' using "`csv_spill'", write append
+		file write `fh' `""`cur_spec'";"spill";"`outcome'";"main";"'   %9.4f (`b_post') `"`stars_post'"' _n
+		file write `fh' `""`cur_spec'";"spill";"`outcome'";"main_se";"' %9.4f (`se_post') _n
+		file write `fh' `""`cur_spec'";"spill";"`outcome'";"pre";"'    %9.4f (`b_pre') `"`stars_pre'"'  _n
+		file write `fh' `""`cur_spec'";"spill";"`outcome'";"pre_se";"'  %9.4f (`se_pre') _n
+		file write `fh' `""`cur_spec'";"spill";"`outcome'";"n_obs";"'   %12.0fc (`n_obs') _n
+		file write `fh' `""`cur_spec'";"spill";"`outcome'";"n_estab";"' %12.0fc (`n_estab') _n
+		file write `fh' `""`cur_spec'";"spill";"`outcome'";"pre_pval";"' %9.4f (`pre_ftest_pval') _n
+		file close `fh'
+	}
 }
 
 di as result _newline "All regressions complete."
@@ -354,56 +366,67 @@ di as result "------------------------------------------------------------------
 local spec_ln    "ln_cba_similarity_avg_tfpw_07_11"
 local csv_ln     "$tables/clause_types/results_spill_ln_cba_similarity_avg_tfpw_07_11.csv"
 
-foreach outcome of local ln_sim_outcomes {
+foreach fe_variant in base union {
+	if "`fe_variant'" == "base" {
+		local cur_base_fe  "`base_fe_cba'"
+		local cur_spec_ln  "`spec_ln'"
+	}
+	else {
+		local cur_base_fe  "`base_fe_cba_union'"
+		local cur_spec_ln  "`spec_ln'_union"
+	}
 
-	di as text "  Estimating: `outcome' (spillover, log)"
+	foreach outcome of local ln_sim_outcomes {
 
-	local absorb_cba "`base_fe_cba' ib0.`outcome'_pre4#i.cba_period ib0.l_firm_emp_pre4#i.cba_period `extra_cba'"
+		di as text "  Estimating: `outcome' (spillover, log, `fe_variant')"
 
-	reghdfe `outcome' c.`conn'##post_treat_cba ///
-		if `s_spill' & !missing(cba_period) & !missing(`outcome'), ///
-		absorb(`absorb_cba') vce(cluster identificad)
+		local absorb_cba "`cur_base_fe' ib0.`outcome'_pre4#i.cba_period ib0.l_firm_emp_pre4#i.cba_period `extra_cba'"
 
-	local b_post  = _b[1.post_treat_cba#c.`conn']
-	local se_post = _se[1.post_treat_cba#c.`conn']
-	local p_post  = 2*ttail(e(df_r), abs(`b_post'/`se_post'))
-	local n_obs   = e(N)
-	local n_estab = e(N_clust)
+		reghdfe `outcome' c.`conn'##post_treat_cba ///
+			if `s_spill' & !missing(cba_period) & !missing(`outcome'), ///
+			absorb(`absorb_cba') vce(cluster identificad)
 
-	reghdfe `outcome' c.`conn'##pre_treat_cba ///
-		if `s_spill' & !missing(cba_period) & cba_period <= 2 & !missing(`outcome'), ///
-		absorb(`absorb_cba') vce(cluster identificad)
+		local b_post  = _b[1.post_treat_cba#c.`conn']
+		local se_post = _se[1.post_treat_cba#c.`conn']
+		local p_post  = 2*ttail(e(df_r), abs(`b_post'/`se_post'))
+		local n_obs   = e(N)
+		local n_estab = e(N_clust)
 
-	local b_pre  = _b[1.pre_treat_cba#c.`conn']
-	local se_pre = _se[1.pre_treat_cba#c.`conn']
-	local p_pre  = 2*ttail(e(df_r), abs(`b_pre'/`se_pre'))
+		reghdfe `outcome' c.`conn'##pre_treat_cba ///
+			if `s_spill' & !missing(cba_period) & cba_period <= 2 & !missing(`outcome'), ///
+			absorb(`absorb_cba') vce(cluster identificad)
 
-	local stars_post ""
-	if `p_post' < 0.01                           local stars_post "***"
-	else if (`p_post' < 0.05 & `p_post' > 0.01) local stars_post "**"
-	else if (`p_post' < 0.10 & `p_post' > 0.05) local stars_post "*"
+		local b_pre  = _b[1.pre_treat_cba#c.`conn']
+		local se_pre = _se[1.pre_treat_cba#c.`conn']
+		local p_pre  = 2*ttail(e(df_r), abs(`b_pre'/`se_pre'))
 
-	local stars_pre ""
-	if `p_pre' < 0.01                            local stars_pre "***"
-	else if (`p_pre' < 0.05 & `p_pre' > 0.01)   local stars_pre "**"
-	else if (`p_pre' < 0.10 & `p_pre' > 0.05)   local stars_pre "*"
+		local stars_post ""
+		if `p_post' < 0.01                           local stars_post "***"
+		else if (`p_post' < 0.05 & `p_post' > 0.01) local stars_post "**"
+		else if (`p_post' < 0.10 & `p_post' > 0.05) local stars_post "*"
 
-	reghdfe `outcome' c.`conn'##ib2.cba_period ///
-		if `s_spill' & !missing(cba_period) & !missing(`outcome'), ///
-		absorb(`absorb_cba') vce(cluster identificad)
-	testparm c.`conn'#1.cba_period
-	local pre_ftest_pval = r(p)
+		local stars_pre ""
+		if `p_pre' < 0.01                            local stars_pre "***"
+		else if (`p_pre' < 0.05 & `p_pre' > 0.01)   local stars_pre "**"
+		else if (`p_pre' < 0.10 & `p_pre' > 0.05)   local stars_pre "*"
 
-	tempname fh
-	file open `fh' using "`csv_ln'", write append
-	file write `fh' `""`spec_ln'";"spill";"`outcome'";"main";"'   %9.4f (`b_post') `"`stars_post'"' _n
-	file write `fh' `""`spec_ln'";"spill";"`outcome'";"main_se";"' %9.4f (`se_post') _n
-	file write `fh' `""`spec_ln'";"spill";"`outcome'";"pre";"'    %9.4f (`b_pre') `"`stars_pre'"'  _n
-	file write `fh' `""`spec_ln'";"spill";"`outcome'";"pre_se";"'  %9.4f (`se_pre') _n
-	file write `fh' `""`spec_ln'";"spill";"`outcome'";"n_obs";"'   %12.0fc (`n_obs') _n
-	file write `fh' `""`spec_ln'";"spill";"`outcome'";"n_estab";"' %12.0fc (`n_estab') _n
-	file write `fh' `""`spec_ln'";"spill";"`outcome'";"pre_pval";"' %9.4f (`pre_ftest_pval') _n
-	file close `fh'
+		reghdfe `outcome' c.`conn'##ib2.cba_period ///
+			if `s_spill' & !missing(cba_period) & !missing(`outcome'), ///
+			absorb(`absorb_cba') vce(cluster identificad)
+		testparm c.`conn'#1.cba_period
+		local pre_ftest_pval = r(p)
+
+		tempname fh
+		file open `fh' using "`csv_ln'", write append
+		file write `fh' `""`cur_spec_ln'";"spill";"`outcome'";"main";"'   %9.4f (`b_post') `"`stars_post'"' _n
+		file write `fh' `""`cur_spec_ln'";"spill";"`outcome'";"main_se";"' %9.4f (`se_post') _n
+		file write `fh' `""`cur_spec_ln'";"spill";"`outcome'";"pre";"'    %9.4f (`b_pre') `"`stars_pre'"'  _n
+		file write `fh' `""`cur_spec_ln'";"spill";"`outcome'";"pre_se";"'  %9.4f (`se_pre') _n
+		file write `fh' `""`cur_spec_ln'";"spill";"`outcome'";"n_obs";"'   %12.0fc (`n_obs') _n
+		file write `fh' `""`cur_spec_ln'";"spill";"`outcome'";"n_estab";"' %12.0fc (`n_estab') _n
+		file write `fh' `""`cur_spec_ln'";"spill";"`outcome'";"pre_pval";"' %9.4f (`pre_ftest_pval') _n
+		file close `fh'
+	}
 }
 
 di as result _newline "Log similarity regressions complete."
