@@ -2,13 +2,13 @@
 Assemble comparison table across layer spillover specifications
 (above-median firm-level employment restriction).
 
-Reads CSVs produced by 07e_layer_spillover.do and outputs:
-  Tables/layer_connectivity/table_layer_specs_abvmed_firm.tex
-  Tables/layer_connectivity/table_layer_specs_abvmed_firm.csv
-  Tables/layer_connectivity/table_layer_specs_abvmed_firm_edu.tex
-  Tables/layer_connectivity/table_layer_specs_abvmed_firm_edu.csv
-  Tables/layer_connectivity/table_layer_specs_abvmed_firm_demog.tex
-  Tables/layer_connectivity/table_layer_specs_abvmed_firm_demog.csv
+Reads CSVs produced by 01a_layer_spillover.do and outputs:
+  output/table_layer_specs_abvmed_firm.tex
+  output/table_layer_specs_abvmed_firm.csv
+  output/table_layer_specs_abvmed_firm_edu.tex
+  output/table_layer_specs_abvmed_firm_edu.csv
+  output/table_layer_specs_abvmed_firm_demog.tex
+  output/table_layer_specs_abvmed_firm_demog.csv
 
 Specs included:
   (1) Within-firm FE     — firm×year FE, layer connectivity
@@ -19,15 +19,15 @@ Specs included:
                            results_spill_firmrestr_{edu2,gender,race}_abvmed_firm_layer_spill.csv
 
 Usage:
-  ~/.conda/envs/venv_python312/bin/python Programs/layer_connectivity/08d_make_table_layer_specs_abvmed_firm.py
+  python scripts/01b_make_table_spillover.py
 """
 
 from pathlib import Path
 import pandas as pd
 
 # ── Paths ──────────────────────────────────────────────────────────────────────
-PROJ   = Path(__file__).resolve().parent.parent.parent
-TABLES = PROJ / "Tables" / "layer_connectivity"
+STANDALONE = Path(__file__).resolve().parent.parent
+TABLES = STANDALONE / "output"
 
 # ── Load one CSV (semicolon-separated data rows, comma header) ─────────────────
 def load_csv(path: Path) -> pd.DataFrame:
@@ -132,7 +132,7 @@ for layer in LAYERS:
             data[key] = row["value"]
 
 if missing_files:
-    print("WARNING — missing files (run 07e_layer_spillover.do first):")
+    print("WARNING — missing files (run 01a_layer_spillover.do first):")
     for f in missing_files:
         print(f"  {f}")
     if len(missing_files) == len(LAYERS) * len(SPECS):
@@ -261,7 +261,7 @@ def build_latex(layers_subset: list, caption: str, label: str) -> str:
         ("Layer-level outcomes",            lambda si: si in (0, 1)),
         ("Firm-level outcomes",             lambda si: si == 2),
         ("Firm $\\times$ year FE",          lambda si: si == 0),
-        ("Firm-level FE",                   lambda si: si == 1),
+        ("Geo $\\times$ ind $\\times$ mode FE", lambda si: si == 1),
         ("Firm FE",                         lambda si: si == 2),
     ]
 

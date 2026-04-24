@@ -29,23 +29,30 @@
 * SECTION 1: PATHS & GLOBALS
 ********************************************************************************
 
-global main      "/kellogg/proj/lgg3230"
-global rais_firm "$main/UnionSpill/Data/CBA_RAIS_firm_level"
-global rais_aux  "$main/UnionSpill/Data/RAIS_aux"
-global tables    "$main/UnionSpill/Tables"
-global graphs    "$main/UnionSpill/Graphs"
-global logs      "$main/UnionSpill/Logs"
-global programs  "$main/UnionSpill/Programs"
+* ── Paths: inherited from run_all.do; set manually if running standalone ──────
+if "${standalone}" == "" {
+	di as error "ERROR: global standalone not set."
+	di as error "Run via scripts/run_all.do, or set it manually before calling this do-file:"
+	di as error `"  global standalone "/path/to/layer_connectivity_standalone""'
+	exit 198
+}
+global data       "$standalone/data"
+global output     "$standalone/output"
+global layer_data "$data"
+global rais_firm  "$data"
+global rais_aux   "$data"
+global tables     "$output"
+global graphs     "$output"
+global logs       "$output"
 
 capture log close
 local d = subinstr("`c(current_date)'"," ","_",.)
 local t = subinstr("`c(current_time)'",":","",.)
-log using "$logs/layer_connectivity/layer_spillover_abvmed_firm_`d'_`t'.log", replace text
+log using "$logs/layer_spillover_abvmed_firm_`d'_`t'.log", replace text
 
 di "Started: `c(current_date)' `c(current_time)'"
 di "Stata version: `c(stata_version)'"
 
-global layer_data "$main/UnionSpill/Data/layer_connectivity"
 local  spec       "abvmed_firm_layer_spill"
 
 ********************************************************************************
@@ -96,7 +103,7 @@ foreach layer in edu2 gender race {
 	* ── 2b. Merge connectivity (firm × layer, time-invariant pre-treatment) ──
 	di as result "Merging layer connectivity..."
 	merge m:1 identificad layer_id using ///
-		"$layer_data/final_measures/firm_layer_connectivity_`layer'.dta", ///
+		"$data/firm_layer_connectivity_`layer'.dta", ///
 		keep(master match) nogen
 
 	count
@@ -249,7 +256,7 @@ foreach layer in edu2 gender race {
 	* SECTION 2g: INITIALIZE OUTPUT CSV
 	****************************************************************************
 
-	local csv_out "$tables/layer_connectivity/results_spill_layer_`layer'_`spec'.csv"
+	local csv_out "$tables/results_spill_layer_`layer'_`spec'.csv"
 	capture erase "`csv_out'"
 	tempname fh
 	file open  `fh' using "`csv_out'", write replace
@@ -358,7 +365,7 @@ foreach layer in edu2 gender race {
 			graphregion(color(white)) bgcolor(white) ///
 			ci(95) ciopts(recast(rcap) color(blue)) mcolor(blue)
 
-		graph export "$graphs/layer_connectivity/es_`outcome'_abvmed_firm_spill_`layer'_`d'.pdf", ///
+		graph export "$graphs/es_`outcome'_abvmed_firm_spill_`layer'_`d'.pdf", ///
 			as(pdf) replace
 
 		estimates drop _es_tmp
@@ -377,7 +384,7 @@ foreach layer in edu2 gender race {
 
 	local base_fe_cross "i.firm_layer_id i.year i.industry1_num#i.year i.mode_base_month_num#i.year i.microregion_num#i.year i.layer_id_num#i.year"
 
-	local csv_cross "$tables/layer_connectivity/results_spill_layer_cross_`layer'_`spec'.csv"
+	local csv_cross "$tables/results_spill_layer_cross_`layer'_`spec'.csv"
 	capture erase "`csv_cross'"
 	tempname fhx
 	file open  `fhx' using "`csv_cross'", write replace
@@ -477,7 +484,7 @@ foreach layer in edu2 gender race {
 			graphregion(color(white)) bgcolor(white) ///
 			ci(95) ciopts(recast(rcap) color(blue)) mcolor(blue)
 
-		graph export "$graphs/layer_connectivity/es_`outcome'_abvmed_firm_cross_`layer'_`d'.pdf", ///
+		graph export "$graphs/es_`outcome'_abvmed_firm_cross_`layer'_`d'.pdf", ///
 			as(pdf) replace
 
 		estimates drop _es_x_tmp
@@ -582,7 +589,10 @@ foreach layer in edu2 gender race {
 
 	* ── Pre-treatment outcome bins (full sample, to match main spec) ──────
 	foreach outcome in lr_remdezr_w lr_remdezr_h_w {
-		cap drop `outcome'_pre_o `outcome'_pre `outcome'_pre4_o `outcome'_pre4
+		cap drop `outcome'_pre_o
+		cap drop `outcome'_pre
+		cap drop `outcome'_pre4_o
+		cap drop `outcome'_pre4
 		bys identificad: ///
 			egen `outcome'_pre_o = mean(`outcome') if inrange(year, 2009, 2011)
 		bys identificad: ///
@@ -613,11 +623,11 @@ foreach layer in edu2 gender race {
 
 	* ── FE macros ────────────────────────────────────────────────────────
 	local conn_r    "totaltreat_pw_norm_r"
-	local base_fe_r "identificad i.industry1_num#i.year i.mode_base_month_num#i.year i.microregion_num#i.year"
+	local base_fe_r "identificad i.year i.industry1_num#i.year i.mode_base_month_num#i.year i.microregion_num#i.year"
 	local extra_r   "ib0.totalflows_pw_pre4_r#i.year"
 
 	* ── Initialize output CSV ────────────────────────────────────────────
-	local csv_r "$tables/layer_connectivity/results_spill_firmrestr_`layer'_`spec'.csv"
+	local csv_r "$tables/results_spill_firmrestr_`layer'_`spec'.csv"
 	capture erase "`csv_r'"
 	tempname fhr
 	file open  `fhr' using "`csv_r'", write replace
@@ -706,7 +716,7 @@ foreach layer in edu2 gender race {
 			graphregion(color(white)) bgcolor(white) ///
 			ci(95) ciopts(recast(rcap) color(blue)) mcolor(blue)
 
-		graph export "$graphs/layer_connectivity/es_`outcome'_abvmed_firm_firmrestr_`layer'_`d'.pdf", ///
+		graph export "$graphs/es_`outcome'_abvmed_firm_firmrestr_`layer'_`d'.pdf", ///
 			as(pdf) replace
 
 		estimates drop _es_r_tmp
@@ -726,7 +736,6 @@ foreach layer in edu2 gender race {
 log close
 di as result "Finished: `c(current_date)' `c(current_time)'"
 
-shell source /gpfs/kellogg/proj/lgg3230/UnionSpill/Programs/notify.sh && notify "Layer spillover abvmed firm done" "07e: above-median firm employment restriction complete"
 
 ********************************************************************************
 * END OF DO-FILE

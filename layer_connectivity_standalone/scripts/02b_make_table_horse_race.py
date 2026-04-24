@@ -1,5 +1,5 @@
 """
-Assemble horse race table from 13_horse_race_edu2.do output.
+Assemble horse race table from 02a_horse_race_edu2.do output.
 
 Both c_no_hs and c_has_hs appear simultaneously in each regression.
 
@@ -18,17 +18,17 @@ Rows:
   Pre-F: c_has_hs
 
 Output:
-  Tables/layer_connectivity/table_horse_race_edu2.tex / .csv
+  output/table_horse_race_edu2.tex / .csv
 
 Usage:
-  ~/.conda/envs/venv_python312/bin/python Programs/layer_connectivity/14_make_table_horse_race.py
+  python scripts/02b_make_table_horse_race.py
 """
 
 from pathlib import Path
 import pandas as pd
 
-PROJ   = Path(__file__).resolve().parent.parent.parent
-TABLES = PROJ / "Tables" / "layer_connectivity"
+STANDALONE = Path(__file__).resolve().parent.parent
+TABLES = STANDALONE / "output"
 CSV_IN = TABLES / "results_horse_race_edu2.csv"
 
 # ── CSV loader ────────────────────────────────────────────────────────────────
@@ -255,7 +255,7 @@ def build_csv(data: dict) -> pd.DataFrame:
 
 # ── Main ──────────────────────────────────────────────────────────────────────
 if not CSV_IN.exists():
-    raise SystemExit(f"ERROR: results file not found — run 13_horse_race_edu2.do first:\n  {CSV_IN}")
+    raise SystemExit(f"ERROR: results file not found — run 02a_horse_race_edu2.do first:\n  {CSV_IN}")
 
 data = load_csv(CSV_IN)
 print(f"Loaded {len(data)} entries from {CSV_IN.name}")

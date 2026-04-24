@@ -11,20 +11,26 @@
 * Output:  Tables/layer_connectivity/results_horse_race_edu2.csv
 ********************************************************************************
 
-* ── Set globals ───────────────────────────────────────────────────────────────
-global main      "/kellogg/proj/lgg3230"
-global rais_firm "$main/UnionSpill/Data/CBA_RAIS_firm_level"
-global rais_aux  "$main/UnionSpill/Data/RAIS_aux"
-global tables    "$main/UnionSpill/Tables"
-global graphs    "$main/UnionSpill/Graphs"
-global logs      "$main/UnionSpill/Logs"
-global programs  "$main/UnionSpill/Programs"
-global layer_data "$main/UnionSpill/Data/layer_connectivity"
+* ── Paths: inherited from run_all.do; set manually if running standalone ──────
+if "${standalone}" == "" {
+	di as error "ERROR: global standalone not set."
+	di as error "Run via scripts/run_all.do, or set it manually before calling this do-file:"
+	di as error `"  global standalone "/path/to/layer_connectivity_standalone""'
+	exit 198
+}
+global data       "$standalone/data"
+global output     "$standalone/output"
+global layer_data "$data"
+global rais_firm  "$data"
+global rais_aux   "$data"
+global tables     "$output"
+global graphs     "$output"
+global logs       "$output"
 
 capture log close
 local d = subinstr("`c(current_date)'"," ","_",.)
 local t = subinstr("`c(current_time)'",":","",.)
-log using "$logs/layer_connectivity/horse_race_edu2_`d'_`t'.log", replace text
+log using "$logs/horse_race_edu2_`d'_`t'.log", replace text
 
 di "Started: `c(current_date)' `c(current_time)'"
 di "Stata version: `c(stata_version)'"
@@ -60,7 +66,7 @@ egen firm_layer_id = group(identificad layer_id)
 * ── Merge layer connectivity ──────────────────────────────────────────────────
 di as result "Merging layer connectivity..."
 merge m:1 identificad layer_id using ///
-	"$layer_data/final_measures/firm_layer_connectivity_edu2.dta", ///
+	"$data/firm_layer_connectivity_edu2.dta", ///
 	keep(master match) nogen
 
 count
@@ -82,6 +88,19 @@ keep if lagos_sample_avg == 1
 
 count
 di as result "  After sample restriction (lagos_sample_avg==1): `r(N)'"
+
+* ── Encode firm-level categorical FE variables ────────────────────────────────
+capture confirm string variable industry1
+if !_rc encode industry1,         gen(industry1_num)
+else     gen industry1_num       = industry1
+
+capture confirm string variable mode_base_month
+if !_rc encode mode_base_month,   gen(mode_base_month_num)
+else     gen mode_base_month_num = mode_base_month
+
+capture confirm string variable microregion
+if !_rc encode microregion,       gen(microregion_num)
+else     gen microregion_num     = microregion
 
 ********************************************************************************
 * SECTION 3: VARIABLE CREATION
@@ -157,7 +176,7 @@ di as result "All variables created."
 * SECTION 4: INITIALIZE OUTPUT CSV
 ********************************************************************************
 
-local csv_out "$tables/layer_connectivity/results_horse_race_edu2.csv"
+local csv_out "$tables/results_horse_race_edu2.csv"
 capture erase "`csv_out'"
 tempname fh
 file open  `fh' using "`csv_out'", write replace
@@ -176,7 +195,7 @@ foreach outcome in lr_remdezr_layer l_layer_emp {
 
 	di as text "  [Layer-level] Outcome: `outcome'"
 
-	local extra "ib0.`outcome'_pre4#i.year ib0.l_layer_emp_pre4#i.year ib0.layer_totalflows_pw_pre4#i.year"
+	local extra "ib0.`outcome'_pre4#i.year ib0.l_layer_emp_pre4#i.year ib0.layer_totalflows_pw_pre4#i.year i.industry1_num#i.year i.microregion_num#i.year i.mode_base_month_num#i.year"
 
 	foreach lv_o in no_hs has_hs {
 
@@ -288,6 +307,19 @@ preserve
 	cap drop firm_id
 	egen firm_id = group(identificad)
 
+	* Re-encode categorical FE variables (numeric versions dropped by collapse)
+	capture confirm string variable industry1
+	if !_rc encode industry1,         gen(industry1_num)
+	else     gen industry1_num       = industry1
+
+	capture confirm string variable mode_base_month
+	if !_rc encode mode_base_month,   gen(mode_base_month_num)
+	else     gen mode_base_month_num = mode_base_month
+
+	capture confirm string variable microregion
+	if !_rc encode microregion,       gen(microregion_num)
+	else     gen microregion_num     = microregion
+
 	gen byte treat_year   = (year >= 2012)
 	gen byte placebo_year = (year < 2011)
 
@@ -336,7 +368,7 @@ preserve
 
 		di as text "  [Firm-level] Outcome: `outcome'"
 
-		local extra_f "ib0.`outcome'_pre4#i.year ib0.l_firm_emp_pre4#i.year ib0.totalflows_pw_pre4#i.year"
+		local extra_f "ib0.`outcome'_pre4#i.year ib0.l_firm_emp_pre4#i.year ib0.totalflows_pw_pre4#i.year i.industry1_num#i.year i.microregion_num#i.year i.mode_base_month_num#i.year"
 
 		* ── Post-treatment DiD ───────────────────────────────────────────────
 		reghdfe `outcome' c.c_no_hs##i.treat_year c.c_has_hs##i.treat_year ///
@@ -428,7 +460,6 @@ di as result "Horse race regressions complete. Results in `csv_out'"
 
 log close
 
-shell source /gpfs/kellogg/proj/lgg3230/UnionSpill/Programs/notify.sh && notify "Horse race done" "13_horse_race_edu2.do complete"
 
 ********************************************************************************
 * END OF DO-FILE
