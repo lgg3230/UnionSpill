@@ -28,6 +28,7 @@ import pandas as pd
 # ── Paths ──────────────────────────────────────────────────────────────────────
 PROJ   = Path(__file__).resolve().parent.parent.parent
 TABLES = PROJ / "Tables" / "layer_connectivity"
+TEX_TABLES = TABLES / "tex_tables"
 
 # ── Load one CSV (semicolon-separated data rows, comma header) ─────────────────
 def load_csv(path: Path) -> pd.DataFrame:
@@ -353,7 +354,7 @@ LABELS = {
 }
 
 for group_key, (layers_subset, _) in LAYER_GROUPS.items():
-    tex_out = TABLES / f"table_layer_specs_abvmed_{group_key}.tex"
+    tex_out = TEX_TABLES / f"table_layer_specs_abvmed_{group_key}.tex"
     csv_out = TABLES / f"table_layer_specs_abvmed_{group_key}.csv"
 
     tex = build_latex(layers_subset, CAPTIONS[group_key], LABELS[group_key])
@@ -369,7 +370,7 @@ for group_key, (layers_subset, _) in LAYER_GROUPS.items():
     print()
 
 # Combined table
-tex_out_all = TABLES / "table_layer_specs_abvmed.tex"
+tex_out_all = TEX_TABLES / "table_layer_specs_abvmed.tex"
 csv_out_all = TABLES / "table_layer_specs_abvmed.csv"
 tex_all = build_latex(LAYERS, "Layer spillover effects, above-median both layers --- specification comparison", "tab:layer_specs_abvmed")
 tex_out_all.write_text(tex_all)

@@ -13,7 +13,7 @@ Output:
     Data/layer_connectivity/validation/reconstruction_multi_layer.csv
 
 Usage:
-    python 04b_reconstruction_decompose.py
+    python 04b_decompose.py
 """
 
 import os
@@ -24,7 +24,7 @@ import duckdb
 import pandas as pd
 import numpy as np
 
-sys.path.insert(0, os.path.dirname(__file__))
+sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 from layer_config import OUT_BASE, ORIG_FIRM_CONN_PARQUET, ORIG_FIRM_CONN, CBA_FIRM
 
 # ---------------------------------------------------------------------------
@@ -260,7 +260,7 @@ def main():
     subprocess.run([
         "curl", "-s", "-o", "/dev/null",
         "-H", "Title: Done",
-        "-d", "04b_reconstruction_decompose.py complete",
+        "-d", "04b_decompose.py complete",
         "https://ntfy.sh/lgg3230-kellogg",
     ])
 

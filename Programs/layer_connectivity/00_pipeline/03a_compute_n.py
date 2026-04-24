@@ -8,8 +8,8 @@ Replicates the _n logic from 05_yearly_employers.do for each of:
   - ratio_cross  → crosstreat_pw_n
 
 Usage:
-    python 03_compute_n.py --layer occ3
-    python 03_compute_n.py --layer edu
+    python 03a_compute_n.py --layer occ3
+    python 03a_compute_n.py --layer edu
 """
 
 import argparse
@@ -18,7 +18,7 @@ import sys
 import pandas as pd
 import numpy as np
 
-sys.path.insert(0, os.path.dirname(__file__))
+sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 from layer_config import LAYER_DEFS, PAIR_LABELS, OUT_BASE
 
 

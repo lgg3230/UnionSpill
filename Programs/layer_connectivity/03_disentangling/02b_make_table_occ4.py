@@ -1,7 +1,7 @@
 """
 Assemble disentangling table for the occ4 layer (occupation 4-bin, CBO 2002).
 
-Reads results_disentangle_occ4_layer_spill.csv produced by 11c_disentangling_occ4.do
+Reads results_disentangle_occ4_layer_spill.csv produced by 01b_disentangle_occ4.do
 and outputs:
   Tables/layer_connectivity/table_disentangle_occ4.tex
   Tables/layer_connectivity/table_disentangle_occ4.csv
@@ -12,14 +12,15 @@ Layout (transposed relative to 12_make_table_disentangle.py):
           = 4×2 + 2 = 10 data columns
 
 Usage:
-  ~/.conda/envs/venv_python312/bin/python Programs/layer_connectivity/12d_make_table_disentangle_occ4.py
+  ~/.conda/envs/venv_python312/bin/python Programs/layer_connectivity/02b_make_table_occ4.py
 """
 
 from pathlib import Path
 import pandas as pd
 
-PROJ   = Path(__file__).resolve().parent.parent.parent
-TABLES = PROJ / "Tables" / "layer_connectivity"
+PROJ   = Path(__file__).resolve().parent.parent.parent.parent
+TABLES = PROJ / "Tables" / "layer_connectivity/03_disentangling"
+TEX_TABLES = TABLES / "tex_tables"
 
 LAYER     = "occ4"
 LAYER_CSV = TABLES / f"results_disentangle_{LAYER}_layer_spill.csv"
@@ -67,7 +68,7 @@ data = {}
 if LAYER_CSV.exists():
     data = load_csv(LAYER_CSV)
 else:
-    raise SystemExit(f"Missing: {LAYER_CSV}\nRun 11c_disentangling_occ4.do first.")
+    raise SystemExit(f"Missing: {LAYER_CSV}\nRun 01b_disentangle_occ4.do first.")
 
 
 def get(section, outcome, row_type, default="--"):
@@ -289,7 +290,7 @@ def build_csv() -> pd.DataFrame:
 # ── Write outputs ──────────────────────────────────────────────────────────────
 TABLES.mkdir(parents=True, exist_ok=True)
 
-tex_out = TABLES / "table_disentangle_occ4.tex"
+tex_out = TEX_TABLES / "table_disentangle_occ4.tex"
 csv_out = TABLES / "table_disentangle_occ4.csv"
 
 tex_out.write_text(build_latex())

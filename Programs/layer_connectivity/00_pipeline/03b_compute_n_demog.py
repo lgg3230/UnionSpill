@@ -2,11 +2,11 @@
 """
 Script 03d: NaN-aware average across year pairs → final firm × layer dataset.
 
-Identical logic to 03_compute_n.py; handles gender and race layers.
+Identical logic to 03a_compute_n.py; handles gender and race layers.
 
 Usage:
-    python 03d_compute_n_demog.py --layer gender
-    python 03d_compute_n_demog.py --layer race
+    python 03b_compute_n_demog.py --layer gender
+    python 03b_compute_n_demog.py --layer race
 """
 
 import argparse
@@ -15,7 +15,7 @@ import sys
 import pandas as pd
 import numpy as np
 
-sys.path.insert(0, os.path.dirname(__file__))
+sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 from layer_config import PAIR_LABELS, OUT_BASE
 
 

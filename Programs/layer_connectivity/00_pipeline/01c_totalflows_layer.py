@@ -15,7 +15,7 @@ but is faster because we do NOT need contact-layer tracking:
 Focal-year layer assignment:
   - Year 2009, 2010 → worker_panel_lagos.parquet  (fast)
   - Year 2007, 2008 → raw RAIS_{year}.dta with spell-selection algorithm
-    (same logic as 01_build_transitions.py, but only loading grinstrucao)
+    (same logic as 01a_build_transitions.py, but only loading grinstrucao)
 
 NaN-aware average over 4 pairs → totalflows_layer_pw_n, which is then
 merged into the existing connectivity DTA files in place.
@@ -32,7 +32,7 @@ import duckdb
 import numpy as np
 import pandas as pd
 
-sys.path.insert(0, os.path.dirname(__file__))
+sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 from layer_config import (
     PAIR_LABELS, YEAR_PAIRS,
     PARQUET_ORIGIN_YEARS,      # {2009, 2010}
@@ -103,7 +103,7 @@ def load_focal_layer_parquet(year: int) -> pd.DataFrame:
 def load_focal_layer_rais(year: int) -> pd.DataFrame:
     """
     Load (PIS, identificad, educ_bin) from raw RAIS_{year}.dta.
-    Applies the same spell-selection algorithm as 01_build_transitions.py:
+    Applies the same spell-selection algorithm as 01a_build_transitions.py:
       Stage 1: one per (identificad × PIS) by hours then hourly wage
       Stage 2: one per PIS by tenure then hourly wage
     Only loads columns needed for layer assignment + spell selection.

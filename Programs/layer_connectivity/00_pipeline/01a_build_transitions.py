@@ -16,8 +16,8 @@ Output schema per record:
     is_treated_contact - 1 if contact with a treated firm
 
 Usage:
-    python 01_build_transitions.py --layer occ3
-    python 01_build_transitions.py --layer edu
+    python 01a_build_transitions.py --layer occ3
+    python 01a_build_transitions.py --layer edu
 """
 
 import argparse
@@ -28,7 +28,7 @@ import pandas as pd
 import numpy as np
 
 # Allow running from project root
-sys.path.insert(0, os.path.dirname(__file__))
+sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 from layer_config import (
     LAYER_DEFS, YEAR_PAIRS, PAIR_LABELS,
     PARQUET_ORIGIN_YEARS, PARQUET_DEST_YEARS, IPCA,
@@ -118,9 +118,23 @@ def load_layer_from_parquet(year: int, layerdef: dict) -> pd.DataFrame:
             QUALIFY ROW_NUMBER() OVER (PARTITION BY PIS, identificad ORDER BY 1) = 1
         """
     else:
-        # Must compute from raw column (e.g., occ3 from ocup2002)
+        # Must compute from raw column (e.g., occ3/occ4 from ocup2002)
         raw_col = layerdef["raw_cols"][0]
-        if raw_col == "ocup2002":
+        sql_expr = layerdef.get("sql_layer_expr")
+        if sql_expr is not None:
+            expr = sql_expr.strip()
+            query = f"""
+                SELECT
+                    CAST(PIS AS VARCHAR)         AS PIS,
+                    CAST(identificad AS VARCHAR) AS identificad,
+                    CAST(({expr}) AS VARCHAR)    AS layer_id
+                FROM read_parquet('{WORKER_PANEL_PARQUET}')
+                WHERE year = {year}
+                  AND {raw_col} IS NOT NULL
+                  AND ({expr}) IS NOT NULL
+                QUALIFY ROW_NUMBER() OVER (PARTITION BY PIS, identificad ORDER BY 1) = 1
+            """
+        elif raw_col == "ocup2002":
             query = f"""
                 SELECT
                     CAST(PIS AS VARCHAR)         AS PIS,
@@ -216,7 +230,10 @@ def load_layer_from_raw_rais(year: int, layerdef: dict,
         df = df.drop_duplicates(subset=["PIS"], keep="first")
 
     # Compute layer_id
-    if raw_col == "ocup2002":
+    pandas_compute = layerdef.get("pandas_compute")
+    if pandas_compute is not None:
+        df["layer_id"] = pandas_compute(df[raw_col]).astype(str)
+    elif raw_col == "ocup2002":
         df["layer_id"] = (df[raw_col] // 10).astype("Int64").astype(str)
     else:
         # edu: apply pd.cut

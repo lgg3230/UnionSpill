@@ -21,6 +21,7 @@ import pandas as pd
 # ── Paths ───────────────────────────────────────────────────────────────────────
 PROJ   = Path(__file__).resolve().parent.parent.parent
 TABLES = PROJ / "Tables" / "layer_connectivity"
+TEX_TABLES = TABLES / "tex_tables"
 
 # ── Load one CSV (same format as 07_layer_spillover_size.do output) ─────────────
 def load_csv(path: Path) -> pd.DataFrame:
@@ -266,7 +267,7 @@ def build_csv() -> pd.DataFrame:
 # ── Write outputs ────────────────────────────────────────────────────────────────
 TABLES.mkdir(parents=True, exist_ok=True)
 
-tex_out = TABLES / "table_size_specs.tex"
+tex_out = TEX_TABLES / "table_size_specs.tex"
 csv_out = TABLES / "table_size_specs.csv"
 
 tex = build_latex()

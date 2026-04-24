@@ -1,7 +1,7 @@
 """
 Assemble spillover table for the occ4 layer — no layer×year FE spec (test).
 
-Reads CSVs produced by 07g_layer_spillover_occ4_nolayeryear.do and outputs:
+Reads CSVs produced by 01c_layer_spillover_occ4_test.do and outputs:
   Tables/layer_connectivity/table_layer_specs_occ4_nolayeryear.tex
   Tables/layer_connectivity/table_layer_specs_occ4_nolayeryear.csv
 
@@ -11,14 +11,14 @@ Specs included:
   (3) Firm-level restr.  — firm-level outcomes, standard FE, restricted sample
 
 Usage:
-  ~/.conda/envs/venv_python312/bin/python Programs/layer_connectivity/08f_make_table_occ4_nolayeryear.py
+  ~/.conda/envs/venv_python312/bin/python Programs/layer_connectivity/02c_make_table_spillover_occ4_test.py
 """
 
 from pathlib import Path
 import pandas as pd
 
-PROJ   = Path(__file__).resolve().parent.parent.parent
-TABLES = PROJ / "Tables" / "layer_connectivity"
+PROJ   = Path(__file__).resolve().parent.parent.parent.parent
+TABLES = PROJ / "Tables" / "layer_connectivity/02_spillover"
 TEX_TABLES = TABLES / "tex_tables"
 
 

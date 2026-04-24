@@ -1,5 +1,30 @@
 """Central configuration for the firm × layer × year connectivity pipeline."""
+import numpy as np
 import pandas as pd
+
+
+def _occ4_pandas(s):
+    """Map ocup2002 series to 4-bin occupation layer using CBO2002 first digit.
+
+    ocup2002 is stored as a 6-digit integer (e.g. 111220), so the first digit
+    is floor(code / 100000).
+    """
+    first = pd.to_numeric(s, errors="coerce") // 100000
+    return np.select(
+        [first == 1, first.isin([2, 3]), first == 4, first >= 5],
+        ["1_mgr", "23_high", "4_bur", "5p_low"],
+        default="nan",  # string sentinel so load_layer_from_raw_rais can filter
+    )
+
+
+_OCC4_SQL = """
+    CASE
+        WHEN FLOOR(ocup2002 / 100000) = 1       THEN '1_mgr'
+        WHEN FLOOR(ocup2002 / 100000) IN (2, 3) THEN '23_high'
+        WHEN FLOOR(ocup2002 / 100000) = 4       THEN '4_bur'
+        WHEN FLOOR(ocup2002 / 100000) >= 5      THEN '5p_low'
+        ELSE NULL
+    END"""
 
 LAYER_DEFS = {
     "occ3": {
@@ -7,6 +32,14 @@ LAYER_DEFS = {
         "raw_cols":    ["ocup2002"],
         "compute":     lambda df: (df["ocup2002"] // 10).astype("Int64"),
         "parquet_col": None,   # must compute from ocup2002
+    },
+    "occ4": {
+        "description": "4-bin occupation (CBO2002 first digit: 1=mgr, 2/3=high, 4=bur, 5+=low)",
+        "raw_cols":    ["ocup2002"],
+        "compute":     None,
+        "parquet_col": None,
+        "sql_layer_expr":  _OCC4_SQL,
+        "pandas_compute":  _occ4_pandas,
     },
     "edu": {
         "description": "Education bins: 0_no_hs / 1_hs / 2_higher",
@@ -21,6 +54,18 @@ LAYER_DEFS = {
         "raw_cols":    ["grinstrucao"],
         "compute":     None,   # derived from edu; run 01b_remap_edu2.py instead of 01
         "parquet_col": "educ_bin",
+    },
+    "occ2c": {
+        "description": "2-bin occupation: upper_skill (mgr+high+bur) / low_skill (low) — derived from occ4",
+        "raw_cols":    ["ocup2002"],
+        "compute":     None,   # derived from occ4; run 01f_remap_occ2c.py
+        "parquet_col": None,
+    },
+    "occ2": {
+        "description": "2-bin occupation: high_skill (mgr+high) / low_skill (bur+low) — derived from occ4",
+        "raw_cols":    ["ocup2002"],
+        "compute":     None,   # derived from occ4; run 01e_remap_occ2.py instead of 01
+        "parquet_col": None,
     },
 }
 

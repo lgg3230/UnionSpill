@@ -13,8 +13,8 @@ Computes:
 Outputs long and wide parquet files.
 
 Usage:
-    python 02_aggregate.py --layer occ3
-    python 02_aggregate.py --layer edu
+    python 02a_aggregate.py --layer occ3
+    python 02a_aggregate.py --layer edu
 """
 
 import argparse
@@ -24,7 +24,7 @@ import duckdb
 import pandas as pd
 import numpy as np
 
-sys.path.insert(0, os.path.dirname(__file__))
+sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 from layer_config import LAYER_DEFS, PAIR_LABELS, OUT_BASE
 
 

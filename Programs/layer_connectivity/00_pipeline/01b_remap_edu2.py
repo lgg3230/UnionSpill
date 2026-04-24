@@ -5,7 +5,7 @@ Script 01b: Derive edu2 transitions from edu transitions via layer remap.
 edu  (3 bins): 0_no_hs / 1_hs / 2_higher
 edu2 (2 bins): no_hs   / has_hs  (collapses 1_hs and 2_higher)
 
-Reads  transitions_edu.parquet  (must exist — run 01_build_transitions.py --layer edu first)
+Reads  transitions_edu.parquet  (must exist — run 01a_build_transitions.py --layer edu first)
 Writes transitions_edu2.parquet
 
 Usage:
@@ -16,7 +16,7 @@ import os
 import sys
 import pandas as pd
 
-sys.path.insert(0, os.path.dirname(__file__))
+sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 from layer_config import OUT_BASE
 
 REMAP = {

@@ -8,8 +8,8 @@ B. Reconstruction check: employment-weighted average of layer measures vs origin
 C. Layer mixing summary: within/cross-layer shares across all movers.
 
 Usage:
-    python 04_validation.py --layer occ3
-    python 04_validation.py --layer edu
+    python 04a_validate.py --layer occ3
+    python 04a_validate.py --layer edu
 """
 
 import argparse
@@ -19,7 +19,7 @@ import duckdb
 import pandas as pd
 import numpy as np
 
-sys.path.insert(0, os.path.dirname(__file__))
+sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 from layer_config import LAYER_DEFS, OUT_BASE, ORIG_FIRM_CONN, ORIG_FIRM_CONN_PARQUET
 
 

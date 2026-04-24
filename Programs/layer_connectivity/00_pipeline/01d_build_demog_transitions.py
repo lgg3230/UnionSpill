@@ -20,7 +20,7 @@ import duckdb
 import pandas as pd
 import numpy as np
 
-sys.path.insert(0, os.path.dirname(__file__))
+sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 from layer_config import (
     YEAR_PAIRS, PAIR_LABELS,
     PARQUET_ORIGIN_YEARS, PARQUET_DEST_YEARS, IPCA,

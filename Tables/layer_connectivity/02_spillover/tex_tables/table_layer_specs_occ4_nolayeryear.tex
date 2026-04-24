@@ -1,0 +1,36 @@
+\begin{table}[H]
+\centering
+\caption{Layer spillover effects --- occupation layers, no layer$\times$year FE (test)}
+\label{tab:layer_specs_occ4_nolayeryear}
+\scriptsize
+\begin{threeparttable}
+\begin{tabular}{lcccccc}
+\toprule\toprule
+ & \multicolumn{3}{c}{Log Dec. wage} & \multicolumn{3}{c}{Log employment} \\
+\cmidrule(lr){2-4} \cmidrule(lr){5-7}
+ & \shortstack{1 \\ firm$\times$year FE} & \shortstack{2 \\ micro$\times$yr + ind$\times$yr + mode$\times$yr} & \shortstack{3 \\ firm FE} & \shortstack{1 \\ firm$\times$year FE} & \shortstack{2 \\ micro$\times$yr + ind$\times$yr + mode$\times$yr} & \shortstack{3 \\ firm FE} \\
+ & (1) & (2) & (3) & (4) & (5) & (6) \\
+\midrule
+\multicolumn{7}{l}{\textit{Occupation layers (CBO 2002): Managers / High-skill / Bur.\ lower / Low-skill}} \\
+ & -0.0037* & -0.0034* & 0.0051** & 0.0060* & 0.0074** & 0.0006 \\
+ & (0.0022) & (0.0018) & (0.0023) & (0.0035) & (0.0034) & (0.0083) \\
+ & 0.0023 & 0.0026 & 0.0020 & -0.0072* & -0.0073** & -0.0016 \\
+ & (0.0025) & (0.0019) & (0.0025) & (0.0038) & (0.0035) & (0.0064) \\
+\quad Observations & 92,539 & 96,808 & 32,498 & 92,539 & 96,808 & 32,696 \\
+\quad Layers $\times$ firms & 12,001 & 12,999 & --- & 12,001 & 12,999 & --- \\
+\quad Firms & 3,805 & 4,178 & 4,085 & 3,805 & 4,178 & 4,087 \\
+\quad Pre-trend F-test $p$-value & 0.104 & 0.537 & 0.735 & 0.420 & 0.047 & 0.881 \\
+\midrule
+\multicolumn{7}{l}{\textit{Specification}} \\
+Layer-level outcomes & \checkmark & \checkmark & --- & \checkmark & \checkmark & --- \\
+Firm-level outcomes & --- & --- & \checkmark & --- & --- & \checkmark \\
+Firm $\times$ year FE & \checkmark & --- & --- & \checkmark & --- & --- \\
+Firm-level FE & --- & \checkmark & --- & --- & \checkmark & --- \\
+Firm FE & --- & --- & \checkmark & --- & --- & \checkmark \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}[flushleft]
+\item \textit{Notes:} This table reports spillover effects of layer-level connectivity to treated firms for an occupation-based partition following the CBO 2002 first digit: Managers (digit~1), Frontline High-Skills (digits~2--3), Bureaucrat Lower (digit~4), Frontline Low-Skills (digit~5+). The sample covers all firms in the Lagos sample. All regressions are restricted to untreated firms in the balanced firm panel. Connectivity is scaled to the 90th percentile of the control sample at 2009. The regression pools all four occupation layers (firm$\times$layer$\times$year observations). Columns (1), (4) (within-firm) absorb firm$\times$year FE; columns (2), (5) (cross-firm) use microregion$\times$year, industry$\times$year, and mode$\times$year FE; columns (3), (6) (firm-level) run at the firm level on the layer-sample subset. Standard errors clustered at the firm level. $^{***}p<0.01$, $^{**}p<0.05$, $^{*}p<0.10$.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}

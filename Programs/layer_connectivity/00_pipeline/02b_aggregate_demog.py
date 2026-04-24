@@ -2,11 +2,11 @@
 """
 Script 02d: Aggregate demographic transition records to (firm, layer, year_pair) level.
 
-Identical logic to 02_aggregate.py; handles gender and race layers.
+Identical logic to 02a_aggregate.py; handles gender and race layers.
 
 Usage:
-    python 02d_aggregate_demog.py --layer gender
-    python 02d_aggregate_demog.py --layer race
+    python 02b_aggregate_demog.py --layer gender
+    python 02b_aggregate_demog.py --layer race
 """
 
 import argparse
@@ -16,7 +16,7 @@ import duckdb
 import pandas as pd
 import numpy as np
 
-sys.path.insert(0, os.path.dirname(__file__))
+sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 from layer_config import PAIR_LABELS, OUT_BASE
 
 

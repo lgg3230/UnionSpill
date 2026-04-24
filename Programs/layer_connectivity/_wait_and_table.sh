@@ -19,7 +19,7 @@ wait_pid() {
 }
 
 # ── Wait for the four 07_* jobs ───────────────────────────────────────────────
-log "Waiting for 07_layer_spillover.do (PID 2670703)..."
+log "Waiting for 02_spillover/01a_layer_spillover.do (PID 2670703)..."
 wait_pid 2670703 "07_layer_spillover"
 
 log "Waiting for 07_layer_spillover_size.do (PID 2671529)..."
@@ -55,12 +55,12 @@ $PYTHON Programs/layer_connectivity/09_make_table_size_full.py \
 source "$NOTIFY" && notify "07 tables done" "layer specs, size, size100, size_full tables regenerated"
 
 # ── Wait for cross-layer job ──────────────────────────────────────────────────
-log "Waiting for 10_cross_layer_spillover.do (PID $PID_CROSS)..."
+log "Waiting for 01_cross_layer.do (PID $PID_CROSS)..."
 wait_pid $PID_CROSS "10_cross_layer_spillover"
 
-log "Cross-layer done. Running 10_make_table_cross_layer.py..."
-$PYTHON Programs/layer_connectivity/10_make_table_cross_layer.py \
-    && log "10 done." || log "ERROR: 10_make_table_cross_layer.py failed"
+log "Cross-layer done. Running 02_make_table.py..."
+$PYTHON Programs/layer_connectivity/02_make_table.py \
+    && log "10 done." || log "ERROR: 02_make_table.py failed"
 
 source "$NOTIFY" && notify "All layer tables done" "cross-layer table regenerated — all jobs complete"
 

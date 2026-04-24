@@ -20,6 +20,7 @@ import pandas as pd
 
 PROJ   = Path(__file__).resolve().parent.parent.parent
 TABLES = PROJ / "Tables" / "layer_connectivity"
+TEX_TABLES = TABLES / "tex_tables"
 CSV_IN = TABLES / "results_horse_race_edu2_lbal_geo.csv"
 
 # ── CSV loader ────────────────────────────────────────────────────────────────
@@ -242,7 +243,7 @@ caption = (
 )
 label   = "tab:horse_race_edu2_lbal_geo"
 
-tex_out = TABLES / "table_horse_race_edu2_lbal_geo.tex"
+tex_out = TEX_TABLES / "table_horse_race_edu2_lbal_geo.tex"
 csv_out = TABLES / "table_horse_race_edu2_lbal_geo.csv"
 
 tex = build_latex(data, caption, label)

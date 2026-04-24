@@ -30,7 +30,7 @@ global programs  "$main/UnionSpill/Programs"
 capture log close
 local d = subinstr("`c(current_date)'"," ","_",.)
 local t = subinstr("`c(current_time)'",":","",.)
-log using "$logs/layer_connectivity/disentangling_edu_`d'_`t'.log", replace text
+log using "$logs/layer_connectivity/03_disentangling/disentangling_edu_`d'_`t'.log", replace text
 
 di "Started: `c(current_date)' `c(current_time)'"
 di "Stata version: `c(stata_version)'"
@@ -195,7 +195,7 @@ count
 	* SECTION 2f: INITIALIZE OUTPUT CSV
 	****************************************************************************
 
-	local csv_out "$tables/layer_connectivity/results_disentangle_`layer'_`spec'.csv"
+	local csv_out "$tables/layer_connectivity/03_disentangling/results_disentangle_`layer'_`spec'.csv"
 	capture erase "`csv_out'"
 	tempname fh
 	file open  `fh' using "`csv_out'", write replace
@@ -451,7 +451,7 @@ count
 
 log close
 
-shell source /gpfs/kellogg/proj/lgg3230/UnionSpill/Programs/notify.sh && notify "Disentangling edu done" "11b_disentangling_edu.do complete"
+shell source /gpfs/kellogg/proj/lgg3230/UnionSpill/Programs/notify.sh && notify "Disentangling edu done" "01a_disentangle_edu.do complete"
 
 ********************************************************************************
 * END OF DO-FILE

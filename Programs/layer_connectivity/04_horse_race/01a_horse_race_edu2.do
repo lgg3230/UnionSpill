@@ -24,7 +24,7 @@ global layer_data "$main/UnionSpill/Data/layer_connectivity"
 capture log close
 local d = subinstr("`c(current_date)'"," ","_",.)
 local t = subinstr("`c(current_time)'",":","",.)
-log using "$logs/layer_connectivity/horse_race_edu2_`d'_`t'.log", replace text
+log using "$logs/layer_connectivity/04_horse_race/horse_race_edu2_`d'_`t'.log", replace text
 
 di "Started: `c(current_date)' `c(current_time)'"
 di "Stata version: `c(stata_version)'"
@@ -157,7 +157,7 @@ di as result "All variables created."
 * SECTION 4: INITIALIZE OUTPUT CSV
 ********************************************************************************
 
-local csv_out "$tables/layer_connectivity/results_horse_race_edu2.csv"
+local csv_out "$tables/layer_connectivity/04_horse_race/results_horse_race_edu2.csv"
 capture erase "`csv_out'"
 tempname fh
 file open  `fh' using "`csv_out'", write replace
@@ -428,7 +428,7 @@ di as result "Horse race regressions complete. Results in `csv_out'"
 
 log close
 
-shell source /gpfs/kellogg/proj/lgg3230/UnionSpill/Programs/notify.sh && notify "Horse race done" "13_horse_race_edu2.do complete"
+shell source /gpfs/kellogg/proj/lgg3230/UnionSpill/Programs/notify.sh && notify "Horse race done" "01a_horse_race_edu2.do complete"
 
 ********************************************************************************
 * END OF DO-FILE

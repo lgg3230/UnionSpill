@@ -36,7 +36,7 @@ import numpy as np
 import pandas as pd
 import subprocess
 
-sys.path.insert(0, os.path.dirname(__file__))
+sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 from layer_config import OUT_BASE, WORKER_PANEL_PARQUET
 
 DEMOG_OUTCOME_DEFS = {
@@ -52,6 +52,19 @@ DEMOG_OUTCOME_DEFS = {
         ),
         "null_filter": "race_group IN ('branca', 'parda', 'preta')",
         "all_layers":  ["white", "nonwhite"],
+    },
+    "occ4": {
+        "layer_expr": (
+            "CASE "
+            "  WHEN FLOOR(ocup2002 / 100000) = 1       THEN '1_mgr' "
+            "  WHEN FLOOR(ocup2002 / 100000) IN (2, 3) THEN '23_high' "
+            "  WHEN FLOOR(ocup2002 / 100000) = 4       THEN '4_bur' "
+            "  WHEN FLOOR(ocup2002 / 100000) >= 5      THEN '5p_low' "
+            "  ELSE NULL "
+            "END"
+        ),
+        "null_filter": "ocup2002 IS NOT NULL AND ocup2002 >= 1000",
+        "all_layers":  ["1_mgr", "23_high", "4_bur", "5p_low"],
     },
 }
 

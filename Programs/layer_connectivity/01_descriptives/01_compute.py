@@ -21,10 +21,10 @@ from layer_config import OUT_BASE
 # ---------------------------------------------------------------------------
 # Paths
 # ---------------------------------------------------------------------------
-ROOT       = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+ROOT       = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", ".."))
 RAIS_FIRM  = os.path.join(ROOT, "Data", "CBA_RAIS_firm_level",
                           "lagos_sample_sep24_pct_unionexp_ext_df2.dta")
-TABLES_DIR = os.path.join(ROOT, "Tables", "layer_connectivity")
+TABLES_DIR = os.path.join(ROOT, "Tables", "layer_connectivity/01_descriptives")
 os.makedirs(TABLES_DIR, exist_ok=True)
 
 # ---------------------------------------------------------------------------
@@ -58,6 +58,15 @@ LAYER_DEFS = {
         "labels": {
             "nonwhite": "Non-white",
             "white":    "White",
+        },
+    },
+    "occ4": {
+        "formal": "Occupation (CBO 2002)",
+        "labels": {
+            "1_mgr":   "Managers",
+            "23_high": "High-skill",
+            "4_bur":   "Bur. lower",
+            "5p_low":  "Low-skill",
         },
     },
 }

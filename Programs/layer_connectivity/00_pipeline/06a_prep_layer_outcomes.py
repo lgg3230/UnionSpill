@@ -21,7 +21,7 @@ Outputs:
     Data/layer_connectivity/firm_layer_outcomes_edu2_full.dta
 
 Usage:
-    python 06b_prep_layer_outcomes.py
+    python 06a_prep_layer_outcomes.py
 """
 
 import os
@@ -32,7 +32,7 @@ import duckdb
 import numpy as np
 import pandas as pd
 
-sys.path.insert(0, os.path.dirname(__file__))
+sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 from layer_config import OUT_BASE, WORKER_PANEL_PARQUET
 
 

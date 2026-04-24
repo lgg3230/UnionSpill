@@ -1,0 +1,53 @@
+\begin{table}[H]
+\centering
+\caption{Layer spillover effects --- specification comparison}
+\label{tab:layer_specs_firm}
+\scriptsize
+\begin{threeparttable}
+\begin{tabular}{lcccccc}
+\toprule\toprule
+ & \multicolumn{3}{c}{Log Dec. wage} & \multicolumn{3}{c}{Log employment} \\
+\cmidrule(lr){2-4} \cmidrule(lr){5-7}
+ & (1) & (2) & (3) & (4) & (5) & (6) \\
+\midrule
+\multicolumn{7}{l}{\textit{Panel A: 2-bin education (no HS / has HS)}} \\
+\quad Connectivity $\times$ Post & -0.0041 & 0.0022 & 0.0051** & -0.0200** & -0.0091 & 0.0006 \\
+ & (0.0042) & (0.0025) & (0.0023) & (0.0099) & (0.0069) & (0.0083) \\
+\quad Pre-trend (placebo) & 0.0046 & 0.0020 & 0.0020 & 0.0195* & 0.0069 & -0.0016 \\
+ & (0.0054) & (0.0029) & (0.0025) & (0.0118) & (0.0054) & (0.0064) \\
+\quad Observations & 52,458 & 59,391 & 32,498 & 52,458 & 59,391 & 32,696 \\
+\quad Layers $\times$ firms & 6,273 & 7,751 & --- & 6,273 & 7,751 & --- \\
+\quad Firms & 3,580 & 4,172 & 4,085 & 3,580 & 4,172 & 4,087 \\
+\quad Pre-trend F-test $p$-value & 0.025 & 0.446 & 0.735 & 0.138 & 0.367 & 0.881 \\[6pt]
+\multicolumn{7}{l}{\textit{Panel B: Gender (female / male)}} \\
+\quad Connectivity $\times$ Post & -0.0006 & 0.0022 & 0.0051** & -0.0001 & 0.0029 & 0.0006 \\
+ & (0.0030) & (0.0020) & (0.0023) & (0.0049) & (0.0045) & (0.0083) \\
+\quad Pre-trend (placebo) & -0.0010 & -0.0005 & 0.0020 & -0.0054 & -0.0015 & -0.0016 \\
+ & (0.0050) & (0.0025) & (0.0025) & (0.0098) & (0.0058) & (0.0064) \\
+\quad Observations & 55,358 & 60,864 & 32,498 & 55,358 & 60,864 & 32,696 \\
+\quad Layers $\times$ firms & 6,649 & 7,855 & --- & 6,649 & 7,855 & --- \\
+\quad Firms & 3,684 & 4,175 & 4,085 & 3,684 & 4,175 & 4,087 \\
+\quad Pre-trend F-test $p$-value & 0.898 & 0.797 & 0.735 & 0.025 & 0.740 & 0.881 \\[6pt]
+\multicolumn{7}{l}{\textit{Panel C: Race (non-white / white)}} \\
+\quad Connectivity $\times$ Post & -0.0028 & 0.0022 & 0.0051** & 0.0223*** & 0.0147** & 0.0007 \\
+ & (0.0036) & (0.0025) & (0.0023) & (0.0069) & (0.0063) & (0.0083) \\
+\quad Pre-trend (placebo) & -0.0032 & -0.0019 & 0.0020 & -0.0148 & -0.0030 & -0.0017 \\
+ & (0.0037) & (0.0022) & (0.0025) & (0.0111) & (0.0062) & (0.0064) \\
+\quad Observations & 48,498 & 57,074 & 32,412 & 48,498 & 57,074 & 32,608 \\
+\quad Layers $\times$ firms & 5,757 & 7,541 & --- & 5,757 & 7,541 & --- \\
+\quad Firms & 3,397 & 4,159 & 4,074 & 3,397 & 4,159 & 4,076 \\
+\quad Pre-trend F-test $p$-value & 0.715 & 0.596 & 0.736 & 0.541 & 0.477 & 0.882 \\
+\midrule
+\multicolumn{7}{l}{\textit{Specification}} \\
+Layer-level outcomes & \checkmark & \checkmark & --- & \checkmark & \checkmark & --- \\
+Firm-level outcomes & --- & --- & \checkmark & --- & --- & \checkmark \\
+Firm $\times$ year FE & \checkmark & --- & --- & \checkmark & --- & --- \\
+Firm-level FE & --- & \checkmark & --- & --- & \checkmark & --- \\
+Firm FE & --- & --- & \checkmark & --- & --- & \checkmark \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}[flushleft]
+\item \textit{Notes:} This table compares spillover effects of layer-level connectivity to treated firms across three specifications and three worker-partitioning schemes. The sample covers all firms in the Lagos sample. All layers of qualifying firms are kept. All regressions are further restricted to untreated firms in the balanced firm panel and, for layer-level specifications, to firms with positive employment in all layers in all years 2009--2016. Connectivity is scaled to the 90th percentile of the control sample at 2009 and is interacted with a post-2012 indicator (S\'{u}mula 277 reform). The pre-trend (placebo) coefficient tests whether connectivity predicts differential outcomes in 2009--2010 relative to 2011, using only pre-reform years (2009--2011). The pre-trend F-test $p$-value tests the joint significance of all pre-trend event-study coefficients; small values indicate detectable pre-trends. \textit{Outcome levels.} Columns (1), (4) and (2), (5) use \textit{layer-level} outcomes: each observation is a firm--layer--year cell, and the connectivity measure captures the share of that layer's outflows reaching treated firms. Columns (3), (6) use \textit{firm-level} outcomes and the aggregate firm-level connectivity, restricted to the subset of firms present in the layer sample. \textit{Fixed effects.} Columns (1), (4) (within-firm) absorb firm$\times$year FE; identification comes from cross-layer variation within the same firm--year. Columns (2), (5) (cross-firm) include firm-level FE: microregion$\times$year, industry$\times$year, and mode$\times$year. Columns (3), (6) (firm-level) include firm FE and year FE. \textit{Layer definitions.} Panel A: 2-bin education (no HS / has HS). Panel B: gender (female / male). Panel C: race (non-white / white). Standard errors clustered at the firm level. $^{***}p<0.01$, $^{**}p<0.05$, $^{*}p<0.10$.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}

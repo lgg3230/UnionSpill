@@ -19,6 +19,7 @@ import pandas as pd
 
 PROJ   = Path(__file__).resolve().parent.parent.parent
 TABLES = PROJ / "Tables" / "layer_connectivity"
+TEX_TABLES = TABLES / "tex_tables"
 
 # ── CSV loader ────────────────────────────────────────────────────────────────
 def load_csv(path: Path) -> pd.DataFrame:
@@ -377,7 +378,7 @@ LABELS = {
 }
 
 for group_key, (layers_subset, _) in LAYER_GROUPS.items():
-    tex_out = TABLES / f"table_disentangle_{group_key}_xfirm.tex"
+    tex_out = TEX_TABLES / f"table_disentangle_{group_key}_xfirm.tex"
     csv_out = TABLES / f"table_disentangle_{group_key}_xfirm.csv"
 
     tex = build_latex(layers_subset, CAPTIONS[group_key], LABELS[group_key])

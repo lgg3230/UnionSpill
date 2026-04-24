@@ -17,6 +17,7 @@ import pandas as pd
 
 PROJ   = Path(__file__).resolve().parent.parent.parent
 TABLES = PROJ / "Tables" / "layer_connectivity"
+TEX_TABLES = TABLES / "tex_tables"
 
 # ── Layer configuration ────────────────────────────────────────────────────────
 LAYER_CONFIG = {
@@ -265,7 +266,7 @@ TABLES.mkdir(parents=True, exist_ok=True)
 for layer in LAYERS:
     cfg     = LAYER_CONFIG[layer]
     csv_in  = TABLES / f"results_horse_race_{layer}_xfirm_abvp25.csv"
-    tex_out = TABLES / f"table_horse_race_{layer}_xfirm_abvp25.tex"
+    tex_out = TEX_TABLES / f"table_horse_race_{layer}_xfirm_abvp25.tex"
     csv_out = TABLES / f"table_horse_race_{layer}_xfirm_abvp25.csv"
 
     if not csv_in.exists():

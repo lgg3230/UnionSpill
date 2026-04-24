@@ -2,7 +2,7 @@
 * UNION SPILLOVERS — HORSE RACE: occ4 layer connectivity variables simultaneously
 * Purpose: Include all four occupation-layer connectivity variables simultaneously
 *          to identify which occupation channel survives when all compete.
-*          Mirrors 13_horse_race_edu2.do for the occ4 layer.
+*          Mirrors 01a_horse_race_edu2.do for the occ4 layer.
 *
 * Layers:  occ4 (4-bin: 1_mgr / 23_high / 4_bur / 5p_low)
 *
@@ -31,7 +31,7 @@ global layer_data "$main/UnionSpill/Data/layer_connectivity"
 capture log close
 local d = subinstr("`c(current_date)'"," ","_",.)
 local t = subinstr("`c(current_time)'",":","",.)
-log using "$logs/layer_connectivity/horse_race_occ4_`d'_`t'.log", replace text
+log using "$logs/layer_connectivity/04_horse_race/horse_race_occ4_`d'_`t'.log", replace text
 
 di "Started: `c(current_date)' `c(current_time)'"
 di "Stata version: `c(stata_version)'"
@@ -178,7 +178,7 @@ di as result "All variables created."
 * SECTION 5: INITIALIZE OUTPUT CSV
 ********************************************************************************
 
-local csv_out "$tables/layer_connectivity/results_horse_race_occ4.csv"
+local csv_out "$tables/layer_connectivity/04_horse_race/results_horse_race_occ4.csv"
 capture erase "`csv_out'"
 tempname fh
 file open  `fh' using "`csv_out'", write replace

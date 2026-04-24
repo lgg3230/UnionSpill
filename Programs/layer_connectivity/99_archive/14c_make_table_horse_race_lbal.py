@@ -31,6 +31,7 @@ import pandas as pd
 
 PROJ   = Path(__file__).resolve().parent.parent.parent
 TABLES = PROJ / "Tables" / "layer_connectivity"
+TEX_TABLES = TABLES / "tex_tables"
 CSV_IN = TABLES / "results_horse_race_edu2_lbal.csv"
 
 # ── CSV loader ────────────────────────────────────────────────────────────────
@@ -261,7 +262,7 @@ TABLES.mkdir(parents=True, exist_ok=True)
 caption = r"Horse race: $c_{\text{no\_hs}}$ vs.\ $c_{\text{has\_hs}}$ simultaneously (layer-balanced panel)"
 label   = "tab:horse_race_edu2_lbal"
 
-tex_out = TABLES / "table_horse_race_edu2_lbal.tex"
+tex_out = TEX_TABLES / "table_horse_race_edu2_lbal.tex"
 csv_out = TABLES / "table_horse_race_edu2_lbal.csv"
 
 tex = build_latex(data, caption, label)

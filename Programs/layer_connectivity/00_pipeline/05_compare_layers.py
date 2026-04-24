@@ -10,7 +10,7 @@ import sys
 import pandas as pd
 import numpy as np
 
-sys.path.insert(0, os.path.dirname(__file__))
+sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 from layer_config import OUT_BASE, PAIR_LABELS, CBA_RAIS_FIRM, FIRM_STATUS_PARQUET
 
 LAYERS = ["edu", "edu2"]

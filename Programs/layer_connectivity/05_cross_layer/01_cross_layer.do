@@ -34,7 +34,7 @@ global layer_data "$main/UnionSpill/Data/layer_connectivity"
 capture log close
 local d = subinstr("`c(current_date)'"," ","_",.)
 local t = subinstr("`c(current_time)'",":","",.)
-log using "$logs/layer_connectivity/cross_layer_spillover_`d'_`t'.log", replace text
+log using "$logs/layer_connectivity/05_cross_layer/cross_layer_spillover_`d'_`t'.log", replace text
 
 di "Started: `c(current_date)' `c(current_time)'"
 di "Stata version: `c(stata_version)'"
@@ -164,7 +164,7 @@ foreach layer in edu edu2 gender race {
 	* SECTION 2f: INITIALIZE OUTPUT CSV
 	****************************************************************************
 
-	local csv_out "$tables/layer_connectivity/results_cross_layer_`layer'_`spec'.csv"
+	local csv_out "$tables/layer_connectivity/05_cross_layer/results_cross_layer_`layer'_`spec'.csv"
 	capture erase "`csv_out'"
 	tempname fh
 	file open  `fh' using "`csv_out'", write replace
@@ -308,7 +308,7 @@ foreach layer in edu edu2 gender race {
 					graphregion(color(white)) bgcolor(white) ///
 					ci(95) ciopts(recast(rcap) color(red)) mcolor(red)
 
-				graph export "$graphs/layer_connectivity/es_`outcome'_cross_layer_`layer'_`d'.pdf", ///
+				graph export "$graphs/layer_connectivity/05_cross_layer/es_`outcome'_cross_layer_`layer'_`d'.pdf", ///
 					as(pdf) replace
 
 				estimates drop _es_tmp
@@ -330,7 +330,7 @@ foreach layer in edu edu2 gender race {
 log close
 di as result "Finished: `c(current_date)' `c(current_time)'"
 
-shell source /gpfs/kellogg/proj/lgg3230/UnionSpill/Programs/notify.sh && notify "Cross-layer spillover done" "10_cross_layer_spillover.do complete — base + extended FE"
+shell source /gpfs/kellogg/proj/lgg3230/UnionSpill/Programs/notify.sh && notify "Cross-layer spillover done" "01_cross_layer.do complete — base + extended FE"
 
 ********************************************************************************
 * END OF DO-FILE

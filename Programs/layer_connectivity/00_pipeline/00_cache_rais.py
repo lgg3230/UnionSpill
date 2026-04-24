@@ -11,8 +11,8 @@ Caches:
   4. cba_rais_firm (3 cols only)  → firm_status.parquet           (treat/panel flags)
 
 Usage:
-    python 00_cache_rais_parquet.py              # default: RAIS years 2007 2008
-    python 00_cache_rais_parquet.py --years 2007 2008
+    python 00_cache_rais.py              # default: RAIS years 2007 2008
+    python 00_cache_rais.py --years 2007 2008
 """
 
 import argparse
@@ -22,7 +22,7 @@ import time
 
 import pandas as pd
 
-sys.path.insert(0, os.path.dirname(__file__))
+sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 from layer_config import (
     RAIS_DIR, RAIS_AUX, CBA_FIRM,
     YEARLY_EMP_TEMPLATE, YEARLY_EMP_PARQUET_TEMPLATE,

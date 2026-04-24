@@ -1,6 +1,6 @@
 ********************************************************************************
 * UNION SPILLOVERS — LAYER-LEVEL SPILLOVER EFFECTS (OCC4 LAYER, ABOVE-MEDIAN FIRMS)
-* Purpose: Same as 07e_layer_spillover.do but restricted to the occ4 layer
+* Purpose: Same as 01a_layer_spillover.do but restricted to the occ4 layer
 *          (CBO2002 first digit: 1=Bureaucrat-Managers, 2/3=Frontline-High,
 *          4=Bureaucrat-Lower, 5+=Frontline-Low Skills) and firms above the
 *          median pre-treatment employment.
@@ -33,13 +33,13 @@ global programs  "$main/UnionSpill/Programs"
 capture log close
 local d = subinstr("`c(current_date)'"," ","_",.)
 local t = subinstr("`c(current_time)'",":","",.)
-log using "$logs/layer_connectivity/layer_spillover_occ4_`d'_`t'.log", replace text
+log using "$logs/layer_connectivity/02_spillover/layer_spillover_occ4_`d'_`t'.log", replace text
 
 di "Started: `c(current_date)' `c(current_time)'"
 di "Stata version: `c(stata_version)'"
 
 global layer_data "$main/UnionSpill/Data/layer_connectivity"
-local  spec       "abvmed_firm_layer_spill"
+local  spec       "firm_layer_spill"
 
 ********************************************************************************
 * SECTION 2: LOOP OVER LAYER DEFINITIONS
@@ -123,34 +123,6 @@ foreach layer in occ4 {
 	count
 	di as result "  After sample restriction (lagos_sample_avg==1): `r(N)'"
 
-	* ── Above-median firm employment restriction ──────────────────────────────
-	cap drop avg_pre_firm_emp_o
-	cap drop avg_pre_firm_emp
-	bys identificad: ///
-		egen avg_pre_firm_emp_o = mean(firm_emp) if inrange(year, 2009, 2011)
-	bys identificad: ///
-		egen avg_pre_firm_emp = min(avg_pre_firm_emp_o)
-	drop avg_pre_firm_emp_o
-
-	cap drop tag_firm
-	egen tag_firm = tag(identificad)
-	_pctile avg_pre_firm_emp ///
-		if tag_firm == 1 & in_balanced_panel == 1 & treat_ultra == 0, p(50)
-	local med_firm_emp = r(r1)
-	drop tag_firm
-
-	di as result "  Median avg pre-treatment firm employment: `med_firm_emp'"
-
-	cap drop in_above_med_firm
-	gen byte in_above_med_firm = (avg_pre_firm_emp > `med_firm_emp') ///
-		if !missing(avg_pre_firm_emp)
-	drop avg_pre_firm_emp
-	label var in_above_med_firm ///
-		"Firm avg pre-treatment employment above median (`med_firm_emp')"
-
-	count if in_above_med_firm == 1
-	di as result "  Above-median firm employment: `r(N)' obs"
-
 	* Create numeric firm ID for interaction FE
 	cap drop firm_id
 	egen firm_id = group(identificad)
@@ -177,8 +149,8 @@ foreach layer in occ4 {
 	label var placebo_year "Pre-treatment placebo (year < 2011)"
 
 	* ── Layer connectivity scaling ───────────────────────────────────────────
-	* Scale to P90 of untreated balanced-panel above-median-firm firms at 2009.
-	local s_spill "lagos_sample_avg==1 & treat_ultra==0 & in_balanced_panel==1 & in_above_med_firm==1"
+	* Scale to P90 of untreated balanced-panel firms at 2009.
+	local s_spill "lagos_sample_avg==1 & treat_ultra==0 & in_balanced_panel==1"
 
 	cap drop layer_conn_norm
 	sum layer_treat_pw_n if `s_spill' & year == 2009, detail
@@ -236,7 +208,7 @@ foreach layer in occ4 {
 	* SECTION 2g: INITIALIZE OUTPUT CSV
 	****************************************************************************
 
-	local csv_out "$tables/layer_connectivity/results_spill_layer_`layer'_`spec'.csv"
+	local csv_out "$tables/layer_connectivity/02_spillover/results_spill_layer_`layer'_`spec'.csv"
 	capture erase "`csv_out'"
 	tempname fh
 	file open  `fh' using "`csv_out'", write replace
@@ -345,7 +317,7 @@ foreach layer in occ4 {
 			graphregion(color(white)) bgcolor(white) ///
 			ci(95) ciopts(recast(rcap) color(blue)) mcolor(blue)
 
-		graph export "$graphs/layer_connectivity/es_`outcome'_abvmed_firm_spill_`layer'_`d'.pdf", ///
+		graph export "$graphs/layer_connectivity/02_spillover/es_`outcome'_firm_spill_`layer'_`d'.pdf", ///
 			as(pdf) replace
 
 		estimates drop _es_tmp
@@ -364,7 +336,7 @@ foreach layer in occ4 {
 
 	local base_fe_cross "i.firm_layer_id i.year i.industry1_num#i.year i.mode_base_month_num#i.year i.microregion_num#i.year i.layer_id_num#i.year"
 
-	local csv_cross "$tables/layer_connectivity/results_spill_layer_cross_`layer'_`spec'.csv"
+	local csv_cross "$tables/layer_connectivity/02_spillover/results_spill_layer_cross_`layer'_`spec'.csv"
 	capture erase "`csv_cross'"
 	tempname fhx
 	file open  `fhx' using "`csv_cross'", write replace
@@ -464,7 +436,7 @@ foreach layer in occ4 {
 			graphregion(color(white)) bgcolor(white) ///
 			ci(95) ciopts(recast(rcap) color(blue)) mcolor(blue)
 
-		graph export "$graphs/layer_connectivity/es_`outcome'_abvmed_firm_cross_`layer'_`d'.pdf", ///
+		graph export "$graphs/layer_connectivity/02_spillover/es_`outcome'_firm_cross_`layer'_`d'.pdf", ///
 			as(pdf) replace
 
 		estimates drop _es_x_tmp
@@ -483,7 +455,7 @@ foreach layer in occ4 {
 	di as result "FIRM-LEVEL RESTRICTED SPEC — layer: `layer'"
 	di as result "-----------------------------------------------------------------------"
 
-	local s_spill_restr "treat_ultra==0 & in_balanced_panel==1 & in_above_med_firm==1 & lagos_sample_avg==1"
+	local s_spill_restr "treat_ultra==0 & in_balanced_panel==1 & lagos_sample_avg==1"
 	tempfile restr_firms
 	keep if (`s_spill_restr') & !missing(layer_treat_pw_n)
 	keep identificad
@@ -566,7 +538,10 @@ foreach layer in occ4 {
 
 	* ── Pre-treatment outcome bins ───────────────────────────────────────
 	foreach outcome in lr_remdezr_w lr_remdezr_h_w {
-		cap drop `outcome'_pre_o `outcome'_pre `outcome'_pre4_o `outcome'_pre4
+		cap drop `outcome'_pre_o
+		cap drop `outcome'_pre
+		cap drop `outcome'_pre4_o
+		cap drop `outcome'_pre4
 		bys identificad: ///
 			egen `outcome'_pre_o = mean(`outcome') if inrange(year, 2009, 2011)
 		bys identificad: ///
@@ -597,11 +572,11 @@ foreach layer in occ4 {
 
 	* ── FE macros ────────────────────────────────────────────────────────
 	local conn_r    "totaltreat_pw_norm_r"
-	local base_fe_r "identificad i.industry1_num#i.year i.mode_base_month_num#i.year i.microregion_num#i.year"
+	local base_fe_r "identificad i.year i.industry1_num#i.year i.mode_base_month_num#i.year i.microregion_num#i.year"
 	local extra_r   "ib0.totalflows_pw_pre4_r#i.year"
 
 	* ── Initialize output CSV ────────────────────────────────────────────
-	local csv_r "$tables/layer_connectivity/results_spill_firmrestr_`layer'_`spec'.csv"
+	local csv_r "$tables/layer_connectivity/02_spillover/results_spill_firmrestr_`layer'_`spec'.csv"
 	capture erase "`csv_r'"
 	tempname fhr
 	file open  `fhr' using "`csv_r'", write replace
@@ -690,7 +665,7 @@ foreach layer in occ4 {
 			graphregion(color(white)) bgcolor(white) ///
 			ci(95) ciopts(recast(rcap) color(blue)) mcolor(blue)
 
-		graph export "$graphs/layer_connectivity/es_`outcome'_abvmed_firm_firmrestr_`layer'_`d'.pdf", ///
+		graph export "$graphs/layer_connectivity/02_spillover/es_`outcome'_firm_firmrestr_`layer'_`d'.pdf", ///
 			as(pdf) replace
 
 		estimates drop _es_r_tmp

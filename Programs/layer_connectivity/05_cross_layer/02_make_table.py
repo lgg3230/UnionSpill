@@ -1,7 +1,7 @@
 """
 Assemble cross-layer spillover table.
 
-Reads CSVs produced by 10_cross_layer_spillover.do and outputs:
+Reads CSVs produced by 01_cross_layer.do and outputs:
   Tables/layer_connectivity/table_cross_layer_specs.tex
   Tables/layer_connectivity/table_cross_layer_specs.csv
 
@@ -16,14 +16,15 @@ Table structure:
       Observations, Layers × firms, Firms, Pre-trend F-test p-value (cross)
 
 Usage:
-  ~/.conda/envs/venv_python312/bin/python Programs/layer_connectivity/10_make_table_cross_layer.py
+  ~/.conda/envs/venv_python312/bin/python Programs/layer_connectivity/02_make_table.py
 """
 
 from pathlib import Path
 import pandas as pd
 
-PROJ   = Path(__file__).resolve().parent.parent.parent
-TABLES = PROJ / "Tables" / "layer_connectivity"
+PROJ   = Path(__file__).resolve().parent.parent.parent.parent
+TABLES = PROJ / "Tables" / "layer_connectivity/05_cross_layer"
+TEX_TABLES = TABLES / "tex_tables"
 
 # ── Load one CSV ─────────────────────────────────────────────────────────────────
 def load_csv(path: Path) -> pd.DataFrame:
@@ -54,7 +55,7 @@ LAYER_LABELS = {
 }
 
 OUTCOMES     = ["lr_remdezr_layer", "lr_remdezr_h_layer", "l_layer_emp"]
-OUTCOME_SHORT = ["Log Dec.\ wage", "Log hourly wage", "Log employment"]
+OUTCOME_SHORT = [r"Log Dec.\ wage", "Log hourly wage", "Log employment"]
 
 FE_SPECS  = ["with_firmyr", "no_firmyr"]
 FE_LABELS = {"with_firmyr": "Unit + Firm$\\times$year FE", "no_firmyr": "Unit + Year FE"}
@@ -269,7 +270,7 @@ def build_csv() -> pd.DataFrame:
 # ── Write outputs ──────────────────────────────────────────────────────────────────
 TABLES.mkdir(parents=True, exist_ok=True)
 
-tex_out = TABLES / "table_cross_layer_specs.tex"
+tex_out = TEX_TABLES / "table_cross_layer_specs.tex"
 csv_out = TABLES / "table_cross_layer_specs.csv"
 
 tex = build_latex()

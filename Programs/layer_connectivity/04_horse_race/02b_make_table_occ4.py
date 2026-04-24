@@ -1,5 +1,5 @@
 """
-Assemble horse race table from 13h_horse_race_occ4.do output.
+Assemble horse race table from 01b_horse_race_occ4.do output.
 
 All four occ4 connectivity variables appear simultaneously in each regression.
 
@@ -19,14 +19,14 @@ Output:
   Tables/layer_connectivity/table_horse_race_occ4.csv
 
 Usage:
-  ~/.conda/envs/venv_python312/bin/python Programs/layer_connectivity/14j_make_table_horse_race_occ4.py
+  ~/.conda/envs/venv_python312/bin/python Programs/layer_connectivity/02b_make_table_occ4.py
 """
 
 from pathlib import Path
 import pandas as pd
 
-PROJ       = Path(__file__).resolve().parent.parent.parent
-TABLES     = PROJ / "Tables" / "layer_connectivity"
+PROJ       = Path(__file__).resolve().parent.parent.parent.parent
+TABLES     = PROJ / "Tables" / "layer_connectivity" / "04_horse_race"
 TEX_TABLES = TABLES / "tex_tables"
 CSV_IN     = TABLES / "results_horse_race_occ4.csv"
 
@@ -263,7 +263,7 @@ def build_csv(data: dict) -> pd.DataFrame:
 # ── Main ──────────────────────────────────────────────────────────────────────
 if not CSV_IN.exists():
     raise SystemExit(
-        f"ERROR: results file not found — run 13h_horse_race_occ4.do first:\n  {CSV_IN}"
+        f"ERROR: results file not found — run 01b_horse_race_occ4.do first:\n  {CSV_IN}"
     )
 
 data = load_csv(CSV_IN)

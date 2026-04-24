@@ -1,5 +1,5 @@
 """
-Assemble horse race table from 13_horse_race_edu2.do output.
+Assemble horse race table from 01a_horse_race_edu2.do output.
 
 Both c_no_hs and c_has_hs appear simultaneously in each regression.
 
@@ -21,14 +21,15 @@ Output:
   Tables/layer_connectivity/table_horse_race_edu2.tex / .csv
 
 Usage:
-  ~/.conda/envs/venv_python312/bin/python Programs/layer_connectivity/14_make_table_horse_race.py
+  ~/.conda/envs/venv_python312/bin/python Programs/layer_connectivity/02a_make_table_edu2.py
 """
 
 from pathlib import Path
 import pandas as pd
 
-PROJ   = Path(__file__).resolve().parent.parent.parent
-TABLES = PROJ / "Tables" / "layer_connectivity"
+PROJ   = Path(__file__).resolve().parent.parent.parent.parent
+TABLES = PROJ / "Tables" / "layer_connectivity/04_horse_race"
+TEX_TABLES = TABLES / "tex_tables"
 CSV_IN = TABLES / "results_horse_race_edu2.csv"
 
 # ── CSV loader ────────────────────────────────────────────────────────────────
@@ -255,7 +256,7 @@ def build_csv(data: dict) -> pd.DataFrame:
 
 # ── Main ──────────────────────────────────────────────────────────────────────
 if not CSV_IN.exists():
-    raise SystemExit(f"ERROR: results file not found — run 13_horse_race_edu2.do first:\n  {CSV_IN}")
+    raise SystemExit(f"ERROR: results file not found — run 01a_horse_race_edu2.do first:\n  {CSV_IN}")
 
 data = load_csv(CSV_IN)
 print(f"Loaded {len(data)} entries from {CSV_IN.name}")
@@ -265,7 +266,7 @@ TABLES.mkdir(parents=True, exist_ok=True)
 caption = r"Horse race: $c_{\text{no\_hs}}$ vs.\ $c_{\text{has\_hs}}$ simultaneously"
 label   = "tab:horse_race_edu2"
 
-tex_out = TABLES / "table_horse_race_edu2.tex"
+tex_out = TEX_TABLES / "table_horse_race_edu2.tex"
 csv_out = TABLES / "table_horse_race_edu2.csv"
 
 tex = build_latex(data, caption, label)

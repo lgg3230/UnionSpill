@@ -1,7 +1,7 @@
 """
 Assemble spillover table for the occ4 layer (above-median firm employment).
 
-Reads CSVs produced by 07f_layer_spillover_occ4.do and outputs:
+Reads CSVs produced by 01b_layer_spillover_occ4.do and outputs:
   Tables/layer_connectivity/table_layer_specs_abvmed_firm_occ4.tex
   Tables/layer_connectivity/table_layer_specs_abvmed_firm_occ4.csv
 
@@ -11,14 +11,15 @@ Specs included:
   (3) Firm-level restr.  — firm-level outcomes, standard FE, restricted sample
 
 Usage:
-  ~/.conda/envs/venv_python312/bin/python Programs/layer_connectivity/08e_make_table_layer_specs_abvmed_firm_occ4.py
+  ~/.conda/envs/venv_python312/bin/python Programs/layer_connectivity/02b_make_table_spillover_occ4.py
 """
 
 from pathlib import Path
 import pandas as pd
 
-PROJ   = Path(__file__).resolve().parent.parent.parent
-TABLES = PROJ / "Tables" / "layer_connectivity"
+PROJ   = Path(__file__).resolve().parent.parent.parent.parent
+TABLES = PROJ / "Tables" / "layer_connectivity/02_spillover"
+TEX_TABLES = TABLES / "tex_tables"
 
 
 def load_csv(path: Path) -> pd.DataFrame:
@@ -46,19 +47,19 @@ SPECS = [
     {
         "label":    "(1) Within-firm FE",
         "sublabel": r"firm$\times$year FE",
-        "file_tpl": "results_spill_layer_{layer}_abvmed_firm_layer_spill.csv",
+        "file_tpl": "results_spill_layer_{layer}_firm_layer_spill.csv",
         "outcomes": ["lr_remdezr_layer", "l_layer_emp"],
     },
     {
         "label":    "(2) Cross-firm FE",
         "sublabel": r"micro$\times$yr + ind$\times$yr + mode$\times$yr",
-        "file_tpl": "results_spill_layer_cross_{layer}_abvmed_firm_layer_spill.csv",
+        "file_tpl": "results_spill_layer_cross_{layer}_firm_layer_spill.csv",
         "outcomes": ["lr_remdezr_layer", "l_layer_emp"],
     },
     {
         "label":    "(3) Firm-level (restricted)",
         "sublabel": "firm FE",
-        "file_tpl": "results_spill_firmrestr_{layer}_abvmed_firm_layer_spill.csv",
+        "file_tpl": "results_spill_firmrestr_{layer}_firm_layer_spill.csv",
         "outcomes": ["lr_remdezr_w", "l_firm_emp"],
     },
 ]
@@ -134,10 +135,9 @@ def build_latex() -> str:
     lines.append(r"\begin{table}[H]")
     lines.append(r"\centering")
     lines.append(
-        r"\caption{Layer spillover effects, above-median firm employment "
-        r"--- occupation layers (CBO 2002)}"
+        r"\caption{Layer spillover effects --- occupation layers (CBO 2002)}"
     )
-    lines.append(r"\label{tab:layer_specs_abvmed_firm_occ4}")
+    lines.append(r"\label{tab:layer_specs_firm_occ4}")
     lines.append(r"\scriptsize")
     lines.append(r"\begin{threeparttable}")
     lines.append(r"\begin{tabular}{" + col_spec + r"}")
@@ -230,7 +230,7 @@ def build_latex() -> str:
         r"for an occupation-based partition following the CBO 2002 first digit: "
         r"Managers (digit~1), Frontline High-Skills (digits~2--3), Bureaucrat Lower (digit~4), "
         r"Frontline Low-Skills (digit~5+). "
-        r"The sample is restricted to firms above the median pre-treatment employment (2009--2011). "
+        r"The sample covers all firms in the Lagos sample. "
         r"All regressions are restricted to untreated firms in the balanced firm panel. "
         r"Connectivity is scaled to the 90th percentile of the control sample at 2009. "
         r"The regression pools all four occupation layers (firm$\times$layer$\times$year observations). "
@@ -270,8 +270,8 @@ def build_csv() -> pd.DataFrame:
 # ── Write outputs ──────────────────────────────────────────────────────────────
 TABLES.mkdir(parents=True, exist_ok=True)
 
-tex_out = TABLES / "table_layer_specs_abvmed_firm_occ4.tex"
-csv_out = TABLES / "table_layer_specs_abvmed_firm_occ4.csv"
+tex_out = TEX_TABLES / "table_layer_specs_firm_occ4.tex"
+csv_out = TABLES / "table_layer_specs_firm_occ4.csv"
 
 tex_out.write_text(build_latex())
 print(f"Wrote: {tex_out}")

@@ -7,7 +7,7 @@
 #
 # This wrapper runs only the fast steps:
 #   1. Python: build firm×layer×year outcomes from worker_panel_lagos.parquet
-#   2. Stata:  spillover regressions (07_layer_spillover.do)
+#   2. Stata:  spillover regressions (02_spillover/01a_layer_spillover.do)
 #
 # Outputs:
 #   Tables/layer_connectivity/results_spill_layer_{edu,edu2}_layer_spill.csv
@@ -26,10 +26,10 @@ mkdir -p "$PROJ/Tables/layer_connectivity"
 mkdir -p "$PROJ/Graphs/layer_connectivity"
 
 echo "=== 00: Build firm×layer×year outcomes ===" | tee "$LOGS/00_outcomes.log"
-$PYTHON "$SCRIPTS/06_prep_layer_outcomes.py" 2>&1 | tee -a "$LOGS/00_outcomes.log"
+$PYTHON "$SCRIPTS/00_pipeline/06a_prep_layer_outcomes.py" 2>&1 | tee -a "$LOGS/00_outcomes.log"
 
 echo "=== Stata: layer spillover regressions ===" | tee "$LOGS/stata_spillover.log"
-$STATA -b do "$SCRIPTS/07_layer_spillover.do" 2>&1 | tee -a "$LOGS/stata_spillover.log"
+$STATA -b do "$SCRIPTS/02_spillover/01a_layer_spillover.do" 2>&1 | tee -a "$LOGS/stata_spillover.log"
 
 source /gpfs/kellogg/proj/lgg3230/UnionSpill/Programs/notify.sh
 notify "Layer spillover wrapper done" "outcomes + Stata complete"

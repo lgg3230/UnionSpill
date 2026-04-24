@@ -20,6 +20,7 @@ import pandas as pd
 
 PROJ   = Path(__file__).resolve().parent.parent.parent
 TABLES = PROJ / "Tables" / "layer_connectivity"
+TEX_TABLES = TABLES / "tex_tables"
 
 # ── Layer configuration ────────────────────────────────────────────────────────
 LAYER_CONFIG = {
@@ -381,7 +382,7 @@ all_data = {}
 for layer in LAYERS:
     cfg     = LAYER_CONFIG[layer]
     csv_in  = TABLES / f"results_horse_race_{layer}_xfirm_size_large.csv"
-    tex_out = TABLES / f"table_horse_race_{layer}_xfirm_size_large.tex"
+    tex_out = TEX_TABLES / f"table_horse_race_{layer}_xfirm_size_large.tex"
     csv_out = TABLES / f"table_horse_race_{layer}_xfirm_size_large.csv"
 
     if not csv_in.exists():
@@ -404,6 +405,6 @@ for layer in LAYERS:
 # Combined table (only if all three layers loaded)
 if set(LAYERS) <= set(all_data):
     tex_combined = build_combined_latex(all_data)
-    out_combined = TABLES / "table_horse_race_all_xfirm_size_large.tex"
+    out_combined = TEX_TABLES / "table_horse_race_all_xfirm_size_large.tex"
     out_combined.write_text(tex_combined)
     print(f"Wrote: {out_combined}")

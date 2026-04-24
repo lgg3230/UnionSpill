@@ -16,6 +16,7 @@ import pandas as pd
 
 PROJ = Path(__file__).resolve().parent.parent.parent
 TABLES = PROJ / "Tables" / "layer_connectivity"
+TEX_TABLES = TABLES / "tex_tables"
 CSV_IN = TABLES / "results_horse_race_binary_lbal.csv"
 
 PANELS = [
@@ -267,7 +268,7 @@ if not CSV_IN.exists():
 data = load_csv(CSV_IN)
 TABLES.mkdir(parents=True, exist_ok=True)
 
-tex_out = TABLES / "table_horse_race_binary_lbal.tex"
+tex_out = TEX_TABLES / "table_horse_race_binary_lbal.tex"
 csv_out = TABLES / "table_horse_race_binary_lbal.csv"
 
 tex_out.write_text(

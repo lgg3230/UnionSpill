@@ -12,14 +12,15 @@ Output:
   Tables/layer_connectivity/table_disentangle_edu.tex / .csv
 
 Usage:
-  ~/.conda/envs/venv_python312/bin/python Programs/layer_connectivity/12b_make_table_disentangle_edu.py
+  ~/.conda/envs/venv_python312/bin/python Programs/layer_connectivity/02a_make_table_edu.py
 """
 
 from pathlib import Path
 import pandas as pd
 
-PROJ   = Path(__file__).resolve().parent.parent.parent
-TABLES = PROJ / "Tables" / "layer_connectivity"
+PROJ   = Path(__file__).resolve().parent.parent.parent.parent
+TABLES = PROJ / "Tables" / "layer_connectivity/03_disentangling"
+TEX_TABLES = TABLES / "tex_tables"
 
 # ── CSV loader ────────────────────────────────────────────────────────────────
 def load_csv(path: Path) -> pd.DataFrame:
@@ -101,7 +102,7 @@ def fmt_stat(v: str, is_pval: bool = False) -> str:
 # ── Load data ─────────────────────────────────────────────────────────────────
 fpath = TABLES / f"results_disentangle_{LAYER}_layer_spill.csv"
 if not fpath.exists():
-    raise SystemExit(f"Missing: {fpath}\nRun 11b_disentangling_edu.do first.")
+    raise SystemExit(f"Missing: {fpath}\nRun 01a_disentangle_edu.do first.")
 
 data: dict = {}
 for _, row in load_csv(fpath).iterrows():
@@ -310,7 +311,7 @@ tex = build_latex(
     caption="Disentangling layer spillover effects --- 3-bin education",
     label="tab:disentangle_edu",
 )
-tex_out = TABLES / "table_disentangle_edu.tex"
+tex_out = TEX_TABLES / "table_disentangle_edu.tex"
 tex_out.write_text(tex)
 print(f"Wrote: {tex_out}")
 

@@ -18,6 +18,7 @@ import pandas as pd
 
 PROJ   = Path(__file__).resolve().parent.parent.parent
 TABLES = PROJ / "Tables" / "layer_connectivity"
+TEX_TABLES = TABLES / "tex_tables"
 
 LAYER_CONFIG = {
     "edu2": {
@@ -266,6 +267,6 @@ for layer in LAYERS:
 
 tex = build_latex(all_data)
 
-tex_out = TABLES / "table_horse_race_xfirm_abvp25_combined.tex"
+tex_out = TEX_TABLES / "table_horse_race_xfirm_abvp25_combined.tex"
 tex_out.write_text(tex)
 print(f"Wrote: {tex_out}")
