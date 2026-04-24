@@ -479,3 +479,12 @@ foreach samp in full pre {
 log close
 
 di "=== results_entry_exit.do done: `c(current_date)' `c(current_time)' ==="
+
+// local outcome "lr_remdezr_w"
+// local conn "totaltreat_pw_norm"
+// local s_use "treat_ultra==0 & lagos_sample_unbal_avg==1 "
+// local absorb "identificad i.industry1#i.year i.microregion#i.year i.mode_base_month#i.year ib0.totalflows_pw_pre_07_114#i.year ib0.`outcome'_pre4#i.year ib0.l_firm_emp_pre4#i.year"
+// 
+//  reghdfe `outcome' c.`conn'##i.treat_year if `s_use', ///
+//                 absorb(`absorb') vce(cluster identificad)
+
