@@ -19,6 +19,15 @@ __pycache__/
 Data/*
 !Data/layer_connectivity/
 !Data/layer_connectivity/**
+
+# ----- layer_connectivity: ignore occ* output data (large parquet/dta) -----
+Data/layer_connectivity/transitions_base/transitions_occ*.parquet
+Data/layer_connectivity/connectivity_components/components_occ*.parquet
+Data/layer_connectivity/connectivity_components/wide_occ*.parquet
+Data/layer_connectivity/final_measures/firm_layer_connectivity_occ*.parquet
+Data/layer_connectivity/final_measures/firm_layer_connectivity_occ*.dta
+Data/layer_connectivity/firm_layer_outcomes_occ*.parquet
+Data/layer_connectivity/firm_layer_outcomes_occ*.dta
 !Data/CBA_RAIS_firm_level/
 Data/CBA_RAIS_firm_level/*
 !Data/RAIS_aux/
