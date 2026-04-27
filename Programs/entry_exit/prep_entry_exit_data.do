@@ -37,7 +37,7 @@ preserve
     use "$rais_firm/lagos_sample_sep24_pct_unionexp_ext_df2.dta", clear
     keep identificad year industry1 microregion mode_base_month ///
          numb_clauses cba_period avg_file_date earliest2009_avg second_cba_avg ///
-         lr_remdezr_w lr_remdezr_h_w ///
+         lr_remdezr_w ///
          pre_treat_cba post_treat_cba
     tempfile main_vars
     save `main_vars'
@@ -205,15 +205,13 @@ gen double totaltreat_pw_norm = totaltreat_pw_n / `p90_unbal'
 label var totaltreat_pw_norm "Connectivity scaled to p90 of unbal spillover sample (2009)"
 
 ********************************************************************************
-* SECTION 7: WAGE FOR EXTRA FIRMS
-* lr_remdezr_w and lr_remdezr_h_w come from the worker-level dataset (_w =
-* worker-level source, not winsorized). For the 16,471 overlapping firms they
-* are already merged from the main dataset in Section 2.
-* For the ~2,840 extra (exiting) firms not in the balanced sample, we fill
-* lr_remdezr_w from lr_remdezr in the unbalanced panel — both are computed
-* from the same RAIS spell-selected worker records in rais_firm_YYYY.dta.
-* lr_remdezr_h_w (hourly) is not available in the unbalanced panel; those
-* firms remain missing for hourly wage regressions.
+* SECTION 7: WAGE FOR EXTRA FIRMS + HOURLY WAGE FROM RAIS FIRM FILES
+* lr_remdezr_w: fill extra firms from lr_remdezr in the unbalanced panel.
+* lr_remdezr_h_w: stack lr_remdezr_h from rais_firm_YYYY.dta for all years
+*   and merge in (renamed to lr_remdezr_h_w for downstream compatibility).
+*   Validation (validate_hourly_wage_rais_firm.do) confirms it is identical
+*   to the former worker-panel source for balanced-panel firms (corr=1, MAD=0)
+*   and covers exiting firms (99.3% of all real obs vs. ~0% before).
 ********************************************************************************
 
 replace lr_remdezr_w = lr_remdezr if _extra_firm == 1 & missing(lr_remdezr_w)
@@ -221,6 +219,32 @@ label var lr_remdezr_w "Log real Dec wage, worker-level (main dataset or RAIS un
 
 count if _extra_firm == 1 & missing(lr_remdezr_w)
 di "Extra firms still missing lr_remdezr_w: " r(N)
+
+* Stack lr_remdezr_h from rais_firm_2009–2016
+tempfile raisf_hourly
+local first 1
+forvalues yr = 2009/2016 {
+    preserve
+        use "$rais_firm/rais_firm_`yr'.dta", clear
+        keep identificad lr_remdezr_h
+        gen int year = `yr'
+        if `first' {
+            save `raisf_hourly'
+            local first 0
+        }
+        else {
+            append using `raisf_hourly'
+            save `raisf_hourly', replace
+        }
+    restore
+}
+
+merge 1:1 identificad year using `raisf_hourly', keep(master match) nogen
+rename lr_remdezr_h lr_remdezr_h_w
+label var lr_remdezr_h_w "Log real hourly wage (rais_firm source, 2009-2016)"
+
+count if missing(lr_remdezr_h_w)
+di "Real obs missing lr_remdezr_h_w after rais_firm merge: " r(N)
 
 ********************************************************************************
 * SECTION 8: ENTRY/EXIT INDICATORS (before expand)
