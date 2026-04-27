@@ -1,0 +1,41 @@
+\documentclass[12pt,letterpaper]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{booktabs}
+\usepackage{threeparttable}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{float}
+\begin{document}
+
+\begin{table}[H]
+\centering
+\caption{Effects of the Ultractivity Reform on CBA Content}
+\label{tab:cba_value}
+\scriptsize
+\begin{threeparttable}
+\begin{tabular}{l cccc}
+\toprule\toprule
+ & \shortstack{Panel A\\Zero\\Connectivity} & \shortstack{Panel B\\$\leq$1\%\\Connectivity} & \shortstack{Panel C\\All\\Untreated} & \shortstack{Spillover\\Connected\\Untreated} \\
+ & (1) & (2) & (3) & (4) \\
+\midrule
+\multicolumn{5}{l}{\textit{CBA Value Score}} \\
+Post $\times$ Treatment & 0.0073*** & 0.0062*** & 0.0066*** & $-$0.0009 \\
+  & (0.0027) & (0.0022) & (0.0019) & (0.0016) \\
+ & & & & \\
+Pre $\times$ Treatment & $-$0.0133*** & $-$0.0079*** & $-$0.0060*** & 0.0020 \\
+  & (0.0031) & (0.0023) & (0.0020) & (0.0029) \\
+Pre-trend $F$-test $p$-value & [0.0000] & [0.0010] & [0.0029] & [0.4873] \\
+ & & & & \\
+Mean (pre-treatment) & 0.1505 & 0.1380 & 0.1329 & 0.1329 \\
+Observations & 73{,}177 & 77{,}947 & 84{,}080 & 19{,}693 \\
+Establishments & 14{,}176 & 15{,}171 & 16{,}444 & 4{,}142 \\
+\bottomrule
+\end{tabular}
+\scriptsize
+\begin{tablenotes}
+\item \textit{Notes:} This table presents difference-in-differences estimates of the effects of Brazil's 2012 ultractivity reform on CBA content. The CBA Value Score is the wage-equivalent weighted sum of subgroup clause counts, using the subgroup-level weights estimated in Lagos (2026). Clause Count is the total number of clauses in the CBA (unweighted). Columns (1)--(3) report direct effects on treated establishments relative to control groups of increasing breadth. Column (4) reports the spillover effect for untreated establishments: the interaction of post-reform indicator with pre-reform connectivity (share of workforce overlapping with treated firms, normalized to the 90th percentile). All regressions include establishment fixed effects and CBA-period fixed effects interacted with two-digit industry, microregion, and negotiation-month indicators, and quartile-bin controls for pre-treatment per-worker pairwise worker flows (2007--2011) and pre-treatment establishment size, interacted with CBA-period fixed effects. Standard errors clustered at the establishment level in parentheses. *** p$<$0.01, ** p$<$0.05, * p$<$0.10.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+\end{document}
