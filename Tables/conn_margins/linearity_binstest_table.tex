@@ -1,0 +1,20 @@
+\begin{table}[H]
+\centering
+\caption{Linearity Test: Connectivity and Firm Outcomes}
+\label{tab:linearity_binstest}
+\scriptsize
+\begin{tabular}{llccccc}
+\toprule\toprule
+Outcome & Sample & $N$ & \shortstack{Bins\\(DPI)} & \shortstack{Sup-$t$\\stat} & $p$-value \\
+\midrule
+Log  wages & Year 2011 & $4{,}183$ & 28 & 0.577 & 0.985 \\
+Log hourly wages & Year 2011 & $4{,}183$ & 28 & 1.406 & 0.498 \\
+Log employment & Year 2011 & $4{,}195$ & 28 & 2.228 &  0.083 \\
+\# CBA clauses & CBA period 1 & $4{,}356$ & 29 & 1.226 & 0.610 \\
+\bottomrule
+\end{tabular}
+\begin{minipage}{\linewidth}
+\footnotesize\vspace{4pt}
+\textit{Notes:} This table reports Cattaneo, Crump, Farrell, and Feng (2024) sup-$t$ tests of the null hypothesis that the conditional expectation of each outcome is a degree-1 polynomial (linear) in connectivity. The cross-section is fixed at year 2011 (calendar-year outcomes) or CBA period 1 (number of CBA clauses). Controls included as covariates: industry, month-of-year, microregion, pre-treatment outcome quartile, pre-treatment employment quartile, and pre-treatment worker-flow quartile. Bins are set to 50; effective bins after dropping repeated quantile knots at $x=0$ are reported. Inference based on 2{,}000 simulation draws; grid of 50 evaluation points per bin. Standard errors are heteroskedasticity-robust.
+\end{minipage}
+\end{table}

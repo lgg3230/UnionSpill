@@ -77,17 +77,19 @@ with warnings.catch_warnings():
     warnings.simplefilter("ignore")
     res = binsreg.binsreg("y", "x", w=w_cols, data=df_bs,
                           noplot=True, nbins=50, cb=(3, 3))
-    tst = binsreg.binstest("y", "x", w=w_cols, data=df_bs,
-                           testmodelpoly=1, nsims=2000, simsseed=42, simsgrid=50)
 
 d    = res.data_plot[0]
 dots = d.dots
 cb   = d.cb
 print(f"Bins: {len(dots)}")
 
-p_val = float(tst.testpoly.pval[0])
-t_stat = float(tst.testpoly.stat[0])
-print(f"Linearity test — stat: {t_stat:.4f}, p-value: {p_val:.4f}")
+# p-value from canonical Stata binstest (cross-section 2011, nbins=50)
+binstest_csv = tables_dir / "linearity_binstest_panel.csv"
+bt = pd.read_csv(binstest_csv)
+row = bt[bt["outcome"] == "lr_remdezr_w"].iloc[0]
+p_val  = float(row["pval"])
+t_stat = float(row["stat_supt"])
+print(f"Linearity test (Stata) — stat: {t_stat:.4f}, p-value: {p_val:.4f}")
 
 # ── OLS with same controls ────────────────────────────────────────────────────
 
