@@ -163,7 +163,7 @@ ax.plot(x_grid, pr.predicted_mean, color=RED, linewidth=1.8, zorder=5,
         label=f"OLS + 95\\% CI  (slope: {slope:.4f})")
 
 ax.axvline(0, color="gray", linewidth=0.5, linestyle="--", alpha=0.4)
-ax.set_ylim(top=7.6)
+ax.set_xlim(right=7.6)
 
 p_str = f"$p = {p_val:.3f}$" if p_val >= 0.001 else "$p < 0.001$"
 ax.text(0.98, 0.97, f"Linearity test: {p_str}",
