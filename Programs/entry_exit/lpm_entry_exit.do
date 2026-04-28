@@ -2,6 +2,12 @@
 * Program:    lpm_entry_exit.do
 * Purpose:    Linear probability model for firm presence in dataset.
 *             Outcome: present_in_year (1=real obs, 0=padded/absent).
+*             Also estimates buffer-window entry and exit indicators
+*             following Bassier (2023):
+*               entry_bw = 1 if absent in t-2,t-1; present in t,t+1,t+2
+*               exit_bw  = 1 if present in t-2,t-1,t; absent in t+1,t+2
+*             Buffer-window outcomes are defined only for 2011-2014 (given
+*             2009-2016 data range); placebo/event-study F-tests are skipped.
 *             Uses full firm×year balanced panel (including padded rows).
 *             Same FE spec as results_entry_exit.do but no outcome-specific pre4 bin.
 *             Reports direct and spillover effects for two samples:
@@ -34,6 +40,41 @@ use "$main/UnionSpill/Data/entry_exit/entry_exit_panel.dta", clear
 di "Total obs (full panel): " _N
 count if present_in_year == 0
 di "Padded (absent) obs: " r(N)
+
+********************************************************************************
+* SECTION 1b: BUFFER-WINDOW ENTRY/EXIT INDICATORS (Bassier 2023)
+* entry_bw = 1: absent in t-2 & t-1, present in t & t+1 & t+2
+* exit_bw  = 1: present in t-2 & t-1 & t, absent in t+1 & t+2
+* Defined only for years 2011-2014 (boundary years set to missing).
+********************************************************************************
+
+* tsset requires numeric panel variable; create a temporary numeric firm ID
+tempvar id_num
+egen `id_num' = group(identificad)
+tsset `id_num' year
+
+cap drop entry_bw
+gen byte entry_bw = (L2.present_in_year == 0) & ///
+                    (L1.present_in_year == 0) & ///
+                    (present_in_year    == 1) & ///
+                    (F1.present_in_year == 1) & ///
+                    (F2.present_in_year == 1)
+replace entry_bw = . if missing(L2.present_in_year) | missing(F2.present_in_year)
+label var entry_bw "Buffer-window firm entry: absent t-2,t-1; present t,t+1,t+2 (2011-2014)"
+
+cap drop exit_bw
+gen byte exit_bw  = (L2.present_in_year == 1) & ///
+                    (L1.present_in_year == 1) & ///
+                    (present_in_year    == 1) & ///
+                    (F1.present_in_year == 0) & ///
+                    (F2.present_in_year == 0)
+replace exit_bw = . if missing(L2.present_in_year) | missing(F2.present_in_year)
+label var exit_bw "Buffer-window firm exit: present t-2,t-1,t; absent t+1,t+2 (2011-2014)"
+
+di "Buffer-window entry obs (entry_bw == 1): "
+count if entry_bw == 1
+di "Buffer-window exit obs (exit_bw == 1): "
+count if exit_bw == 1
 
 ********************************************************************************
 * SECTION 2: SPEC AND SAMPLE MACROS
@@ -125,9 +166,10 @@ foreach samp in full pre {
 
         di _newline(1)
         di as result "--- Panel `panel' | `samp_label' ---"
+
+        * ── present_in_year ─────────────────────────────────────────────────
         di as text "  Estimating: present_in_year (Panel `panel', `samp')"
 
-        * Post-treatment DiD
         reghdfe present_in_year treat_ultra##i.treat_year if `s_use', ///
             absorb(`absorb') vce(cluster identificad)
 
@@ -145,7 +187,6 @@ foreach samp in full pre {
         local se_pre = _se[1.treat_ultra#1.placebo_year]
         local p_pre  = 2*ttail(e(df_r), abs(`b_pre'/`se_pre'))
 
-        * Stars
         local stars_post ""
         if `p_post' < 0.01                           local stars_post "***"
         else if `p_post' < 0.05 & `p_post' >= 0.01  local stars_post "**"
@@ -156,13 +197,11 @@ foreach samp in full pre {
         else if `p_pre' < 0.05 & `p_pre' >= 0.01    local stars_pre "**"
         else if `p_pre' < 0.10 & `p_pre' >= 0.05    local stars_pre "*"
 
-        * Event-study F-test for pre-trend
         reghdfe present_in_year i.treat_ultra##ib2011.year if `s_use', ///
             absorb(`absorb') vce(cluster identificad) tolerance(1e-2)
         testparm 1.treat_ultra#i(2009 2010).year
         local pre_ftest_pval = r(p)
 
-        * Write CSV
         tempname fh
         file open `fh' using "`csv_out'", write append
         file write `fh' `""`spec'";"`section'";"present_in_year";"main";"'   %9.4f (`b_post') `"`stars_post'""' _n
@@ -199,6 +238,41 @@ foreach samp in full pre {
             as(pdf) replace
         estimates drop _es_d_tmp
 
+        * ── Buffer-window entry and exit (2011-2014 only) ───────────────────
+        foreach bw_out in entry_bw exit_bw {
+
+            di as text "  Estimating: `bw_out' (Panel `panel', `samp')"
+
+            * Post-treatment DiD (observations only where bw_out is defined)
+            capture reghdfe `bw_out' treat_ultra##i.treat_year ///
+                if `s_use' & !missing(`bw_out'), ///
+                absorb(`absorb') vce(cluster identificad)
+            if _rc != 0 {
+                di as error "  `bw_out' DiD failed (rc=`_rc') — skipping"
+                continue
+            }
+
+            local b_bw_post  = _b[1.treat_ultra#1.treat_year]
+            local se_bw_post = _se[1.treat_ultra#1.treat_year]
+            local p_bw_post  = 2*ttail(e(df_r), abs(`b_bw_post'/`se_bw_post'))
+            local n_bw_obs   = e(N)
+            local n_bw_estab = e(N_clust)
+
+            local stars_bw_post ""
+            if `p_bw_post' < 0.01                              local stars_bw_post "***"
+            else if `p_bw_post' < 0.05 & `p_bw_post' >= 0.01  local stars_bw_post "**"
+            else if `p_bw_post' < 0.10 & `p_bw_post' >= 0.05  local stars_bw_post "*"
+
+            * No pre-trend test: buffer window obs only span 2011-2014
+            tempname fh2
+            file open `fh2' using "`csv_out'", write append
+            file write `fh2' `""`spec'";"`section'";"`bw_out'";"main";"'   %9.4f (`b_bw_post') `"`stars_bw_post'""' _n
+            file write `fh2' `""`spec'";"`section'";"`bw_out'";"main_se";"' %9.4f (`se_bw_post') `"""' _n
+            file write `fh2' `""`spec'";"`section'";"`bw_out'";"n_obs";"'   %12.0fc (`n_bw_obs') `"""' _n
+            file write `fh2' `""`spec'";"`section'";"`bw_out'";"n_estab";"' %12.0fc (`n_bw_estab') `"""' _n
+            file close `fh2'
+        }
+
         di as result "Panel `panel' | `samp' complete."
     }
 }
@@ -228,9 +302,10 @@ foreach samp in full pre {
 
     di _newline(1)
     di as result "--- Spillover | `samp_label' ---"
+
+    * ── present_in_year ─────────────────────────────────────────────────────
     di as text "  Estimating: present_in_year (spillover, `samp')"
 
-    * Post-treatment: β on connectivity × post
     reghdfe present_in_year c.`conn'##i.treat_year if `s_spill', ///
         absorb(`absorb') vce(cluster identificad)
 
@@ -240,7 +315,6 @@ foreach samp in full pre {
     local n_obs   = e(N)
     local n_estab = e(N_clust)
 
-    * Pre-treatment placebo
     reghdfe present_in_year c.`conn'##i.placebo_year if `s_spill' & year <= 2011, ///
         absorb(`absorb') vce(cluster identificad)
 
@@ -248,7 +322,6 @@ foreach samp in full pre {
     local se_pre = _se[c.`conn'#1.placebo_year]
     local p_pre  = 2*ttail(e(df_r), abs(`b_pre'/`se_pre'))
 
-    * Stars
     local stars_post ""
     if `p_post' < 0.01                           local stars_post "***"
     else if `p_post' < 0.05 & `p_post' >= 0.01  local stars_post "**"
@@ -259,13 +332,11 @@ foreach samp in full pre {
     else if `p_pre' < 0.05 & `p_pre' >= 0.01    local stars_pre "**"
     else if `p_pre' < 0.10 & `p_pre' >= 0.05    local stars_pre "*"
 
-    * Event-study F-test for pre-trend
     reghdfe present_in_year c.`conn'##ib2011.year if `s_spill', ///
         absorb(`absorb') vce(cluster identificad) tolerance(1e-2)
     capture testparm 2009.year#c.`conn' 2010.year#c.`conn'
     local pre_ftest_pval = cond(_rc==0, r(p), .)
 
-    * Write CSV
     tempname fh
     file open `fh' using "`csv_spill'", write append
     file write `fh' `""`spec'";"`section'";"present_in_year";"main";"'    %9.4f (`b_post') `"`stars_post'""' _n
@@ -301,6 +372,39 @@ foreach samp in full pre {
     cap graph export "$graphs/lpm_es_spill_`samp'_`d'.pdf", ///
         as(pdf) replace
     estimates drop _es_s_tmp
+
+    * ── Buffer-window entry and exit (2011-2014 only) ────────────────────────
+    foreach bw_out in entry_bw exit_bw {
+
+        di as text "  Estimating: `bw_out' (spillover, `samp')"
+
+        capture reghdfe `bw_out' c.`conn'##i.treat_year ///
+            if `s_spill' & !missing(`bw_out'), ///
+            absorb(`absorb') vce(cluster identificad)
+        if _rc != 0 {
+            di as error "  `bw_out' spillover DiD failed (rc=`_rc') — skipping"
+            continue
+        }
+
+        local b_bw_post  = _b[c.`conn'#1.treat_year]
+        local se_bw_post = _se[c.`conn'#1.treat_year]
+        local p_bw_post  = 2*ttail(e(df_r), abs(`b_bw_post'/`se_bw_post'))
+        local n_bw_obs   = e(N)
+        local n_bw_estab = e(N_clust)
+
+        local stars_bw_post ""
+        if `p_bw_post' < 0.01                              local stars_bw_post "***"
+        else if `p_bw_post' < 0.05 & `p_bw_post' >= 0.01  local stars_bw_post "**"
+        else if `p_bw_post' < 0.10 & `p_bw_post' >= 0.05  local stars_bw_post "*"
+
+        tempname fh2
+        file open `fh2' using "`csv_spill'", write append
+        file write `fh2' `""`spec'";"`section'";"`bw_out'";"main";"'    %9.4f (`b_bw_post') `"`stars_bw_post'""' _n
+        file write `fh2' `""`spec'";"`section'";"`bw_out'";"main_se";"'  %9.4f (`se_bw_post') `"""' _n
+        file write `fh2' `""`spec'";"`section'";"`bw_out'";"n_obs";"'   %12.0fc (`n_bw_obs') `"""' _n
+        file write `fh2' `""`spec'";"`section'";"`bw_out'";"n_estab";"' %12.0fc (`n_bw_estab') `"""' _n
+        file close `fh2'
+    }
 
     di as result "Spillover | `samp' complete."
 }

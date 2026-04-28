@@ -1,26 +1,37 @@
 \begin{table}[H]
 \centering
 \scriptsize
-\caption{Spillover Effects: Firm Presence (LPM)}
+\caption{Spillover Effects: Firm Presence, Entry, and Exit (LPM)}
 \begin{tabular}{lcc}
 \toprule
 & \shortstack{Full\\unbalanced panel} & \shortstack{Present all\\pre-treat yrs} \\
 & (1) & (2) \\
 \midrule
+\multicolumn{3}{l}{\textit{Outcome: Firm active in year}} \\
 Connectivity $\times$ Post & 0.0021 & -0.0110*** \\
 & (0.0033) & (0.0024) \\[3pt]
 Connectivity $\times$ Pre & 0.0190*** & 0.0000 \\
 & (0.0032) & (0.0000) \\[3pt]
-\midrule
 Observations   & 40,915 & 40,331 \\
 Establishments & 5,115 & 5,042 \\
 Pre-trend $p$-val & 0.000 & 0.819 \\
+\midrule
+\multicolumn{3}{l}{\textit{Outcome: Firm entry (buffer window, 2011--2014)}} \\
+Connectivity $\times$ Post & 0.0024** & -0.0000 \\
+& (0.0010) & (0.0001) \\[3pt]
+Observations   & 20,459 & 20,167 \\
+Establishments & 5,115 & 5,042 \\
+\midrule
+\multicolumn{3}{l}{\textit{Outcome: Firm exit (buffer window, 2011--2014)}} \\
+Connectivity $\times$ Post & -0.0028** & 0.0004 \\
+& (0.0011) & (0.0021) \\[3pt]
+Observations   & 20,459 & 20,167 \\
+Establishments & 5,115 & 5,042 \\
 \bottomrule
 \end{tabular}
 \begin{minipage}{\textwidth}
 \footnotesize
 \medskip
-\textit{Notes}: This table reports linear probability model estimates of firm presence ($\mathbf{1}[\text{firm active in year } t]$) for the spillover sample (untreated firms only). The spillover regressor is a firm's pre-treatment exposure to treated firms, measured as pairwise per-worker flows from 2007--2011, normalized to the 90th percentile of the spillover sample in 2009. \textit{Full unbalanced panel} and \textit{Present all pre-treat yrs} as in the direct effects table. Fixed effects and pre-treatment controls as above. Standard errors clustered at the establishment level. Significance: $^{*}p{<}0.10$, $^{**}p{<}0.05$, $^{***}p{<}0.01$.
+\textit{Notes}: This table reports linear probability model spillover estimates for the same three outcomes as the direct-effects table (see notes there for outcome definitions). The sample is untreated firms only. The spillover regressor is a firm's pre-treatment exposure to treated firms (pairwise per-worker flows 2007--2011, normalized to the 90th percentile of the spillover sample in 2009). Fixed effects and pre-treatment controls as in the direct-effects table. Standard errors clustered at the establishment level. Significance: $^{*}p{<}0.10$, $^{**}p{<}0.05$, $^{***}p{<}0.01$.
 \end{minipage}
 \end{table}
-
