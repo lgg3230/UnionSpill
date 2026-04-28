@@ -136,23 +136,60 @@ def postamble(notes):
 def make_subgroup_table(dA, dB, dC, dS, dU, dR, prefix,
                         caption, label, outcome_notes):
     """
-    Six-column table: Panels A/B/C + Spillover + Spillover+UnionFE + Baseline(restricted).
+    Six-column longtable: spans multiple pages.
     prefix: 'sg' for counts, 'sh' for shares.
     """
     col_spec = r"l cccccc"
     blank    = r" & & & & & & \\"
+    ncols    = 7
 
-    hdr = (r" & \shortstack{Panel A\\Zero\\Connectivity}"
-           r" & \shortstack{Panel B\\$\leq$1\%\\Connectivity}"
-           r" & \shortstack{Panel C\\All\\Untreated}"
-           r" & \shortstack{Spillover\\(4)}"
-           r" & \shortstack{Spillover\\+ Union FE\\(5)}"
-           r" & \shortstack{Baseline\\Restr.\ sample\\(6)}"
-           r" \\")
-    num = r" & (1) & (2) & (3) & (4) & (5) & (6) \\"
+    hdr_cols = (r" & \shortstack{Panel A\\Zero\\Connectivity}"
+                r" & \shortstack{Panel B\\$\leq$1\%\\Connectivity}"
+                r" & \shortstack{Panel C\\All\\Untreated}"
+                r" & \shortstack{Spillover\\(4)}"
+                r" & \shortstack{Spillover\\+ Union FE\\(5)}"
+                r" & \shortstack{Baseline\\Restr.\ sample\\(6)}"
+                r" \\")
+    num_row  = r" & (1) & (2) & (3) & (4) & (5) & (6) \\"
 
-    lines = preamble(caption, label, col_spec)
-    lines += [hdr, num]
+    notes = (
+        f"This table presents difference-in-differences estimates of the "
+        f"effects of Brazil's 2012 ultractivity reform on {outcome_notes} "
+        f"for each of the 24 Sistema Mediador clause subgroups. "
+        r"Columns (1)--(3) report direct effects on treated establishments "
+        r"relative to control groups of increasing breadth. "
+        r"Column (4) reports the baseline spillover effect. "
+        r"Column (5) repeats column (4) adding modal-union $\times$ CBA-period "
+        r"fixed effects. "
+        r"Column (6) runs the baseline spec (no union FE) on the same sample "
+        r"used in column (5), isolating sample selection from the FE itself. "
+        r"Each subgroup block shows the post-treatment coefficient (top row), "
+        r"its standard error (second row), the pre-treatment placebo "
+        r"coefficient (third row), and its standard error (fourth row). "
+        + _ABSORB + _STARS
+    )
+
+    lines = [
+        rf"\begin{{longtable}}{{{col_spec}}}",
+        rf"\caption{{{caption}}} \label{{{label}}} \\",
+        r"\toprule\toprule",
+        hdr_cols,
+        num_row,
+        r"\midrule",
+        r"\endfirsthead",
+        rf"\multicolumn{{{ncols}}}{{l}}{{\small\textit{{(continued from previous page)}}}} \\",
+        r"\toprule\toprule",
+        hdr_cols,
+        num_row,
+        r"\midrule",
+        r"\endhead",
+        r"\midrule",
+        rf"\multicolumn{{{ncols}}}{{r}}{{\small\textit{{Continued on next page\ldots}}}} \\",
+        r"\endfoot",
+        r"\bottomrule",
+        rf"\multicolumn{{{ncols}}}{{p{{\linewidth}}}}{{\scriptsize\textit{{Notes:}} {notes}}} \\",
+        r"\endlastfoot",
+    ]
 
     prev_broad = None
     for sg in SG_IDS:
@@ -162,7 +199,7 @@ def make_subgroup_table(dA, dB, dC, dS, dU, dR, prefix,
 
         if broad != prev_broad:
             lines.append(r"\midrule")
-            lines.append(rf"\multicolumn{{7}}{{l}}{{\textit{{{broad} amenities}}}} \\")
+            lines.append(rf"\multicolumn{{{ncols}}}{{l}}{{\textit{{{broad} amenities}}}} \\")
             prev_broad = broad
 
         lines.append(
@@ -204,24 +241,7 @@ def make_subgroup_table(dA, dB, dC, dS, dU, dR, prefix,
         )
         lines.append(blank)
 
-    notes = (
-        f"This table presents difference-in-differences estimates of the "
-        f"effects of Brazil's 2012 ultractivity reform on {outcome_notes} "
-        f"for each of the 24 Sistema Mediador clause subgroups. "
-        r"Columns (1)--(3) report direct effects on treated establishments "
-        r"relative to control groups of increasing breadth. "
-        r"Column (4) reports the baseline spillover effect. "
-        r"Column (5) repeats column (4) adding modal-union $\times$ CBA-period "
-        r"fixed effects. "
-        r"Column (6) runs the baseline spec (no union FE) on the same sample "
-        r"used in column (5), isolating sample selection from the FE itself. "
-        r"Each subgroup block shows the post-treatment coefficient (top row), "
-        r"its standard error (second row), the pre-treatment placebo "
-        r"coefficient (third row), and its standard error (fourth row). "
-        + _ABSORB + _STARS
-    )
-
-    lines += postamble(notes)
+    lines.append(r"\end{longtable}")
     return "\n".join(lines)
 
 
@@ -304,6 +324,7 @@ def main():
         r"\documentclass[12pt,letterpaper]{article}",
         r"\usepackage[margin=1in]{geometry}",
         r"\usepackage{booktabs}",
+        r"\usepackage{longtable}",
         r"\usepackage{threeparttable}",
         r"\usepackage{amsmath}",
         r"\usepackage{amssymb}",
