@@ -75,6 +75,28 @@ do "$scripts/02a_horse_race_edu2.do"
 di "Exercise 2 complete: `c(current_time)'"
 
 ********************************************************************************
+* EXERCISE 3: Layer-level spillover (occ4)
+********************************************************************************
+
+di _n "--- Exercise 3: layer-level spillover (occ4) ---"
+di "Started: `c(current_time)'"
+
+do "$scripts/03a_layer_spillover_occ4.do"
+
+di "Exercise 3 complete: `c(current_time)'"
+
+********************************************************************************
+* EXERCISE 4: Horse race (occ4)
+********************************************************************************
+
+di _n "--- Exercise 4: horse race (occ4) ---"
+di "Started: `c(current_time)'"
+
+do "$scripts/04a_horse_race_occ4.do"
+
+di "Exercise 4 complete: `c(current_time)'"
+
+********************************************************************************
 * DONE
 ********************************************************************************
 

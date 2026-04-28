@@ -27,10 +27,10 @@ global tables     "$output"
 global graphs     "$output"
 global logs       "$output"
 
-capture log close
+capture log close horse_race_edu2_log
 local d = subinstr("`c(current_date)'"," ","_",.)
 local t = subinstr("`c(current_time)'",":","",.)
-log using "$logs/horse_race_edu2_`d'_`t'.log", replace text
+log using "$logs/horse_race_edu2_`d'_`t'.log", replace text name(horse_race_edu2_log)
 
 di "Started: `c(current_date)' `c(current_time)'"
 di "Stata version: `c(stata_version)'"
@@ -180,7 +180,7 @@ local csv_out "$tables/results_horse_race_edu2.csv"
 capture erase "`csv_out'"
 tempname fh
 file open  `fh' using "`csv_out'", write replace
-file write `fh' "spec;section;outcome;row_type;value" _n
+file write `fh' "spec,section,outcome,row_type,value" _n
 file close `fh'
 
 di as result "Output CSV: `csv_out'"
@@ -368,7 +368,12 @@ preserve
 
 		di as text "  [Firm-level] Outcome: `outcome'"
 
-		local extra_f "ib0.`outcome'_pre4#i.year ib0.l_firm_emp_pre4#i.year ib0.totalflows_pw_pre4#i.year i.industry1_num#i.year i.microregion_num#i.year i.mode_base_month_num#i.year"
+		if "`outcome'" == "l_firm_emp" {
+			local extra_f "ib0.`outcome'_pre4#i.year ib0.totalflows_pw_pre4#i.year i.industry1_num#i.year i.microregion_num#i.year i.mode_base_month_num#i.year"
+		}
+		else {
+			local extra_f "ib0.`outcome'_pre4#i.year ib0.l_firm_emp_pre4#i.year ib0.totalflows_pw_pre4#i.year i.industry1_num#i.year i.microregion_num#i.year i.mode_base_month_num#i.year"
+		}
 
 		* ── Post-treatment DiD ───────────────────────────────────────────────
 		reghdfe `outcome' c.c_no_hs##i.treat_year c.c_has_hs##i.treat_year ///
@@ -458,7 +463,7 @@ restore
 
 di as result "Horse race regressions complete. Results in `csv_out'"
 
-log close
+log close horse_race_edu2_log
 
 
 ********************************************************************************

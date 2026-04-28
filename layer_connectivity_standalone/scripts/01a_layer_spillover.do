@@ -45,10 +45,10 @@ global tables     "$output"
 global graphs     "$output"
 global logs       "$output"
 
-capture log close
+capture log close layer_spillover_log
 local d = subinstr("`c(current_date)'"," ","_",.)
 local t = subinstr("`c(current_time)'",":","",.)
-log using "$logs/layer_spillover_abvmed_firm_`d'_`t'.log", replace text
+log using "$logs/layer_spillover_abvmed_firm_`d'_`t'.log", replace text name(layer_spillover_log)
 
 di "Started: `c(current_date)' `c(current_time)'"
 di "Stata version: `c(stata_version)'"
@@ -278,8 +278,12 @@ foreach layer in edu2 gender race {
 
 		di as text "  Estimating: `outcome' (layer: `layer')"
 
-		local absorb ///
-			"`base_fe' ib0.`outcome'_pre4#i.year ib0.l_layer_emp_pre4#i.year `extra_year'"
+		if "`outcome'" == "l_layer_emp" {
+			local absorb "`base_fe' ib0.`outcome'_pre4#i.year `extra_year'"
+		}
+		else {
+			local absorb "`base_fe' ib0.`outcome'_pre4#i.year ib0.l_layer_emp_pre4#i.year `extra_year'"
+		}
 
 		* ── Post-treatment spillover ─────────────────────────────────────────
 		reghdfe `outcome' c.`conn'##i.treat_year if `s_spill', ///
@@ -315,8 +319,8 @@ foreach layer in edu2 gender race {
 		reghdfe `outcome' c.`conn'##ib2011.year if `s_spill', ///
 			absorb(`absorb') vce(cluster identificad)
 
-		testparm c.`conn'#i(2009 2010).year
-		local pre_ftest_pval = r(p)
+		capture testparm c.`conn'#i(2009 2010).year
+		local pre_ftest_pval = cond(_rc==0, r(p), .)
 
 		* ── Count unique firm×layer cells in estimation sample ───────────────
 		tempvar in_samp cell_first
@@ -397,8 +401,12 @@ foreach layer in edu2 gender race {
 
 		di as text "  Estimating (cross-firm): `outcome' (layer: `layer')"
 
-		local absorb_cross ///
-			"`base_fe_cross' ib0.`outcome'_pre4#i.year ib0.l_layer_emp_pre4#i.year `extra_year'"
+		if "`outcome'" == "l_layer_emp" {
+			local absorb_cross "`base_fe_cross' ib0.`outcome'_pre4#i.year `extra_year'"
+		}
+		else {
+			local absorb_cross "`base_fe_cross' ib0.`outcome'_pre4#i.year ib0.l_layer_emp_pre4#i.year `extra_year'"
+		}
 
 		* Post-treatment spillover
 		reghdfe `outcome' c.`conn'##i.treat_year if `s_spill', ///
@@ -434,8 +442,8 @@ foreach layer in edu2 gender race {
 		reghdfe `outcome' c.`conn'##ib2011.year if `s_spill', ///
 			absorb(`absorb_cross') vce(cluster identificad)
 
-		testparm c.`conn'#i(2009 2010).year
-		local pre_ftest_pval_x = r(p)
+		capture testparm c.`conn'#i(2009 2010).year
+		local pre_ftest_pval_x = cond(_rc==0, r(p), .)
 
 		* Count unique firm×layer cells
 		tempvar in_samp_x cell_first_x
@@ -623,7 +631,9 @@ foreach layer in edu2 gender race {
 
 	* ── FE macros ────────────────────────────────────────────────────────
 	local conn_r    "totaltreat_pw_norm_r"
-	local base_fe_r "identificad i.year i.industry1_num#i.year i.mode_base_month_num#i.year i.microregion_num#i.year"
+	cap drop firm_id_r
+	egen firm_id_r = group(identificad)
+	local base_fe_r "firm_id_r i.year i.industry1_num#i.year i.mode_base_month_num#i.year i.microregion_num#i.year"
 	local extra_r   "ib0.totalflows_pw_pre4_r#i.year"
 
 	* ── Initialize output CSV ────────────────────────────────────────────
@@ -641,7 +651,12 @@ foreach layer in edu2 gender race {
 
 		di as text "  Estimating (restricted): `outcome' (layer: `layer')"
 
-		local absorb_r "`base_fe_r' ib0.`outcome'_pre4#i.year ib0.l_firm_emp_pre4#i.year `extra_r'"
+		if "`outcome'" == "l_firm_emp" {
+			local absorb_r "`base_fe_r' ib0.`outcome'_pre4#i.year `extra_r'"
+		}
+		else {
+			local absorb_r "`base_fe_r' ib0.`outcome'_pre4#i.year ib0.l_firm_emp_pre4#i.year `extra_r'"
+		}
 
 		* Post-treatment spillover
 		reghdfe `outcome' c.`conn_r'##i.treat_year if `s_spill_r', ///
@@ -677,8 +692,8 @@ foreach layer in edu2 gender race {
 		reghdfe `outcome' c.`conn_r'##ib2011.year if `s_spill_r', ///
 			absorb(`absorb_r') vce(cluster identificad)
 
-		testparm c.`conn_r'#i(2009 2010).year
-		local pre_ftest_pval_r = r(p)
+		capture testparm c.`conn_r'#i(2009 2010).year
+		local pre_ftest_pval_r = cond(_rc==0, r(p), .)
 
 		* Write to CSV
 		tempname fhr
@@ -733,7 +748,7 @@ foreach layer in edu2 gender race {
 * SECTION 3: COMPLETION
 ********************************************************************************
 
-log close
+log close layer_spillover_log
 di as result "Finished: `c(current_date)' `c(current_time)'"
 
 
