@@ -170,6 +170,7 @@ def make_subgroup_table(dA, dB, dC, dS, dU, dR, prefix,
     )
 
     lines = [
+        r"\scriptsize",
         rf"\begin{{longtable}}{{{col_spec}}}",
         rf"\caption{{{caption}}} \label{{{label}}} \\",
         r"\toprule\toprule",
