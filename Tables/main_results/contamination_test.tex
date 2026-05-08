@@ -1,0 +1,37 @@
+\begin{table}[H]
+\scriptsize
+\centering
+\begin{tabular}{lcccc}
+\hline\hline
+  & (1) & (2) & (3) & (4) \\
+
+  & Log Dec.\ Wages & Log Hourly Wages & Log Employment & \# CBA Clauses \\
+
+\hline
+\multicolumn{5}{l}{\textit{Direct effect vs.\ pure controls ($\hat{\beta}_4 = \tau_T$)}} \\[3pt]
+Treated $\times$ Post & 0.0249$^{***}$ & 0.0272$^{***}$ & 0.0023 & 1.4433$^{***}$ \\
+
+ & (0.0048) & (0.0049) & (0.0148) & (0.2842) \\[4pt]
+
+\multicolumn{5}{l}{\textit{Contamination bias ($\hat{\beta}_5 = \tau_D$)}} \\[3pt]
+Contaminated $\times$ Post & 0.0128$^{**}$ & 0.0126$^{**}$ & -0.0015 & 0.1727 \\
+
+ & (0.0054) & (0.0055) & (0.0183) & (0.3447) \\[4pt]
+
+\multicolumn{5}{l}{\textit{Implied $\hat{\beta}_C = \hat{\beta}_4 - \hat{\beta}_5$}} \\[3pt]
+ & 0.0122 & 0.0146 & 0.0038 & 1.2706 \\[4pt]
+
+\hline
+Pre-trend (Treated) & -0.0013 & -0.0014 & 0.0152 & 0.0551 \\
+
+ & (0.0045) & (0.0052) & (0.0100) & (0.3423) \\
+
+\hline
+Observations & 130,708 & 130,708 & 131,232 & 84,080 \\
+
+Establishments & 16,398 & 16,398 & 16,404 & 16,444 \\
+
+\hline\hline
+\multicolumn{5}{p{0.92\linewidth}}{\scriptsize This table reports estimates from a three-group DiD. The treated group ($T$) comprises firms covered by a CBA affected by Brazil's S\'{u}mula~277 reform. Pure controls ($C$) are firms with zero pre-treatment worker flows to treated firms. Contaminated controls ($D$) are all remaining non-treated firms. $\hat{\beta}_4$ estimates the direct union wage effect against the cleanest counterfactual; $\hat{\beta}_5$ measures the spillover onto contaminated controls, which equals the attenuation bias in $\hat{\beta}_C = \hat{\beta}_4 - \hat{\beta}_5$. All specifications include firm, industry$\times$year, seasonality$\times$year, and microregion$\times$year fixed effects, plus quartile bins of pre-treatment outcome, employment, and total flows interacted with year. \textit{\# CBA Clauses} uses CBA negotiation periods instead of calendar years. Standard errors clustered by firm. *** $p<0.01$, ** $p<0.05$, * $p<0.10$.}
+\end{tabular}
+\end{table}

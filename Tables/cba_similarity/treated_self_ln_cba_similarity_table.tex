@@ -1,0 +1,43 @@
+\begin{table}[H]
+\centering
+\caption{Log CBA Content Stability: Treated Firms vs.\ Own Pre-Treatment CBA}
+\label{tab:treated_self_ln_cba_similarity}
+\scriptsize
+\setlength{\tabcolsep}{8pt}
+\begin{tabular}{lcccc}
+\toprule\toprule
+ & (1) & (2) & (3) & (4) \\
+ & \textbf{Cosine} & \textbf{Bray-Curtis} & \textbf{Total Var.} & \textbf{Ruzicka} \\
+\midrule
+\multicolumn{5}{l}{\textit{Panel A: Baseline}} \\
+\multicolumn{5}{l}{\textit{Post-treatment}} \\
+Connectivity $\times$ Post & -0.0023 & -0.0029 & 0.0246 & -0.0034 \\
+ & (0.0027) & (0.0034) & (0.0245) & (0.0044) \\
+\multicolumn{5}{l}{\textit{Pre-treatment placebo}} \\
+Connectivity $\times$ Pre & 0.0014 & 0.0002 & 0.0073 & 0.0000 \\
+ & (0.0013) & (0.0014) & (0.0245) & (0.0017) \\
+\midrule
+Baseline mean (period 2) & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Observations &       10,403 &       10,403 &       10,479 &       10,403 \\
+Establishments &        2,533 &        2,533 &        2,537 &        2,533 \\
+Pre-trend $p$-value & 0.420 & 0.819 & 0.701 & 0.907 \\
+\midrule
+\multicolumn{5}{l}{\textit{Panel B: Adding union $\times$ period FE}} \\
+\multicolumn{5}{l}{\textit{Post-treatment}} \\
+Connectivity $\times$ Post & -0.0039 & -0.0030 & -0.0148 & -0.0039 \\
+ & (0.0029) & (0.0031) & (0.0117) & (0.0038) \\
+\multicolumn{5}{l}{\textit{Pre-treatment placebo}} \\
+Connectivity $\times$ Pre & -0.0004 & -0.0010 & 0.0162 & -0.0012 \\
+ & (0.0011) & (0.0011) & (0.0202) & (0.0013) \\
+\midrule
+Baseline mean (period 2) & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Observations &        8,288 &        8,288 &        8,367 &        8,288 \\
+Establishments &        2,175 &        2,175 &        2,180 &        2,175 \\
+Pre-trend $p$-value & 0.654 & 0.283 & 0.454 & 0.303 \\
+\bottomrule
+\end{tabular}
+\begin{minipage}{\linewidth}
+\footnotesize\vspace{4pt}
+\textit{Notes:} This table reports estimates of \emph{log} within-firm CBA content stability on connectivity for treated firms. Outcomes are $\ln(\text{sim}_{it})$ for $\text{sim} \in \{\text{cosine}, \text{Bray-Curtis}, \text{total variation}, \text{Ruzicka}\}$, dropping firm-period observations with zero similarity. Each similarity is computed between firm $i$'s clause vector at period $t$ and firm $i$'s OWN clause vector at cba\_period $= 2$. Sample, connectivity, and fixed-effects structure are identical to Table~\ref{tab:treated_self_cba_similarity}; see notes there. Standard errors clustered at the establishment level. $^{***}p<0.01$, $^{**}p<0.05$, $^{*}p<0.10$.
+\end{minipage}
+\end{table}

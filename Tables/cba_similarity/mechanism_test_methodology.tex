@@ -1,0 +1,117 @@
+% mechanism_test_methodology.tex
+% Stand-alone methodology snippet for the mechanism (gap/surplus) test.
+% Designed to be \input{} into the paper. No \documentclass.
+% Required packages in main document: amsmath, amssymb, bm.
+
+\subsection{Mechanism test: do treated firms learn from connected partners?}
+\label{sec:mechanism_test}
+
+If the spillover effect runs through CBA content diffusing along worker
+flows, the same channel should also operate \emph{from} treated firms'
+connected partners \emph{back} to the treated firm itself. Specifically,
+when treated firms renegotiate post-Súmula 277, they should add the most
+new clauses in the dimensions where their connected, untreated partners
+already had a head start pre-reform.
+
+We test this prediction directly on the treated balanced-panel sample,
+reshaped long over the 139 clause types $c$.
+
+\paragraph{Pre-treatment mismatch.} For each treated firm $i$ and each
+clause type $c$, we summarize what its connected, untreated worker-flow
+partners $j$ already carried in their CBAs pre-reform. Let $w_{ij}$ be the
+average of the four pre-treatment year-pair flow ratios from $i$ to $j$
+($\overline{w_{ij}} = \tfrac14(r_{ij}^{07{-}08} + r_{ij}^{08{-}09} + r_{ij}^{09{-}10} + r_{ij}^{10{-}11})$),
+and let $c^{\text{pre}}_{jc}$ be partner $j$'s pre-treatment count of
+clauses of type $c$. The connectivity-weighted partner average is
+%
+\begin{equation}
+  \bar{c}_{-i,c}
+  \;=\; \frac{\sum_{j \in \mathcal{P}_i} w_{ij}\, c^{\text{pre}}_{jc}}
+             {\sum_{j \in \mathcal{P}_i} w_{ij}},
+\end{equation}
+%
+where $\mathcal{P}_i$ is the set of untreated firms with positive worker
+flow to $i$ during 2007--2011. Note that the weights normalize out: the
+quantity is a content-distance summary, not an exposure dose. From this we
+build three pre-treatment, time-invariant mismatch measures:
+%
+\begin{align}
+  \text{gap}_{ic}     &\;=\; \max\!\bigl(0,\; \bar{c}_{-i,c} - c^{\text{pre}}_{ic}\bigr)
+  & \text{(partners had more)}\\
+  \text{surplus}_{ic} &\;=\; \max\!\bigl(0,\; c^{\text{pre}}_{ic} - \bar{c}_{-i,c}\bigr)
+  & \text{(firm $i$ had more)}\\
+  \text{raw\_gap}_{ic} &\;=\; \bar{c}_{-i,c} - c^{\text{pre}}_{ic}
+  & \text{(signed)}.
+\end{align}
+%
+By construction $\text{gap}_{ic}$ and $\text{surplus}_{ic}$ have disjoint
+support at the firm--clause cell level (only one is positive in any cell,
+the other is zero), and $\text{raw\_gap}_{ic} = \text{gap}_{ic} - \text{surplus}_{ic}$.
+
+\paragraph{Specification.} On the long panel of treated balanced-panel
+firms $\times$ years $\times$ clause types, we estimate
+%
+\begin{equation}
+  cl\_count_{ict}
+  \;=\; \beta \,\bigl(X_{ic} \times T_t\bigr)
+  \;+\; \alpha_{ic}
+  \;+\; \alpha_{ft}
+  \;+\; \varepsilon_{ict},
+  \label{eq:mechanism_spec}
+\end{equation}
+%
+where $X_{ic} \in \{\text{gap}_{ic},\, \text{surplus}_{ic},\, \text{raw\_gap}_{ic}\}$,
+$\alpha_{ic}$ is a firm $\times$ clause-type fixed effect (which absorbs
+the time-invariant level of $X_{ic}$ and the firm's baseline count for
+clause type $c$), and $\alpha_{ft}$ is a flexible time effect. We report
+three choices for $\alpha_{ft}$: a year fixed effect, a clause type
+$\times$ year fixed effect (which absorbs clause-specific secular trends),
+and a mode-union $\times$ year fixed effect (which absorbs union-specific
+time trends). Standard errors are clustered at the firm level.
+
+The treatment indicator is $T_t = \mathbf{1}\{cba\_period_{t} \geq 3\}$,
+i.e.\ post-Súmula renegotiation. Identification of $\beta$ comes from
+within firm $\times$ clause-type variation: for a given $(i,c)$ cell, how
+much the post-period count moves relative to that same firm's other
+clause-type cells where the firm did or did not have a pre-treatment
+mismatch.
+
+\paragraph{Predictions.} Under the content-diffusion hypothesis,
+%
+\begin{itemize}
+  \item $\beta_{\text{gap}} > 0$: treated firms add clauses where their
+    connected partners had more.
+  \item $\beta_{\text{surplus}} \approx 0$: partners cannot teach a firm
+    about clauses they themselves are short of, so a positive level of
+    \emph{own} pre-treatment surplus should not predict post growth. A
+    significantly negative $\beta_{\text{surplus}}$ instead points to
+    \emph{convergence} (firms shed clauses they had above the local mean)
+    or to mechanical reallocation under a quasi-fixed renegotiation budget.
+  \item $\beta_{\text{raw\_gap}}$ is the OLS slope under the linearity
+    restriction $\beta_{\text{gap}} = -\beta_{\text{surplus}}$. We
+    additionally estimate equation~\eqref{eq:mechanism_spec} with both
+    $\text{gap}_{ic} \times T_t$ and $\text{surplus}_{ic} \times T_t$
+    entered jointly and report a Wald test of this linearity restriction.
+\end{itemize}
+
+\paragraph{Placebo.} As a pre-trend check, we re-estimate
+equation~\eqref{eq:mechanism_spec} on the pre-period subset
+$cba\_period \in \{1, 2\}$, replacing $T_t$ with
+$T^{\text{plac}}_t = \mathbf{1}\{cba\_period_{t} = 2\}$. The same firm
+$\times$ clause-type cells are compared between their first and second
+pre-Súmula periods. A coefficient of zero is consistent with no
+differential pre-trend in clause counts on either side of the mismatch.
+A non-zero placebo coefficient would indicate that the mismatch measures
+already correlated with clause-count growth before Súmula 277, and would
+require attribution of any post-period coefficient to a continuing trend
+rather than the reform itself.
+
+\paragraph{Mirror to the firm-level similarity exercise.} The mechanism
+test is the treated-side mirror of the untreated-firm CBA-similarity
+exercise (Section~\ref{sec:cba_similarity}, table~\ref{tab:cba_similarity}).
+There, more-connected untreated firms have their full CBA vectors compared
+to a connected-treated reference. Here we ask the same question
+clause-by-clause from the treated side: do treated firms re-template
+specifically toward what their connected partners carry? Both reduce to
+the same content-diffusion null, evaluated with different aggregations
+and from opposite sides of the worker flow.

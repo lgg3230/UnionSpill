@@ -1,0 +1,43 @@
+\begin{table}[H]
+\centering
+\caption{Log CBA Similarity to Moving Treated Reference (Orientation-Corrected Weights)}
+\label{tab:corr_w_ln_cba_similarity}
+\scriptsize
+\setlength{\tabcolsep}{8pt}
+\begin{tabular}{lcccc}
+\hline\hline
+ & (1) & (2) & (3) & (4) \\
+ & \textbf{Cosine} & \textbf{Bray-Curtis} & \textbf{Total Var.} & \textbf{Ruzicka} \\
+\hline
+\multicolumn{5}{l}{\textit{Panel A: Baseline}} \\
+\multicolumn{5}{l}{\textit{Post-treatment}} \\
+Connectivity $\times$ Post & -0.0012 & 0.0110 & 0.0832 & 0.0116 \\
+ & (0.0088) & (0.0084) & (0.0708) & (0.0095) \\
+\multicolumn{5}{l}{\textit{Pre-treatment placebo}} \\
+Connectivity $\times$ Pre & -0.0071 & -0.0031 & 0.0342 & -0.0039 \\
+ & (0.0083) & (0.0083) & (0.0713) & (0.0091) \\
+\hline
+Baseline log-mean (period 2) & -1.0335 & -1.3976 & -2.2007 & -1.9017 \\
+Observations &        8,510 &        8,510 &        8,766 &        8,510 \\
+Establishments &        2,000 &        2,000 &        2,061 &        2,000 \\
+Pre-trend $p$-value & 0.375 & 0.731 & 0.442 & 0.693 \\
+\hline
+\multicolumn{5}{l}{\textit{Panel B: Adding union $\times$ period FE}} \\
+\multicolumn{5}{l}{\textit{Post-treatment}} \\
+Connectivity $\times$ Post & 0.0000 & 0.0007 & 0.0749 & 0.0033 \\
+ & (0.0115) & (0.0085) & (0.0996) & (0.0100) \\
+\multicolumn{5}{l}{\textit{Pre-treatment placebo}} \\
+Connectivity $\times$ Pre & 0.0013 & 0.0015 & 0.0514 & 0.0004 \\
+ & (0.0108) & (0.0091) & (0.0960) & (0.0102) \\
+\hline
+Baseline log-mean (period 2) & -1.0154 & -1.3795 & -2.2622 & -1.8825 \\
+Observations &        6,816 &        6,816 &        7,051 &        6,816 \\
+Establishments &        1,723 &        1,723 &        1,783 &        1,723 \\
+Pre-trend $p$-value & 0.946 & 0.930 & 0.500 & 0.981 \\
+\hline\hline
+\end{tabular}
+\begin{minipage}{\linewidth}
+\smallskip
+\scriptsize\textit{Notes:} This table reproduces the spillover \emph{log} similarity exercise (CBA content similarity vs.\ flow-weighted treated reference) with \textbf{orientation-corrected connectivity weights}. Outcomes are $\ln(\text{sim}_{it})$ for $\text{sim} \in \{\text{cosine}, \text{Bray-Curtis}, \text{total variation}, \text{Ruzicka}\}$, dropping firm-period observations with zero similarity. Sample, weight definition, and fixed-effects structure are identical to Table~\ref{tab:corr_w_cba_similarity}; see notes there. Standard errors clustered at the establishment level. *\,$p<0.10$, **\,$p<0.05$, ***\,$p<0.01$.
+\end{minipage}
+\end{table}

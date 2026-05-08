@@ -1,0 +1,80 @@
+\begin{table}[H]
+\centering
+\caption{Mechanism test: treated firms' clause-type expansion vs.\ pre-treatment gap to connected partners}
+\label{tab:mechanism_test}
+\scriptsize
+\begin{tabular}{lcccc}
+\toprule\toprule
+ & (1) & (2) & (3) & (4) \\
+ & \shortstack{Raw \\ alone} & \shortstack{Gap \\ alone} & \shortstack{Surplus \\ alone} & Joint \\
+\midrule
+\multicolumn{5}{l}{\textit{Panel A: Main sample. $\text{post} = \mathbf{1}\{cba\_period \geq 3\}$}} \\
+\midrule
+\multicolumn{5}{l}{\textit{Year FE}} \\
+$\text{raw\_gap} \times \text{post}$ & $0.264^{***}$ &  &  &  \\
+ & $(0.030)$ &  &  &  \\
+$\text{gap} \times \text{post}$ &  & $0.072^{***}$ &  & $0.046^{***}$ \\
+ &  & $(0.005)$ &  & $(0.005)$ \\
+$\text{surplus} \times \text{post}$ &  &  & $-0.419^{***}$ & $-0.417^{***}$ \\
+ &  &  & $(0.042)$ & $(0.043)$ \\
+$N$ & 1,869,133 & 1,869,133 & 1,869,133 & 1,869,133 \\
+\# firms & 1,950 & 1,950 & 1,950 & 1,950 \\
+\addlinespace
+\multicolumn{5}{l}{\textit{Clause type $\times$ year FE}} \\
+$\text{raw\_gap} \times \text{post}$ & $0.264^{***}$ &  &  &  \\
+ & $(0.031)$ &  &  &  \\
+$\text{gap} \times \text{post}$ &  & $0.059^{***}$ &  & $-0.011$ \\
+ &  & $(0.005)$ &  & $(0.007)$ \\
+$\text{surplus} \times \text{post}$ &  &  & $-0.455^{***}$ & $-0.456^{***}$ \\
+ &  &  & $(0.043)$ & $(0.043)$ \\
+$N$ & 1,869,133 & 1,869,133 & 1,869,133 & 1,869,133 \\
+\# firms & 1,950 & 1,950 & 1,950 & 1,950 \\
+\addlinespace
+\multicolumn{5}{l}{\textit{Mode union $\times$ year FE}} \\
+$\text{raw\_gap} \times \text{post}$ & $0.268^{***}$ &  &  &  \\
+ & $(0.031)$ &  &  &  \\
+$\text{gap} \times \text{post}$ &  & $0.072^{***}$ &  & $0.048^{***}$ \\
+ &  & $(0.005)$ &  & $(0.005)$ \\
+$\text{surplus} \times \text{post}$ &  &  & $-0.425^{***}$ & $-0.423^{***}$ \\
+ &  &  & $(0.043)$ & $(0.043)$ \\
+$N$ & 1,869,133 & 1,869,133 & 1,869,133 & 1,869,133 \\
+\# firms & 1,950 & 1,950 & 1,950 & 1,950 \\
+\midrule
+\multicolumn{5}{l}{\textit{Panel B: Placebo (pre-period only). $\text{placebo} = \mathbf{1}\{cba\_period = 1\}$ (cba\_period 2 = base)}} \\
+\midrule
+\multicolumn{5}{l}{\textit{Year FE}} \\
+$\text{raw\_gap} \times \text{placebo}$ & $-0.018^{*}$ &  &  &  \\
+ & $(0.010)$ &  &  &  \\
+$\text{gap} \times \text{placebo}$ &  & $-0.002$ &  & $-0.001$ \\
+ &  & $(0.003)$ &  & $(0.003)$ \\
+$\text{surplus} \times \text{placebo}$ &  &  & $0.030^{*}$ & $0.030^{*}$ \\
+ &  &  & $(0.018)$ & $(0.018)$ \\
+$N$ & 773,396 & 773,396 & 773,396 & 773,396 \\
+\# firms & 1,950 & 1,950 & 1,950 & 1,950 \\
+\addlinespace
+\multicolumn{5}{l}{\textit{Clause type $\times$ year FE}} \\
+$\text{raw\_gap} \times \text{placebo}$ & $-0.019^{*}$ &  &  &  \\
+ & $(0.010)$ &  &  &  \\
+$\text{gap} \times \text{placebo}$ &  & $-0.015^{***}$ &  & $-0.013^{***}$ \\
+ &  & $(0.004)$ &  & $(0.003)$ \\
+$\text{surplus} \times \text{placebo}$ &  &  & $0.023$ & $0.022$ \\
+ &  &  & $(0.018)$ & $(0.018)$ \\
+$N$ & 773,396 & 773,396 & 773,396 & 773,396 \\
+\# firms & 1,950 & 1,950 & 1,950 & 1,950 \\
+\addlinespace
+\multicolumn{5}{l}{\textit{Mode union $\times$ year FE}} \\
+$\text{raw\_gap} \times \text{placebo}$ & $-0.017$ &  &  &  \\
+ & $(0.011)$ &  &  &  \\
+$\text{gap} \times \text{placebo}$ &  & $0.001$ &  & $0.002$ \\
+ &  & $(0.003)$ &  & $(0.003)$ \\
+$\text{surplus} \times \text{placebo}$ &  &  & $0.031^{*}$ & $0.031^{*}$ \\
+ &  &  & $(0.018)$ & $(0.018)$ \\
+$N$ & 773,396 & 773,396 & 773,396 & 773,396 \\
+\# firms & 1,950 & 1,950 & 1,950 & 1,950 \\
+\bottomrule
+\end{tabular}
+\begin{minipage}{\linewidth}
+\footnotesize\vspace{4pt}
+\textit{Notes:} This table reports estimates of $\beta$ from $cl\_count_{ict} = \beta\,(X_{ic} \times T_t) + \alpha_{ic} + \alpha_{ft} + \varepsilon_{ict}$ on the long panel of treated balanced-panel firms reshaped over their 139 clause types. $X_{ic}$ is one of the pre-treatment mismatch measures: $\text{gap}_{ic} = \max(0, \bar{c}_{-i,c} - c^{\text{pre}}_{ic})$, $\text{surplus}_{ic} = \max(0, c^{\text{pre}}_{ic} - \bar{c}_{-i,c})$, or $\text{raw\_gap}_{ic} = \bar{c}_{-i,c} - c^{\text{pre}}_{ic}$. $\bar{c}_{-i,c}$ is the connectivity-weighted average of the clause-$c$ count among firm $i$'s connected, untreated, worker-flow partners; weights are the average of the four pre-treatment year-pair flow ratios in 2007--2011. $\alpha_{ic}$ is a firm $\times$ clause-type fixed effect; $\alpha_{ft}$ is the sub-panel-specific time effect. Each column is a separate regression. Column~(4) is a joint regression with both $\text{gap}_{ic} \times T_t$ and $\text{surplus}_{ic} \times T_t$. \# firms is the count of distinct \texttt{identificad8} (8-digit CNPJ root) in the regression sample. The placebo panel restricts to $cba\_period \in \{1, 2\}$ and replaces $T_t$ with $\mathbf{1}\{cba\_period = 1\}$, treating $cba\_period = 2$ (the cycle immediately before Súmula~277) as the base period — a test for differential pre-trends. Standard errors clustered at the establishment level (\texttt{identificad}). $^{***}p<0.01$, $^{**}p<0.05$, $^{*}p<0.10$.
+\end{minipage}
+\end{table}

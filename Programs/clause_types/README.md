@@ -28,3 +28,7 @@ Pipeline for direct and spillover effects on clause-count outcomes.
 1. Modify the grouped clause-count definitions in `clause_types.do` if you want different clause partitions.
 2. Adjust table text or formatting in `generate_clause_count_latex.py`.
 3. If one count category looks interesting, build a follow-up event-study around that outcome.
+
+## See also
+
+- `Programs/cba_similarity/`: separate pipeline that compares pre- vs. post-reform CBA content vectors (cosine, Bray-Curtis, total variation, Jaccard) between untreated firms and a connected/average treated reference. Mirrors the panel spec in `clause_types.do`.

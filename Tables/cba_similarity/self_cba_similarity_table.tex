@@ -1,0 +1,43 @@
+\begin{table}[H]
+\centering
+\caption{CBA Content Stability: Untreated Firms vs.\ Own Pre-Treatment CBA}
+\label{tab:self_cba_similarity}
+\scriptsize
+\setlength{\tabcolsep}{8pt}
+\begin{tabular}{lcccc}
+\hline\hline
+ & (1) & (2) & (3) & (4) \\
+ & \textbf{Cosine} & \textbf{Bray-Curtis} & \textbf{Total Var.} & \textbf{Ruzicka} \\
+\hline
+\multicolumn{5}{l}{\textit{Panel A: Baseline}} \\
+\multicolumn{5}{l}{\textit{Post-treatment}} \\
+Connectivity $\times$ Post & 0.0043 & 0.0041 & 0.0052 & 0.0038 \\
+ & (0.0034) & (0.0035) & (0.0034) & (0.0037) \\
+\multicolumn{5}{l}{\textit{Pre-treatment placebo}} \\
+Connectivity $\times$ Pre & -0.0002 & -0.0016 & 0.0012 & -0.0014 \\
+ & (0.0017) & (0.0020) & (0.0018) & (0.0018) \\
+\hline
+Baseline mean (period 2) & 1.0000 & 1.0000 & 1.0000 & 1.0000 \\
+Observations &        6,943 &        6,943 &        6,943 &        6,943 \\
+Establishments &        1,652 &        1,652 &        1,652 &        1,652 \\
+Pre-trend $p$-value & 0.973 & 0.477 & 0.424 & 0.530 \\
+\hline
+\multicolumn{5}{l}{\textit{Panel B: Adding union $\times$ period FE}} \\
+\multicolumn{5}{l}{\textit{Post-treatment}} \\
+Connectivity $\times$ Post & 0.0013 & -0.0026 & -0.0002 & -0.0026 \\
+ & (0.0036) & (0.0039) & (0.0033) & (0.0042) \\
+\multicolumn{5}{l}{\textit{Pre-treatment placebo}} \\
+Connectivity $\times$ Pre & 0.0017 & 0.0035* & 0.0026 & 0.0022 \\
+ & (0.0020) & (0.0020) & (0.0018) & (0.0016) \\
+\hline
+Baseline mean (period 2) & 1.0000 & 1.0000 & 1.0000 & 1.0000 \\
+Observations &        5,455 &        5,455 &        5,455 &        5,455 \\
+Establishments &        1,415 &        1,415 &        1,415 &        1,415 \\
+Pre-trend $p$-value & 0.365 & 0.092 & 0.139 & 0.195 \\
+\hline\hline
+\end{tabular}
+\begin{minipage}{\linewidth}
+\smallskip
+\scriptsize\textit{Notes:} This table reports estimates of within-firm CBA content stability on connectivity for untreated firms. For each untreated firm $i$ and CBA period $t$, the outcome is the similarity between firm $i$'s clause vector at period $t$ and firm $i$'s OWN clause vector at \textbf{cba\_period $= 2$} (the last pre-Sumula 277 CBA). By construction, similarity equals 1 at period 2; the regression captures how much of that stability is broken in subsequent periods, and whether the break correlates with connectivity to treated firms. Connectivity is scaled to 1 at the 90th percentile of the spillover sample at year 2009. Panel A includes establishment, industry $\times$ period, mode-month $\times$ period, and microregion $\times$ period fixed effects, with pre-treatment quartile bins of the outcome, log employment, and total flows interacted with period. Panel B additionally absorbs union $\times$ period fixed effects. Standard errors clustered at the establishment level. *\,$p<0.10$, **\,$p<0.05$, ***\,$p<0.01$.
+\end{minipage}
+\end{table}

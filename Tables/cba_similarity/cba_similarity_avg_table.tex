@@ -1,0 +1,42 @@
+\begin{table}[H]
+\centering
+\caption{CBA Content Similarity and Connectivity: Average Treated Reference}
+\scriptsize
+\setlength{\tabcolsep}{8pt}
+\begin{tabular}{lcccc}
+\hline\hline
+ & (1) & (2) & (3) & (4) \\
+ & \textbf{Cosine} & \textbf{Bray-Curtis} & \textbf{Total Var.} & \textbf{Ruzicka} \\
+\hline
+\multicolumn{5}{l}{\textit{Panel A: Baseline}} \\
+\multicolumn{5}{l}{\textit{Post-treatment}} \\
+Connectivity $\times$ Post & 0.0030*** & 0.0019** & 0.0019** & 0.0012** \\
+ & (0.0010) & (0.0008) & (0.0009) & (0.0005) \\
+\multicolumn{5}{l}{\textit{Pre-treatment placebo}} \\
+Connectivity $\times$ Pre & -0.0004 & -0.0001 & 0.0004 & 0.0001 \\
+ & (0.0012) & (0.0008) & (0.0010) & (0.0005) \\
+\hline
+Baseline mean (period 2) & 0.4383 & 0.2647 & 0.2697 & 0.1589 \\
+Observations &       19,693 &       19,693 &       19,693 &       19,693 \\
+Establishments &        4,142 &        4,142 &        4,142 &        4,142 \\
+Pre-trend $p$-value & 0.817 & 0.923 & 0.665 & 0.940 \\
+\hline
+\multicolumn{5}{l}{\textit{Panel B: Adding union $\times$ period FE}} \\
+\multicolumn{5}{l}{\textit{Post-treatment}} \\
+Connectivity $\times$ Post & 0.0000 & -0.0004 & -0.0003 & -0.0002 \\
+ & (0.0006) & (0.0004) & (0.0005) & (0.0003) \\
+\multicolumn{5}{l}{\textit{Pre-treatment placebo}} \\
+Connectivity $\times$ Pre & 0.0002 & 0.0002 & 0.0002 & 0.0002 \\
+ & (0.0009) & (0.0005) & (0.0006) & (0.0003) \\
+\hline
+Baseline mean (period 2) & 0.4390 & 0.2652 & 0.2710 & 0.1592 \\
+Observations &       17,746 &       17,746 &       17,746 &       17,746 \\
+Establishments &        3,871 &        3,871 &        3,871 &        3,871 \\
+Pre-trend $p$-value & 0.835 & 0.771 & 0.819 & 0.730 \\
+\hline\hline
+\end{tabular}
+\begin{minipage}{\linewidth}
+\smallskip
+\scriptsize\textit{Notes:} This table reports spillover-effect estimates of CBA content similarity on connectivity. For each untreated firm $i$ and CBA period $t$, the outcome is the similarity between firm $i$'s clause vector and the \emph{simple (unweighted) average} clause vector across \emph{all} treated firms in period $t$; every untreated firm receives a reference vector regardless of its bilateral connectivity to treated firms. Connectivity is scaled to 1 at the 90th percentile of the spillover sample. Panel A includes establishment, industry $\times$ period, mode-month $\times$ period, and microregion $\times$ period fixed effects, with pre-treatment bins of the outcome, log employment, and total flows absorbed. Panel B additionally absorbs union $\times$ period fixed effects. Standard errors clustered at the establishment level. *\,$p<0.10$, **\,$p<0.05$, ***\,$p<0.01$.
+\end{minipage}
+\end{table}

@@ -1,0 +1,43 @@
+\begin{table}[H]
+\centering
+\caption{CBA Content Stability: Treated Firms vs.\ Own Pre-Treatment CBA}
+\label{tab:treated_self_cba_similarity}
+\scriptsize
+\setlength{\tabcolsep}{8pt}
+\begin{tabular}{lcccc}
+\toprule\toprule
+ & (1) & (2) & (3) & (4) \\
+ & \textbf{Cosine} & \textbf{Bray-Curtis} & \textbf{Total Var.} & \textbf{Ruzicka} \\
+\midrule
+\multicolumn{5}{l}{\textit{Panel A: Baseline}} \\
+\multicolumn{5}{l}{\textit{Post-treatment}} \\
+Connectivity $\times$ Post & -0.0001 & -0.0002 & -0.0003 & -0.0000 \\
+ & (0.0014) & (0.0014) & (0.0014) & (0.0016) \\
+\multicolumn{5}{l}{\textit{Pre-treatment placebo}} \\
+Connectivity $\times$ Pre & -0.0009 & -0.0002 & -0.0008 & -0.0003 \\
+ & (0.0007) & (0.0005) & (0.0006) & (0.0004) \\
+\midrule
+Baseline mean (period 2) & 1.0000 & 1.0000 & 1.0000 & 1.0000 \\
+Observations &       10,806 &       10,806 &       10,806 &       10,806 \\
+Establishments &        2,573 &        2,573 &        2,573 &        2,573 \\
+Pre-trend $p$-value & 0.210 & 0.857 & 0.235 & 0.537 \\
+\midrule
+\multicolumn{5}{l}{\textit{Panel B: Adding union $\times$ period FE}} \\
+\multicolumn{5}{l}{\textit{Post-treatment}} \\
+Connectivity $\times$ Post & -0.0015 & -0.0016 & -0.0014 & -0.0018 \\
+ & (0.0013) & (0.0012) & (0.0011) & (0.0012) \\
+\multicolumn{5}{l}{\textit{Pre-treatment placebo}} \\
+Connectivity $\times$ Pre & -0.0005 & -0.0002 & -0.0005 & -0.0001 \\
+ & (0.0006) & (0.0005) & (0.0005) & (0.0005) \\
+\midrule
+Baseline mean (period 2) & 1.0000 & 1.0000 & 1.0000 & 1.0000 \\
+Observations &        8,651 &        8,651 &        8,651 &        8,651 \\
+Establishments &        2,219 &        2,219 &        2,219 &        2,219 \\
+Pre-trend $p$-value & 0.393 & 0.741 & 0.370 & 0.786 \\
+\bottomrule
+\end{tabular}
+\begin{minipage}{\linewidth}
+\footnotesize\vspace{4pt}
+\textit{Notes:} This table reports estimates of within-firm CBA content stability on connectivity for treated firms. For each treated firm $i$ and CBA period $t$, the outcome is the similarity between firm $i$'s clause vector at period $t$ and firm $i$'s OWN clause vector at \textbf{cba\_period $= 2$}. Connectivity is \texttt{totalcontrol\_pw\_n}, the mirror of \texttt{totaltreat\_pw\_n}, scaled to 1 at the 90th percentile in the treated balanced panel at year 2009. The hypothesis: more connected treated firms drift further from their pre-treatment contracts after Sumula 277, so the connectivity-by-post coefficient should be negative. Panel A includes establishment, industry $\times$ period, mode-month $\times$ period, and microregion $\times$ period fixed effects, with pre-treatment quartile bins of the outcome, log employment, and total flows interacted with period. Panel B additionally absorbs union $\times$ period fixed effects. Standard errors clustered at the establishment level. $^{***}p<0.01$, $^{**}p<0.05$, $^{*}p<0.10$.
+\end{minipage}
+\end{table}

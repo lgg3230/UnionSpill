@@ -1,0 +1,72 @@
+\begin{table}[H]
+\centering
+\caption{Directional mechanism test (year FE only, firm-cluster SEs): treated vs.\ untreated convergence rates}
+\label{tab:mechanism_test_directional_yearonly_firmcluster}
+\scriptsize
+\begin{tabular}{lcccc}
+\toprule\toprule
+ & (1) & (2) & (3) & (4) \\
+ & \shortstack{Raw \\ alone} & \shortstack{Gap \\ alone} & \shortstack{Surplus \\ alone} & Joint \\
+\midrule
+\multicolumn{5}{l}{\textit{Panel A: Main sample. $\text{post} = \mathbf{1}\{cba\_period \geq 3\}$}} \\
+\midrule
+\multicolumn{5}{l}{$\text{raw\_gap} \times \text{post}$} \\
+$\quad$ Treated & $0.264^{***}$ &  &  &  \\
+ & $(0.031)$ &  &  &  \\
+$\quad$ Untreated & $0.133^{***}$ &  &  &  \\
+ & $(0.030)$ &  &  &  \\
+$\quad$ T = U $p$-val & $0.002^{***}$ &  &  &  \\
+\addlinespace[2pt]
+\multicolumn{5}{l}{$\text{gap} \times \text{post}$} \\
+$\quad$ Treated &  & $0.072^{***}$ &  & $0.046^{***}$ \\
+ &  & $(0.006)$ &  & $(0.006)$ \\
+$\quad$ Untreated &  & $0.066^{***}$ &  & $0.053^{***}$ \\
+ &  & $(0.007)$ &  & $(0.007)$ \\
+$\quad$ T = U $p$-val &  & $0.346$ &  & $0.251$ \\
+\addlinespace[2pt]
+\multicolumn{5}{l}{$\text{surplus} \times \text{post}$} \\
+$\quad$ Treated &  &  & $-0.419^{***}$ & $-0.417^{***}$ \\
+ &  &  & $(0.043)$ & $(0.043)$ \\
+$\quad$ Untreated &  &  & $-0.204^{***}$ & $-0.201^{***}$ \\
+ &  &  & $(0.058)$ & $(0.058)$ \\
+$\quad$ T = U $p$-val &  &  & $0.004^{***}$ & $0.004^{***}$ \\
+\addlinespace[2pt]
+$N$ (T) & 1,869,133 & 1,869,133 & 1,869,133 & 1,869,133 \\
+$N$ (U) & 1,153,283 & 1,153,283 & 1,153,283 & 1,153,283 \\
+\# firms (T) & 1,950 & 1,950 & 1,950 & 1,950 \\
+\# firms (U) & 1,262 & 1,262 & 1,262 & 1,262 \\
+\midrule
+\multicolumn{5}{l}{\textit{Panel B: Placebo (pre-period only). $\text{placebo} = \mathbf{1}\{cba\_period = 1\}$ (cba\_period 2 = base)}} \\
+\midrule
+\multicolumn{5}{l}{$\text{raw\_gap} \times \text{placebo}$} \\
+$\quad$ Treated & $-0.018^{*}$ &  &  &  \\
+ & $(0.011)$ &  &  &  \\
+$\quad$ Untreated & $0.030$ &  &  &  \\
+ & $(0.044)$ &  &  &  \\
+$\quad$ T = U $p$-val & $0.792$ &  &  &  \\
+\addlinespace[2pt]
+\multicolumn{5}{l}{$\text{gap} \times \text{placebo}$} \\
+$\quad$ Treated &  & $-0.002$ &  & $-0.001$ \\
+ &  & $(0.004)$ &  & $(0.003)$ \\
+$\quad$ Untreated &  & $0.013$ &  & $0.012$ \\
+ &  & $(0.010)$ &  & $(0.010)$ \\
+$\quad$ T = U $p$-val &  & $0.379$ &  & $0.385$ \\
+\addlinespace[2pt]
+\multicolumn{5}{l}{$\text{surplus} \times \text{placebo}$} \\
+$\quad$ Treated &  &  & $0.030^{*}$ & $0.030^{*}$ \\
+ &  &  & $(0.018)$ & $(0.018)$ \\
+$\quad$ Untreated &  &  & $-0.045$ & $-0.045$ \\
+ &  &  & $(0.083)$ & $(0.083)$ \\
+$\quad$ T = U $p$-val &  &  & $0.845$ & $0.845$ \\
+\addlinespace[2pt]
+$N$ (T) & 773,396 & 773,396 & 773,396 & 773,396 \\
+$N$ (U) & 494,562 & 494,562 & 494,562 & 494,562 \\
+\# firms (T) & 1,950 & 1,950 & 1,950 & 1,950 \\
+\# firms (U) & 1,262 & 1,262 & 1,262 & 1,262 \\
+\bottomrule
+\end{tabular}
+\begin{minipage}{\linewidth}
+\footnotesize\vspace{4pt}
+\textit{Notes:} This table compares the gap-filling response on the treated and untreated sides of the worker-flow network. The Treated row reports $\beta$ from $cl\_count_{ict} = \beta\,(X_{ic} \times T_t) + \alpha_{ic} + \alpha_{ft} + \varepsilon_{ict}$ on treated balanced-panel firms, where $\bar c_{-i,c}$ in $X_{ic}$ averages over $i$'s \textit{untreated} worker-flow partners. The Untreated row reports the mirror specification on untreated balanced-panel firms, where $\bar c_{-i,c}$ averages over $i$'s \textit{treated} worker-flow partners. The T = U $p$-value comes from a pooled regression that stacks both sides and includes a triple interaction $X_{ic} \times T_t \times \text{Treated}_i$; the $p$-value is the Wald test that the triple-interaction coefficient is zero, i.e.\ that both sides converge at the same rate. $X_{ic}$ is one of: $\text{gap}_{ic} = \max(0, \bar{c}_{-i,c} - c^{\text{pre}}_{ic})$, $\text{surplus}_{ic} = \max(0, c^{\text{pre}}_{ic} - \bar{c}_{-i,c})$, or $\text{raw\_gap}_{ic} = \bar{c}_{-i,c} - c^{\text{pre}}_{ic}$. Connectivity weights are the average of the four pre-treatment year-pair flow ratios in 2007--2011. $\alpha_{ic}$ is a firm $\times$ clause-type fixed effect. \# firms is the count of distinct \texttt{identificad8} (8-digit CNPJ root) in the regression sample. The placebo panel restricts to $cba\_period \in \{1, 2\}$ and replaces $T_t$ with $\mathbf{1}\{cba\_period = 1\}$ (cycle 2 is the base period). Standard errors clustered at the firm level (\texttt{identificad8}, the 8-digit CNPJ root). $^{***}p<0.01$, $^{**}p<0.05$, $^{*}p<0.10$.
+\end{minipage}
+\end{table}

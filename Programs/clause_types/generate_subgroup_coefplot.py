@@ -74,21 +74,18 @@ def load_coefs(csv_path):
     if not csv_path.exists():
         print(f"  WARNING: {csv_path.name} not found")
         return {}
-    df = pd.read_csv(csv_path, sep=None, engine="python", quotechar='"')
-    # normalise column names
-    df.columns = [c.strip().strip('"').lower() for c in df.columns]
-    # semicolon-delimited inside rows is already split if sep=None detected it
-    # fallback: re-parse
-    if "row_type" not in df.columns:
-        rows = []
-        with open(csv_path) as f:
-            next(f)
-            for line in f:
-                parts = line.strip().replace('"','').split(';')
-                if len(parts) >= 6:
-                    rows.append({"outcome": parts[2], "label": parts[3],
-                                 "row_type": parts[4], "value": parts[5]})
-        df = pd.DataFrame(rows)
+    rows = []
+    with open(csv_path) as f:
+        next(f)
+        for line in f:
+            parts = line.strip().replace('"', '').split(';')
+            if len(parts) >= 6:
+                rows.append({"outcome": parts[2], "label": parts[3],
+                             "row_type": parts[4], "value": parts[5]})
+            elif len(parts) == 5:
+                rows.append({"outcome": parts[2], "label": "",
+                             "row_type": parts[3], "value": parts[4]})
+    df = pd.DataFrame(rows)
     out = {}
     for _, row in df.iterrows():
         oc  = str(row.get("outcome","")).strip()

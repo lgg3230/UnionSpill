@@ -1,0 +1,68 @@
+\begin{table}[H]
+\centering
+\caption{Average-Treated Similarity: Continuous vs.\ Binary Connectivity}
+\scriptsize
+\setlength{\tabcolsep}{6pt}
+\begin{tabular}{lcccc}
+\hline\hline
+ & (1) & (2) & (3) & (4) \\
+ & \textbf{Cosine} & \textbf{Bray-Curtis} & \textbf{Total Var.} & \textbf{Ruzicka} \\
+\hline
+\multicolumn{5}{l}{\textit{Panel A: Continuous connectivity — baseline FE}} \\
+\multicolumn{5}{l}{\textit{Post-treatment}} \\
+Connectivity $\times$ Post & 0.0030*** & 0.0019** & 0.0019** & 0.0012** \\
+ & (0.0010) & (0.0008) & (0.0009) & (0.0005) \\
+\multicolumn{5}{l}{\textit{Pre-treatment placebo}} \\
+Connectivity $\times$ Pre & -0.0004 & -0.0001 & 0.0004 & 0.0001 \\
+ & (0.0012) & (0.0008) & (0.0010) & (0.0005) \\
+\hline
+Baseline mean (period 2) & 0.4383 & 0.2647 & 0.2697 & 0.1589 \\
+Observations &       19,693 &       19,693 &       19,693 &       19,693 \\
+Establishments &        4,142 &        4,142 &        4,142 &        4,142 \\
+Pre-trend $p$-value & 0.817 & 0.923 & 0.665 & 0.940 \\
+\hline
+\multicolumn{5}{l}{\textit{Panel B: Continuous connectivity — adding union $\times$ period FE}} \\
+\multicolumn{5}{l}{\textit{Post-treatment}} \\
+Connectivity $\times$ Post & 0.0000 & -0.0004 & -0.0003 & -0.0002 \\
+ & (0.0006) & (0.0004) & (0.0005) & (0.0003) \\
+\multicolumn{5}{l}{\textit{Pre-treatment placebo}} \\
+Connectivity $\times$ Pre & 0.0002 & 0.0002 & 0.0002 & 0.0002 \\
+ & (0.0009) & (0.0005) & (0.0006) & (0.0003) \\
+\hline
+Baseline mean (period 2) & 0.4390 & 0.2652 & 0.2710 & 0.1592 \\
+Observations &       17,746 &       17,746 &       17,746 &       17,746 \\
+Establishments &        3,871 &        3,871 &        3,871 &        3,871 \\
+Pre-trend $p$-value & 0.835 & 0.771 & 0.819 & 0.730 \\
+\hline
+\multicolumn{5}{l}{\textit{Panel C: Binary connectivity (pos\_conn dummy) — baseline FE}} \\
+\multicolumn{5}{l}{\textit{Post-treatment}} \\
+Connectivity $\times$ Post & 0.0045 & 0.0000 & 0.0019 & 0.0001 \\
+ & (0.0034) & (0.0026) & (0.0029) & (0.0017) \\
+\multicolumn{5}{l}{\textit{Pre-treatment placebo}} \\
+Connectivity $\times$ Pre & -0.0055 & -0.0026 & -0.0018 & -0.0018 \\
+ & (0.0039) & (0.0026) & (0.0033) & (0.0017) \\
+\hline
+Baseline mean (period 2) & 0.4383 & 0.2647 & 0.2697 & 0.1589 \\
+Observations &       19,693 &       19,693 &       19,693 &       19,693 \\
+Establishments &        4,142 &        4,142 &        4,142 &        4,142 \\
+Pre-trend $p$-value & 0.183 & 0.335 & 0.579 & 0.317 \\
+\hline
+\multicolumn{5}{l}{\textit{Panel D: Binary connectivity (pos\_conn dummy) — adding union $\times$ period FE}} \\
+\multicolumn{5}{l}{\textit{Post-treatment}} \\
+Connectivity $\times$ Post & 0.0003 & -0.0020 & -0.0011 & -0.0014 \\
+ & (0.0023) & (0.0016) & (0.0019) & (0.0011) \\
+\multicolumn{5}{l}{\textit{Pre-treatment placebo}} \\
+Connectivity $\times$ Pre & 0.0020 & 0.0021 & 0.0023 & 0.0013 \\
+ & (0.0028) & (0.0019) & (0.0022) & (0.0012) \\
+\hline
+Baseline mean (period 2) & 0.4390 & 0.2652 & 0.2710 & 0.1592 \\
+Observations &       17,746 &       17,746 &       17,746 &       17,746 \\
+Establishments &        3,871 &        3,871 &        3,871 &        3,871 \\
+Pre-trend $p$-value & 0.418 & 0.261 & 0.272 & 0.285 \\
+\hline\hline
+\end{tabular}
+\begin{minipage}{\linewidth}
+\smallskip
+\scriptsize\textit{Notes:} This table tests whether the average-treated similarity effect is driven by an extensive-margin level difference between firms with and without any pre-treatment worker flows to treated firms, rather than a dose-response relationship with connectivity intensity. Panels A--B use the continuous connectivity measure (total flows to treated firms per worker, scaled to 1 at the 90th percentile); Panels C--D replace it with a binary indicator equal to one if the firm has any positive pre-treatment flow to treated firms (\texttt{pos\_conn}). Panels B and D add union $\times$ period fixed effects. If Panels C and D replicate the pattern in A and B, the effect is an extensive-margin phenomenon absorbed by union identity rather than a firm-level dose-response. All specifications include establishment, industry $\times$ period, mode-month $\times$ period, and microregion $\times$ period fixed effects, with pre-treatment bins of the outcome, log employment, and total flows absorbed. Standard errors clustered at the establishment level. *\,$p<0.10$, **\,$p<0.05$, ***\,$p<0.01$.
+\end{minipage}
+\end{table}

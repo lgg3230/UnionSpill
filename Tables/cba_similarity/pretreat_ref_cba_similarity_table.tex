@@ -1,0 +1,43 @@
+\begin{table}[H]
+\centering
+\caption{CBA Content Similarity to Fixed Pre-Treatment Treated Reference}
+\label{tab:pretreat_ref_cba_similarity}
+\scriptsize
+\setlength{\tabcolsep}{8pt}
+\begin{tabular}{lcccc}
+\hline\hline
+ & (1) & (2) & (3) & (4) \\
+ & \textbf{Cosine} & \textbf{Bray-Curtis} & \textbf{Total Var.} & \textbf{Ruzicka} \\
+\hline
+\multicolumn{5}{l}{\textit{Panel A: Baseline}} \\
+\multicolumn{5}{l}{\textit{Post-treatment}} \\
+Connectivity $\times$ Post & -0.0034 & -0.0035* & -0.0042* & -0.0044** \\
+ & (0.0024) & (0.0021) & (0.0023) & (0.0021) \\
+\multicolumn{5}{l}{\textit{Pre-treatment placebo}} \\
+Connectivity $\times$ Pre & -0.0038 & -0.0029 & -0.0015 & -0.0035** \\
+ & (0.0023) & (0.0018) & (0.0019) & (0.0016) \\
+\hline
+Baseline mean (period 2) & 0.4156 & 0.3057 & 0.3034 & 0.2062 \\
+Observations &       10,001 &       10,001 &       10,001 &       10,001 \\
+Establishments &        2,142 &        2,142 &        2,142 &        2,142 \\
+Pre-trend $p$-value & 0.105 & 0.111 & 0.428 & 0.031 \\
+\hline
+\multicolumn{5}{l}{\textit{Panel B: Adding union $\times$ period FE}} \\
+\multicolumn{5}{l}{\textit{Post-treatment}} \\
+Connectivity $\times$ Post & -0.0004 & -0.0011 & -0.0015 & -0.0008 \\
+ & (0.0023) & (0.0017) & (0.0018) & (0.0015) \\
+\multicolumn{5}{l}{\textit{Pre-treatment placebo}} \\
+Connectivity $\times$ Pre & -0.0007 & -0.0011 & -0.0007 & -0.0014 \\
+ & (0.0028) & (0.0019) & (0.0023) & (0.0015) \\
+\hline
+Baseline mean (period 2) & 0.4179 & 0.3058 & 0.3041 & 0.2066 \\
+Observations &        8,151 &        8,151 &        8,151 &        8,151 \\
+Establishments &        1,881 &        1,881 &        1,881 &        1,881 \\
+Pre-trend $p$-value & 0.864 & 0.638 & 0.832 & 0.417 \\
+\hline\hline
+\end{tabular}
+\begin{minipage}{\linewidth}
+\smallskip
+\scriptsize\textit{Notes:} This table reports spillover-effect estimates of CBA content similarity on connectivity, where the reference vector is \emph{fixed} at the partners' \textit{pre-Sumula 277} contracts. For each untreated firm $i$ and CBA period $t$, the outcome is the similarity between firm $i$'s clause vector at period $t$ and a flow-weighted average of the clause vectors of treated firms with pre-treatment worker flows to $i$, evaluated at \textbf{cba\_period $= 2$} (the last pre-Sumula 277 negotiation cycle). Weights are the orientation-corrected per-worker bilateral connectivity, averaged across the four 2007--2011 year-pairs, with firm $i$'s own average employment as denominator each year-pair. Only untreated firms with at least one treated counterpart with period-2 clauses enter the sample. Connectivity is scaled to 1 at the 90th percentile of the spillover sample at year 2009. Panel A includes establishment, industry $\times$ period, mode-month $\times$ period, and microregion $\times$ period fixed effects, with pre-treatment quartile bins of the outcome, log employment, and total flows interacted with period. Panel B additionally absorbs union $\times$ period fixed effects. Standard errors clustered at the establishment level. *\,$p<0.10$, **\,$p<0.05$, ***\,$p<0.01$.
+\end{minipage}
+\end{table}
