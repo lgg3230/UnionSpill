@@ -1,0 +1,48 @@
+\begin{table}[H]
+\centering
+\caption{A/B/C Decomposition: Log CBA Content Similarity to Treated Partners}
+\label{tab:abc_decomposition_ln_cba_similarity}
+\scriptsize
+\setlength{\tabcolsep}{8pt}
+\begin{tabular}{lcccc}
+\hline\hline
+ & (1) & (2) & (3) & (4) \\
+ & \textbf{Cosine} & \textbf{Bray-Curtis} & \textbf{Total Var.} & \textbf{Ruzicka} \\
+\hline
+\multicolumn{5}{l}{\textit{Panel A: Both moving  ---  $S(u_{i,t},\, T_{i,t})$}} \\
+Connectivity $\times$ Post & 0.0281* & 0.0287** & 0.0950 & 0.0334** \\
+ & (0.0157) & (0.0135) & (0.0702) & (0.0151) \\
+Connectivity $\times$ Pre & -0.0242** & -0.0203* & 0.0370 & -0.0231* \\
+ & (0.0118) & (0.0112) & (0.1141) & (0.0124) \\
+Baseline log-mean (period 2) & -1.0582 & -1.3929 & -2.0225 & -1.8891 \\
+Observations &        6,351 &        6,351 &        6,547 &        6,351 \\
+Establishments &        1,543 &        1,543 &        1,582 &        1,543 \\
+Pre-trend $p$-value & 0.043 & 0.089 & 0.810 & 0.079 \\
+\hline
+\multicolumn{5}{l}{\textit{Panel B: Focal frozen at $p_2$, partners moving  ---  $S(u_{i,2},\, T_{i,t})$}} \\
+Connectivity $\times$ Post & 0.0173 & 0.0186* & -0.0148 & 0.0209* \\
+ & (0.0131) & (0.0102) & (0.0603) & (0.0120) \\
+Connectivity $\times$ Pre & -0.0249** & -0.0157* & -0.0354 & -0.0181* \\
+ & (0.0104) & (0.0092) & (0.0511) & (0.0106) \\
+Baseline log-mean (period 2) & -1.0738 & -1.4131 & -2.1084 & -1.9130 \\
+Observations &        6,434 &        6,434 &        6,592 &        6,434 \\
+Establishments &        1,549 &        1,549 &        1,588 &        1,549 \\
+Pre-trend $p$-value & 0.008 & 0.069 & 0.508 & 0.068 \\
+\hline
+\multicolumn{5}{l}{\textit{Panel C: Focal moving, partners frozen at $p_2$  ---  $S(u_{i,t},\, T_{i,2})$}} \\
+Connectivity $\times$ Post & -0.0079 & 0.0004 & 0.0835 & -0.0014 \\
+ & (0.0117) & (0.0120) & (0.0703) & (0.0135) \\
+Connectivity $\times$ Pre & -0.0085 & -0.0103 & 0.0927 & -0.0127 \\
+ & (0.0083) & (0.0087) & (0.1109) & (0.0098) \\
+Baseline log-mean (period 2) & -1.0630 & -1.3989 & -2.1513 & -1.8957 \\
+Observations &        6,402 &        6,402 &        6,587 &        6,402 \\
+Establishments &        1,535 &        1,535 &        1,578 &        1,535 \\
+Pre-trend $p$-value & 0.223 & 0.198 & 0.435 & 0.161 \\
+\hline
+\hline\hline
+\end{tabular}
+\begin{minipage}{\linewidth}
+\smallskip
+\scriptsize\textit{Notes:} This table decomposes the connectivity-driven approximation of untreated firms' CBAs toward their treated counterparts' CBAs into the contributions of focal-side movement (Panel C), partner-side movement (Panel B), and the combined movement (Panel A). Each cell reports the coefficient on connectivity $\times$ post (or pre) from a separate spillover regression of the indicated log similarity measure on connectivity, in a sample of untreated firms with at least one treated counterpart sharing pre-treatment worker flows. All three exercises use the \emph{uncorrected} per-worker bilateral connectivity (\texttt{bilateral\_conn\_pw}) as the weighting kernel; connectivity is scaled to 1 at the 90th percentile of the spillover sample at year 2009. All regressions absorb establishment, industry $\times$ period, mode-month $\times$ period, and microregion $\times$ period fixed effects, and include pre-treatment quartile bins of the outcome, log employment, and total flows interacted with period. Standard errors clustered at the establishment level. *\,$p<0.10$, **\,$p<0.05$, ***\,$p<0.01$.
+\end{minipage}
+\end{table}

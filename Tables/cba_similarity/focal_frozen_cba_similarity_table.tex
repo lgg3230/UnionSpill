@@ -1,0 +1,43 @@
+\begin{table}[H]
+\centering
+\caption{CBA Content Similarity: Focal Firm Frozen at Period 2, Treated Partners Moving}
+\label{tab:focal_frozen_cba_similarity}
+\scriptsize
+\setlength{\tabcolsep}{8pt}
+\begin{tabular}{lcccc}
+\hline\hline
+ & (1) & (2) & (3) & (4) \\
+ & \textbf{Cosine} & \textbf{Bray-Curtis} & \textbf{Total Var.} & \textbf{Ruzicka} \\
+\hline
+\multicolumn{5}{l}{\textit{Panel A: Baseline}} \\
+\multicolumn{5}{l}{\textit{Post-treatment}} \\
+Connectivity $\times$ Post & 0.0044 & 0.0012 & 0.0023 & -0.0006 \\
+ & (0.0040) & (0.0030) & (0.0033) & (0.0030) \\
+\multicolumn{5}{l}{\textit{Pre-treatment placebo}} \\
+Connectivity $\times$ Pre & -0.0056* & -0.0023 & -0.0034 & -0.0031 \\
+ & (0.0029) & (0.0023) & (0.0024) & (0.0021) \\
+\hline
+Baseline mean (period 2) & 0.4135 & 0.3139 & 0.3122 & 0.2166 \\
+Observations &        6,943 &        6,943 &        6,943 &        6,943 \\
+Establishments &        1,652 &        1,652 &        1,652 &        1,652 \\
+Pre-trend $p$-value & 0.037 & 0.248 & 0.122 & 0.104 \\
+\hline
+\multicolumn{5}{l}{\textit{Panel B: Adding union $\times$ period FE}} \\
+\multicolumn{5}{l}{\textit{Post-treatment}} \\
+Connectivity $\times$ Post & 0.0081 & 0.0051 & 0.0065 & 0.0036 \\
+ & (0.0054) & (0.0039) & (0.0043) & (0.0038) \\
+\multicolumn{5}{l}{\textit{Pre-treatment placebo}} \\
+Connectivity $\times$ Pre & -0.0019 & 0.0006 & -0.0004 & -0.0007 \\
+ & (0.0037) & (0.0030) & (0.0031) & (0.0027) \\
+\hline
+Baseline mean (period 2) & 0.4208 & 0.3192 & 0.3187 & 0.2222 \\
+Observations &        5,455 &        5,455 &        5,455 &        5,455 \\
+Establishments &        1,415 &        1,415 &        1,415 &        1,415 \\
+Pre-trend $p$-value & 0.452 & 0.955 & 0.783 & 0.688 \\
+\hline\hline
+\end{tabular}
+\begin{minipage}{\linewidth}
+\smallskip
+\scriptsize\textit{Notes:} This table reports Exercise B of the A/B/C decomposition: the focal (spillover) firm's clause vector is \emph{frozen} at \textbf{cba\_period $= 2$} (the last pre-Sumula 277 negotiation cycle), while the treated-partner reference \emph{moves} with the current cba\_period $t$. For each untreated firm $i$ and period $t$, the outcome measures similarity between $u_{i,2}$ (firm $i$'s clauses at period 2) and $T_{i,t} = \sum_k w_{ik} x_{k,t} / \sum_k w_{ik}$, the flow-weighted average of treated partners' clauses at period $t$. Weights $w_{ik}$ are the uncorrected per-worker bilateral connectivity (\texttt{bilateral\_conn\_pw}), identical to Exercises A and C so that coefficients are directly comparable across the three decomposition pieces. Only untreated firms with period-2 clauses and at least one treated counterpart with positive flow weight enter the sample. Connectivity is scaled to 1 at the 90th percentile of the spillover sample at year 2009. Panel A includes establishment, industry $\times$ period, mode-month $\times$ period, and microregion $\times$ period fixed effects, with pre-treatment quartile bins of the outcome, log employment, and total flows interacted with period. Panel B additionally absorbs union $\times$ period fixed effects. Standard errors clustered at the establishment level. *\,$p<0.10$, **\,$p<0.05$, ***\,$p<0.01$.
+\end{minipage}
+\end{table}

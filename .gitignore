@@ -183,3 +183,6 @@ Graphs/plots jul 31/*.gph
 # ----- Nested repo (old cluster sync copy — not part of this repo) -----
 UnionSpill/
 UnionSpill-paper/
+
+# ----- Packaged standalone archive (exceeds GitHub 100MB limit; dir itself is tracked) -----
+layer_connectivity_standalone.zip

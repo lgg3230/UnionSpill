@@ -26,6 +26,74 @@ _OCC4_SQL = """
         ELSE NULL
     END"""
 
+
+def _occ5_sara_pandas(s):
+    """Map ocup2002 to Sara Moreira's 5-layer occupation partition.
+
+    Source: Programs/layer_connectivity/sara_files/000_clean_rais.do
+            + collapse in 010_collapse_firm.do (which merges Sara's layers 1+2
+            into a single managers bin).
+
+    Bins (using first digit d1 and second digit d2):
+        '1_mgr'  : managers — d2 in {11,12,13,14}  (Sara layers 1 + 2)
+        '2_pro'  : professionals — d1 == 2          (Sara layer 3)
+        '3_bur'  : bureaucrats — d1 in [4,9] AND 3rd digit == 0  (Sara layer 4)
+        '4_tech' : technicians — d1 == 3            (Sara layer 5)
+        '5_low'  : low-skill — d1 in [4,9] AND 3rd digit != 0    (Sara layer 6)
+    """
+    v = pd.to_numeric(s, errors="coerce")
+    d1 = (v // 100000).astype("Int64")
+    d2 = (v // 10000).astype("Int64")
+    d3 = ((v // 1000) % 10).astype("Int64")
+    return np.select(
+        [
+            d2.isin([11, 12, 13, 14]),
+            d1 == 2,
+            d1.isin([4, 5, 6, 7, 8, 9]) & (d3 == 0),
+            d1 == 3,
+            d1.isin([4, 5, 6, 7, 8, 9]),
+        ],
+        ["1_mgr", "2_pro", "3_bur", "4_tech", "5_low"],
+        default="nan",
+    )
+
+
+_OCC5_SARA_SQL = """
+    CASE
+        WHEN FLOOR(ocup2002 / 10000) IN (11, 12, 13, 14)              THEN '1_mgr'
+        WHEN FLOOR(ocup2002 / 100000) = 2                              THEN '2_pro'
+        WHEN FLOOR(ocup2002 / 100000) BETWEEN 4 AND 9
+             AND MOD(FLOOR(ocup2002 / 1000), 10) = 0                   THEN '3_bur'
+        WHEN FLOOR(ocup2002 / 100000) = 3                              THEN '4_tech'
+        WHEN FLOOR(ocup2002 / 100000) BETWEEN 4 AND 9                  THEN '5_low'
+        ELSE NULL
+    END"""
+
+
+def _ten2_pandas(s):
+    """Map tempempr (tenure in months) to binary tenure layer at 12 months.
+
+    Cutoff at 12 months based on a Lagos-sample diagnostic (May 2026): the
+    pooled tenure distribution is monotonically decaying, ~23% of workers
+    fall below 12 months, and firms vary widely in their share of these
+    'short-tenure' workers (within-firm p10=6%, p90=48%).
+    """
+    v = pd.to_numeric(s, errors="coerce")
+    return np.select(
+        [v < 12, v >= 12],
+        ["lt12mo", "ge12mo"],
+        default="nan",
+    )
+
+
+_TEN2_SQL = """
+    CASE
+        WHEN tempempr <  12 THEN 'lt12mo'
+        WHEN tempempr >= 12 THEN 'ge12mo'
+        ELSE NULL
+    END"""
+
+
 LAYER_DEFS = {
     "occ3": {
         "description": "3-digit occupation (floor(ocup2002 / 10))",
@@ -66,6 +134,24 @@ LAYER_DEFS = {
         "raw_cols":    ["ocup2002"],
         "compute":     None,   # derived from occ4; run 01e_remap_occ2.py instead of 01
         "parquet_col": None,
+    },
+    "occ5_sara": {
+        "description": ("5-bin occupation following Sara Moreira's CBO2002 partition "
+                        "(managers 11-14 / professionals 1d=2 / bureaucrats 4-9+3rd=0 / "
+                        "technicians 1d=3 / low-skill 4-9 residual)"),
+        "raw_cols":    ["ocup2002"],
+        "compute":     None,
+        "parquet_col": None,
+        "sql_layer_expr":  _OCC5_SARA_SQL,
+        "pandas_compute":  _occ5_sara_pandas,
+    },
+    "ten2": {
+        "description": "Binary tenure: lt12mo (<1yr) / ge12mo (>=1yr), computed from tempempr",
+        "raw_cols":    ["tempempr"],
+        "compute":     None,
+        "parquet_col": None,
+        "sql_layer_expr":  _TEN2_SQL,
+        "pandas_compute":  _ten2_pandas,
     },
 }
 

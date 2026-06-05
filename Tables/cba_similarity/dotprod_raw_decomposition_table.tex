@@ -1,0 +1,38 @@
+\begin{table}[H]
+\centering
+\caption{Bilinear A/B/C/Cross Decomposition: Raw Clause Counts (Pretrend-Anchored)}
+\label{tab:dotprod_raw_decomposition}
+\scriptsize
+\setlength{\tabcolsep}{6pt}
+\begin{tabular}{lccccc}
+\hline\hline
+ & (1) & (2) & (3) & (4) & (5) \\
+ & \textbf{$A$} & \textbf{$B$} & \textbf{$C$} & \textbf{$\text{cross}$} & \textbf{$B{+}C{+}\text{cross}$} \\
+\hline
+\multicolumn{6}{l}{\textit{Panel A: Baseline FE \quad (identity residual $= +0.00e+00$)}} \\
+Connectivity $\times$ Post & 0.4312 & 0.0136 & -0.5119 & 0.9295*** & 0.4312 \\
+ & (0.4999) & (0.4339) & (0.3114) & (0.3316) & (0.6286)$^\dagger$ \\
+Connectivity $\times$ Pre & 0.3497 & 0.1237 & 0.2259 & 0.0000 & 0.3497 \\
+ & (0.3624) & (0.1795) & (0.3245) & (0.0000) & (0.3708)$^\dagger$ \\
+Baseline mean (period 2) & 25.1578 & 24.4926 & 24.3392 & 0.2301 & --- \\
+Observations & 6,943 & 6,943 & 6,943 & 6,943 & --- \\
+Establishments & 1,652 & 1,652 & 1,652 & 1,652 & --- \\
+Pre-trend $p$-value & 0.431 & 0.713 & 0.563 & 0.177 & --- \\
+\hline
+\multicolumn{6}{l}{\textit{Panel B: Adding union $\times$ period FE \quad (identity residual $= -2.22e-16$)}} \\
+Connectivity $\times$ Post & 1.7967** & 1.0712 & 0.1378 & 0.5876 & 1.7967 \\
+ & (0.8619) & (0.7205) & (0.4110) & (0.4133) & (0.9267)$^\dagger$ \\
+Connectivity $\times$ Pre & -0.5391 & 0.0181 & -0.5572 & 0.0000 & -0.5391 \\
+ & (0.7491) & (0.2341) & (0.7326) & (0.0000) & (0.7690)$^\dagger$ \\
+Baseline mean (period 2) & 26.0866 & 25.5318 & 25.2357 & 0.2338 & --- \\
+Observations & 5,455 & 5,455 & 5,455 & 5,455 & --- \\
+Establishments & 1,415 & 1,415 & 1,415 & 1,415 & --- \\
+Pre-trend $p$-value & 0.396 & 0.735 & 0.419 & 0.390 & --- \\
+\hline
+\hline\hline
+\end{tabular}
+\begin{minipage}{\linewidth}
+\smallskip
+\scriptsize\textit{Notes:} This table reports the bilinear A/B/C/cross decomposition of the connectivity-driven approximation of untreated firms' CBAs toward their treated counterparts' CBAs, using the \emph{raw clause counts} as the outcome. For each untreated firm $i$ and CBA period $t$, the outcomes are: $A = u_t \cdot T_t$ (both moving); $B = \bar u_i \cdot T_t$ (focal anchored at pre-treatment average); $C = u_t \cdot \bar T_i$ (partners anchored at pre-treatment average); $\text{cross} = (u_t - \bar u_i) \cdot (T_t - \bar T_i)$ (interaction of focal and partner shifts around their pre-treatment anchors). Anchors are firm-specific averages over $t \in \{1, 2\}$; firm fixed effects absorb the firm-specific constant $\bar u_i \cdot \bar T_i$ (resp.\ $\bar s_{u,i} \cdot \bar s_{T,i}$), so by linearity of OLS the identity $\hat\beta_A = \hat\beta_B + \hat\beta_C + \hat\beta_{\text{cross}}$ holds exactly; the residual is reported per panel. The $B{+}C{+}\text{cross}$ column reports the algebraic sum of the three single-outcome coefficients (and the root-sum-of-squared SEs, $^\dagger$, which is an upper bound under perfect positive correlation; the true SE of the sum is the SE of the $A$ column). Connectivity weights are uncorrected per-worker bilateral flows (\texttt{bilateral\_conn\_pw}), identical to Exercises A/B/C. Connectivity is scaled to 1 at the 90th percentile of the spillover sample at year 2009. Pre regression is the placebo on the within-pre-window contrast ($\text{cba\_period} \in \{1,2\}$); for the $\text{cross}$ outcome this regression is mechanically degenerate because $(u_t - \bar u_i)(T_t - \bar T_i)$ is constant within firm across the two pre-periods (the symmetric anchor implies $u_1 - \bar u_i = -(u_2 - \bar u_i)$), so we report $\beta_{\text{cross}}^{\text{pre}} \equiv 0$. Sample restriction: untreated firms in the lagos balanced spillover panel. Panel A includes establishment, industry $\times$ period, mode-month $\times$ period, microregion $\times$ period FE; Panel B adds union $\times$ period. Standard errors clustered at the establishment level. *\,$p<0.10$, **\,$p<0.05$, ***\,$p<0.01$.
+\end{minipage}
+\end{table}

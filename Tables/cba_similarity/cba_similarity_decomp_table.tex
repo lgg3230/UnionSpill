@@ -1,0 +1,38 @@
+\begin{table}[H]
+\centering
+\caption{Ordered Decomposition of CBA Similarity: Who Moved?}
+\scriptsize
+\setlength{\tabcolsep}{8pt}
+\begin{tabular}{lcccc}
+\hline\hline
+ & (1) & (2) & (3) & (4) \\
+ & \textbf{Cosine} & \textbf{Bray-Curtis} & \textbf{Total Var.} & \textbf{Ruzicka} \\
+\hline
+\multicolumn{5}{l}{\textit{UntreatedMove}} \\
+\quad Connectivity $\times$ Post & -0.0000 & -0.0012 & -0.0015 & -0.0032 \\
+\quad & (0.0030) & (0.0027) & (0.0028) & (0.0026) \\
+\quad Connectivity $\times$ Pre  & -0.0026 & -0.0028 & -0.0013 & -0.0038* \\
+\quad & (0.0028) & (0.0021) & (0.0021) & (0.0019) \\
+\hline
+Baseline mean (period 2) & 0.4135 & 0.3139 & 0.3122 & 0.2166 \\
+Observations           & 6,943 & 6,943 & 6,943 & 6,943 \\
+Establishments         & 1,652 & 1,652 & 1,652 & 1,652 \\
+Pre-trend $p$-value    & 0.325 & 0.180 & 0.516 & 0.051 \\
+\hline
+\multicolumn{5}{l}{\textit{TreatedMove}} \\
+\quad Connectivity $\times$ Post & 0.0037 & 0.0011 & 0.0022 & -0.0007 \\
+\quad & (0.0040) & (0.0030) & (0.0032) & (0.0030) \\
+\quad Connectivity $\times$ Pre  & -0.0050* & -0.0022 & -0.0033 & -0.0032 \\
+\quad & (0.0029) & (0.0022) & (0.0024) & (0.0021) \\
+\hline
+Baseline mean (period 2) & 0.4135 & 0.3139 & 0.3122 & 0.2166 \\
+Observations           & 6,943 & 6,943 & 6,943 & 6,943 \\
+Establishments         & 1,652 & 1,652 & 1,652 & 1,652 \\
+Pre-trend $p$-value    & 0.051 & 0.259 & 0.123 & 0.094 \\
+\hline\hline
+\end{tabular}
+\begin{minipage}{\linewidth}
+\smallskip
+\scriptsize\textit{Notes:} This table decomposes the change in CBA-content similarity into two ordered counterfactuals. For each untreated focal firm $i$ and CBA period $t$, let $u_{it}$ be its clause vector, $T_{it}$ the flow-weighted average clause vector of connected treated partners with a CBA at $t$, and $u_{i2}$ and $T_{i2}$ the corresponding period-2 anchors. \textsc{UntreatedMove} regresses $S(u_{it}, T_{i2})$ on connectivity $\times$ post, holding the treated reference frozen at its last pre-reform value. \textsc{TreatedMove} regresses $S(u_{i2}, T_{it})$, holding the focal firm frozen at its last pre-reform CBA. With establishment fixed effects the constant $S(u_{i2}, T_{i2})$ is absorbed. All regressions use the spillover sample (lagos balanced panel, untreated focal with at least one treated partner having a CBA in both period $t$ and period $2$) and include establishment, industry $\times$ period, mode-month $\times$ period, microregion $\times$ period, and pre-treatment outcome/employment/total-flow quartile fixed effects. Connectivity is scaled to 1 at the 90th percentile of the spillover sample. Standard errors clustered at the establishment level. *\,$p<0.10$, **\,$p<0.05$, ***\,$p<0.01$.
+\end{minipage}
+\end{table}

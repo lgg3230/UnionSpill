@@ -1,0 +1,38 @@
+\begin{table}[H]
+\centering
+\caption{Ordered Decomposition of CBA Similarity: Average-Treated Reference}
+\scriptsize
+\setlength{\tabcolsep}{8pt}
+\begin{tabular}{lcccc}
+\hline\hline
+ & (1) & (2) & (3) & (4) \\
+ & \textbf{Cosine} & \textbf{Bray-Curtis} & \textbf{Total Var.} & \textbf{Ruzicka} \\
+\hline
+\multicolumn{5}{l}{\textit{UntreatedMove}} \\
+\quad Connectivity $\times$ Post & 0.0027** & 0.0013* & 0.0018** & 0.0009* \\
+\quad & (0.0011) & (0.0007) & (0.0009) & (0.0005) \\
+\quad Connectivity $\times$ Pre  & -0.0002 & 0.0001 & 0.0003 & 0.0001 \\
+\quad & (0.0012) & (0.0008) & (0.0010) & (0.0006) \\
+\hline
+Baseline mean (period 2) & 0.4383 & 0.2647 & 0.2697 & 0.1589 \\
+Observations           & 19,693 & 19,693 & 19,693 & 19,693 \\
+Establishments         & 4,142 & 4,142 & 4,142 & 4,142 \\
+Pre-trend $p$-value    & 0.953 & 0.924 & 0.713 & 0.794 \\
+\hline
+\multicolumn{5}{l}{\textit{TreatedMove}} \\
+\quad Connectivity $\times$ Post & 0.0004 & 0.0003 & 0.0001 & 0.0002 \\
+\quad & (0.0004) & (0.0002) & (0.0002) & (0.0001) \\
+\quad Connectivity $\times$ Pre  & 0.0004 & 0.0000 & -0.0000 & 0.0000 \\
+\quad & (0.0004) & (0.0002) & (0.0001) & (0.0001) \\
+\hline
+Baseline mean (period 2) & 0.4383 & 0.2647 & 0.2697 & 0.1589 \\
+Observations           & 19,693 & 19,693 & 19,693 & 19,693 \\
+Establishments         & 4,142 & 4,142 & 4,142 & 4,142 \\
+Pre-trend $p$-value    & 0.408 & 0.983 & 0.927 & 0.939 \\
+\hline\hline
+\end{tabular}
+\begin{minipage}{\linewidth}
+\smallskip
+\scriptsize\textit{Notes:} Average-reference counterpart of the ordered decomposition table. $T_t$ is the simple unweighted mean of clause vectors across treated firms with a CBA at $t$, $T_2$ is the same at period 2. \textsc{UntreatedMove} regresses $S(u_{it}, T_2)$ on connectivity $\times$ post; \textsc{TreatedMove} regresses $S(u_{i2}, T_t)$. Because $T_t$ does not depend on $i$, the \textsc{TreatedMove} coefficient identifies whether the universal shift in the avg treated CBA happens to align with high-connectivity firms' period-2 profiles; a near-zero coefficient is expected by construction and is best read as a sanity check. Sample is the full untreated lagos balanced panel with a CBA at period 2; fixed effects include establishment, industry $\times$ period, mode-month $\times$ period, microregion $\times$ period, and pre-treatment outcome/employment/total-flow quartile fixed effects. Standard errors clustered at the establishment level. *\,$p<0.10$, **\,$p<0.05$, ***\,$p<0.01$.
+\end{minipage}
+\end{table}

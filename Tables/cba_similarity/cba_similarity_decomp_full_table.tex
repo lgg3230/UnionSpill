@@ -1,0 +1,55 @@
+\begin{table}[H]
+\centering
+\caption{Ordered Decomposition: Full Five-Outcome Breakdown}
+\scriptsize
+\setlength{\tabcolsep}{8pt}
+\begin{tabular}{lcccc}
+\hline\hline
+ & (1) & (2) & (3) & (4) \\
+ & \textbf{Cosine} & \textbf{Bray-Curtis} & \textbf{Total Var.} & \textbf{Ruzicka} \\
+\hline
+\multicolumn{5}{l}{\textit{$\Delta S$}} \\
+\quad Connectivity $\times$ Post & 0.0133*** & 0.0083*** & 0.0102*** & 0.0062** \\
+\quad & (0.0039) & (0.0028) & (0.0031) & (0.0025) \\
+\quad Connectivity $\times$ Pre  & -0.0048 & -0.0033 & -0.0030 & -0.0039* \\
+\quad & (0.0030) & (0.0023) & (0.0024) & (0.0020) \\
+\hline
+\multicolumn{5}{l}{\textit{UntreatedMove}} \\
+\quad Connectivity $\times$ Post & -0.0000 & -0.0012 & -0.0015 & -0.0032 \\
+\quad & (0.0030) & (0.0027) & (0.0028) & (0.0026) \\
+\quad Connectivity $\times$ Pre  & -0.0026 & -0.0028 & -0.0013 & -0.0038* \\
+\quad & (0.0028) & (0.0021) & (0.0021) & (0.0019) \\
+\hline
+\multicolumn{5}{l}{\textit{TreatedMove}} \\
+\quad Connectivity $\times$ Post & 0.0037 & 0.0011 & 0.0022 & -0.0007 \\
+\quad & (0.0040) & (0.0030) & (0.0032) & (0.0030) \\
+\quad Connectivity $\times$ Pre  & -0.0050* & -0.0022 & -0.0033 & -0.0032 \\
+\quad & (0.0029) & (0.0022) & (0.0024) & (0.0021) \\
+\hline
+\multicolumn{5}{l}{\textit{TreatedAdditional}} \\
+\quad Connectivity $\times$ Post & 0.0133*** & 0.0095*** & 0.0117*** & 0.0094*** \\
+\quad & (0.0041) & (0.0030) & (0.0035) & (0.0029) \\
+\quad Connectivity $\times$ Pre  & -0.0022 & -0.0005 & -0.0018 & -0.0001 \\
+\quad & (0.0025) & (0.0021) & (0.0020) & (0.0020) \\
+\hline
+\multicolumn{5}{l}{\textit{UntreatedAdditional}} \\
+\quad Connectivity $\times$ Post & 0.0096*** & 0.0072*** & 0.0081*** & 0.0069*** \\
+\quad & (0.0033) & (0.0026) & (0.0026) & (0.0025) \\
+\quad Connectivity $\times$ Pre  & 0.0002 & -0.0011 & 0.0003 & -0.0007 \\
+\quad & (0.0026) & (0.0020) & (0.0022) & (0.0019) \\
+\hline
+Baseline mean (period 2) & -0.0000 & -0.0000 & -0.0000 & 0.0000 \\
+Observations           & 6,943 & 6,943 & 6,943 & 6,943 \\
+Establishments         & 1,652 & 1,652 & 1,652 & 1,652 \\
+Pre-trend $p$-value    & 0.882 & 0.659 & 0.833 & 0.786 \\
+\hline
+\multicolumn{5}{l}{\textit{Coefficient identity (decomposition residuals)}} \\
+\quad $\hat\beta_{\Delta S} - \hat\beta_{\text{UM}} - \hat\beta_{\text{TA}}$ & 0.00e+00 & 0.00e+00 & 0.00e+00 & 0.00e+00 \\
+\quad $\hat\beta_{\Delta S} - \hat\beta_{\text{TM}} - \hat\beta_{\text{UA}}$ & 0.00e+00 & 0.00e+00 & -1.00e-04 & 0.00e+00 \\
+\hline\hline
+\end{tabular}
+\begin{minipage}{\linewidth}
+\smallskip
+\scriptsize\textit{Notes:} This appendix table reports all five outcomes in the ordered decomposition of the CBA-similarity change. $\Delta S$ is the headline similarity $S(u_{it}, T_{it})$, with the period-2 constant $S(u_{i2}, T_{i2})$ absorbed by establishment fixed effects. \textsc{UntreatedMove} ($S(u_{it}, T_{i2})$) and \textsc{TreatedMove} ($S(u_{i2}, T_{it})$) hold one side fixed at the pre-reform anchor. \textsc{TreatedAdditional} $\equiv \Delta S - \textsc{UntreatedMove}$ and \textsc{UntreatedAdditional} $\equiv \Delta S - \textsc{TreatedMove}$ complete the two ordered decompositions algebraically. Because OLS is linear and all five regressions share the same sample and fixed-effect structure, $\hat\beta_{\Delta S} = \hat\beta_{\text{UM}} + \hat\beta_{\text{TA}} = \hat\beta_{\text{TM}} + \hat\beta_{\text{UA}}$ holds to machine precision; the last two rows verify this. Standard errors clustered at the establishment level. *\,$p<0.10$, **\,$p<0.05$, ***\,$p<0.01$.
+\end{minipage}
+\end{table}

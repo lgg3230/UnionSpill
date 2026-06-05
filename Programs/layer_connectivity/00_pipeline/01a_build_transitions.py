@@ -178,6 +178,8 @@ def load_layer_from_raw_rais(year: int, layerdef: dict,
 
     cols_needed = ["PIS", "identificad", "horascontr", "remdezr", "tempempr",
                    "empem3112", raw_col]
+    # Dedupe in case raw_col is already in the base list (e.g. tempempr for ten2).
+    cols_needed = list(dict.fromkeys(cols_needed))
 
     if os.path.exists(parquet_path):
         print(f"  Loading raw RAIS {year} from parquet for layer variable '{raw_col}'...")

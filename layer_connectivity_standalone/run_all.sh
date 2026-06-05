@@ -6,7 +6,7 @@
 set -euo pipefail
 
 STATA="${STATA:-stata-mp}"
-PYTHON="${PYTHON:-/home/lgg3230/.conda/envs/venv_python312/bin/python}"
+PYTHON="${PYTHON:-python3}"
 ROOT="$(cd "$(dirname "$0")" && pwd)"
 
 echo "=== Step 1: Stata regressions ==="

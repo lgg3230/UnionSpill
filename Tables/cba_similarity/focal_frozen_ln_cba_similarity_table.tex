@@ -1,0 +1,43 @@
+\begin{table}[H]
+\centering
+\caption{Log CBA Content Similarity: Focal Firm Frozen at Period 2, Treated Partners Moving}
+\label{tab:focal_frozen_ln_cba_similarity}
+\scriptsize
+\setlength{\tabcolsep}{8pt}
+\begin{tabular}{lcccc}
+\hline\hline
+ & (1) & (2) & (3) & (4) \\
+ & \textbf{Cosine} & \textbf{Bray-Curtis} & \textbf{Total Var.} & \textbf{Ruzicka} \\
+\hline
+\multicolumn{5}{l}{\textit{Panel A: Baseline}} \\
+\multicolumn{5}{l}{\textit{Post-treatment}} \\
+Connectivity $\times$ Post & 0.0173 & 0.0186* & -0.0148 & 0.0209* \\
+ & (0.0131) & (0.0102) & (0.0603) & (0.0120) \\
+\multicolumn{5}{l}{\textit{Pre-treatment placebo}} \\
+Connectivity $\times$ Pre & -0.0249** & -0.0157* & -0.0354 & -0.0181* \\
+ & (0.0104) & (0.0092) & (0.0511) & (0.0106) \\
+\hline
+Baseline log-mean (period 2) & -1.0738 & -1.4131 & -2.1084 & -1.9130 \\
+Observations &        6,434 &        6,434 &        6,592 &        6,434 \\
+Establishments &        1,549 &        1,549 &        1,588 &        1,549 \\
+Pre-trend $p$-value & 0.008 & 0.069 & 0.508 & 0.068 \\
+\hline
+\multicolumn{5}{l}{\textit{Panel B: Adding union $\times$ period FE}} \\
+\multicolumn{5}{l}{\textit{Post-treatment}} \\
+Connectivity $\times$ Post & 0.0364** & 0.0306** & 0.0355 & 0.0355** \\
+ & (0.0173) & (0.0133) & (0.1112) & (0.0151) \\
+\multicolumn{5}{l}{\textit{Pre-treatment placebo}} \\
+Connectivity $\times$ Pre & -0.0119 & -0.0083 & -0.0133 & -0.0104 \\
+ & (0.0123) & (0.0126) & (0.0978) & (0.0150) \\
+\hline
+Baseline log-mean (period 2) & -1.0555 & -1.3882 & -2.0779 & -1.8836 \\
+Observations &        4,999 &        4,999 &        5,138 &        4,999 \\
+Establishments &        1,312 &        1,312 &        1,351 &        1,312 \\
+Pre-trend $p$-value & 0.203 & 0.463 & 0.921 & 0.437 \\
+\hline\hline
+\end{tabular}
+\begin{minipage}{\linewidth}
+\smallskip
+\scriptsize\textit{Notes:} This table reports Exercise B with log similarity outcomes. The focal (spillover) firm's clause vector is \emph{frozen} at \textbf{cba\_period $= 2$}; the treated-partner reference moves with the current period. Outcomes are $\ln(\text{sim}_{it})$ for $\text{sim} \in \{\text{cosine}, \text{Bray-Curtis}, \text{total variation}, \text{Ruzicka}\}$, dropping firm-period observations with zero similarity. The coefficient is interpretable as the percentage change in similarity associated with a one-unit increase in connectivity. Sample, weights, and fixed-effects structure are identical to Table~\ref{tab:focal_frozen_cba_similarity}; see notes there. Standard errors clustered at the establishment level. *\,$p<0.10$, **\,$p<0.05$, ***\,$p<0.01$.
+\end{minipage}
+\end{table}

@@ -1,0 +1,38 @@
+\begin{table}[H]
+\centering
+\caption{Ruzicka (Weighted Jaccard) A/B/C with Pretrend-Corrected Anchors}
+\label{tab:ruzicka_pretrend_anchored}
+\scriptsize
+\setlength{\tabcolsep}{8pt}
+\begin{tabular}{lccc}
+\hline\hline
+ & (1) & (2) & (3) \\
+ & \textbf{$A:\,\text{ruz}(u_t,\,T_t)$} & \textbf{$B:\,\text{ruz}(\bar u_i,\,T_t)$} & \textbf{$C:\,\text{ruz}(u_t,\,\bar T_i)$} \\
+\hline
+\multicolumn{4}{l}{\textit{Panel A: Baseline FE}} \\
+Connectivity $\times$ Post & 0.0062** & -0.0002 & -0.0039 \\
+ & (0.0025) & (0.0030) & (0.0028) \\
+Connectivity $\times$ Pre & -0.0039* & -0.0010 & -0.0015 \\
+ & (0.0020) & (0.0015) & (0.0013) \\
+Baseline mean (period 2) & 0.2166 & 0.2216 & 0.2116 \\
+Observations & 6,943 & 6,943 & 6,943 \\
+Establishments & 1,652 & 1,652 & 1,652 \\
+Pre-trend $p$-value & 0.048 & 0.350 & 0.200 \\
+\hline
+\multicolumn{4}{l}{\textit{Panel B: Adding union $\times$ period FE}} \\
+Connectivity $\times$ Post & 0.0100*** & 0.0042 & 0.0017 \\
+ & (0.0033) & (0.0037) & (0.0030) \\
+Connectivity $\times$ Pre & -0.0017 & 0.0003 & -0.0009 \\
+ & (0.0030) & (0.0023) & (0.0019) \\
+Baseline mean (period 2) & 0.2222 & 0.2273 & 0.2163 \\
+Observations & 5,455 & 5,455 & 5,455 \\
+Establishments & 1,415 & 1,415 & 1,415 \\
+Pre-trend $p$-value & 0.523 & 0.930 & 0.584 \\
+\hline
+\hline\hline
+\end{tabular}
+\begin{minipage}{\linewidth}
+\smallskip
+\scriptsize\textit{Notes:} This table reports the Ruzicka A/B/C decomposition with firm-specific pre-treatment averages $\bar u_i$, $\bar T_i$ over $t \in \{1,2\}$. Ruzicka similarity is $\sum_k \min(u_k, T_k) / \sum_k \max(u_k, T_k)$ --- magnitude-sensitive (unlike cosine, which is L2-normalized) and stricter than Bray-Curtis (max in denominator rather than sum). Ruzicka is non-linear, so the bilinear identity does \emph{not} hold; only three regressions are reported. Connectivity weights, sample, and FE structure are identical to the bilinear decomposition tables. Standard errors clustered at the establishment level. *\,$p<0.10$, **\,$p<0.05$, ***\,$p<0.01$.
+\end{minipage}
+\end{table}
