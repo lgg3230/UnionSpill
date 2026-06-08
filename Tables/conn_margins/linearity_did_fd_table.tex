@@ -1,0 +1,20 @@
+\begin{table}[H]
+\centering
+\caption{Linearity Test of the Spillover Dose--Response (First Difference)}
+\label{tab:linearity_did_fd}
+\scriptsize
+\begin{tabular}{lcccc}
+\toprule\toprule
+Outcome & $N$ & \shortstack{Bins\\(req.\ 50)} & \shortstack{Sup-$t$\\stat} & $p$-value \\
+\midrule
+Log Dec.\ wage & $4{,}188$ & 28 & 2.150 & 0.132 \\
+Log hourly wage & $4{,}188$ & 28 & 1.757 & 0.271 \\
+Log employment & $4{,}195$ & 28 & 0.881 & 0.802 \\
+\# CBA clauses & $3{,}977$ & 29 & 1.457 & 0.449 \\
+\bottomrule
+\end{tabular}
+\begin{minipage}{\linewidth}
+\footnotesize\vspace{4pt}
+\textit{Notes:} This table reports Cattaneo, Crump, Farrell, and Feng (2024) sup-$t$ tests of the null hypothesis that the firm-level treatment effect is a degree-1 polynomial (linear) in connectivity. For each firm the outcome is first-differenced, $\Delta Y_j = \overline{Y}_j^{\,post} - \overline{Y}_j^{\,pre}$ (post $=$ 2012--2016, pre $=$ 2009--2011; CBA periods 3--6 vs.\ 1--2 for clause counts), which removes the firm fixed effect of the panel DiD exactly. The OLS slope of $\Delta Y_j$ on connectivity reproduces the panel spillover coefficient to machine precision. Industry, month-of-year, microregion, and pre-treatment outcome, employment, and worker-flow quartile bins enter the binscatter as internal covariates (the semi-linear partial-mean estimator), so no variable is pre-residualized. The sample is the balanced panel of untreated firms; standard errors are heteroskedasticity-robust; inference uses 2{,}000 simulation draws on a grid of 50 points per bin. $p$-values below $0.10$ are bolded.
+\end{minipage}
+\end{table}

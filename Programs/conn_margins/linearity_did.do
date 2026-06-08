@@ -222,89 +222,17 @@ local extra_cba   "ib0.totalflows_pw_pre_07_114#i.cba_period"
 local conn "totaltreat_pw_norm"
 
 ********************************************************************************
-* PART A — POOLED RESIDUALIZED LINEARITY TEST
+* PART A — SUPERSEDED
+*
+* The pooled residualized binstest that used to live here pre-residualized the
+* outcome and the treatment before binning, which is exactly the distortion
+* Cattaneo et al. (2024, "Problem 1") warn against. It has been replaced by the
+* validated first-difference test in  linearity_did_fd.do, which passes the
+* controls to binsreg/binstest INTERNALLY (no pre-residualization) on the
+* firm-level first-difference cross-section. See linearity_did_notes_fd.md.
+*
+* Only PART B (event study) remains in this file.
 ********************************************************************************
-
-tempname fh
-file open `fh' using "$tables/conn_margins/linearity_did_test.csv", write replace
-file write `fh' "outcome,sample,n,nbins,stat_supt,pval,nsims,simsgrid" _n
-file close `fh'
-
-foreach outcome in lr_remdezr_w lr_remdezr_h_w l_firm_emp {
-
-	di _newline "============================================================"
-	di "PART A linearity test: `outcome'"
-	di "============================================================"
-
-	local absorb "`base_fe' ib0.`outcome'_pre4#i.year ib0.l_firm_emp_pre4#i.year `extra_year'"
-
-	* FWL: residualize Y and D=Conn x Post on i.treat_year + same FE/controls
-	cap drop yres
-	cap drop dres
-	reghdfe `outcome'  i.treat_year if `s_spill_pos', absorb(`absorb') residuals(yres)
-	reghdfe conn_x_post i.treat_year if `s_spill_pos', absorb(`absorb') residuals(dres)
-
-	binstest yres dres if `s_spill_pos' & !missing(yres) & !missing(dres), ///
-		vce(cluster firm_num) nbins(50) masspoints(nolocalcheck) ///
-		testmodelpoly(1) nsims(2000) simsgrid(50) simsseed(12345)
-
-	local stat  = e(stat_poly)
-	local pval  = e(pval_poly)
-	local nbins = e(nbins)
-	local n     = e(N)
-
-	di "  N: `n'  |  bins: `nbins'  |  stat: " %6.4f `stat' "  |  p-val: " %6.4f `pval'
-
-	tempname fh
-	file open `fh' using "$tables/conn_margins/linearity_did_test.csv", write append
-	file write `fh' `"`outcome',s_spill_pos,`n',`nbins',`stat',`pval',2000,50"' _n
-	file close `fh'
-
-	* Export residuals for the binsreg figure
-	preserve
-		keep if `s_spill_pos' & !missing(yres) & !missing(dres)
-		keep firm_num year yres dres conn_x_post totaltreat_pw_norm
-		export delimited "$tables/conn_margins/linearity_did_resid_`outcome'.csv", replace
-	restore
-}
-
-* numb_clauses (CBA-period structure)
-capture confirm variable numb_clauses
-if _rc == 0 {
-
-	di _newline "============================================================"
-	di "PART A linearity test: numb_clauses (CBA periods)"
-	di "============================================================"
-
-	local absorb_cba "`base_fe_cba' ib0.numb_clauses_pre4#i.cba_period ib0.l_firm_emp_pre4#i.cba_period `extra_cba'"
-
-	cap drop yres
-	cap drop dres
-	reghdfe numb_clauses     i.post_treat_cba if `s_spill_pos' & !missing(cba_period), absorb(`absorb_cba') residuals(yres)
-	reghdfe conn_x_post_cba  i.post_treat_cba if `s_spill_pos' & !missing(cba_period), absorb(`absorb_cba') residuals(dres)
-
-	binstest yres dres if `s_spill_pos' & !missing(cba_period) & !missing(yres) & !missing(dres), ///
-		vce(cluster firm_num) nbins(50) masspoints(nolocalcheck) ///
-		testmodelpoly(1) nsims(2000) simsgrid(50) simsseed(12345)
-
-	local stat  = e(stat_poly)
-	local pval  = e(pval_poly)
-	local nbins = e(nbins)
-	local n     = e(N)
-
-	di "  N: `n'  |  bins: `nbins'  |  stat: " %6.4f `stat' "  |  p-val: " %6.4f `pval'
-
-	tempname fh
-	file open `fh' using "$tables/conn_margins/linearity_did_test.csv", write append
-	file write `fh' `"numb_clauses,s_spill_pos_cba,`n',`nbins',`stat',`pval',2000,50"' _n
-	file close `fh'
-
-	preserve
-		keep if `s_spill_pos' & !missing(cba_period) & !missing(yres) & !missing(dres)
-		keep firm_num cba_period yres dres conn_x_post_cba totaltreat_pw_norm
-		export delimited "$tables/conn_margins/linearity_did_resid_numb_clauses.csv", replace
-	restore
-}
 
 ********************************************************************************
 * PART B — LINEAR vs BINNED (NONPARAMETRIC-IN-CONNECTIVITY) EVENT STUDY
