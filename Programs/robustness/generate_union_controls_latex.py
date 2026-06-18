@@ -61,7 +61,7 @@ def get(data, col, row_type, **kw):
 # ── Table builder ─────────────────────────────────────────────────────────────
 
 def make_table(data):
-    COLS = [1, 2, 3, 4]
+    COLS = [1, 2, 3, 4, 5, 6]
     blank = " & " * len(COLS) + r"\\"
 
     notes = (
@@ -79,6 +79,10 @@ def make_table(data):
         r"Column~(4) controls for \textit{Union Exposure (workers)} $=$ "
         r"(employment in treated establishments) / (total union employment), "
         r"interacted with year. "
+        r"Columns~(5) and~(6) replace the linear union-exposure controls of "
+        r"columns~(3) and~(4) with indicators for the quartile of union "
+        r"exposure to treated firms and to treated employees, respectively, "
+        r"each interacted with year. "
         r"All specifications include establishment fixed effects, year fixed "
         r"effects interacted with two-digit industry, microregion, and "
         r"negotiation-month indicators, and quartile-bin controls for "
@@ -97,7 +101,7 @@ def make_table(data):
         r"\label{tab:spill_union_controls}",
         r"\footnotesize",
         r"\begin{threeparttable}",
-        r"\begin{tabular}{lcccc}",
+        r"\begin{tabular}{lcccccc}",
         r"\toprule\toprule",
         r"\textbf{Dependent Var: Log Wages} & " + col_nums + r" \\ \midrule",
         " & " + blank,
@@ -118,10 +122,12 @@ def make_table(data):
             " & " + get(data, c, "n_estab", is_count=True) for c in COLS) + r" \\ \midrule",
         # Additional controls panel
         r" & " * len(COLS) + r"\\",
-        r"\textbf{Additional Controls} & & & & \\",
-        r"Union FE $\times$ Year FE & & X & & \\",
-        r"Union Exposure (firm) $\times$ Year FE & & & X & \\",
-        r"Union Exposure (workers) $\times$ Year FE & & & & X \\",
+        r"\textbf{Additional Controls} & & & & & & \\",
+        r"Union FE $\times$ Year FE & & X & & & & \\",
+        r"Union Exposure (firm) $\times$ Year FE & & & X & & & \\",
+        r"Union Exposure (workers) $\times$ Year FE & & & & X & & \\",
+        r"Union Exposure (firm), quartiles $\times$ Year FE & & & & & X & \\",
+        r"Union Exposure (workers), quartiles $\times$ Year FE & & & & & & X \\",
         r"\bottomrule",
         r"\end{tabular}",
         r"\scriptsize",

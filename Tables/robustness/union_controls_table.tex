@@ -4,28 +4,30 @@
 \label{tab:spill_union_controls}
 \footnotesize
 \begin{threeparttable}
-\begin{tabular}{lcccc}
+\begin{tabular}{lcccccc}
 \toprule\toprule
-\textbf{Dependent Var: Log Wages} & (1) & (2) & (3) & (4) \\ \midrule
- &  &  &  &  & \\
-Post $\times$ Connectivity & 0.0051** & 0.0044* & 0.0056** & 0.0054** \\
- & (0.0023) & (0.0026) & (0.0023) & (0.0023) \\
- &  &  &  &  & \\
-Pre $\times$ Connectivity & 0.0020 & $-$0.0011 & 0.0013 & 0.0013 \\
- & (0.0025) & (0.0029) & (0.0025) & (0.0025) \\
- &  &  &  &  & \\
-Num Obs & 32{,}495 & 28{,}714 & 32{,}495 & 32{,}495 \\
-Num Establishments & 4{,}084 & 3{,}614 & 4{,}084 & 4{,}084 \\ \midrule
- &  &  &  & \\
-\textbf{Additional Controls} & & & & \\
-Union FE $\times$ Year FE & & \checkmark & & \\
-Union Exposure (firm) $\times$ Year FE & & & \checkmark & \\
-Union Exposure (workers) $\times$ Year FE & & & & \checkmark \\
+\textbf{Dependent Var: Log Wages} & (1) & (2) & (3) & (4) & (5) & (6) \\ \midrule
+ &  &  &  &  &  &  & \\
+Post $\times$ Connectivity & 0.0051** & 0.0044* & 0.0056** & 0.0054** & 0.0053** & 0.0053** \\
+ & (0.0023) & (0.0026) & (0.0023) & (0.0023) & (0.0023) & (0.0023) \\
+ &  &  &  &  &  &  & \\
+Pre $\times$ Connectivity & 0.0020 & $-$0.0011 & 0.0013 & 0.0013 & 0.0010 & 0.0015 \\
+ & (0.0025) & (0.0029) & (0.0025) & (0.0025) & (0.0026) & (0.0025) \\
+ &  &  &  &  &  &  & \\
+Num Obs & 32{,}495 & 28{,}714 & 32{,}495 & 32{,}495 & 32{,}495 & 32{,}495 \\
+Num Establishments & 4{,}084 & 3{,}614 & 4{,}084 & 4{,}084 & 4{,}084 & 4{,}084 \\ \midrule
+ &  &  &  &  &  & \\
+\textbf{Additional Controls} & & & & & & \\
+Union FE $\times$ Year FE & & X & & & & \\
+Union Exposure (firm) $\times$ Year FE & & & X & & & \\
+Union Exposure (workers) $\times$ Year FE & & & & X & & \\
+Union Exposure (firm), quartiles $\times$ Year FE & & & & & X & \\
+Union Exposure (workers), quartiles $\times$ Year FE & & & & & & X \\
 \bottomrule
 \end{tabular}
 \scriptsize
 \begin{tablenotes}
-\item \textit{Notes:} This table tests whether the spillover effect of Brazil's 2012 ultractivity reform on log wages is robust to controlling for union coverage of treated firms. The sample is restricted to untreated establishments in the Lagos balanced panel. Connectivity is per-worker pairwise flows to treated firms (2007--2011), normalized to the 90th percentile. Column~(1) is the baseline specification. Column~(2) adds union $\times$ year fixed effects to the absorb, absorbing all time-varying union-level heterogeneity. Column~(3) controls for \textit{Union Exposure (firm)} $=$ (treated establishments in union) / (total establishments in union), interacted with year. Column~(4) controls for \textit{Union Exposure (workers)} $=$ (employment in treated establishments) / (total union employment), interacted with year. All specifications include establishment fixed effects, year fixed effects interacted with two-digit industry, microregion, and negotiation-month indicators, and quartile-bin controls for pre-treatment log wages, log employment, and per-worker pairwise flows (2007--2011), each interacted with year. Standard errors clustered at the establishment level in parentheses. *** p$<$0.01, ** p$<$0.05, * p$<$0.10.
+\item \textit{Notes:} This table tests whether the spillover effect of Brazil's 2012 ultractivity reform on log wages is robust to controlling for union coverage of treated firms. The sample is restricted to untreated establishments in the Lagos balanced panel. Connectivity is per-worker pairwise flows to treated firms (2007--2011), normalized to the 90th percentile. Column~(1) is the baseline specification. Column~(2) adds union $\times$ year fixed effects to the absorb, absorbing all time-varying union-level heterogeneity. Column~(3) controls for \textit{Union Exposure (firm)} $=$ (treated establishments in union) / (total establishments in union), interacted with year. Column~(4) controls for \textit{Union Exposure (workers)} $=$ (employment in treated establishments) / (total union employment), interacted with year. Columns~(5) and~(6) replace the linear union-exposure controls of columns~(3) and~(4) with indicators for the quartile of union exposure to treated firms and to treated employees, respectively, each interacted with year. All specifications include establishment fixed effects, year fixed effects interacted with two-digit industry, microregion, and negotiation-month indicators, and quartile-bin controls for pre-treatment log wages, log employment, and per-worker pairwise flows (2007--2011), each interacted with year. Standard errors clustered at the establishment level in parentheses. *** p$<$0.01, ** p$<$0.05, * p$<$0.10.
 \end{tablenotes}
 \end{threeparttable}
 \end{table}

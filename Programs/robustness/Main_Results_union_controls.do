@@ -126,6 +126,31 @@ quietly {
 	replace totalflows_pw_pre_07_114 = 0 if missing(totalflows_pw_pre_07_114)
 }
 
+* Union-exposure quartile bins (firm distribution at 2009, balanced panel)
+* treat_union_exp_all = exposure to treated firms (union firm share)
+* union_emp_exp       = exposure to treated employees (union worker share)
+* Both are union-level (time-invariant), so binned exactly like the pre-treat
+* controls above: cut into 4 quartiles at 2009, then min over firm.
+cap drop treat_union_exp_all_q4_o
+cap drop treat_union_exp_all_q4
+quietly {
+	egen treat_union_exp_all_q4_o = cut(treat_union_exp_all) ///
+		if year == 2009 & in_balanced_panel == 1, group(4)
+	bys identificad: egen treat_union_exp_all_q4 = min(treat_union_exp_all_q4_o)
+	drop treat_union_exp_all_q4_o
+}
+label var treat_union_exp_all_q4 "Quartile of union exposure to treated firms"
+
+cap drop union_emp_exp_q4_o
+cap drop union_emp_exp_q4
+quietly {
+	egen union_emp_exp_q4_o = cut(union_emp_exp) ///
+		if year == 2009 & in_balanced_panel == 1, group(4)
+	bys identificad: egen union_emp_exp_q4 = min(union_emp_exp_q4_o)
+	drop union_emp_exp_q4_o
+}
+label var union_emp_exp_q4 "Quartile of union exposure to treated employees"
+
 di as result "All variables created."
 
 ********************************************************************************
@@ -307,6 +332,86 @@ file write `fh' `""`outcome'";4;"pre";"' %9.4f (`b_pre') `"`stars_pre'""' _n
 file write `fh' `""`outcome'";4;"pre_se";"' %9.4f (`se_pre') `"""' _n
 file write `fh' `""`outcome'";4;"n_obs";"' %12.0fc (`n_obs') `"""' _n
 file write `fh' `""`outcome'";4;"n_estab";"' %12.0fc (`n_estab') `"""' _n
+file close `fh'
+
+* ── Col 5: Union Exposure (firm share) — quartiles ───────────────────────────
+
+di as result "Col 5 (union exp firm, quartiles)"
+
+reghdfe `outcome' c.`conn'##i.treat_year i.treat_union_exp_all_q4#i.year if `s_spill', ///
+	absorb(`absorb_base') vce(cluster identificad)
+
+local b_post  = _b[1.treat_year#c.`conn']
+local se_post = _se[1.treat_year#c.`conn']
+local p_post  = 2*ttail(e(df_r), abs(`b_post'/`se_post'))
+local n_obs   = e(N)
+local n_estab = e(N_clust)
+
+reghdfe `outcome' c.`conn'##i.placebo_year i.treat_union_exp_all_q4#i.year if `s_spill' & year <= 2011, ///
+	absorb(`absorb_base') vce(cluster identificad)
+
+local b_pre  = _b[1.placebo_year#c.`conn']
+local se_pre = _se[1.placebo_year#c.`conn']
+local p_pre  = 2*ttail(e(df_r), abs(`b_pre'/`se_pre'))
+
+local stars_post ""
+if `p_post' < 0.01                              local stars_post "***"
+else if (`p_post' < 0.05 & `p_post' > 0.01)    local stars_post "**"
+else if (`p_post' < 0.10 & `p_post' > 0.05)    local stars_post "*"
+
+local stars_pre ""
+if `p_pre' < 0.01                               local stars_pre "***"
+else if (`p_pre' < 0.05 & `p_pre' > 0.01)      local stars_pre "**"
+else if (`p_pre' < 0.10 & `p_pre' > 0.05)      local stars_pre "*"
+
+tempname fh
+file open `fh' using "`csv'", write append
+file write `fh' `""`outcome'";5;"main";"' %9.4f (`b_post') `"`stars_post'""' _n
+file write `fh' `""`outcome'";5;"main_se";"' %9.4f (`se_post') `"""' _n
+file write `fh' `""`outcome'";5;"pre";"' %9.4f (`b_pre') `"`stars_pre'""' _n
+file write `fh' `""`outcome'";5;"pre_se";"' %9.4f (`se_pre') `"""' _n
+file write `fh' `""`outcome'";5;"n_obs";"' %12.0fc (`n_obs') `"""' _n
+file write `fh' `""`outcome'";5;"n_estab";"' %12.0fc (`n_estab') `"""' _n
+file close `fh'
+
+* ── Col 6: Union Exposure (worker share) — quartiles ─────────────────────────
+
+di as result "Col 6 (union emp exp, quartiles)"
+
+reghdfe `outcome' c.`conn'##i.treat_year i.union_emp_exp_q4#i.treat_year if `s_spill', ///
+	absorb(`absorb_base') vce(cluster identificad)
+
+local b_post  = _b[1.treat_year#c.`conn']
+local se_post = _se[1.treat_year#c.`conn']
+local p_post  = 2*ttail(e(df_r), abs(`b_post'/`se_post'))
+local n_obs   = e(N)
+local n_estab = e(N_clust)
+
+reghdfe `outcome' c.`conn'##i.placebo_year i.union_emp_exp_q4#i.placebo_year if `s_spill' & year <= 2011, ///
+	absorb(`absorb_base') vce(cluster identificad)
+
+local b_pre  = _b[1.placebo_year#c.`conn']
+local se_pre = _se[1.placebo_year#c.`conn']
+local p_pre  = 2*ttail(e(df_r), abs(`b_pre'/`se_pre'))
+
+local stars_post ""
+if `p_post' < 0.01                              local stars_post "***"
+else if (`p_post' < 0.05 & `p_post' > 0.01)    local stars_post "**"
+else if (`p_post' < 0.10 & `p_post' > 0.05)    local stars_post "*"
+
+local stars_pre ""
+if `p_pre' < 0.01                               local stars_pre "***"
+else if (`p_pre' < 0.05 & `p_pre' > 0.01)      local stars_pre "**"
+else if (`p_pre' < 0.10 & `p_pre' > 0.05)      local stars_pre "*"
+
+tempname fh
+file open `fh' using "`csv'", write append
+file write `fh' `""`outcome'";6;"main";"' %9.4f (`b_post') `"`stars_post'""' _n
+file write `fh' `""`outcome'";6;"main_se";"' %9.4f (`se_post') `"""' _n
+file write `fh' `""`outcome'";6;"pre";"' %9.4f (`b_pre') `"`stars_pre'""' _n
+file write `fh' `""`outcome'";6;"pre_se";"' %9.4f (`se_pre') `"""' _n
+file write `fh' `""`outcome'";6;"n_obs";"' %12.0fc (`n_obs') `"""' _n
+file write `fh' `""`outcome'";6;"n_estab";"' %12.0fc (`n_estab') `"""' _n
 file close `fh'
 
 ********************************************************************************
