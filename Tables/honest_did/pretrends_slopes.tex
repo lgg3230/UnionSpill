@@ -1,0 +1,22 @@
+\begin{table}[H]
+\centering
+\scriptsize
+\caption{Roth (2022) pre-trends power diagnostics}
+\label{tab:pretrends_slopes}
+\begin{tabular}{llccc}
+\hline\hline
+Effect & Outcome & Slope (50\% power) & Slope (80\% power) & Mean post-effect \\
+\hline
+Direct & Log monthly earnings & 0.0035 & 0.0051 & 0.0209 \\
+Direct & Log hourly earnings & 0.0039 & 0.0058 & 0.0242 \\
+Direct & Log employment & 0.0089 & 0.0132 & 0.0041 \\
+Direct & # CBA clauses$^{\dagger}$ & 0.4807 & 0.6872 & 1.5277 \\
+\hline
+Spillover & Log monthly earnings & 0.0031 & 0.0046 & 0.0065 \\
+Spillover & Log hourly earnings & 0.0031 & 0.0046 & 0.0084 \\
+Spillover & Log employment & 0.0076 & 0.0114 & -0.0007 \\
+Spillover & # CBA clauses$^{\dagger}$ & 0.3974 & 0.5681 & 0.2514 \\
+\hline
+\end{tabular}
+\begin{minipage}{0.92\textwidth}\scriptsize This table reports, for each of the 8 main event studies, the slope of a linear pre-trend (per period) that the standard pre-trends test would reject with 50\% and 80\% probability (Roth, 2022). A larger detectable slope means the pre-test is less powered. ``Mean post-effect'' is the average estimated post-treatment coefficient, shown for scale: if the slope a well-powered test would catch is small relative to the estimated effect, the effect is unlikely to be an artifact of an undetected linear pre-trend. See the companion figures for the hypothesized trends and the coefficients expected conditional on passing the pre-test. $^{\dagger}$ numb\_clauses has a single pre-period, so its power diagnostic is degenerate and should be read with caution.\end{minipage}
+\end{table}

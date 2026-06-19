@@ -1,0 +1,22 @@
+\begin{table}[H]
+\centering
+\scriptsize
+\caption{Rambachan--Roth (2023) honest-DiD breakdown values}
+\label{tab:honest_did_breakdown}
+\begin{tabular}{llcc}
+\hline\hline
+Effect & Outcome & $\bar{M}$ breakdown ($\Delta^{RM}$) & $M$ breakdown ($\Delta^{SD}$) \\
+\hline
+Direct & Log monthly earnings & 1.822 & $>0.02$ \\
+Direct & Log hourly earnings & 1.641 & 0.016 \\
+Direct & Log employment & n.s. & n.s. \\
+Direct & # CBA clauses & 1.635$^{\dagger}$ & 0.649$^{\dagger}$ \\
+\hline
+Spillover & Log monthly earnings & 0.746$^{\ast}$ & 0.001 \\
+Spillover & Log hourly earnings & 0.418$^{\ast}$ & 0.000 \\
+Spillover & Log employment & n.s. & n.s. \\
+Spillover & # CBA clauses & n.s.$^{\dagger}$ & n.s.$^{\dagger}$ \\
+\hline
+\end{tabular}
+\begin{minipage}{0.92\textwidth}\scriptsize This table reports the breakdown value of the sensitivity parameter at which the Rambachan--Roth robust confidence interval first includes zero, for each of the 8 main event-study specifications (estimated standalone with establishment-clustered VCV). $\Delta^{RM}$ bounds the post-treatment differential trend by $\bar{M}$ times the largest pre-treatment differential; its grid ($0$--$2$) is comparable across outcomes. $\Delta^{SD}$ bounds the curvature of the differential trend in outcome units, so $M$ is not comparable across outcomes. All CIs use the C-LF (conditional least-favorable) method. ``n.s.'' marks specs whose original OLS CI already includes zero, for which the breakdown value is mechanically zero and uninformative. $^{\ast}$ $\bar{M}<1$ (result not robust to a post-period violation as large as pre-period violations). $^{\dagger}$ numb\_clauses has a single pre-period (CBA-period structure), so its breakdown values rest on one pre-treatment coefficient and should be read with caution. \end{minipage}
+\end{table}
