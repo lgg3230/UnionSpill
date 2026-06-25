@@ -16,7 +16,8 @@ copies of the data (the small sample and C), each with its OWN fixed effects
 interaction treat_ultra#post#samp equals (beta_C - beta_small); clustering on the
 firm id accounts for firms that appear in both stacks.
 
-Outcomes: lr_remdezr_w, lr_remdezr_h_w.
+Outcomes: lr_remdezr_w, lr_remdezr_h_w, l_firm_emp (year structure), and
+numb_clauses (CBA-period structure: post = cba_period>=3, via _stacktest_cba).
 ================================================================================
 */
 
@@ -104,6 +105,29 @@ quietly {
 	replace totalflows_pw_pre_07_114 = 0 if missing(totalflows_pw_pre_07_114)
 }
 
+* ── numb_clauses pre-treatment (CBA-period based) + CBA period indicators ─────
+capture confirm variable numb_clauses
+if _rc == 0 {
+	cap drop numb_clauses_pre_o
+	cap drop numb_clauses_pre
+	quietly {
+		bys identificad: egen numb_clauses_pre_o = mean(numb_clauses) if inrange(cba_period,1,2)
+		bys identificad: egen numb_clauses_pre   = min(numb_clauses_pre_o)
+		drop numb_clauses_pre_o
+	}
+	cap drop numb_clauses_pre4_o
+	cap drop numb_clauses_pre4
+	quietly {
+		egen numb_clauses_pre4_o = cut(numb_clauses_pre) if year==2009 & in_balanced_panel==1, group(4)
+		bys identificad: egen numb_clauses_pre4 = min(numb_clauses_pre4_o)
+		drop numb_clauses_pre4_o
+	}
+}
+cap drop pre_treat_cba
+cap drop post_treat_cba
+gen byte pre_treat_cba  = cond(cba_period < 2, 1, 0)
+gen byte post_treat_cba = cond(cba_period >= 3, 1, 0) if !missing(cba_period)
+
 cap drop firm_id
 egen firm_id = group(identificad)
 
@@ -161,12 +185,57 @@ program define _stacktest
 	restore
 end
 
-foreach outcome in lr_remdezr_w lr_remdezr_h_w {
+* ── program: stacked test for numb_clauses (CBA-period structure) ────────────
+capture program drop _stacktest_cba
+program define _stacktest_cba
+	args outcome slabel
+	preserve
+		use "$basefile", clear
+		keep if ($s_C) & !missing(cba_period)
+		gen byte samp = 1
+		tempfile cpart
+		save `cpart'
+
+		use "$basefile", clear
+		keep if ($scond) & !missing(cba_period)
+		gen byte samp = 0
+		append using `cpart'
+
+		local absorb "i.samp#i.firm_id i.samp#i.industry1#i.cba_period i.samp#i.mode_base_month#i.cba_period i.samp#i.microregion#i.cba_period i.samp#i.numb_clauses_pre4#i.cba_period i.samp#i.l_firm_emp_pre4#i.cba_period i.samp#i.totalflows_pw_pre_07_114#i.cba_period"
+
+		reghdfe `outcome' i.treat_ultra##i.post_treat_cba##i.samp, ///
+			absorb(`absorb') vce(cluster firm_id)
+
+		local b_small = _b[1.treat_ultra#1.post_treat_cba]
+		local diff    = _b[1.treat_ultra#1.post_treat_cba#1.samp]
+		local b_C     = `b_small' + `diff'
+		local se_diff = _se[1.treat_ultra#1.post_treat_cba#1.samp]
+		test 1.treat_ultra#1.post_treat_cba#1.samp = 0
+		local p_diff = r(p)
+
+		di _newline "==== `outcome': `slabel' vs C ===="
+		di " beta_`slabel' = " %9.5f `b_small' "   beta_C = " %9.5f `b_C' ///
+			"   diff(C-`slabel') = " %9.5f `diff' "   se = " %9.5f `se_diff' "   p = " %6.4f `p_diff'
+
+		tempname fh2
+		file open `fh2' using "$tables/conn_margins/direct_sample_coef_test.csv", write append
+		file write `fh2' `"`outcome',`slabel'_vs_C,`b_small',`b_C',`diff',`se_diff',`p_diff'"' _n
+		file close `fh2'
+	restore
+end
+
+foreach outcome in lr_remdezr_w lr_remdezr_h_w l_firm_emp {
 	global scond "$s_A"
 	_stacktest `outcome' A
 	global scond "$s_B"
 	_stacktest `outcome' B
 }
+
+* numb_clauses uses the CBA-period structure
+global scond "$s_A"
+_stacktest_cba numb_clauses A
+global scond "$s_B"
+_stacktest_cba numb_clauses B
 
 di _newline "======================================================="
 type "$tables/conn_margins/direct_sample_coef_test.csv"
