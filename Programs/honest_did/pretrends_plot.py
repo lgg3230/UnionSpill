@@ -28,12 +28,28 @@ RESULTS_CSV = TABLES_DIR / "pretrends_results.csv"
 
 try:
     import matplotlib.font_manager as fm
-    for fp in ["/kellogg/proj/lgg3230/UnionSpill/Programs/fonts/LibertinusSerif-Regular.otf",
-               str(HERE.parent / "fonts" / "LibertinusSerif-Regular.otf")]:
-        if Path(fp).exists():
-            fm.fontManager.addfont(fp)
-            plt.rcParams["font.family"] = "Libertinus Serif"
-            break
+    _variants = ["LibertinusSerif-Regular.otf", "LibertinusSerif-Italic.otf",
+                 "LibertinusSerif-Bold.otf", "LibertinusSerif-BoldItalic.otf"]
+    _loaded = False
+    for d in ["/kellogg/proj/lgg3230/UnionSpill/Programs/fonts",
+              str(HERE.parent / "fonts")]:
+        if Path(d).exists():
+            for v in _variants:
+                fp = Path(d) / v
+                if fp.exists():
+                    fm.fontManager.addfont(str(fp))
+                    _loaded = True
+            if _loaded:
+                break
+    if _loaded:
+        plt.rcParams["font.family"]       = "Libertinus Serif"
+        plt.rcParams["mathtext.fontset"]  = "custom"
+        plt.rcParams["mathtext.rm"]       = "Libertinus Serif"
+        plt.rcParams["mathtext.it"]       = "Libertinus Serif:italic"
+        plt.rcParams["mathtext.bf"]       = "Libertinus Serif:bold"
+        plt.rcParams["mathtext.sf"]       = "Libertinus Serif"
+        plt.rcParams["mathtext.cal"]      = "Libertinus Serif:italic"
+        plt.rcParams["mathtext.fallback"] = "cm"
 except Exception:
     pass
 
@@ -42,8 +58,8 @@ C_TREND = "#B2182B"   # hypothesized trend (red)
 C_COND  = "#2166AC"   # E[coef | passed pre-test] (blue)
 
 OUTCOME_LABEL = {
-    "lr_remdezr_w":   "Log monthly earnings",
-    "lr_remdezr_h_w": "Log hourly earnings",
+    "lr_remdezr_w":   "Log wages",
+    "lr_remdezr_h_w": "Log hourly wages",
     "l_firm_emp":     "Log employment",
     "numb_clauses":   "# CBA clauses",
 }

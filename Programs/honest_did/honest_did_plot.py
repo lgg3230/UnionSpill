@@ -26,15 +26,31 @@ GRAPHS_DIR  = ROOT / "Graphs" / "honest_did"
 GRAPHS_DIR.mkdir(parents=True, exist_ok=True)
 RESULTS_CSV = TABLES_DIR / "honest_did_results.csv"
 
-# ── fonts (Libertinus Serif if available; silent fallback) ──────────────────
+# ── fonts (Libertinus Serif, text + mathtext; silent fallback) ──────────────
 try:
     import matplotlib.font_manager as fm
-    for fp in ["/kellogg/proj/lgg3230/UnionSpill/Programs/fonts/LibertinusSerif-Regular.otf",
-               str(HERE.parent / "fonts" / "LibertinusSerif-Regular.otf")]:
-        if Path(fp).exists():
-            fm.fontManager.addfont(fp)
-            plt.rcParams["font.family"] = "Libertinus Serif"
-            break
+    _variants = ["LibertinusSerif-Regular.otf", "LibertinusSerif-Italic.otf",
+                 "LibertinusSerif-Bold.otf", "LibertinusSerif-BoldItalic.otf"]
+    _loaded = False
+    for d in ["/kellogg/proj/lgg3230/UnionSpill/Programs/fonts",
+              str(HERE.parent / "fonts")]:
+        if Path(d).exists():
+            for v in _variants:
+                fp = Path(d) / v
+                if fp.exists():
+                    fm.fontManager.addfont(str(fp))
+                    _loaded = True
+            if _loaded:
+                break
+    if _loaded:
+        plt.rcParams["font.family"]       = "Libertinus Serif"
+        plt.rcParams["mathtext.fontset"]  = "custom"
+        plt.rcParams["mathtext.rm"]       = "Libertinus Serif"
+        plt.rcParams["mathtext.it"]       = "Libertinus Serif:italic"
+        plt.rcParams["mathtext.bf"]       = "Libertinus Serif:bold"
+        plt.rcParams["mathtext.sf"]       = "Libertinus Serif"
+        plt.rcParams["mathtext.cal"]      = "Libertinus Serif:italic"
+        plt.rcParams["mathtext.fallback"] = "cm"
 except Exception:
     pass
 
@@ -42,8 +58,8 @@ C_ORIG   = "#2166AC"   # original OLS CI (blue)
 C_ROBUST = "#B2182B"   # robust honest-DiD CI (red)
 
 OUTCOME_LABEL = {
-    "lr_remdezr_w":   "Log monthly earnings",
-    "lr_remdezr_h_w": "Log hourly earnings",
+    "lr_remdezr_w":   "Log wages",
+    "lr_remdezr_h_w": "Log hourly wages",
     "l_firm_emp":     "Log employment",
     "numb_clauses":   "# CBA clauses",
 }
@@ -52,6 +68,18 @@ EFFECT_LABEL  = {"direct": "Direct", "spill": "Spillover"}
 RESTR_LABEL   = {"rm": r"$\Delta^{RM}$ (relative magnitudes)",
                  "sd": r"$\Delta^{SD}$ (smoothness)"}
 RESTR_X       = {"rm": r"$\bar{M}$", "sd": r"$M$"}
+
+# target = which post-period coefficient the sensitivity CI is built around
+# (honestdid l_vec). p1 = first post period (the default), ..., avg = average.
+TARGET_ORDER  = ["p1", "p2", "p3", "p4", "p5", "avg"]
+TARGET_LABEL  = {
+    "p1":  "1st post period (yr 2012 / cba 3)",
+    "p2":  "2nd post period (yr 2013 / cba 4)",
+    "p3":  "3rd post period (yr 2014 / cba 5)",
+    "p4":  "4th post period (yr 2015 / cba 6)",
+    "p5":  "5th post period (yr 2016; clauses n/a)",
+    "avg": "average of post periods",
+}
 
 
 def breakdown(m, lb, ub):
@@ -77,13 +105,16 @@ def breakdown(m, lb, ub):
 
 def main():
     df = pd.read_csv(RESULTS_CSV)
+    if "target" not in df.columns:        # backward compat with old CSVs
+        df["target"] = "p1"
     failed = df[df["is_original"].astype(str) == "FAILED"]
     df = df[df["is_original"].astype(str) != "FAILED"].copy()
     for c in ["m", "lb", "ub", "is_original"]:
         df[c] = pd.to_numeric(df[c], errors="coerce")
 
     summary = []
-    for (effect, outcome, restr), g in df.groupby(["effect", "outcome", "restriction"]):
+    for (effect, outcome, restr, target), g in df.groupby(
+            ["effect", "outcome", "restriction", "target"]):
         og = g[g["is_original"] == 1]
         grid = g[g["is_original"] == 0].sort_values("m")
         if grid.empty:
@@ -92,14 +123,14 @@ def main():
         og_lb = float(og["lb"].iloc[0]) if not og.empty else np.nan
         og_ub = float(og["ub"].iloc[0]) if not og.empty else np.nan
         summary.append(dict(effect=effect, outcome=outcome, restriction=restr,
-                            breakdown=bd, status=status,
+                            target=target, breakdown=bd, status=status,
                             grid_max=float(grid["m"].max()),
                             og_lb=og_lb, og_ub=og_ub))
     # mark failed specs in the summary too
     for _, r in failed.iterrows():
         summary.append(dict(effect=r["effect"], outcome=r["outcome"],
-                            restriction=r["restriction"], breakdown=np.nan,
-                            status="FAILED", grid_max=np.nan,
+                            restriction=r["restriction"], target=r.get("target", "p1"),
+                            breakdown=np.nan, status="FAILED", grid_max=np.nan,
                             og_lb=np.nan, og_ub=np.nan))
     sm = pd.DataFrame(summary)
 
@@ -123,13 +154,18 @@ def main():
         return caveat.strip()  # SD scale-dependent: report numeric only
     sm["flag"] = sm.apply(flag, axis=1)
 
-    sm = sm.sort_values(["restriction", "effect", "outcome"])
+    sm = sm.sort_values(["restriction", "target", "effect", "outcome"])
     sm.to_csv(TABLES_DIR / "honest_did_breakdown.csv", index=False)
     print(sm.to_string(index=False))
 
-    write_latex(sm)
+    # headline LaTeX table uses the first post period (p1, the honestdid default)
+    write_latex(sm[sm["target"] == "p1"])
+
+    targets = [t for t in TARGET_ORDER if t in set(df["target"].unique())]
     for restr in ["rm", "sd"]:
-        plot_grid(df, sm, restr)
+        for target in targets:
+            plot_grid(df[df["target"] == target],
+                      sm[sm["target"] == target], restr, target)
 
     if not sm.empty:
         frag = sm[sm["flag"].isin(["VERY FRAGILE", "fragile", "infeasible (1 pre-period)"])]
@@ -193,8 +229,24 @@ def write_latex(sm):
     print(f"wrote {TABLES_DIR/'honest_did_breakdown.tex'}")
 
 
-def plot_grid(df, sm, restr):
-    """4x2 grid (rows=outcomes, cols=direct/spill) of robust CI band vs M."""
+def _bd_caption(row, restr):
+    """Short caption: the value of M at which the robust CI first crosses zero."""
+    x  = RESTR_X[restr]
+    st = row["status"]
+    if st == "FAILED":
+        return "infeasible (1 pre-period)"
+    if str(row.get("flag", "")).startswith("OLS n.s."):
+        return "OLS CI already includes 0"
+    if st == "beyond_grid":
+        return f"no 0-crossing for {x} $\\leq$ {row['grid_max']:.3g}"
+    return f"crosses 0 at {x} = {row['breakdown']:.3g}"
+
+
+def plot_grid(df, sm, restr, target):
+    """4x2 grid (rows=outcomes, cols=direct/spill): Rambachan--Roth sensitivity
+    plot -- one robust confidence INTERVAL per chosen value of M (not a continuous
+    band), with the original OLS CI shown as a separate interval on the left.
+    `df`/`sm` are already filtered to a single target post period."""
     sub = df[(df["restriction"] == restr)]
     fig, axes = plt.subplots(len(OUTCOME_ORDER), 2,
                              figsize=(10, 2.4 * len(OUTCOME_ORDER)),
@@ -206,45 +258,68 @@ def plot_grid(df, sm, restr):
             og = g[g["is_original"] == 1]
             grid = g[g["is_original"] == 0].sort_values("m")
             if grid.empty:
-                ax.text(0.5, 0.5, "infeasible\n(1 pre-period)",
+                ax.text(0.5, 0.5, "n/a",
                         ha="center", va="center", transform=ax.transAxes,
-                        fontsize=9, color="gray")
+                        fontsize=10, color="gray")
                 ax.set_xticks([]); ax.set_yticks([])
             else:
-                m = grid["m"].values
-                ax.fill_between(m, grid["lb"], grid["ub"], color=C_ROBUST,
-                                alpha=0.18, label="Robust CI")
-                ax.plot(m, grid["lb"], color=C_ROBUST, lw=1.5)
-                ax.plot(m, grid["ub"], color=C_ROBUST, lw=1.5)
-                if not og.empty:
-                    ax.axhspan(float(og["lb"].iloc[0]), float(og["ub"].iloc[0]),
-                               color=C_ORIG, alpha=0.15, label="Original OLS CI")
+                m   = grid["m"].values
+                lb  = grid["lb"].values
+                ub  = grid["ub"].values
+                xs  = np.arange(len(m))
+                cen = 0.5 * (lb + ub)
+                has_og = not og.empty
+                x_og   = -1.3
+                # ── original OLS CI as a separate interval on the left ──────────
+                if has_og:
+                    o_lb = float(og["lb"].iloc[0]); o_ub = float(og["ub"].iloc[0])
+                    o_c  = 0.5 * (o_lb + o_ub)
+                    ax.errorbar([x_og], [o_c], yerr=[[o_c - o_lb], [o_ub - o_c]],
+                                fmt="none", ecolor=C_ORIG, elinewidth=1.6,
+                                capsize=3, capthick=1.6, label="Original OLS CI")
+                    ax.axvline(-0.65, color="gray", lw=0.6, ls=":")
+                # ── robust CI: one interval per chosen M (no center point) ──────
+                ax.errorbar(xs, cen, yerr=[cen - lb, ub - cen], fmt="none",
+                            ecolor=C_ROBUST, elinewidth=1.6, capsize=3,
+                            capthick=1.6, label="Robust CI")
                 ax.axhline(0, color="black", lw=0.8)
-                # breakdown marker
-                row = sm[(sm["restriction"] == restr) & (sm["effect"] == effect) &
-                         (sm["outcome"] == outcome)]
-                if not row.empty and row["status"].iloc[0] in ("in_grid", "at_min"):
-                    bd = row["breakdown"].iloc[0]
-                    ax.axvline(bd, color="gray", ls="--", lw=1.0)
-                    ax.text(bd, ax.get_ylim()[1], f" {RESTR_X[restr]}*={bd:.2f}",
-                            ha="left", va="top", fontsize=7, color="gray")
-                ax.set_xlim(m.min(), m.max())
+                # x ticks: original + (thinned) M labels
+                step = 1 if len(m) <= 10 else int(np.ceil(len(m) / 8))
+                tick_x   = ([x_og] if has_og else []) + list(xs[::step])
+                tick_lab = (["Orig."] if has_og else []) + [f"{v:g}" for v in m[::step]]
+                ax.set_xticks(tick_x)
+                ax.set_xticklabels(tick_lab, fontsize=6.5)
+                ax.set_xlim((x_og - 0.5) if has_og else -0.5, len(m) - 0.5)
+            # breakdown caption underneath each panel
+            srow = sm[(sm["restriction"] == restr) & (sm["effect"] == effect) &
+                      (sm["outcome"] == outcome)]
+            if not srow.empty:
+                ax.text(0.5, -0.17, _bd_caption(srow.iloc[0], restr),
+                        transform=ax.transAxes, ha="center", va="top",
+                        fontsize=7.5, color="dimgray")
             if ri == 0:
                 ax.set_title(EFFECT_LABEL[effect], fontsize=11, fontweight="bold")
             if ci == 0:
                 ax.set_ylabel(OUTCOME_LABEL[outcome], fontsize=9, fontweight="bold")
             if ri == len(OUTCOME_ORDER) - 1:
-                ax.set_xlabel(RESTR_X[restr], fontsize=10)
+                ax.set_xlabel(RESTR_X[restr], fontsize=10, labelpad=24)
 
-    handles = [Patch(facecolor=C_ROBUST, alpha=0.18, label="Robust CI"),
-               Patch(facecolor=C_ORIG, alpha=0.15, label="Original OLS CI"),
-               Line2D([0], [0], color="gray", ls="--", lw=1.0, label="Breakdown")]
-    fig.legend(handles=handles, loc="lower center", ncol=3, frameon=False,
+    handles = [
+        Line2D([0], [0], color=C_ROBUST, lw=1.8, label=f"Robust CI (per {RESTR_X[restr]})"),
+        Line2D([0], [0], color=C_ORIG, lw=1.8, label="Original OLS CI"),
+    ]
+    fig.legend(handles=handles, loc="lower center", ncol=2, frameon=False,
                bbox_to_anchor=(0.5, -0.01))
-    fig.tight_layout(rect=[0, 0.03, 1, 1])
-    out = GRAPHS_DIR / f"honest_did_{restr}.pdf"
+    fig.suptitle(f"{RESTR_LABEL[restr]}   —   target: {TARGET_LABEL.get(target, target)}",
+                 fontsize=12, y=0.998)
+    fig.tight_layout(rect=[0, 0.03, 1, 0.975], h_pad=3.0)
+    out = GRAPHS_DIR / f"honest_did_{restr}_{target}.pdf"
     fig.savefig(out, bbox_inches="tight")
     fig.savefig(out.with_suffix(".png"), dpi=150, bbox_inches="tight")
+    if target == "p1":                    # also keep the default-named figure
+        alt = GRAPHS_DIR / f"honest_did_{restr}.pdf"
+        fig.savefig(alt, bbox_inches="tight")
+        fig.savefig(alt.with_suffix(".png"), dpi=150, bbox_inches="tight")
     plt.close(fig)
     print(f"wrote {out}")
 
