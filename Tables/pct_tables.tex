@@ -1,0 +1,480 @@
+\documentclass[12pt,letterpaper]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{booktabs}
+\usepackage{threeparttable}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{hyperref}
+\usepackage{float}
+
+\hypersetup{colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue}
+
+\begin{document}
+
+\begin{titlepage}
+\centering
+\vspace*{2cm}
+{\Huge\bfseries Union Spillovers:\\Wage Distribution Tables\par}
+\vspace{2cm}
+{\Large Percentiles \& Inequality Ratios --- tfpw\_07\_11 Specification\par}
+\vspace{1cm}
+{\large \today\par}
+\vfill
+{\large Luis Gomes\\Northwestern University\par}
+\end{titlepage}
+
+\tableofcontents
+\clearpage
+
+\begin{table}[]
+\centering
+\caption{Direct Effects of the Ultractivity Reform on Establishment Outcomes}
+\label{tab:direct_base}
+\scriptsize
+\begin{threeparttable}
+\begin{tabular}{lcccc}
+\toprule\toprule
+\begin{tabular}[c]{@{}l@{}}\textbf{Panel A:} \textit{Only Control Firms}\\ \textit{with Zero Connectivity}\end{tabular} & \begin{tabular}[c]{@{}c@{}}Log\\Wages\end{tabular} & \begin{tabular}[c]{@{}c@{}}Log Hourly\\Wages\end{tabular} & \begin{tabular}[c]{@{}c@{}}Log\\Employment\end{tabular} & \begin{tabular}[c]{@{}c@{}}Clause\\Count\end{tabular} \\
+ & (1) & (2) & (3) & (4) \\
+\midrule
+Post $\times$ Treatment & 0.0262*** & 0.0287*** & $-$0.0018 & 1.5568*** \\
+  & (0.0049) & (0.0050) & (0.0153) & (0.3044) \\
+  &  &  &  & \\
+Pre $\times$ Treatment & $-$0.0001 & $-$0.0013 & 0.0163 & 0.1467 \\
+  & (0.0046) & (0.0054) & (0.0101) & (0.3484) \\
+Pre-trend $F$-test $p$-value & [0.7372] & [0.6977] & [0.0162] & [0.7105] \\
+  &  &  &  & \\
+Observations & 112{,}679 & 112{,}679 & 113{,}096 & 73{,}177 \\
+Establishments & 14{,}134 & 14{,}134 & 14{,}137 & 14{,}176 \\
+  &  &  &  & \\
+\midrule
+\begin{tabular}[c]{@{}l@{}}\textbf{Panel B:} \textit{Control Firms with}\\ \textit{$\leq$1\% Connectivity}\end{tabular} & \begin{tabular}[c]{@{}c@{}}Log\\Wages\end{tabular} & \begin{tabular}[c]{@{}c@{}}Log Hourly\\Wages\end{tabular} & \begin{tabular}[c]{@{}c@{}}Log\\Employment\end{tabular} & \begin{tabular}[c]{@{}c@{}}Clause\\Count\end{tabular} \\
+ & (1) & (2) & (3) & (4) \\
+\midrule
+Post $\times$ Treatment & 0.0199*** & 0.0234*** & $-$0.0045 & 1.3556*** \\
+  & (0.0038) & (0.0039) & (0.0125) & (0.2684) \\
+  &  &  &  & \\
+Pre $\times$ Treatment & 0.0049 & 0.0056 & 0.0036 & 0.3638 \\
+  & (0.0035) & (0.0041) & (0.0088) & (0.2920) \\
+Pre-trend $F$-test $p$-value & [0.2354] & [0.2127] & [0.2728] & [0.2045] \\
+  &  &  &  & \\
+Observations & 120{,}617 & 120{,}617 & 121{,}064 & 77{,}947 \\
+Establishments & 15{,}129 & 15{,}129 & 15{,}133 & 15{,}171 \\
+  &  &  &  & \\
+\midrule
+\begin{tabular}[c]{@{}l@{}}\textbf{Panel C:} \textit{All Untreated}\\ \textit{Control Firms}\end{tabular} & \begin{tabular}[c]{@{}c@{}}Log\\Wages\end{tabular} & \begin{tabular}[c]{@{}c@{}}Log Hourly\\Wages\end{tabular} & \begin{tabular}[c]{@{}c@{}}Log\\Employment\end{tabular} & \begin{tabular}[c]{@{}c@{}}Clause\\Count\end{tabular} \\
+ & (1) & (2) & (3) & (4) \\
+\midrule
+Post $\times$ Treatment & 0.0178*** & 0.0202*** & 0.0024 & 1.3481*** \\
+  & (0.0032) & (0.0033) & (0.0111) & (0.2350) \\
+  &  &  &  & \\
+Pre $\times$ Treatment & 0.0042 & 0.0048 & $-$0.0012 & 0.2660 \\
+  & (0.0030) & (0.0035) & (0.0076) & (0.2471) \\
+Pre-trend $F$-test $p$-value & [0.1959] & [0.1822] & [0.4932] & [0.3105] \\
+  &  &  &  & \\
+Observations & 130{,}708 & 130{,}708 & 131{,}232 & 84{,}080 \\
+Establishments & 16{,}398 & 16{,}398 & 16{,}404 & 16{,}444 \\
+\bottomrule
+\end{tabular}
+\scriptsize
+\begin{tablenotes}
+\item \textit{Notes:} This table presents difference-in-differences estimates of the direct effects of Brazil's 2012 ultractivity reform on log wages, log hourly wages, log employment, and the number of CBA clauses. The reform, effective September~25, 2012, extended existing collective bargaining agreements (CBAs) indefinitely upon expiration, increasing the bargaining power of workers at treated establishments---those with an active CBA on that date. The sample covers Brazilian establishments in the Lagos sample observed annually from 2009 to 2016. Post $\times$ Treatment measures the average treatment effect for 2012--2016; Pre $\times$ Treatment is a placebo test using 2009--2011 as the pre-reform period. The clause count outcome uses CBA negotiation periods rather than calendar years; observations therefore differ in that column. All regressions include establishment fixed effects, year fixed effects interacted with two-digit industry, microregion, and negotiation-month indicators, and quartile-bin controls for pre-treatment per-worker pairwise worker flows (2007--2011) and pre-treatment establishment size, interacted with year (or CBA-period) fixed effects. Panel~A restricts the control group to establishments with zero pre-reform worker-flow connectivity to treated firms; Panel~B to establishments with at most 1\% connectivity; Panel~C includes all untreated establishments. Standard errors clustered at the establishment level in parentheses. *** p$<$0.01, ** p$<$0.05, * p$<$0.10.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+\clearpage
+
+\begin{table}[]
+\centering
+\caption{Spillover Effects of the Ultractivity Reform on Establishment Outcomes}
+\label{tab:spill_base}
+\scriptsize
+\begin{threeparttable}
+\begin{tabular}{lcccc}
+\toprule\toprule
+ & \begin{tabular}[c]{@{}c@{}}Log\\Wages\end{tabular} & \begin{tabular}[c]{@{}c@{}}Log Hourly\\Wages\end{tabular} & \begin{tabular}[c]{@{}c@{}}Log\\Employment\end{tabular} & \begin{tabular}[c]{@{}c@{}}Clause\\Count\end{tabular} \\
+ & (1) & (2) & (3) & (4) \\
+\midrule
+Post $\times$ Connectivity & 0.0051** & 0.0066*** & 0.0004 & 0.0180 \\
+  & (0.0023) & (0.0023) & (0.0081) & (0.1176) \\
+  &  &  &  & \\
+Pre $\times$ Connectivity & 0.0020 & 0.0016 & $-$0.0012 & 0.3276 \\
+  & (0.0025) & (0.0026) & (0.0063) & (0.2017) \\
+Pre-trend $F$-test $p$-value & [0.7351] & [0.7907] & [0.8736] & [0.0980] \\
+  &  &  &  & \\
+Observations & 32{,}495 & 32{,}495 & 32{,}704 & 19{,}693 \\
+Establishments & 4{,}084 & 4{,}084 & 4{,}088 & 4{,}142 \\
+\bottomrule
+\end{tabular}
+\scriptsize
+\begin{tablenotes}
+\item \textit{Notes:} This table estimates spillover effects of Brazil's 2012 ultractivity reform on log wages, log hourly wages, and log employment at untreated establishments connected to treated firms. Connectivity is defined as the share of an establishment's pre-reform workforce (2007--2011) that overlapped with a treated firm's workforce, normalized to the 90th percentile of the spillover sample distribution. The sample is restricted to untreated establishments in the Lagos sample participating in a balanced panel. Post $\times$ Connectivity captures the average spillover effect for 2012--2016; Pre $\times$ Connectivity is a placebo test using 2009--2011. All regressions include establishment fixed effects, year fixed effects interacted with two-digit industry, microregion, and negotiation-month indicators, and quartile-bin controls for pre-treatment per-worker pairwise worker flows (2007--2011) and pre-treatment establishment size, interacted with year (or CBA-period) fixed effects. Standard errors clustered at the establishment level in parentheses. *** p$<$0.01, ** p$<$0.05, * p$<$0.10.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+\clearpage
+
+\begin{table}[]
+\centering
+\caption{Direct Effects on the Distribution of Log December Wages}
+\label{tab:direct_pct_dec}
+\scriptsize
+\begin{threeparttable}
+\begin{tabular}{lccccc}
+\toprule\toprule
+\begin{tabular}[c]{@{}l@{}}\textbf{Panel A:} \textit{Only Control Firms}\\ \textit{with Zero Connectivity}\end{tabular} & \begin{tabular}[c]{@{}c@{}}10th\\Pctile\end{tabular} & \begin{tabular}[c]{@{}c@{}}25th\\Pctile\end{tabular} & \begin{tabular}[c]{@{}c@{}}50th\\Pctile\end{tabular} & \begin{tabular}[c]{@{}c@{}}75th\\Pctile\end{tabular} & \begin{tabular}[c]{@{}c@{}}90th\\Pctile\end{tabular} \\
+ & (1) & (2) & (3) & (4) & (5) \\
+\midrule
+Post $\times$ Treatment & 0.0260*** & 0.0286*** & 0.0293*** & 0.0207*** & 0.0181*** \\
+  & (0.0067) & (0.0057) & (0.0055) & (0.0062) & (0.0070) \\
+  &  &  &  &  & \\
+Pre $\times$ Treatment & 0.0118* & 0.0046 & 0.0028 & $-$0.0021 & $-$0.0038 \\
+  & (0.0070) & (0.0060) & (0.0056) & (0.0062) & (0.0069) \\
+Pre-trend $F$-test $p$-value & [0.0427] & [0.3467] & [0.3662] & [0.9175] & [0.3498] \\
+  &  &  &  &  & \\
+Observations & 112{,}686 & 112{,}686 & 112{,}686 & 112{,}686 & 112{,}686 \\
+Establishments & 14{,}136 & 14{,}136 & 14{,}136 & 14{,}136 & 14{,}136 \\
+  &  &  &  &  & \\
+\midrule
+\begin{tabular}[c]{@{}l@{}}\textbf{Panel B:} \textit{Control Firms with}\\ \textit{$\leq$1\% Connectivity}\end{tabular} & \begin{tabular}[c]{@{}c@{}}10th\\Pctile\end{tabular} & \begin{tabular}[c]{@{}c@{}}25th\\Pctile\end{tabular} & \begin{tabular}[c]{@{}c@{}}50th\\Pctile\end{tabular} & \begin{tabular}[c]{@{}c@{}}75th\\Pctile\end{tabular} & \begin{tabular}[c]{@{}c@{}}90th\\Pctile\end{tabular} \\
+ & (1) & (2) & (3) & (4) & (5) \\
+\midrule
+Post $\times$ Treatment & 0.0232*** & 0.0236*** & 0.0224*** & 0.0159*** & 0.0109** \\
+  & (0.0049) & (0.0043) & (0.0042) & (0.0048) & (0.0054) \\
+  &  &  &  &  & \\
+Pre $\times$ Treatment & 0.0117** & 0.0073* & 0.0071* & 0.0039 & 0.0041 \\
+  & (0.0051) & (0.0043) & (0.0042) & (0.0047) & (0.0052) \\
+Pre-trend $F$-test $p$-value & [0.0106] & [0.1012] & [0.0979] & [0.7236] & [0.2132] \\
+  &  &  &  &  & \\
+Observations & 120{,}624 & 120{,}624 & 120{,}624 & 120{,}624 & 120{,}624 \\
+Establishments & 15{,}131 & 15{,}131 & 15{,}131 & 15{,}131 & 15{,}131 \\
+  &  &  &  &  & \\
+\midrule
+\begin{tabular}[c]{@{}l@{}}\textbf{Panel C:} \textit{All Untreated}\\ \textit{Control Firms}\end{tabular} & \begin{tabular}[c]{@{}c@{}}10th\\Pctile\end{tabular} & \begin{tabular}[c]{@{}c@{}}25th\\Pctile\end{tabular} & \begin{tabular}[c]{@{}c@{}}50th\\Pctile\end{tabular} & \begin{tabular}[c]{@{}c@{}}75th\\Pctile\end{tabular} & \begin{tabular}[c]{@{}c@{}}90th\\Pctile\end{tabular} \\
+ & (1) & (2) & (3) & (4) & (5) \\
+\midrule
+Post $\times$ Treatment & 0.0225*** & 0.0223*** & 0.0207*** & 0.0124*** & 0.0081* \\
+  & (0.0041) & (0.0036) & (0.0036) & (0.0040) & (0.0045) \\
+  &  &  &  &  & \\
+Pre $\times$ Treatment & 0.0089** & 0.0063* & 0.0065* & 0.0036 & 0.0047 \\
+  & (0.0043) & (0.0037) & (0.0036) & (0.0040) & (0.0045) \\
+Pre-trend $F$-test $p$-value & [0.0298] & [0.0796] & [0.0530] & [0.6334] & [0.3290] \\
+  &  &  &  &  & \\
+Observations & 130{,}715 & 130{,}715 & 130{,}715 & 130{,}715 & 130{,}715 \\
+Establishments & 16{,}400 & 16{,}400 & 16{,}400 & 16{,}400 & 16{,}400 \\
+\bottomrule
+\end{tabular}
+\scriptsize
+\begin{tablenotes}
+\item \textit{Notes:} This table presents difference-in-differences estimates of the direct effects of Brazil's 2012 ultractivity reform on the within-establishment distribution of log December wages, measured at the 10th, 25th, 50th, 75th, and 90th percentiles. The reform, effective September~25, 2012, extended existing collective bargaining agreements (CBAs) indefinitely upon expiration, increasing the bargaining power of workers at treated establishments---those with an active CBA on that date. The sample covers Brazilian establishments in the Lagos sample observed annually from 2009 to 2016. Post $\times$ Treatment measures the average treatment effect for 2012--2016; Pre $\times$ Treatment is a placebo test using 2009--2011 as the pre-reform period. All regressions include establishment fixed effects, year fixed effects interacted with two-digit industry, microregion, and negotiation-month indicators, and quartile-bin controls for pre-treatment per-worker pairwise worker flows (2007--2011) and pre-treatment establishment size, interacted with year (or CBA-period) fixed effects. Panel~A restricts the control group to establishments with zero pre-reform worker-flow connectivity to treated firms; Panel~B to establishments with at most 1\% connectivity; Panel~C includes all untreated establishments. Standard errors clustered at the establishment level in parentheses. *** p$<$0.01, ** p$<$0.05, * p$<$0.10.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+\clearpage
+
+\begin{table}[]
+\centering
+\caption{Spillover Effects on the Distribution of Log December Wages}
+\label{tab:spill_pct_dec}
+\scriptsize
+\begin{threeparttable}
+\begin{tabular}{lccccc}
+\toprule\toprule
+ & \begin{tabular}[c]{@{}c@{}}10th\\Pctile\end{tabular} & \begin{tabular}[c]{@{}c@{}}25th\\Pctile\end{tabular} & \begin{tabular}[c]{@{}c@{}}50th\\Pctile\end{tabular} & \begin{tabular}[c]{@{}c@{}}75th\\Pctile\end{tabular} & \begin{tabular}[c]{@{}c@{}}90th\\Pctile\end{tabular} \\
+ & (1) & (2) & (3) & (4) & (5) \\
+\midrule
+Post $\times$ Connectivity & 0.0052* & 0.0047* & 0.0051** & 0.0096*** & 0.0029 \\
+  & (0.0028) & (0.0025) & (0.0026) & (0.0029) & (0.0029) \\
+  &  &  &  &  & \\
+Pre $\times$ Connectivity & 0.0007 & $-$0.0035 & 0.0006 & 0.0029 & 0.0064 \\
+  & (0.0034) & (0.0026) & (0.0033) & (0.0035) & (0.0047) \\
+Pre-trend $F$-test $p$-value & [0.9796] & [0.3496] & [0.9650] & [0.6252] & [0.2902] \\
+  &  &  &  &  & \\
+Observations & 32{,}498 & 32{,}498 & 32{,}498 & 32{,}498 & 32{,}498 \\
+Establishments & 4{,}085 & 4{,}085 & 4{,}085 & 4{,}085 & 4{,}085 \\
+\bottomrule
+\end{tabular}
+\scriptsize
+\begin{tablenotes}
+\item \textit{Notes:} This table estimates spillover effects of Brazil's 2012 ultractivity reform on the within-establishment distribution of log December wages (10th, 25th, 50th, 75th, and 90th percentiles) at untreated establishments connected to treated firms. Connectivity is defined as the share of an establishment's pre-reform workforce (2007--2011) that overlapped with a treated firm's workforce, normalized to the 90th percentile of the spillover sample distribution. The sample is restricted to untreated establishments in the Lagos sample participating in a balanced panel. Post $\times$ Connectivity captures the average spillover effect for 2012--2016; Pre $\times$ Connectivity is a placebo test using 2009--2011. All regressions include establishment fixed effects, year fixed effects interacted with two-digit industry, microregion, and negotiation-month indicators, and quartile-bin controls for pre-treatment per-worker pairwise worker flows (2007--2011) and pre-treatment establishment size, interacted with year (or CBA-period) fixed effects. Standard errors clustered at the establishment level in parentheses. *** p$<$0.01, ** p$<$0.05, * p$<$0.10.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+\clearpage
+
+\begin{table}[]
+\centering
+\caption{Direct Effects on the Distribution of Log Hourly Wages}
+\label{tab:direct_pct_hr}
+\scriptsize
+\begin{threeparttable}
+\begin{tabular}{lccccc}
+\toprule\toprule
+\begin{tabular}[c]{@{}l@{}}\textbf{Panel A:} \textit{Only Control Firms}\\ \textit{with Zero Connectivity}\end{tabular} & \begin{tabular}[c]{@{}c@{}}10th\\Pctile\end{tabular} & \begin{tabular}[c]{@{}c@{}}25th\\Pctile\end{tabular} & \begin{tabular}[c]{@{}c@{}}50th\\Pctile\end{tabular} & \begin{tabular}[c]{@{}c@{}}75th\\Pctile\end{tabular} & \begin{tabular}[c]{@{}c@{}}90th\\Pctile\end{tabular} \\
+ & (1) & (2) & (3) & (4) & (5) \\
+\midrule
+Post $\times$ Treatment & 0.0255*** & 0.0347*** & 0.0337*** & 0.0204*** & 0.0208*** \\
+  & (0.0061) & (0.0060) & (0.0059) & (0.0066) & (0.0075) \\
+  &  &  &  &  & \\
+Pre $\times$ Treatment & 0.0141** & 0.0069 & $-$0.0035 & $-$0.0050 & $-$0.0107 \\
+  & (0.0067) & (0.0064) & (0.0068) & (0.0074) & (0.0080) \\
+Pre-trend $F$-test $p$-value & [0.0145] & [0.3726] & [0.6596] & [0.7679] & [0.2254] \\
+  &  &  &  &  & \\
+Observations & 112{,}686 & 112{,}686 & 112{,}686 & 112{,}686 & 112{,}686 \\
+Establishments & 14{,}136 & 14{,}136 & 14{,}136 & 14{,}136 & 14{,}136 \\
+  &  &  &  &  & \\
+\midrule
+\begin{tabular}[c]{@{}l@{}}\textbf{Panel B:} \textit{Control Firms with}\\ \textit{$\leq$1\% Connectivity}\end{tabular} & \begin{tabular}[c]{@{}c@{}}10th\\Pctile\end{tabular} & \begin{tabular}[c]{@{}c@{}}25th\\Pctile\end{tabular} & \begin{tabular}[c]{@{}c@{}}50th\\Pctile\end{tabular} & \begin{tabular}[c]{@{}c@{}}75th\\Pctile\end{tabular} & \begin{tabular}[c]{@{}c@{}}90th\\Pctile\end{tabular} \\
+ & (1) & (2) & (3) & (4) & (5) \\
+\midrule
+Post $\times$ Treatment & 0.0228*** & 0.0287*** & 0.0282*** & 0.0168*** & 0.0150** \\
+  & (0.0045) & (0.0045) & (0.0046) & (0.0052) & (0.0060) \\
+  &  &  &  &  & \\
+Pre $\times$ Treatment & 0.0125*** & 0.0089* & 0.0046 & 0.0053 & 0.0026 \\
+  & (0.0049) & (0.0047) & (0.0051) & (0.0057) & (0.0062) \\
+Pre-trend $F$-test $p$-value & [0.0030] & [0.0626] & [0.4368] & [0.6262] & [0.6105] \\
+  &  &  &  &  & \\
+Observations & 120{,}624 & 120{,}624 & 120{,}624 & 120{,}624 & 120{,}624 \\
+Establishments & 15{,}131 & 15{,}131 & 15{,}131 & 15{,}131 & 15{,}131 \\
+  &  &  &  &  & \\
+\midrule
+\begin{tabular}[c]{@{}l@{}}\textbf{Panel C:} \textit{All Untreated}\\ \textit{Control Firms}\end{tabular} & \begin{tabular}[c]{@{}c@{}}10th\\Pctile\end{tabular} & \begin{tabular}[c]{@{}c@{}}25th\\Pctile\end{tabular} & \begin{tabular}[c]{@{}c@{}}50th\\Pctile\end{tabular} & \begin{tabular}[c]{@{}c@{}}75th\\Pctile\end{tabular} & \begin{tabular}[c]{@{}c@{}}90th\\Pctile\end{tabular} \\
+ & (1) & (2) & (3) & (4) & (5) \\
+\midrule
+Post $\times$ Treatment & 0.0213*** & 0.0264*** & 0.0245*** & 0.0132*** & 0.0110** \\
+  & (0.0038) & (0.0038) & (0.0039) & (0.0044) & (0.0050) \\
+  &  &  &  &  & \\
+Pre $\times$ Treatment & 0.0105** & 0.0064 & 0.0049 & 0.0050 & 0.0031 \\
+  & (0.0041) & (0.0039) & (0.0043) & (0.0048) & (0.0054) \\
+Pre-trend $F$-test $p$-value & [0.0032] & [0.0672] & [0.2834] & [0.5491] & [0.5842] \\
+  &  &  &  &  & \\
+Observations & 130{,}715 & 130{,}715 & 130{,}715 & 130{,}715 & 130{,}715 \\
+Establishments & 16{,}400 & 16{,}400 & 16{,}400 & 16{,}400 & 16{,}400 \\
+\bottomrule
+\end{tabular}
+\scriptsize
+\begin{tablenotes}
+\item \textit{Notes:} This table presents difference-in-differences estimates of the direct effects of Brazil's 2012 ultractivity reform on the within-establishment distribution of log hourly wages, measured at the 10th, 25th, 50th, 75th, and 90th percentiles. The reform, effective September~25, 2012, extended existing collective bargaining agreements (CBAs) indefinitely upon expiration, increasing the bargaining power of workers at treated establishments---those with an active CBA on that date. The sample covers Brazilian establishments in the Lagos sample observed annually from 2009 to 2016. Post $\times$ Treatment measures the average treatment effect for 2012--2016; Pre $\times$ Treatment is a placebo test using 2009--2011 as the pre-reform period. All regressions include establishment fixed effects, year fixed effects interacted with two-digit industry, microregion, and negotiation-month indicators, and quartile-bin controls for pre-treatment per-worker pairwise worker flows (2007--2011) and pre-treatment establishment size, interacted with year (or CBA-period) fixed effects. Panel~A restricts the control group to establishments with zero pre-reform worker-flow connectivity to treated firms; Panel~B to establishments with at most 1\% connectivity; Panel~C includes all untreated establishments. Standard errors clustered at the establishment level in parentheses. *** p$<$0.01, ** p$<$0.05, * p$<$0.10.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+\clearpage
+
+\begin{table}[]
+\centering
+\caption{Spillover Effects on the Distribution of Log Hourly Wages}
+\label{tab:spill_pct_hr}
+\scriptsize
+\begin{threeparttable}
+\begin{tabular}{lccccc}
+\toprule\toprule
+ & \begin{tabular}[c]{@{}c@{}}10th\\Pctile\end{tabular} & \begin{tabular}[c]{@{}c@{}}25th\\Pctile\end{tabular} & \begin{tabular}[c]{@{}c@{}}50th\\Pctile\end{tabular} & \begin{tabular}[c]{@{}c@{}}75th\\Pctile\end{tabular} & \begin{tabular}[c]{@{}c@{}}90th\\Pctile\end{tabular} \\
+ & (1) & (2) & (3) & (4) & (5) \\
+\midrule
+Post $\times$ Connectivity & 0.0038 & 0.0054** & 0.0078*** & 0.0112*** & 0.0060 \\
+  & (0.0026) & (0.0026) & (0.0027) & (0.0032) & (0.0037) \\
+  &  &  &  &  & \\
+Pre $\times$ Connectivity & $-$0.0002 & $-$0.0038 & 0.0004 & 0.0046 & 0.0049 \\
+  & (0.0030) & (0.0026) & (0.0034) & (0.0036) & (0.0049) \\
+Pre-trend $F$-test $p$-value & [0.8810] & [0.1691] & [0.7828] & [0.4025] & [0.5366] \\
+  &  &  &  &  & \\
+Observations & 32{,}498 & 32{,}498 & 32{,}498 & 32{,}498 & 32{,}498 \\
+Establishments & 4{,}085 & 4{,}085 & 4{,}085 & 4{,}085 & 4{,}085 \\
+\bottomrule
+\end{tabular}
+\scriptsize
+\begin{tablenotes}
+\item \textit{Notes:} This table estimates spillover effects of Brazil's 2012 ultractivity reform on the within-establishment distribution of log hourly wages (10th, 25th, 50th, 75th, and 90th percentiles) at untreated establishments connected to treated firms. Connectivity is defined as the share of an establishment's pre-reform workforce (2007--2011) that overlapped with a treated firm's workforce, normalized to the 90th percentile of the spillover sample distribution. The sample is restricted to untreated establishments in the Lagos sample participating in a balanced panel. Post $\times$ Connectivity captures the average spillover effect for 2012--2016; Pre $\times$ Connectivity is a placebo test using 2009--2011. All regressions include establishment fixed effects, year fixed effects interacted with two-digit industry, microregion, and negotiation-month indicators, and quartile-bin controls for pre-treatment per-worker pairwise worker flows (2007--2011) and pre-treatment establishment size, interacted with year (or CBA-period) fixed effects. Standard errors clustered at the establishment level in parentheses. *** p$<$0.01, ** p$<$0.05, * p$<$0.10.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+\clearpage
+
+\begin{table}[]
+\centering
+\caption{Direct Effects on December Wage Inequality within Establishments}
+\label{tab:direct_ratio_dec}
+\scriptsize
+\begin{threeparttable}
+\begin{tabular}{lcccc}
+\toprule\toprule
+\begin{tabular}[c]{@{}l@{}}\textbf{Panel A:} \textit{Only Control Firms}\\ \textit{with Zero Connectivity}\end{tabular} & \begin{tabular}[c]{@{}c@{}}p90$-$p10\end{tabular} & \begin{tabular}[c]{@{}c@{}}p75$-$p25\end{tabular} & \begin{tabular}[c]{@{}c@{}}p90$-$p50\end{tabular} & \begin{tabular}[c]{@{}c@{}}p75$-$p50\end{tabular} \\
+ & (1) & (2) & (3) & (4) \\
+\midrule
+Post $\times$ Treatment & $-$0.0046 & $-$0.0043 & $-$0.0077 & $-$0.0062 \\
+  & (0.0084) & (0.0057) & (0.0060) & (0.0042) \\
+  &  &  &  & \\
+Pre $\times$ Treatment & $-$0.0167* & $-$0.0074 & $-$0.0070 & $-$0.0051 \\
+  & (0.0093) & (0.0070) & (0.0068) & (0.0053) \\
+Pre-trend $F$-test $p$-value & [0.0087] & [0.2123] & [0.0468] & [0.1549] \\
+  &  &  &  & \\
+Observations & 112{,}686 & 112{,}686 & 112{,}686 & 112{,}686 \\
+Establishments & 14{,}136 & 14{,}136 & 14{,}136 & 14{,}136 \\
+  &  &  &  & \\
+\midrule
+\begin{tabular}[c]{@{}l@{}}\textbf{Panel B:} \textit{Control Firms with}\\ \textit{$\leq$1\% Connectivity}\end{tabular} & \begin{tabular}[c]{@{}c@{}}p90$-$p10\end{tabular} & \begin{tabular}[c]{@{}c@{}}p75$-$p25\end{tabular} & \begin{tabular}[c]{@{}c@{}}p90$-$p50\end{tabular} & \begin{tabular}[c]{@{}c@{}}p75$-$p50\end{tabular} \\
+ & (1) & (2) & (3) & (4) \\
+\midrule
+Post $\times$ Treatment & $-$0.0096 & $-$0.0054 & $-$0.0093** & $-$0.0051 \\
+  & (0.0063) & (0.0044) & (0.0046) & (0.0031) \\
+  &  &  &  & \\
+Pre $\times$ Treatment & $-$0.0085 & $-$0.0038 & $-$0.0033 & $-$0.0034 \\
+  & (0.0068) & (0.0051) & (0.0050) & (0.0038) \\
+Pre-trend $F$-test $p$-value & [0.0070] & [0.3710] & [0.0240] & [0.2721] \\
+  &  &  &  & \\
+Observations & 120{,}624 & 120{,}624 & 120{,}624 & 120{,}624 \\
+Establishments & 15{,}131 & 15{,}131 & 15{,}131 & 15{,}131 \\
+  &  &  &  & \\
+\midrule
+\begin{tabular}[c]{@{}l@{}}\textbf{Panel C:} \textit{All Untreated}\\ \textit{Control Firms}\end{tabular} & \begin{tabular}[c]{@{}c@{}}p90$-$p10\end{tabular} & \begin{tabular}[c]{@{}c@{}}p75$-$p25\end{tabular} & \begin{tabular}[c]{@{}c@{}}p90$-$p50\end{tabular} & \begin{tabular}[c]{@{}c@{}}p75$-$p50\end{tabular} \\
+ & (1) & (2) & (3) & (4) \\
+\midrule
+Post $\times$ Treatment & $-$0.0103** & $-$0.0068* & $-$0.0100*** & $-$0.0064** \\
+  & (0.0052) & (0.0036) & (0.0038) & (0.0026) \\
+  &  &  &  & \\
+Pre $\times$ Treatment & $-$0.0052 & $-$0.0032 & $-$0.0021 & $-$0.0031 \\
+  & (0.0057) & (0.0042) & (0.0043) & (0.0032) \\
+Pre-trend $F$-test $p$-value & [0.0463] & [0.4158] & [0.0449] & [0.2615] \\
+  &  &  &  & \\
+Observations & 130{,}715 & 130{,}715 & 130{,}715 & 130{,}715 \\
+Establishments & 16{,}400 & 16{,}400 & 16{,}400 & 16{,}400 \\
+\bottomrule
+\end{tabular}
+\scriptsize
+\begin{tablenotes}
+\item \textit{Notes:} This table presents difference-in-differences estimates of the direct effects of Brazil's 2012 ultractivity reform on December wage inequality within establishments, measured by log wage gaps at the 90th--10th (p90$-$p10), 75th--25th (p75$-$p25), 90th--50th (p90$-$p50), and 75th--50th (p75$-$p50) percentiles. The reform, effective September~25, 2012, extended existing collective bargaining agreements (CBAs) indefinitely upon expiration, increasing the bargaining power of workers at treated establishments---those with an active CBA on that date. The sample covers Brazilian establishments in the Lagos sample observed annually from 2009 to 2016. Post $\times$ Treatment measures the average treatment effect for 2012--2016; Pre $\times$ Treatment is a placebo test using 2009--2011 as the pre-reform period. All regressions include establishment fixed effects, year fixed effects interacted with two-digit industry, microregion, and negotiation-month indicators, and quartile-bin controls for pre-treatment per-worker pairwise worker flows (2007--2011) and pre-treatment establishment size, interacted with year (or CBA-period) fixed effects. Panel~A restricts the control group to establishments with zero pre-reform worker-flow connectivity to treated firms; Panel~B to establishments with at most 1\% connectivity; Panel~C includes all untreated establishments. Standard errors clustered at the establishment level in parentheses. *** p$<$0.01, ** p$<$0.05, * p$<$0.10.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+\clearpage
+
+\begin{table}[]
+\centering
+\caption{Spillover Effects on December Wage Inequality within Establishments}
+\label{tab:spill_ratio_dec}
+\scriptsize
+\begin{threeparttable}
+\begin{tabular}{lcccc}
+\toprule\toprule
+ & \begin{tabular}[c]{@{}c@{}}p90$-$p10\end{tabular} & \begin{tabular}[c]{@{}c@{}}p75$-$p25\end{tabular} & \begin{tabular}[c]{@{}c@{}}p90$-$p50\end{tabular} & \begin{tabular}[c]{@{}c@{}}p75$-$p50\end{tabular} \\
+ & (1) & (2) & (3) & (4) \\
+\midrule
+Post $\times$ Connectivity & $-$0.0026 & 0.0040 & $-$0.0032 & 0.0024 \\
+  & (0.0033) & (0.0027) & (0.0025) & (0.0019) \\
+  &  &  &  & \\
+Pre $\times$ Connectivity & 0.0060 & 0.0066* & 0.0063 & 0.0027 \\
+  & (0.0055) & (0.0034) & (0.0049) & (0.0024) \\
+Pre-trend $F$-test $p$-value & [0.4987] & [0.1174] & [0.4299] & [0.5303] \\
+  &  &  &  & \\
+Observations & 32{,}498 & 32{,}498 & 32{,}498 & 32{,}498 \\
+Establishments & 4{,}085 & 4{,}085 & 4{,}085 & 4{,}085 \\
+\bottomrule
+\end{tabular}
+\scriptsize
+\begin{tablenotes}
+\item \textit{Notes:} This table estimates spillover effects of Brazil's 2012 ultractivity reform on December wage inequality within establishments (p90$-$p10, p75$-$p25, p90$-$p50, and p75$-$p50 log wage gaps) at untreated establishments connected to treated firms. Connectivity is defined as the share of an establishment's pre-reform workforce (2007--2011) that overlapped with a treated firm's workforce, normalized to the 90th percentile of the spillover sample distribution. The sample is restricted to untreated establishments in the Lagos sample participating in a balanced panel. Post $\times$ Connectivity captures the average spillover effect for 2012--2016; Pre $\times$ Connectivity is a placebo test using 2009--2011. All regressions include establishment fixed effects, year fixed effects interacted with two-digit industry, microregion, and negotiation-month indicators, and quartile-bin controls for pre-treatment per-worker pairwise worker flows (2007--2011) and pre-treatment establishment size, interacted with year (or CBA-period) fixed effects. Standard errors clustered at the establishment level in parentheses. *** p$<$0.01, ** p$<$0.05, * p$<$0.10.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+\clearpage
+
+\begin{table}[]
+\centering
+\caption{Direct Effects on Hourly Wage Inequality within Establishments}
+\label{tab:direct_ratio_hr}
+\scriptsize
+\begin{threeparttable}
+\begin{tabular}{lcccc}
+\toprule\toprule
+\begin{tabular}[c]{@{}l@{}}\textbf{Panel A:} \textit{Only Control Firms}\\ \textit{with Zero Connectivity}\end{tabular} & \begin{tabular}[c]{@{}c@{}}p90$-$p10\end{tabular} & \begin{tabular}[c]{@{}c@{}}p75$-$p25\end{tabular} & \begin{tabular}[c]{@{}c@{}}p90$-$p50\end{tabular} & \begin{tabular}[c]{@{}c@{}}p75$-$p50\end{tabular} \\
+ & (1) & (2) & (3) & (4) \\
+\midrule
+Post $\times$ Treatment & $-$0.0022 & $-$0.0075 & $-$0.0061 & $-$0.0080* \\
+  & (0.0087) & (0.0065) & (0.0065) & (0.0044) \\
+  &  &  &  & \\
+Pre $\times$ Treatment & $-$0.0261*** & $-$0.0135* & $-$0.0082 & $-$0.0025 \\
+  & (0.0095) & (0.0076) & (0.0073) & (0.0058) \\
+Pre-trend $F$-test $p$-value & [0.0014] & [0.1228] & [0.1527] & [0.5153] \\
+  &  &  &  & \\
+Observations & 112{,}686 & 112{,}686 & 112{,}686 & 112{,}686 \\
+Establishments & 14{,}136 & 14{,}136 & 14{,}136 & 14{,}136 \\
+  &  &  &  & \\
+\midrule
+\begin{tabular}[c]{@{}l@{}}\textbf{Panel B:} \textit{Control Firms with}\\ \textit{$\leq$1\% Connectivity}\end{tabular} & \begin{tabular}[c]{@{}c@{}}p90$-$p10\end{tabular} & \begin{tabular}[c]{@{}c@{}}p75$-$p25\end{tabular} & \begin{tabular}[c]{@{}c@{}}p90$-$p50\end{tabular} & \begin{tabular}[c]{@{}c@{}}p75$-$p50\end{tabular} \\
+ & (1) & (2) & (3) & (4) \\
+\midrule
+Post $\times$ Treatment & $-$0.0066 & $-$0.0060 & $-$0.0079 & $-$0.0070** \\
+  & (0.0067) & (0.0050) & (0.0051) & (0.0034) \\
+  &  &  &  & \\
+Pre $\times$ Treatment & $-$0.0110 & $-$0.0048 & $-$0.0028 & $-$0.0001 \\
+  & (0.0071) & (0.0056) & (0.0054) & (0.0042) \\
+Pre-trend $F$-test $p$-value & [0.0142] & [0.4534] & [0.1997] & [0.8053] \\
+  &  &  &  & \\
+Observations & 120{,}624 & 120{,}624 & 120{,}624 & 120{,}624 \\
+Establishments & 15{,}131 & 15{,}131 & 15{,}131 & 15{,}131 \\
+  &  &  &  & \\
+\midrule
+\begin{tabular}[c]{@{}l@{}}\textbf{Panel C:} \textit{All Untreated}\\ \textit{Control Firms}\end{tabular} & \begin{tabular}[c]{@{}c@{}}p90$-$p10\end{tabular} & \begin{tabular}[c]{@{}c@{}}p75$-$p25\end{tabular} & \begin{tabular}[c]{@{}c@{}}p90$-$p50\end{tabular} & \begin{tabular}[c]{@{}c@{}}p75$-$p50\end{tabular} \\
+ & (1) & (2) & (3) & (4) \\
+\midrule
+Post $\times$ Treatment & $-$0.0085 & $-$0.0081** & $-$0.0091** & $-$0.0078*** \\
+  & (0.0056) & (0.0041) & (0.0042) & (0.0029) \\
+  &  &  &  & \\
+Pre $\times$ Treatment & $-$0.0084 & $-$0.0026 & $-$0.0025 & $-$0.0007 \\
+  & (0.0061) & (0.0047) & (0.0047) & (0.0034) \\
+Pre-trend $F$-test $p$-value & [0.0208] & [0.4759] & [0.1535] & [0.7405] \\
+  &  &  &  & \\
+Observations & 130{,}715 & 130{,}715 & 130{,}715 & 130{,}715 \\
+Establishments & 16{,}400 & 16{,}400 & 16{,}400 & 16{,}400 \\
+\bottomrule
+\end{tabular}
+\scriptsize
+\begin{tablenotes}
+\item \textit{Notes:} This table presents difference-in-differences estimates of the direct effects of Brazil's 2012 ultractivity reform on hourly wage inequality within establishments, measured by log wage gaps at the 90th--10th (p90$-$p10), 75th--25th (p75$-$p25), 90th--50th (p90$-$p50), and 75th--50th (p75$-$p50) percentiles. The reform, effective September~25, 2012, extended existing collective bargaining agreements (CBAs) indefinitely upon expiration, increasing the bargaining power of workers at treated establishments---those with an active CBA on that date. The sample covers Brazilian establishments in the Lagos sample observed annually from 2009 to 2016. Post $\times$ Treatment measures the average treatment effect for 2012--2016; Pre $\times$ Treatment is a placebo test using 2009--2011 as the pre-reform period. All regressions include establishment fixed effects, year fixed effects interacted with two-digit industry, microregion, and negotiation-month indicators, and quartile-bin controls for pre-treatment per-worker pairwise worker flows (2007--2011) and pre-treatment establishment size, interacted with year (or CBA-period) fixed effects. Panel~A restricts the control group to establishments with zero pre-reform worker-flow connectivity to treated firms; Panel~B to establishments with at most 1\% connectivity; Panel~C includes all untreated establishments. Standard errors clustered at the establishment level in parentheses. *** p$<$0.01, ** p$<$0.05, * p$<$0.10.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+\clearpage
+
+\begin{table}[]
+\centering
+\caption{Spillover Effects on Hourly Wage Inequality within Establishments}
+\label{tab:spill_ratio_hr}
+\scriptsize
+\begin{threeparttable}
+\begin{tabular}{lcccc}
+\toprule\toprule
+ & \begin{tabular}[c]{@{}c@{}}p90$-$p10\end{tabular} & \begin{tabular}[c]{@{}c@{}}p75$-$p25\end{tabular} & \begin{tabular}[c]{@{}c@{}}p90$-$p50\end{tabular} & \begin{tabular}[c]{@{}c@{}}p75$-$p50\end{tabular} \\
+ & (1) & (2) & (3) & (4) \\
+\midrule
+Post $\times$ Connectivity & 0.0016 & 0.0058* & $-$0.0011 & 0.0025 \\
+  & (0.0039) & (0.0030) & (0.0029) & (0.0020) \\
+  &  &  &  & \\
+Pre $\times$ Connectivity & 0.0052 & 0.0083** & 0.0048 & 0.0044* \\
+  & (0.0054) & (0.0036) & (0.0049) & (0.0025) \\
+Pre-trend $F$-test $p$-value & [0.6361] & [0.0661] & [0.6028] & [0.1884] \\
+  &  &  &  & \\
+Observations & 32{,}498 & 32{,}498 & 32{,}498 & 32{,}498 \\
+Establishments & 4{,}085 & 4{,}085 & 4{,}085 & 4{,}085 \\
+\bottomrule
+\end{tabular}
+\scriptsize
+\begin{tablenotes}
+\item \textit{Notes:} This table estimates spillover effects of Brazil's 2012 ultractivity reform on hourly wage inequality within establishments (p90$-$p10, p75$-$p25, p90$-$p50, and p75$-$p50 log wage gaps) at untreated establishments connected to treated firms. Connectivity is defined as the share of an establishment's pre-reform workforce (2007--2011) that overlapped with a treated firm's workforce, normalized to the 90th percentile of the spillover sample distribution. The sample is restricted to untreated establishments in the Lagos sample participating in a balanced panel. Post $\times$ Connectivity captures the average spillover effect for 2012--2016; Pre $\times$ Connectivity is a placebo test using 2009--2011. All regressions include establishment fixed effects, year fixed effects interacted with two-digit industry, microregion, and negotiation-month indicators, and quartile-bin controls for pre-treatment per-worker pairwise worker flows (2007--2011) and pre-treatment establishment size, interacted with year (or CBA-period) fixed effects. Standard errors clustered at the establishment level in parentheses. *** p$<$0.01, ** p$<$0.05, * p$<$0.10.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+\clearpage
+
+\end{document}

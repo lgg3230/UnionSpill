@@ -4,6 +4,14 @@
 .vscode/
 *.log
 
+# ----- macOS / R session noise -----
+.DS_Store
+*.Rhistory
+
+# ----- Graphs/maps: shapefiles + oversized map PDF exceed GitHub 100MB limit -----
+Graphs/maps/shapefiles/
+Graphs/maps/sample_geography_map.pdf
+
 # ----- OpenAI Codex CLI (not part of research) -----
 .codex
 node_modules/
@@ -186,3 +194,6 @@ UnionSpill-paper/
 
 # ----- Packaged standalone archive (exceeds GitHub 100MB limit; dir itself is tracked) -----
 layer_connectivity_standalone.zip
+
+# ----- Re-ignore macOS noise even inside force-included dirs (must come last) -----
+**/.DS_Store

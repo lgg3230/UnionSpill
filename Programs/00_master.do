@@ -17,7 +17,7 @@ version 17.0
 // Main:
 
 global klc "/kellogg/proj/lgg3230"
-global luis "/Users/luisg/Library/CloudStorage/OneDrive-NorthwesternUniversity/4 - PhD/02_Research/Org_Econ BR/UnionSpillovers/Replication_Mar 2"
+global luis "/Users/luisg/Library/CloudStorage/OneDrive-NorthwesternUniversity/4 - PhD/02_Research/Org_Econ BR/UnionSpillovers/Cluster/UnionSpill"
 
 if "`c(username)'"=="luisg"{
 	global main "$luis"
@@ -46,6 +46,8 @@ global ibge "$main/UnionSpill/Data/IBGE"
 global programs "$main/UnionSpill/Programs"
 global tables "$main/UnionSpill/Tables"
 global graphs "$main/UnionSpill/Graphs"
+global logs "main/UnionSpill/Logs"
+
 
 // CONTROL WHICH PROGRAMS RUN
 

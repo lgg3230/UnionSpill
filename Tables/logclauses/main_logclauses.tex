@@ -1,0 +1,56 @@
+\begin{table}[!htbp]
+\centering
+\caption{Main Outcomes and Log Clause Count: Direct and Spillover Effects}
+\label{tab:main_logclauses}
+\scriptsize
+\begin{tabular}{lccccc}
+\toprule
+ & Log & Log hourly & Log & Clause & Log clause \\
+ & earnings & earnings & employment & count & count \\
+\midrule
+\multicolumn{6}{l}{\textbf{Panel A}}\\
+\multicolumn{6}{l}{\textit{Control group: zero-connectivity untreated firms}}\\
+Post $\times$ Treatment & 0.0262*** & 0.0287*** & $-$0.0018 & 1.5568*** & 0.0861***\\
+ & (0.0049) & (0.0050) & (0.0153) & (0.3044) & (0.0174)\\
+Pre $\times$ Treatment & $-$0.0001 & $-$0.0013 & 0.0163 & 0.1467 & 0.0435**\\
+ & (0.0046) & (0.0054) & (0.0101) & (0.3484) & (0.0186)\\
+Pre-trend p-value & [0.7372] & [0.6977] & [0.0162] & [0.7105] & [0.0455]\\
+$N$ establishments & 14{,}134 & 14{,}134 & 14{,}137 & 14{,}176 & 14{,}174\\
+$N$ observations & 112{,}679 & 112{,}679 & 113{,}096 & 73{,}177 & 73{,}173\\
+\addlinespace
+\multicolumn{6}{l}{\textbf{Panel B}}\\
+\multicolumn{6}{l}{\textit{Control group: untreated firms with connectivity $\leq 1\%$}}\\
+Post $\times$ Treatment & 0.0199*** & 0.0234*** & $-$0.0045 & 1.3556*** & 0.0751***\\
+ & (0.0038) & (0.0039) & (0.0125) & (0.2684) & (0.0151)\\
+Pre $\times$ Treatment & 0.0049 & 0.0056 & 0.0036 & 0.3638 & 0.0503***\\
+ & (0.0035) & (0.0041) & (0.0088) & (0.2920) & (0.0160)\\
+Pre-trend p-value & [0.2354] & [0.2127] & [0.2728] & [0.2045] & [0.0042]\\
+$N$ establishments & 15{,}129 & 15{,}129 & 15{,}133 & 15{,}171 & 15{,}169\\
+$N$ observations & 120{,}617 & 120{,}617 & 121{,}064 & 77{,}947 & 77{,}943\\
+\addlinespace
+\multicolumn{6}{l}{\textbf{Panel C}}\\
+\multicolumn{6}{l}{\textit{Control group: all untreated firms}}\\
+Post $\times$ Treatment & 0.0178*** & 0.0202*** & 0.0024 & 1.3481*** & 0.0698***\\
+ & (0.0032) & (0.0033) & (0.0111) & (0.2350) & (0.0133)\\
+Pre $\times$ Treatment & 0.0042 & 0.0048 & $-$0.0012 & 0.2660 & 0.0391***\\
+ & (0.0030) & (0.0035) & (0.0076) & (0.2471) & (0.0140)\\
+Pre-trend p-value & [0.1959] & [0.1822] & [0.4932] & [0.3105] & [0.0136]\\
+$N$ establishments & 16{,}398 & 16{,}398 & 16{,}404 & 16{,}444 & 16{,}442\\
+$N$ observations & 130{,}708 & 130{,}708 & 131{,}232 & 84{,}080 & 84{,}075\\
+\addlinespace
+\multicolumn{6}{l}{\textbf{Panel D}}\\
+\multicolumn{6}{l}{\textit{Sample: untreated firms; exposure = worker-flow connectivity to treated}}\\
+Post $\times$ Connectivity & 0.0051** & 0.0066*** & 0.0004 & 0.0180 & 0.0053\\
+ & (0.0023) & (0.0023) & (0.0081) & (0.1176) & (0.0063)\\
+Pre $\times$ Connectivity & 0.0020 & 0.0016 & $-$0.0012 & 0.3276 & 0.0081\\
+ & (0.0025) & (0.0026) & (0.0063) & (0.2017) & (0.0074)\\
+Pre-trend p-value & [0.7351] & [0.7907] & [0.8736] & [0.0980] & [0.2677]\\
+$N$ establishments & 4{,}084 & 4{,}084 & 4{,}088 & 4{,}142 & 4{,}142\\
+$N$ observations & 32{,}495 & 32{,}495 & 32{,}704 & 19{,}693 & 19{,}692\\
+\bottomrule
+\end{tabular}
+\begin{minipage}{\linewidth}
+\footnotesize\vspace{4pt}
+\textit{Notes:} This table reports direct and spillover effects of the 2012 ultractivity reform on the main firm-level outcomes plus the (log) number of clauses in the firm's collective bargaining agreement. Columns~1--3 are log December earnings, log hourly December earnings, and log December employment, estimated on the yearly panel with 2011 as the reference year. Column~4 is the clause count and Column~5 is its log, $\ln(\text{clauses})$, both estimated on the CBA-negotiation-period panel with the second pre-reform period as reference. Panels~A--C report direct effects (treated vs.\ untreated controls): Panel~A uses untreated firms with zero pre-reform worker-flow connectivity to treated firms, Panel~B those with connectivity of at most 1\%, and Panel~C all untreated firms. Panel~D reports spillover effects, where exposure is the firm's pre-reform worker-flow connectivity to treated firms, normalized by the 90th percentile of the 2009 spillover-sample distribution. ``Post'' is the average post-reform effect and ``Pre'' the corresponding placebo from pre-reform periods only. All specifications include establishment fixed effects, period interactions with industry, negotiation month, and microregion, and quartile-bin controls for the pre-treatment outcome, pre-treatment log employment, and average per-worker worker flows during 2007--2011. The log clause count uses the same controls as the clause count, except that $\ln(\text{clauses})$ drops the few firm-period observations with exactly zero clauses. Standard errors clustered by establishment in parentheses; pre-trend $p$-values in brackets. *** p$<$0.01, ** p$<$0.05, * p$<$0.10.
+\end{minipage}
+\end{table}
