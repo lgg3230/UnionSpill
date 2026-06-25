@@ -1,0 +1,70 @@
+\begin{table}[!htbp]
+\centering
+\caption{Robustness to extending the pre-treatment window to 2007}
+\label{tab:extpre_robustness}
+\scriptsize
+\begin{threeparttable}
+\begin{tabular}{lccc}
+\toprule\toprule
+\begin{tabular}[c]{@{}l@{}}\textbf{Panel A:} \textit{Direct Effects (Zero-Connectivity Controls)}\end{tabular} & \begin{tabular}[c]{@{}c@{}}Log\\Wages\end{tabular} & \begin{tabular}[c]{@{}c@{}}Log Hourly\\Wages\end{tabular} & \begin{tabular}[c]{@{}c@{}}Log\\Employment\end{tabular} \\
+ & (1) & (2) & (3) \\
+\midrule
+\textit{(a) Unbalanced (2009--16 firms)} & & & \\
+\quad Post $\times$ Treatment, 2009--2016 & 0.0262*** & 0.0287*** & $-$0.0018 \\
+ & (0.0049) & (0.0050) & (0.0153) \\
+\quad Pre $\times$ Treatment, 2009--2016 & $-$0.0001 & $-$0.0013 & 0.0163 \\
+ & (0.0046) & (0.0054) & (0.0101) \\
+\quad Post $\times$ Treatment, 2007--2016 & 0.0266*** & 0.0303*** & $-$0.0120 \\
+ & (0.0052) & (0.0053) & (0.0162) \\
+\quad Pre $\times$ Treatment, 2007--2016 & $-$0.0022 & $-$0.0047 & 0.0253** \\
+ & (0.0049) & (0.0058) & (0.0117) \\
+\quad Pre-trend $F$ $p$ (2007--2010) & [0.80] & [0.63] & [0.01] \\
+\quad Establishments & 14{,}135 & 14{,}135 & 14{,}137 \\
+ & & & \\
+\textit{(b) Balanced throughout 2007--16} & & & \\
+\quad Post $\times$ Treatment, 2009--2016 & 0.0212*** & 0.0248*** & $-$0.0064 \\
+ & (0.0052) & (0.0054) & (0.0167) \\
+\quad Pre $\times$ Treatment, 2009--2016 & 0.0023 & 0.0003 & 0.0258** \\
+ & (0.0048) & (0.0059) & (0.0108) \\
+\quad Post $\times$ Treatment, 2007--2016 & 0.0234*** & 0.0283*** & $-$0.0152 \\
+ & (0.0056) & (0.0057) & (0.0177) \\
+\quad Pre $\times$ Treatment, 2007--2016 & $-$0.0011 & $-$0.0044 & 0.0325*** \\
+ & (0.0052) & (0.0063) & (0.0125) \\
+\quad Pre-trend $F$ $p$ (2007--2010) & [0.58] & [0.49] & [0.02] \\
+\quad Establishments & 12{,}956 & 12{,}956 & 12{,}956 \\
+\midrule
+ & & & \\
+\begin{tabular}[c]{@{}l@{}}\textbf{Panel B:} \textit{Spillover Effects (Untreated Connected Firms)}\end{tabular} & \begin{tabular}[c]{@{}c@{}}Log\\Wages\end{tabular} & \begin{tabular}[c]{@{}c@{}}Log Hourly\\Wages\end{tabular} & \begin{tabular}[c]{@{}c@{}}Log\\Employment\end{tabular} \\
+ & (1) & (2) & (3) \\
+\midrule
+\textit{(a) Unbalanced (2009--16 firms)} & & & \\
+\quad Post $\times$ Connectivity, 2009--2016 & 0.0051** & 0.0066*** & 0.0004 \\
+ & (0.0022) & (0.0023) & (0.0081) \\
+\quad Pre $\times$ Connectivity, 2009--2016 & 0.0020 & 0.0016 & $-$0.0012 \\
+ & (0.0025) & (0.0026) & (0.0063) \\
+\quad Post $\times$ Connectivity, 2007--2016 & 0.0018 & 0.0040 & 0.0060 \\
+ & (0.0033) & (0.0034) & (0.0100) \\
+\quad Pre $\times$ Connectivity, 2007--2016 & 0.0059 & 0.0046 & $-$0.0098 \\
+ & (0.0037) & (0.0036) & (0.0087) \\
+\quad Pre-trend $F$ $p$ (2007--2010) & [0.43] & [0.55] & [0.27] \\
+\quad Establishments & 4{,}085 & 4{,}085 & 4{,}088 \\
+ & & & \\
+\textit{(b) Balanced throughout 2007--16} & & & \\
+\quad Post $\times$ Connectivity, 2009--2016 & 0.0026 & 0.0032 & $-$0.0154 \\
+ & (0.0037) & (0.0038) & (0.0160) \\
+\quad Pre $\times$ Connectivity, 2009--2016 & 0.0054 & 0.0060 & $-$0.0052 \\
+ & (0.0053) & (0.0055) & (0.0139) \\
+\quad Post $\times$ Connectivity, 2007--2016 & $-$0.0004 & 0.0011 & $-$0.0067 \\
+ & (0.0047) & (0.0050) & (0.0189) \\
+\quad Pre $\times$ Connectivity, 2007--2016 & 0.0083 & 0.0076 & $-$0.0152 \\
+ & (0.0059) & (0.0062) & (0.0183) \\
+\quad Pre-trend $F$ $p$ (2007--2010) & [0.67] & [0.54] & [0.43] \\
+\quad Establishments & 3{,}571 & 3{,}571 & 3{,}572 \\
+\bottomrule
+\end{tabular}
+\scriptsize
+\begin{tablenotes}
+\item \textit{Notes:} This table assesses the robustness of the headline difference-in-differences estimates to extending the pre-treatment window back to 2007. Firm-year outcomes for 2007--2008 are reconstructed from the full RAIS following the same worker-selection and deflation procedure as the main sample, and reproduce the 2009 values to machine precision. The reform (Brazil's 2012 ultractivity ruling, effective September~25, 2012) extended existing CBAs indefinitely upon expiration. Each panel reports the pooled estimate on the published 2009--2016 window and on the extended 2007--2016 window, under two sample definitions: \textit{(a)} the headline balanced-2009--2016 firms with 2007--2008 observations added where the firm operated (pre-period unbalanced), and \textit{(b)} firms operating in every year 2007--2016 (balanced throughout). Comparing the 2009--2016 rows across \textit{(a)} and \textit{(b)} isolates the role of firms entering after 2007; comparing the 2009--2016 and 2007--2016 rows within a sample isolates the added pre-period. ``Post~$\times$~Treatment/Connectivity'' is the pooled post-reform estimate ($t\geq2012$ versus the pre-period); ``Pre~$\times$~Treatment/Connectivity'' is the corresponding placebo, which replaces the post indicator with one for the pre-treatment years (2009--2010 in the 2009--2016 window, 2007--2010 in the 2007--2016 window) relative to the 2011 reference. The pre-trend $F$ $p$-value is a joint test that the dynamic event-study coefficients for 2007--2010 are zero (2011 is the omitted base). All regressions include establishment fixed effects, year fixed effects interacted with two-digit industry, microregion, and negotiation-month indicators, and quartile-bin controls for pre-treatment per-worker pairwise worker flows and establishment size interacted with year. The direct panel uses Panel~A (zero-connectivity controls); the spillover panel uses untreated firms with connectivity normalized to the 90th percentile of the spillover sample in 2009. Standard errors clustered at the establishment level in parentheses. *** $p<.01$, ** $p<.05$, * $p<.10$.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
