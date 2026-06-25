@@ -202,7 +202,12 @@ def panel_sensitivity(ax, effect, outcome, restr, res, bd, show_ylabel):
 
 
 def build(effect, coefs, res, bd):
-    restr = PRIMARY_RESTR[effect]
+    # The linear-extrapolation figure pairs naturally with the smoothness
+    # restriction (Dustmann et al. 2022; Fenizia & Saggio 2024): the rotated
+    # panel removes a linear pre-trend, and Delta^SD asks how much the
+    # counterfactual trend may curve away from that line. We therefore show
+    # Delta^SD for BOTH effects here (Delta^RM remains in honest_did_rm.pdf).
+    restr = "sd"
     nrow = len(OUTCOMES)
     fig, axes = plt.subplots(nrow, 3, figsize=(11, 2.7 * nrow), squeeze=False)
     for ri, outcome in enumerate(OUTCOMES):
