@@ -122,5 +122,6 @@ def make_set(mask, suffix, title, color):
 
 
 make_set(raw.in_spill == 1, "",         "Control (spillover) sample", "#2166AC")
-make_set(raw.in_treat == 1, "_treated", "Treated firms",              "#E08214")
+# Treated-firm connectivity graph deprecated in favor of the Task-2 balance table (balance_table_task2). Re-enable if needed.
+# make_set(raw.in_treat == 1, "_treated", "Treated firms",              "#E08214")
 print("=== firm_conn_scatter.py done ===")

@@ -157,7 +157,8 @@ def make_set(mask, suffix, title, color, fitcolor):
 
 BLUE, ORANGE, RED = "#2166AC", "#E08214", "#B2182B"
 rows  = make_set(raw.in_spill == 1, "",         "Control (spillover) sample", BLUE,   RED)
-rows += make_set(raw.in_treat == 1, "_treated", "Treated firms",              ORANGE, RED)
+# Treated-firm connectivity graph deprecated in favor of the Task-2 balance table (balance_table_task2). Re-enable if needed.
+# rows += make_set(raw.in_treat == 1, "_treated", "Treated firms",              ORANGE, RED)
 
 res = pd.DataFrame(rows)
 res.to_csv(TBL / "firm_conn_slopes.csv", index=False)

@@ -60,5 +60,6 @@ def make_hist(mask, color, fname, title):
 
 
 make_hist(raw.in_spill == 1, "#2166AC", "hist_connectivity.pdf",          "Control (spillover) sample")
-make_hist(raw.in_treat == 1, "#E08214", "hist_connectivity_treated.pdf",  "Treated firms")
+# Treated-firm connectivity graph deprecated in favor of the Task-2 balance table (balance_table_task2). Re-enable if needed.
+# make_hist(raw.in_treat == 1, "#E08214", "hist_connectivity_treated.pdf",  "Treated firms")
 print("=== hist_connectivity.py done ===")
