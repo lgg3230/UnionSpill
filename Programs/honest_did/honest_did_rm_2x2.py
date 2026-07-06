@@ -72,22 +72,32 @@ def panel_series(effect, out, xmax):
     oub = float(og.ub.iloc[0]) if not og.empty else None
     grid = ff[ff.is_original==0].sort_values("m")
     mf,lbf,ubf = grid.m.values, grid.lb.values, grid.ub.values
-    keep = np.isclose((mf/0.1), np.round(mf/0.1), atol=1e-6) & (mf <= 1.0+1e-9)
-    m,lb,ub = list(mf[keep]), list(lbf[keep]), list(ubf[keep])
+    # canonical points for m in (1, xmax] (fine grid stops at 1)
+    cm, clb, cub = [], [], []
     if xmax > 1.0+1e-9:
         cc = canon[(canon.effect==effect)&(canon.restriction=="rm")&(canon.target=="p1")
                    &(canon.outcome==out)&(canon.is_original==0)].sort_values("m")
         for _,r in cc.iterrows():
             if 1.0+1e-9 < r.m <= xmax+1e-9:
-                m.append(r.m); lb.append(r.lb); ub.append(r.ub)
-    return olb, oub, np.array(m), np.array(lb), np.array(ub)
+                cm.append(r.m); clb.append(r.lb); cub.append(r.ub)
+    # breakdown on the FULL-resolution grid (fine 0.05 for m<=1 + canonical tail)
+    fmask = mf <= 1.0+1e-9
+    bd = breakdown(np.concatenate([mf[fmask], np.array(cm)]),
+                   np.concatenate([lbf[fmask], np.array(clb)]))
+    # thinned display grid (0.1 for m<=1) + canonical tail
+    keep = np.isclose((mf/0.1), np.round(mf/0.1), atol=1e-6) & fmask
+    m  = list(mf[keep])  + cm
+    lb = list(lbf[keep]) + clb
+    ub = list(ubf[keep]) + cub
+    return olb, oub, np.array(m), np.array(lb), np.array(ub), bd
 
-def draw_panel(ax, effect, out, xmax, show_xlabel):
+def draw_panel(ax, effect, out, xmax, show_xlabel, show_title=True):
     x_og = -0.09
-    olb, oub, m, lb, ub = panel_series(effect, out, xmax)
+    olb, oub, m, lb, ub, bd = panel_series(effect, out, xmax)
     if len(m)==0:
         ax.text(0.5,0.5,"n/a",ha="center",va="center",transform=ax.transAxes,color="gray")
-        ax.set_title(LABEL[out], fontsize=11*S, fontweight="bold"); return
+        if show_title: ax.set_title(LABEL[out], fontsize=11*S, fontweight="bold")
+        return
     cen = 0.5*(lb+ub)
     if olb is not None:
         oc = 0.5*(olb+oub)
@@ -97,12 +107,11 @@ def draw_panel(ax, effect, out, xmax, show_xlabel):
     ax.errorbar(m,cen,yerr=[cen-lb,ub-cen],fmt="none",ecolor=C_ROBUST,
                 elinewidth=1.5,capsize=3,capthick=1.1,zorder=3)
     ax.axhline(0,color="black",lw=1.0,zorder=2)
-    bd = breakdown(m, lb)
     if bd is not None and 0 < bd <= xmax+1e-9:
         ax.axvline(bd,color="black",lw=1.1,ls=":",zorder=4)
         ax.annotate(rf"$\bar M={bd:.2f}$",xy=(bd,0),xytext=(4,7),textcoords="offset points",
                     fontsize=9.5*S,bbox=dict(boxstyle="round,pad=0.2",fc="white",ec="0.7",alpha=0.9))
-    ax.set_title(LABEL[out], fontsize=11*S, fontweight="bold")
+    if show_title: ax.set_title(LABEL[out], fontsize=11*S, fontweight="bold")
     ax.set_xlim(-0.14, xmax+0.04)
     step = 0.5 if xmax > 1.0+1e-9 else 0.2
     ticks = np.round(np.arange(0, xmax+1e-9, step), 2)
@@ -129,7 +138,7 @@ def make_2x2(effect, title, fname):
 def make_panel(effect, out, fname):
     """One standalone per-outcome PDF (for LaTeX minipage composition)."""
     fig, ax = plt.subplots(figsize=(4.7, 3.7))
-    draw_panel(ax, effect, out, XMAX[effect], show_xlabel=True)
+    draw_panel(ax, effect, out, XMAX[effect], show_xlabel=True, show_title=False)
     fig.tight_layout()
     o=GR/fname; fig.savefig(o,bbox_inches="tight"); fig.savefig(o.with_suffix(".png"),dpi=200,bbox_inches="tight")
     plt.close(fig); print("wrote",o)
