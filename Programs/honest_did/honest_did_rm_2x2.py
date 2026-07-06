@@ -77,7 +77,7 @@ def panel_series(effect, out, xmax):
     within = mf <= xmax+1e-9
     mf,lbf,ubf = mf[within], lbf[within], ubf[within]
     bd = breakdown(mf, lbf)                                       # full 0.05 grid
-    keep = np.isclose((mf/0.1), np.round(mf/0.1), atol=1e-6)      # thin to 0.1 for display
+    keep = np.isclose((mf/0.2), np.round(mf/0.2), atol=1e-6)      # thin to 0.2 for display
     return olb, oub, mf[keep], lbf[keep], ubf[keep], bd
 
 def draw_panel(ax, effect, out, xmax, show_xlabel, show_title=True):
