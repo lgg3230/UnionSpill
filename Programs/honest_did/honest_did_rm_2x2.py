@@ -8,10 +8,11 @@ effects, first post-period target. For each effect this writes BOTH:
     so the paper can compose the exhibit in LaTeX with four \\includegraphics
     (one per outcome) and keep/drop/reorder outcomes.
 
-Robust CIs are the dense fine grid (honest_did_results_fine.csv, step 0.05 thinned
-to 0.1) over Mbar in [0,1]; for the DIRECT effect the x-axis is extended to Mbar=2
-by splicing in the coarser canonical grid (honest_did_results.csv, to Mbar=2) so the
-direct breakdown values (which exceed 1, e.g. ~1.78) are visible as vertical lines.
+Robust CIs are the dense fine grid (honest_did_results_fine.csv, step 0.05, thinned
+to 0.1 for display so spacing is uniform end-to-end) over Mbar in [0, xmax] -- [0,1]
+for the spillover, [0,2] for the direct effect so the direct breakdown values
+(~1.78/1.41/1.39) are visible as vertical lines. (The fine grid now runs to Mbar=2,
+so no canonical splice is needed.)
 Run: /opt/homebrew/bin/python3 Programs/honest_did/honest_did_rm_2x2.py
 """
 from pathlib import Path
@@ -64,32 +65,20 @@ fine  = load(FINE)
 canon = load(CANON)
 
 def panel_series(effect, out, xmax):
-    """(olb, oub, m, lb, ub): original OLS CI + robust display grid over [0, xmax].
-    Dense fine grid (thinned to 0.1) for m<=1; canonical grid spliced in for 1<m<=xmax."""
+    """(olb, oub, m, lb, ub, bd): original OLS CI + robust display grid over [0, xmax]
+    from the dense fine grid (0.05, thinned to 0.1 for display, so spacing is uniform
+    end-to-end); breakdown computed on the full 0.05 grid."""
     ff = fine[(fine.effect==effect)&(fine.restriction=="rm")&(fine.target=="p1")&(fine.outcome==out)]
     og = ff[ff.is_original==1]
     olb = float(og.lb.iloc[0]) if not og.empty else None
     oub = float(og.ub.iloc[0]) if not og.empty else None
     grid = ff[ff.is_original==0].sort_values("m")
     mf,lbf,ubf = grid.m.values, grid.lb.values, grid.ub.values
-    # canonical points for m in (1, xmax] (fine grid stops at 1)
-    cm, clb, cub = [], [], []
-    if xmax > 1.0+1e-9:
-        cc = canon[(canon.effect==effect)&(canon.restriction=="rm")&(canon.target=="p1")
-                   &(canon.outcome==out)&(canon.is_original==0)].sort_values("m")
-        for _,r in cc.iterrows():
-            if 1.0+1e-9 < r.m <= xmax+1e-9:
-                cm.append(r.m); clb.append(r.lb); cub.append(r.ub)
-    # breakdown on the FULL-resolution grid (fine 0.05 for m<=1 + canonical tail)
-    fmask = mf <= 1.0+1e-9
-    bd = breakdown(np.concatenate([mf[fmask], np.array(cm)]),
-                   np.concatenate([lbf[fmask], np.array(clb)]))
-    # thinned display grid (0.1 for m<=1) + canonical tail
-    keep = np.isclose((mf/0.1), np.round(mf/0.1), atol=1e-6) & fmask
-    m  = list(mf[keep])  + cm
-    lb = list(lbf[keep]) + clb
-    ub = list(ubf[keep]) + cub
-    return olb, oub, np.array(m), np.array(lb), np.array(ub), bd
+    within = mf <= xmax+1e-9
+    mf,lbf,ubf = mf[within], lbf[within], ubf[within]
+    bd = breakdown(mf, lbf)                                       # full 0.05 grid
+    keep = np.isclose((mf/0.1), np.round(mf/0.1), atol=1e-6)      # thin to 0.1 for display
+    return olb, oub, mf[keep], lbf[keep], ubf[keep], bd
 
 def draw_panel(ax, effect, out, xmax, show_xlabel, show_title=True):
     x_og = -0.09
