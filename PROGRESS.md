@@ -10,19 +10,17 @@ Each block carries a **precondition pass** filled in *before* coding:
 
 Conventions that apply project-wide: outcomes are **"log wages"** (`lr_remdezr_w`) / **"log hourly wages"** (`lr_remdezr_h_w`), never "earnings". Direct effects use **Sample A** (`s_direct_A` / Panel A), spillover uses `s_spill`. No "fragile"/"VERY FRAGILE" labels in figures. Coefplot formatting per `Cluster/UnionSpill/CLAUDE.md`. Two repos: code = `lgg3230/UnionSpill`, paper = `lgg3230/UnionSpill_paper` (Overleaf bridge — watch for `overleaf-*` branch collisions).
 
-## LIVE STATUS — updated 2026-07-01
-Active list from the 2026-07-01 meeting (this supersedes the 4-task framing below; the detailed blocks + session logs still hold the history). Legend: ☑ done · ◐ in progress · ☐ todo. **"Clódio" in meeting notes = Claude** (answer methodological questions here, not an external person).
+## LIVE STATUS — updated 2026-07-01 (Ben-meeting prep)
+Authoritative list = today's Ben-prep update (supersedes the earlier 5-item meeting list). Legend: ☑ done · ◐ in progress · ☐ todo · ✖ do-not-do. **"Clódio"/"Lorenzo" in notes = Claude / Lorenzo Lagos (Lagos spec).** Execute in order 1→2→3, then 5; send message updates as things confirm.
 
-1. **Parallel-trends verdict (RM presentation)** ◐ — lit funnel DONE (`Programs/honest_did/rm_literature_review.md`; Chiu et al. 2026 distribution = load-bearing cite; Torul / Truffa–Wong = framing templates). TODO: write the subsection — honest but confident, figures→appendix, decide whether to state the magnitude. [old block: Task 1.4]
-2. **6-column balance table (control-effectiveness)** ☑ — BUILT + integrated into the paper this session (see 2026-07-01 log). Method (2009/2010 lag) confirmed. [old block: Task 2]
-3. **CBA similarity test (first pass)** ☐ — Luis's preferred next; could shift the paper's story. Scaffolding under `Programs/cba_similarity/`. Not started.
-4. **Amenities + direct-effect autocorrelation** ☐ — repass amenities (null supports the labor-competition story); assess whether to present spillover-only. [old block: Task 3]
-5. **Ben strategy chat** ☐ — tee up a recommendation on parallel-trends presentation + whether to drop the direct effect.
-- (aside) **Winsorization robustness** ☑ — results robust. [old block: Task 4]
+1. **CBA code check before Ben's meeting (highest value)** ☑ (2026-07-01) — verify direct/spillover, clause categories (`clause_types` wage/emp/other; `composition` age/tenure/female/educ), amenity value (`cba_value`). Confirm **share female NOT significant** even under the Lagos-style control set; rule out mechanical causes (wrong sample / clause-share coding / direct–spillover assignment / stale output table). Message: correct+unchanged (+caveats) OR exactly what changed. [share-female result lives in `Programs/composition/`; Lagos spec in `Programs/cba_value/lagos_spec_direct.do`] — DONE: clause bucketing correct (wage=1/emp=3,4/other=rest; caveat: workday-51 is 'other' here vs 'employment' in the subgroup analysis). Spillover NULL on clause counts, clause shares, and CBA wage-equiv value (−0.0009 ns); share-female spillover null (+0.0003), direct significant. clause_types re-run reproduces all numbers exactly (Apr-8 tex was cosmetically stale, numbers identical; tex refreshed). cba_value already in-sync (Jun 22).
+2. **Balance-table revisions (Ben-ready)** ☑ (2026-07-05: 9-col Raw/Main/+Own, 2007-2010 wage/emp own window; pushed code fe67809 / paper bed4651) — core 6-col table is ☑ (pushed); revisions: (a) add log wages [already a row — confirm intent]; (b) own-control window 2009–2010 → **2007–2010** (needs extpre bilateral-flows; timebox ~30–60 min, stop if sinkhole); (c) add **intermediate column** = main-spec controls only vs +own prior control. Don't control a 2011 outcome by its own contemporaneous value; check we're not implicitly controlling demographics "by themselves" against intent.
+3. **Figure fixes (paper + Ben)** ☑ (2026-07-05) — (1) **split the 2×2 exhibits into per-outcome `\includegraphics`, composed in LaTeX**: `honest_did_rm_{spillover,direct}_2x2.pdf` are each ONE matplotlib 2×2-subplot figure over the four outcomes (built by `honest_did_rm_2x2.py`, single savefig). Change that script to also export each per-outcome panel **without a baked-in title** (drop `ax.set_title` on standalone panels), then in `Main_Results.tex` compose them with **`subfigure` (subcaption pkg, as in `Connectivity.tex`)**: each panel in `\begin{subfigure}[t]{0.48\textwidth}` with `\includegraphics` + `\caption{<outcome>}` (title BELOW) + `\label{}`, so each is **individually referenceable** (Fig X(a)); use `subfigure` ONLY for composing the plot panels, **keep `minipage` for table/figure NOTES blocks**. Supersedes the initial minipage+baked-title version already pushed (code f4cb9f0 / paper cce185a). NB `honest_did_rm_p1..p5.pdf` are from the older `honest_did_plot.py` — don't reuse; extend x-axis past 1 so the **direct breakdown ≈2** shows; fix readability in the paper PDF; investigate **pixelation** (font embedding / export format); verify the residualized-binscatter **bubble sizes recompute after residualizing** (mass-weighting fix just done in `balance_binscatter.py` — re-verify). **DONE 2026-07-05:** per-outcome panels as `subfigure`s (titleless, sub-captioned, individually labelled); direct x-axis to M̄=2; RM fine grid re-run to `mvec(0(0.05)2)` for uniform CI spacing (displayed at 0.2), direct log-wages breakdown refined to 1.77; bubble-sizes already fixed. Pushed (code 542267b / paper 207a41e). Pixelation to confirm after an Overleaf compile.
+4. **Do NOT prep the amenity / reverse-causality story for Ben** ✖ (guardrail) — don't raise "CBAs move toward higher-wage workers' preferences" (reverse-causality risk cuts against the paper). Safe framing: unions don't mediate the spillover in an important way.
+5. **Randomization inference / permutation test (next major task)** ☐ — re-open the preliminary scaffold in the IDs file; decide **stratification** (preserve firm size / distribution?); find a **reference paper** first (as with the breakdown-value search). Deliver preliminary by **Monday**; discuss cleaner version in the **Tuesday** meeting.
 
-NEXT UP: (1) parallel-trends write-up, then (3) CBA similarity first pass.
-OPEN: paper repo has a local commit (balance table, 27dac87) awaiting push approval; code-repo (`lgg3230/UnionSpill`) changes from Task 2 not yet committed.
-
+CARRIED OVER (not today's focus): parallel-trends RM write-up ◐ (lit done; subsection unwritten); CBA similarity first pass ☐; Ben strategy chat (parallel-trends presentation + whether to drop the direct effect).
+DONE recently: 6-col balance table + connectivity binscatters with slopes matching the table (cols 5/6), pushed (code 5da0d51, paper 165d393).
 ---
 
 ## Task 1 — RM robustness: learn how the literature handles low breakdown values, then present ours  ☐
@@ -90,6 +88,19 @@ Flagged highest-value by Guilherme. **Needs a design discussion before coding (3
 - **Internal dependencies:** 1.3 and 1.4 depend on 1.1/1.2 outcome; 2.2 depends on 2.1; 3.2 depends on 3.1 design.
 
 ---
+
+## Session log — 2026-07-05 — Ben-prep: CBA check, balance table, figures, sync tooling
+
+**CBA code check (item 1) ☑** — clause bucketing correct (wage=1/emp=3,4/other=rest; caveat: workday-51 is 'other' here vs 'employment' in the subgroup analysis). Spillover NULL on clause counts, clause shares, and CBA wage-equiv value (−0.0009 ns); share-female spillover null (+0.0003), direct significant. clause_types re-run reproduces all numbers (Apr-8 tex was cosmetically stale). cba_value spec DOES control for the own pre-treatment quartile (`ib0.cba_value_pre4#cba_period`), CBA-periods 1-2.
+
+**Balance table (item 2) ☑** — rebuilt as 9 columns: each comparison (treated-vs-all / treated-vs-zero-conn / connectivity slope) at Raw / Main / +Own. Own-outcome quartile window 2007-2010 for wage & emp (real extpre data) else 2009-2010; loads the extpre panel. Self-contained notes; `\resizebox`. Connectivity binscatters refreshed to match col 9. Pushed (code fe67809 / paper bed4651). The Main-vs-+Own contrast shows where conditioning on a characteristic's own prior drives the balance (esp. demographics).
+
+**Figures (item 3) ☑** — see item 3 above. Split 2×2 into per-outcome subfigures; direct axis to M̄=2; RM fine grid extended to 2 (uniform spacing, 0.2 display); breakdowns 0.75/0.42 (spill), 1.77/1.41/1.39 (direct).
+
+**Productivity tooling ☑** — installed tectonic; added `Programs/paper_push.sh` (safe commit+merge+fragment-smoke-test+push for the paper repo, auto-resolving generated fragments) — tested live; set `core.untrackedCache`/`core.fsmonitor` on the code repo to end commit hangs. See paper-sync-tooling memory.
+
+**Guardrail (item 4):** do NOT raise the amenity/reverse-causality story with Ben.
+**Next (item 5):** randomization inference / permutation test — Monday preliminary.
 
 ## Session log — 2026-07-01 — Task 2 balance table BUILT + integrated; list reframed
 
