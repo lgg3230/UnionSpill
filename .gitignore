@@ -12,6 +12,9 @@
 Graphs/maps/shapefiles/
 Graphs/maps/sample_geography_map.pdf
 
+# ----- Reference papers (copyrighted; not part of research code) -----
+Programs/entry_exit/Lagos JMP (2026).pdf
+
 # ----- OpenAI Codex CLI (not part of research) -----
 .codex
 node_modules/
