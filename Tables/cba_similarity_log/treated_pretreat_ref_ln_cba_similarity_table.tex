@@ -1,0 +1,43 @@
+\begin{table}[H]
+\centering
+\caption{Reciprocal CBA Similarity (Log): Treated Firms vs.\ Fixed Pre-Treatment Untreated Reference}
+\label{tab:treated_pretreat_ref_ln_cba_similarity}
+\scriptsize
+\setlength{\tabcolsep}{8pt}
+\begin{tabular}{lcccc}
+\toprule\toprule
+ & (1) & (2) & (3) & (4) \\
+ & \textbf{Cosine} & \textbf{Bray-Curtis} & \textbf{Total Var.} & \textbf{Ruzicka} \\
+\midrule
+\multicolumn{5}{l}{\textit{Panel A: Baseline}} \\
+\multicolumn{5}{l}{\textit{Post-treatment}} \\
+Connectivity $\times$ Post & 0.0008 & 0.0004 & 0.0004 & 0.0002 \\
+ & (0.0007) & (0.0006) & (0.0006) & (0.0006) \\
+\multicolumn{5}{l}{\textit{Pre-treatment placebo}} \\
+Connectivity $\times$ Pre & -0.0014* & -0.0010 & -0.0009 & -0.0010 \\
+ & (0.0008) & (0.0007) & (0.0008) & (0.0008) \\
+\midrule
+Baseline mean (period 2) & 0.3059 & 0.2354 & 0.2333 & 0.1611 \\
+Observations &       17,957 &       17,957 &       17,957 &       17,957 \\
+Establishments &        3,574 &        3,574 &        3,574 &        3,574 \\
+Pre-trend $p$-value & 0.081 & 0.157 & 0.214 & 0.170 \\
+\midrule
+\multicolumn{5}{l}{\textit{Panel B: Adding union $\times$ period FE}} \\
+\multicolumn{5}{l}{\textit{Post-treatment}} \\
+Connectivity $\times$ Post & -0.0003 & -0.0003 & -0.0002 & -0.0005 \\
+ & (0.0009) & (0.0008) & (0.0008) & (0.0007) \\
+\multicolumn{5}{l}{\textit{Pre-treatment placebo}} \\
+Connectivity $\times$ Pre & -0.0002 & 0.0001 & -0.0001 & -0.0002 \\
+ & (0.0011) & (0.0008) & (0.0009) & (0.0007) \\
+\midrule
+Baseline mean (period 2) & 0.3064 & 0.2360 & 0.2338 & 0.1623 \\
+Observations &       15,494 &       15,494 &       15,494 &       15,494 \\
+Establishments &        3,220 &        3,220 &        3,220 &        3,220 \\
+Pre-trend $p$-value & 0.796 & 0.922 & 0.857 & 0.837 \\
+\bottomrule
+\end{tabular}
+\begin{minipage}{\linewidth}
+\footnotesize\vspace{4pt}
+\textit{Notes:} This table reports treated-side reciprocal estimates of \emph{log} CBA content similarity on connectivity, where the reference vector is fixed at the untreated partners' pre-Sumula 277 contracts (\textbf{cba\_period $= 2$}). Outcomes are $\ln(\text{sim}_{it})$ for $\text{sim} \in \{\text{cosine}, \text{Bray-Curtis}, \text{total variation}, \text{Ruzicka}\}$, dropping firm-period observations with zero similarity. Sample, weights, and fixed-effects structure are identical to Table~\ref{tab:treated_pretreat_ref_cba_similarity}; see notes there. Standard errors clustered at the establishment level. $^{***}p<0.01$, $^{**}p<0.05$, $^{*}p<0.10$.
+\end{minipage}
+\end{table}

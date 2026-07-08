@@ -1,0 +1,27 @@
+\begin{table}[H]
+\centering
+\caption{Polynomial Linearity Test of the Spillover Dose--Response}
+\label{tab:linearity_did_poly}
+\scriptsize
+\begin{tabular}{lccccc}
+\toprule\toprule
+Outcome & \shortstack{Linear\\$\widehat{\beta}_1$} & \shortstack{Quadratic\\$\widehat{\beta}_2$} & \shortstack{Cubic\\$\widehat{\beta}_3$} & \shortstack{Joint $F$\\$(2,\,\cdot)$} & $p$-value \\
+\midrule
+Log Dec.\ wage & 0.0046 & -0.0000 & 0.0000 & 0.019 & 0.981 \\
+ & (0.0072) & (0.0016) & (0.0001) & & \\
+Log hourly wage & 0.0030 & 0.0009 & -0.0000 & 0.156 & 0.856 \\
+ & (0.0078) & (0.0017) & (0.0001) & & \\
+Log employment & 0.0237 & -0.0050 & 0.0002 & 0.414 & 0.661 \\
+ & (0.0262) & (0.0058) & (0.0003) & & \\
+\# CBA clauses & 0.9512 & -0.2130 & 0.0089 & 4.385 & \textbf{0.013} \\
+ & (0.4197) & (0.0740) & (0.0030) & & \\
+\midrule
+\multicolumn{6}{l}{\textit{Memo:} linear-only headline slope $\widehat{\beta}^{\,\text{lin}}$ (s.e.):} \\
+\multicolumn{6}{l}{\hspace{1em}Log Dec.\ wage 0.0051 (0.0022);\quad Log hourly wage 0.0066 (0.0023);\quad Log employment 0.0004 (0.0081);\quad \# CBA clauses 0.0180 (0.1176)} \\
+\bottomrule
+\end{tabular}
+\begin{minipage}{\linewidth}
+\footnotesize\vspace{4pt}
+\textit{Notes:} This table tests the linear functional form of the spillover dose--response by augmenting the headline difference-in-differences specification (Main Results, spillover panel) with quadratic and cubic terms in connectivity. For each outcome the estimating equation is $Y_{jt} = \beta_1\,(C_j\!\times\!\text{Post}_t) + \beta_2\,(C_j^2\!\times\!\text{Post}_t) + \beta_3\,(C_j^3\!\times\!\text{Post}_t) + \alpha_j + \gamma_{g(j)t} + \varepsilon_{jt}$, estimated on the balanced panel of untreated (spillover) firms, where $C_j$ is the firm's connectivity to treated firms (flows per worker, scaled to the 90th percentile of the spillover sample in 2009). Each specification holds fixed the establishment, industry, month-of-year, microregion, and pre-treatment quartile fixed effects (interacted with year, or with CBA period for clause counts) of the headline regression. The reported $F$-statistic tests $H_0\!:\beta_2=\beta_3=0$ (the dose--response is linear in connectivity); failure to reject supports the linear specification. The \textit{Memo} row gives the slope from the linear-only headline regression ($\beta_2=\beta_3=0$ imposed), which reproduces the published spillover coefficient. The wage and employment outcomes use annual data (post $=$ 2012--2016, pre $=$ 2009--2011); clause counts are negotiated on the CBA calendar and use the published firm $\times$ CBA-period DiD (post $=$ post-reform CBA rounds). Standard errors, clustered by establishment, are in parentheses. $p$-values below $0.10$ are bolded. Establishments: Log Dec. $4{,}084$; Log hourly wage $4{,}084$; Log employment $4{,}088$;  $4{,}142$.
+\end{minipage}
+\end{table}

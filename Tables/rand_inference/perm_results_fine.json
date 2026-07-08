@@ -1,0 +1,24 @@
+{
+  "lr_remdezr_w": {
+    "delta_obs": 0.005070386122750775,
+    "p_two_sided": 0.24087591240875914,
+    "p_upper": 0.24087591240875914,
+    "R": 10000,
+    "placebo_mean": 0.003954757716742916,
+    "placebo_sd": 0.0014751255256470143,
+    "coarseness": "fine",
+    "mixed_strata": 629,
+    "seed": 12345
+  },
+  "lr_remdezr_h_w": {
+    "delta_obs": 0.006636246158415334,
+    "p_two_sided": 0.0660933906609339,
+    "p_upper": 0.0660933906609339,
+    "R": 10000,
+    "placebo_mean": 0.004534048297553321,
+    "placebo_sd": 0.0014787463584354716,
+    "coarseness": "fine",
+    "mixed_strata": 629,
+    "seed": 12345
+  }
+}

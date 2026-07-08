@@ -1,20 +1,20 @@
 \begin{table}[H]
 \centering
-\caption{Linearity Test of the Spillover Dose--Response (First Difference)}
+\caption{Linearity Test of the Spillover Dose--Response}
 \label{tab:linearity_did_fd}
 \scriptsize
 \begin{tabular}{lcccc}
 \toprule\toprule
-Outcome & $N$ & \shortstack{Bins\\(req.\ 50)} & \shortstack{Sup-$t$\\stat} & $p$-value \\
+Outcome & Establishments & \shortstack{Bins\\(req.\ 50)} & \shortstack{Sup-$t$\\stat} & $p$-value \\
 \midrule
 Log Dec.\ wage & $4{,}188$ & 28 & 2.150 & 0.132 \\
 Log hourly wage & $4{,}188$ & 28 & 1.757 & 0.271 \\
 Log employment & $4{,}195$ & 28 & 0.881 & 0.802 \\
-\# CBA clauses & $3{,}977$ & 29 & 1.457 & 0.449 \\
+\# CBA clauses & $4{,}142$ & 50 & 2.649 & 0.560 \\
 \bottomrule
 \end{tabular}
 \begin{minipage}{\linewidth}
 \footnotesize\vspace{4pt}
-\textit{Notes:} This table reports Cattaneo, Crump, Farrell, and Feng (2024) sup-$t$ tests of the null hypothesis that the firm-level treatment effect is a degree-1 polynomial (linear) in connectivity. For each firm the outcome is first-differenced, $\Delta Y_j = \overline{Y}_j^{\,post} - \overline{Y}_j^{\,pre}$ (post $=$ 2012--2016, pre $=$ 2009--2011; CBA periods 3--6 vs.\ 1--2 for clause counts), which removes the firm fixed effect of the panel DiD exactly. The OLS slope of $\Delta Y_j$ on connectivity reproduces the panel spillover coefficient to machine precision. Industry, month-of-year, microregion, and pre-treatment outcome, employment, and worker-flow quartile bins enter the binscatter as internal covariates (the semi-linear partial-mean estimator), so no variable is pre-residualized. The sample is the balanced panel of untreated firms; standard errors are heteroskedasticity-robust; inference uses 2{,}000 simulation draws on a grid of 50 points per bin. $p$-values below $0.10$ are bolded.
+\textit{Notes:} This table reports Cattaneo, Crump, Farrell, and Feng (2024) sup-$t$ tests of the null hypothesis that the spillover treatment effect is a degree-1 polynomial (linear) in connectivity, on the balanced panel of untreated firms. For the calendar outcomes (wage and employment) the test runs on the firm-level first difference $\Delta Y_j = \overline{Y}_j^{\,post} - \overline{Y}_j^{\,pre}$ (post $=$ 2012--2016, pre $=$ 2009--2011), which removes the firm fixed effect of the panel DiD exactly, so each establishment contributes one observation. Clause counts are negotiated on the irregular CBA calendar rather than annually, so the clause test runs directly on the published firm $\times$ CBA-period panel DiD (six period fixed effects): the clause count and the connectivity $\times$ post term are residualized on the firm, and on the industry, month-of-year, microregion, and pre-treatment quartile fixed effects interacted with CBA period (all additive, so the projection is within-exact and the test is size-valid under the linear null), and the residuals are binned. The clause test uses $19{,}693$ firm-period observations across $4{,}142$ establishments and reproduces the published spillover slope to machine precision. In every case the OLS slope reproduces the panel spillover coefficient. Standard errors are clustered by establishment for the clause panel and heteroskedasticity-robust for the first-difference outcomes; inference uses 2{,}000 simulation draws on a grid of 50 points per bin. $p$-values below $0.10$ are bolded.
 \end{minipage}
 \end{table}

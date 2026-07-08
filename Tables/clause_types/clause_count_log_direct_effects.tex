@@ -1,0 +1,46 @@
+\begin{table}[!htbp]
+\centering
+\caption{Direct Effects on Clause Counts (log)}
+\label{tab:clause_count_log_direct}
+\scriptsize
+\begin{tabular}{lcccc}
+\toprule
+ & Overall & Wage & Employment & Other \\
+ & clauses & clauses & clauses & clauses \\
+\midrule
+\multicolumn{5}{l}{\textbf{Panel A}}\\
+\multicolumn{5}{l}{\textit{Control group: zero connectivity untreated firms}}\\
+Post $\times$ Treatment & 0.0739*** & 0.0535*** & 0.0503*** & 0.0616***\\
+ & (0.0148) & (0.0109) & (0.0142) & (0.0148)\\
+Pre $\times$ Treatment & 0.0352** & $-$0.0653*** & 0.0849*** & 0.0181\\
+ & (0.0158) & (0.0109) & (0.0166) & (0.0165)\\
+Pre-trend p-value & [0.0512] & [0.0000] & [0.0000] & [0.4142]\\
+$N$ establishments & 14{,}176 & 14{,}176 & 14{,}176 & 14{,}176\\
+$N$ observations & 73{,}177 & 73{,}177 & 73{,}177 & 73{,}177\\
+\addlinespace
+\multicolumn{5}{l}{\textbf{Panel B}}\\
+\multicolumn{5}{l}{\textit{Control group: untreated firms with connectivity $\leq 1\%$}}\\
+Post $\times$ Treatment & 0.0655*** & 0.0459*** & 0.0475*** & 0.0607***\\
+ & (0.0129) & (0.0099) & (0.0125) & (0.0128)\\
+Pre $\times$ Treatment & 0.0424*** & $-$0.0421*** & 0.0661*** & 0.0300**\\
+ & (0.0136) & (0.0096) & (0.0141) & (0.0140)\\
+Pre-trend p-value & [0.0038] & [0.0000] & [0.0000] & [0.0536]\\
+$N$ establishments & 15{,}171 & 15{,}171 & 15{,}171 & 15{,}171\\
+$N$ observations & 77{,}947 & 77{,}947 & 77{,}947 & 77{,}947\\
+\addlinespace
+\multicolumn{5}{l}{\textbf{Panel C}}\\
+\multicolumn{5}{l}{\textit{Control group: all untreated firms}}\\
+Post $\times$ Treatment & 0.0619*** & 0.0482*** & 0.0465*** & 0.0575***\\
+ & (0.0113) & (0.0091) & (0.0110) & (0.0112)\\
+Pre $\times$ Treatment & 0.0335*** & $-$0.0335*** & 0.0439*** & 0.0254**\\
+ & (0.0119) & (0.0086) & (0.0120) & (0.0122)\\
+Pre-trend p-value & [0.0104] & [0.0001] & [0.0003] & [0.0687]\\
+$N$ establishments & 16{,}444 & 16{,}444 & 16{,}444 & 16{,}444\\
+$N$ observations & 84{,}080 & 84{,}080 & 84{,}080 & 84{,}080\\
+\bottomrule
+\end{tabular}
+\begin{minipage}{\linewidth}
+\footnotesize\vspace{4pt}
+\textit{Notes:} This table reports direct effects of the 2012 ultractivity reform on the (log) number of clauses in firms' collective bargaining agreements. Treated firms are establishments whose agreement was directly affected by the reform. ``Post $\times$ Treatment'' reports the average post-reform effect, and ``Pre $\times$ Treatment'' reports the corresponding placebo coefficient estimated from pre-reform CBA periods only. All outcomes are $\ln(1 + \text{count})$, so zero-clause observations are retained; coefficients approximate the proportional change in the clause count. Column~1 is the (log) total number of clauses; Columns~2--4 are the (log) counts of wage, employment, and other clauses. All specifications include establishment fixed effects, CBA-period interactions with industry, negotiation month, and microregion, and quartile-bin controls for the (raw) pre-treatment count, pre-treatment log employment, and average per-worker worker flows during 2007--2011. Standard errors clustered by establishment are reported in parentheses. *** p$<$0.01, ** p$<$0.05, * p$<$0.10.
+\end{minipage}
+\end{table}

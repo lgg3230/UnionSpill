@@ -1,0 +1,43 @@
+\begin{table}[H]
+\centering
+\caption{Log CBA Content Similarity to Fixed Pre-Treatment Treated Reference}
+\label{tab:pretreat_ref_uncorr_w_ln_cba_similarity}
+\scriptsize
+\setlength{\tabcolsep}{8pt}
+\begin{tabular}{lcccc}
+\hline\hline
+ & (1) & (2) & (3) & (4) \\
+ & \textbf{Cosine} & \textbf{Bray-Curtis} & \textbf{Total Var.} & \textbf{Ruzicka} \\
+\hline
+\multicolumn{5}{l}{\textit{Panel A: Baseline}} \\
+\multicolumn{5}{l}{\textit{Post-treatment}} \\
+Connectivity $\times$ Post & 0.0015 & 0.0005 & -0.0001 & -0.0012 \\
+ & (0.0021) & (0.0019) & (0.0019) & (0.0018) \\
+\multicolumn{5}{l}{\textit{Pre-treatment placebo}} \\
+Connectivity $\times$ Pre & -0.0028 & -0.0027* & -0.0014 & -0.0026* \\
+ & (0.0021) & (0.0016) & (0.0016) & (0.0014) \\
+\hline
+Baseline log-mean (period 2) & 0.3273 & 0.2571 & 0.2551 & 0.1825 \\
+Observations &        6,943 &        6,943 &        6,943 &        6,943 \\
+Establishments &        1,652 &        1,652 &        1,652 &        1,652 \\
+Pre-trend $p$-value & 0.160 & 0.089 & 0.346 & 0.061 \\
+\hline
+\multicolumn{5}{l}{\textit{Panel B: Adding union $\times$ period FE}} \\
+\multicolumn{5}{l}{\textit{Post-treatment}} \\
+Connectivity $\times$ Post & 0.0081*** & 0.0048** & 0.0029 & 0.0031 \\
+ & (0.0026) & (0.0022) & (0.0019) & (0.0020) \\
+\multicolumn{5}{l}{\textit{Pre-treatment placebo}} \\
+Connectivity $\times$ Pre & -0.0002 & -0.0011 & 0.0001 & -0.0009 \\
+ & (0.0031) & (0.0024) & (0.0022) & (0.0020) \\
+\hline
+Baseline log-mean (period 2) & 0.3319 & 0.2605 & 0.2593 & 0.1863 \\
+Observations &        5,455 &        5,455 &        5,455 &        5,455 \\
+Establishments &        1,415 &        1,415 &        1,415 &        1,415 \\
+Pre-trend $p$-value & 0.989 & 0.637 & 0.998 & 0.644 \\
+\hline\hline
+\end{tabular}
+\begin{minipage}{\linewidth}
+\smallskip
+\scriptsize\textit{Notes:} This table reports spillover-effect estimates of \emph{log} CBA content similarity on connectivity, where the reference vector is fixed at the treated partners' \textit{pre-Sumula 277} contracts (\textbf{cba\_period $= 2$}). Outcomes are $\ln(\text{sim}_{it})$ for $\text{sim} \in \{\text{cosine}, \text{Bray-Curtis}, \text{total variation}, \text{Ruzicka}\}$, dropping firm-period observations with zero similarity. The coefficient is interpretable as the percentage change in similarity associated with a one-unit increase in connectivity. Sample, weights, and fixed-effects structure are identical to Table~\ref{tab:pretreat_ref_uncorr_w_cba_similarity}; see notes there. Standard errors clustered at the establishment level. *\,$p<0.10$, **\,$p<0.05$, ***\,$p<0.01$.
+\end{minipage}
+\end{table}
