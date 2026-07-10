@@ -1,0 +1,19 @@
+\begin{table}[H]
+\centering
+\scriptsize
+\caption{Randomization-inference p-values for the spillover estimate under four treated-set stratifications}
+\label{tab:placebo_diag}
+\begin{tabular}{lccccc}
+\toprule
+Stratification & \shortstack{Firms in\\estimation} & \shortstack{Treated firms\\swappable} & \shortstack{Mixed\\strata} & \shortstack{$p$\\(log wages)} & \shortstack{$p$\\(log hourly)} \\
+\midrule
+No stratification & 4,084 & 12,276 & 1 & 0.001$^{***}$ & 0.001$^{***}$ \\
+Intermediate (ind.$\times$size$_4\times$flow$_4$) & 4,084 & 10,325 & 671 & 0.001$^{***}$ & 0.001$^{***}$ \\
+Fine (ind.$\times$size$_{20}\times$flow$_{20}$) & 4,084 & 3,891 & 1,489 & 0.001$^{***}$ & 0.001$^{***}$ \\
+Control-spec match (+micro.$\times$month) & 4,084 & 1,165 & 449 & 0.166 & 0.080$^{*}$ \\
+\bottomrule
+\end{tabular}
+\begin{minipage}{0.92\textwidth}\vspace{4pt}\scriptsize
+This table reports two-sided randomization-inference p-values for the spillover coefficient under four schemes for reshuffling the treated label across firms. In every scheme the treated label is permuted within strata of predetermined destination-firm characteristics, holding the number of treated firms fixed at 12,276, and placebo connectivity is rebuilt as $C_i^{(r)}=\sum_j W_{ij} D_j^{(r)}$. Industry cells use the true two-digit CNAE division. The observed estimate is $\hat\beta=0.0051$ (log wages) and $\hat\beta=0.0066$ (log hourly wages), identical across schemes by construction. `Treated firms swappable' counts treated firms that share a stratum with at least one untreated firm (only these can change status); the remainder are frozen. Based on 1,000 placebo draws. $^{*}p<0.10$, $^{**}p<0.05$, $^{***}p<0.01$.
+\end{minipage}
+\end{table}

@@ -191,6 +191,9 @@ Tables/**/*.zip
 Graphs/**/*.gph
 Graphs/plots jul 31/*.gph
 
+# ----- Reference literature PDFs (copyrighted; keep converted .md, not the PDFs) -----
+Docs/Permutation_Placebo/*.pdf
+
 # ----- Nested repo (old cluster sync copy — not part of this repo) -----
 UnionSpill/
 UnionSpill-paper/
