@@ -1,0 +1,36 @@
+\begin{table}[H]\centering\scriptsize
+\caption{Recentered horse-race: spillover effect, real assignment vs.\ recentered by expected connectivity}
+\label{tab:horserace}
+\begin{tabular}{l cccccccc}
+\toprule
+ & \multicolumn{2}{c}{Log wages} & \multicolumn{2}{c}{Log hourly wages} & \multicolumn{2}{c}{Log employment} & \multicolumn{2}{c}{CBA clauses} \\
+\cmidrule(lr){2-3}\cmidrule(lr){4-5}\cmidrule(lr){6-7}\cmidrule(lr){8-9}
+ & Real & Recent. & Real & Recent. & Real & Recent. & Real & Recent. \\
+\midrule
+\multicolumn{9}{l}{\textit{Unstratified} (12,276 swappable)} \\
+\quad Connectivity $\times$ Post & 0.0051$^{**}$ & 0.0065$^{***}$ & 0.0066$^{***}$ & 0.0078$^{***}$ & 0.0004 & 0.0042 & 0.0180 & -0.1104 \\
+\quad Connectivity $\times$ Pre & 0.0020 & 0.0017 & 0.0016 & 0.0016 & -0.0012 & -0.0017 & 0.3276 & 0.4029$^{*}$ \\
+\quad Expected conn.\ $\times$ Post &  & -0.0031$^{*}$ &  & -0.0026 &  & -0.0083$^{*}$ &  & 0.2572$^{***}$ \\
+\quad Expected conn.\ $\times$ Pre &  & 0.0006 &  & 0.0000 &  & 0.0010 &  & -0.1622 \\
+\addlinespace
+\multicolumn{9}{l}{\textit{Industry $\times$ Month} (11,563 swappable)} \\
+\quad Connectivity $\times$ Post & 0.0051$^{**}$ & 0.0055$^{**}$ & 0.0066$^{***}$ & 0.0067$^{***}$ & 0.0004 & 0.0087 & 0.0180 & -0.1742 \\
+\quad Connectivity $\times$ Pre & 0.0020 & 0.0025 & 0.0016 & 0.0028 & -0.0012 & -0.0046 & 0.3276 & 0.5671$^{***}$ \\
+\quad Expected conn.\ $\times$ Post &  & -0.0011 &  & -0.0001 &  & -0.0188$^{***}$ &  & 0.4401$^{***}$ \\
+\quad Expected conn.\ $\times$ Pre &  & -0.0012 &  & -0.0027 &  & 0.0076 &  & -0.5451$^{***}$ \\
+\addlinespace
+\multicolumn{9}{l}{\textit{Industry $\times$ Month $\times$ Region} (9,314 swappable)} \\
+\quad Connectivity $\times$ Post & 0.0051$^{**}$ & 0.0057$^{**}$ & 0.0066$^{***}$ & 0.0065$^{**}$ & 0.0004 & 0.0085 & 0.0180 & -0.1778 \\
+\quad Connectivity $\times$ Pre & 0.0020 & 0.0027 & 0.0016 & 0.0034 & -0.0012 & -0.0043 & 0.3276 & 0.4786$^{**}$ \\
+\quad Expected conn.\ $\times$ Post &  & -0.0012 &  & 0.0002 &  & -0.0156$^{**}$ &  & 0.3797$^{***}$ \\
+\quad Expected conn.\ $\times$ Pre &  & -0.0013 &  & -0.0035 &  & 0.0060 &  & -0.2973$^{**}$ \\
+\addlinespace
+\multicolumn{9}{l}{\textit{Industry $\times$ Month $\times$ Microregion} (3,356 swappable)} \\
+\quad Connectivity $\times$ Post & 0.0051$^{**}$ & 0.0068$^{*}$ & 0.0066$^{***}$ & 0.0073$^{*}$ & 0.0004 & 0.0152 & 0.0180 & -0.0789 \\
+\quad Connectivity $\times$ Pre & 0.0020 & 0.0047 & 0.0016 & 0.0052 & -0.0012 & 0.0014 & 0.3276 & 0.4660$^{*}$ \\
+\quad Expected conn.\ $\times$ Post &  & -0.0023 &  & -0.0010 &  & -0.0202$^{*}$ &  & 0.1386 \\
+\quad Expected conn.\ $\times$ Pre &  & -0.0037 &  & -0.0049 &  & -0.0036 &  & -0.1921 \\
+\bottomrule
+\end{tabular}
+\begin{minipage}{\textwidth}\vspace{4pt}\scriptsize \textit{Notes:} Pooled spillover regression on untreated establishments. `Real' is the baseline specification (connectivity $\times$ Post and its 2009--2011 placebo $\times$ Pre); `Recent.'\ adds the expected connectivity $\mu_i$ (mean across permutations under the panel's scheme) interacted with Post and Pre. The baseline is identical across panels and repeated for comparison. `Swappable' is the number of treated establishments that can be relabeled under the scheme. CBA clauses use the collective-bargaining-period structure. Standard errors clustered at the establishment level. $^{*}p<0.10$, $^{**}p<0.05$, $^{***}p<0.01$.\end{minipage}
+\end{table}
