@@ -16,6 +16,9 @@ global programs "/kellogg/proj/lgg3230/UnionSpill/Programs/rand_inference"
 
 use "$randdir/spill_frame.dta", clear
 merge m:1 identificad using "$randdir/expected_exposure.dta", keep(master match) nogen
+merge m:1 identificad using "$randdir/control_connectivity.dta", keep(master match) nogen
+replace totalcontrol_pw_norm = 0 if missing(totalcontrol_pw_norm)   // no control connectivity = 0
+replace totalcontrol_pw_n    = 0 if missing(totalcontrol_pw_n)
 keep if treat_ultra == 0
 
 cap drop placebo_year
@@ -82,3 +85,41 @@ foreach s of local schemes {
 
 file close `fh'
 di as result "=== horserace_recentered.csv written ==="
+
+********************************************************************************
+* PLACEBO CONTROL — connectivity to CONTROL (untreated) firms as an extra control
+* Bergeaud exercise (ii): Y on treated-connectivity, then adding control-
+* connectivity x Post / Pre. Expect gamma(ctrl) ~ 0 and beta(treat) stable.
+********************************************************************************
+local ctrl "totalcontrol_pw_norm"
+capture erase "$tables/placebo_control.csv"
+tempname pc
+file open `pc' using "$tables/placebo_control.csv", write replace
+file write `pc' "outcome,spec,coef,b,se,n" _n
+
+foreach out in lr_remdezr_w lr_remdezr_h_w l_firm_emp {
+    local ab "`base_fe' ib0.`out'_pre4#i.year ib0.l_firm_emp_pre4#i.year ib0.totalflows_pw_pre_07_114#i.year"
+    reghdfe `out' c.`conn'##i.treat_year, absorb(`ab') vce(cluster identificad)
+    _post `pc' `out' baseline conn_post "1.treat_year#c.`conn'"
+    reghdfe `out' c.`conn'##i.placebo_year if year <= 2011, absorb(`ab') vce(cluster identificad)
+    _post `pc' `out' baseline conn_pre "1.placebo_year#c.`conn'"
+    reghdfe `out' c.`conn'##i.treat_year c.`ctrl'##i.treat_year, absorb(`ab') vce(cluster identificad)
+    _post `pc' `out' withctrl conn_post "1.treat_year#c.`conn'"
+    _post `pc' `out' withctrl ctrl_post "1.treat_year#c.`ctrl'"
+    reghdfe `out' c.`conn'##i.placebo_year c.`ctrl'##i.placebo_year if year <= 2011, absorb(`ab') vce(cluster identificad)
+    _post `pc' `out' withctrl conn_pre "1.placebo_year#c.`conn'"
+    _post `pc' `out' withctrl ctrl_pre "1.placebo_year#c.`ctrl'"
+}
+local abc "`base_fe_cba' ib0.numb_clauses_pre4#i.cba_period ib0.l_firm_emp_pre4#i.cba_period ib0.totalflows_pw_pre_07_114#i.cba_period"
+reghdfe numb_clauses c.`conn'##post_treat_cba if !missing(cba_period), absorb(`abc') vce(cluster identificad)
+_post `pc' numb_clauses baseline conn_post "1.post_treat_cba#c.`conn'"
+reghdfe numb_clauses c.`conn'##pre_treat_cba if cba_period <= 2, absorb(`abc') vce(cluster identificad)
+_post `pc' numb_clauses baseline conn_pre "1.pre_treat_cba#c.`conn'"
+reghdfe numb_clauses c.`conn'##post_treat_cba c.`ctrl'##post_treat_cba if !missing(cba_period), absorb(`abc') vce(cluster identificad)
+_post `pc' numb_clauses withctrl conn_post "1.post_treat_cba#c.`conn'"
+_post `pc' numb_clauses withctrl ctrl_post "1.post_treat_cba#c.`ctrl'"
+reghdfe numb_clauses c.`conn'##pre_treat_cba c.`ctrl'##pre_treat_cba if cba_period <= 2, absorb(`abc') vce(cluster identificad)
+_post `pc' numb_clauses withctrl conn_pre "1.pre_treat_cba#c.`conn'"
+_post `pc' numb_clauses withctrl ctrl_pre "1.pre_treat_cba#c.`ctrl'"
+file close `pc'
+di as result "=== placebo_control.csv written ==="

@@ -1,0 +1,17 @@
+\begin{table}[H]\centering\scriptsize
+\caption{Placebo: connectivity to control (untreated) firms as an additional control}
+\label{tab:placebo_control}
+\begin{tabular}{l cccccccc}
+\toprule
+ & \multicolumn{2}{c}{Log wages} & \multicolumn{2}{c}{Log hourly wages} & \multicolumn{2}{c}{Log employment} & \multicolumn{2}{c}{CBA clauses} \\
+\cmidrule(lr){2-3}\cmidrule(lr){4-5}\cmidrule(lr){6-7}\cmidrule(lr){8-9}
+ & Real & $+$Ctrl & Real & $+$Ctrl & Real & $+$Ctrl & Real & $+$Ctrl \\
+\midrule
+Connectivity $\times$ Post & 0.0051$^{**}$ & 0.0041$^{*}$ & 0.0066$^{***}$ & 0.0058$^{**}$ & 0.0004 & -0.0020 & 0.0180 & 0.0775 \\
+Connectivity $\times$ Pre & 0.0020 & 0.0023 & 0.0016 & 0.0017 & -0.0012 & -0.0015 & 0.3276 & 0.2826 \\
+Control conn.\ $\times$ Post &  & -0.0170$^{*}$ &  & -0.0147 &  & -0.0426$^{*}$ &  & 1.2381$^{***}$ \\
+Control conn.\ $\times$ Pre &  & 0.0048 &  & 0.0017 &  & -0.0047 &  & -0.8277 \\
+\bottomrule
+\end{tabular}
+\begin{minipage}{\textwidth}\vspace{4pt}\scriptsize \textit{Notes:} Pooled spillover regression on untreated establishments. `Real' is the baseline (connectivity to treated firms $\times$ Post and its 2009--2011 placebo $\times$ Pre); `$+$Ctrl' adds connectivity to \emph{control} (untreated) firms, interacted with Post and Pre. Connectivity to controls is built from the same pre-reform worker-flow weights as the treated measure, summed over untreated Lagos firms, and normalized to its own 90th percentile in the spillover sample. A near-zero control-connectivity coefficient with a stable treated coefficient indicates it is connectivity to \emph{treated} firms specifically, not general connectivity, that carries the effect. CBA clauses use the collective-bargaining-period structure. Standard errors clustered at the establishment level. $^{*}p<0.10$, $^{**}p<0.05$, $^{***}p<0.01$.\end{minipage}
+\end{table}

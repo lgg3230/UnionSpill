@@ -135,3 +135,43 @@ L += [r"\end{tabular}",
       r"\end{table}"]
 (TAB / "horserace_recentered.tex").write_text("\n".join(L))
 print("wrote", TAB / "horserace_recentered.tex")
+
+# ══════════════════════════════ 3. PLACEBO CONTROL (connectivity to controls) ═
+pc = pd.read_csv(TAB / "placebo_control.csv")
+for cc in ["b", "se"]: pc[cc] = pd.to_numeric(pc[cc], errors="coerce")
+def pcell(out, spec, coef):
+    r = pc[(pc.outcome == out) & (pc.spec == spec) & (pc.coef == coef)]
+    if r.empty or pd.isna(r.b.iloc[0]): return ""
+    b, se = r.b.iloc[0], r.se.iloc[0]
+    t = abs(b / se) if se and se > 0 else 0
+    star = "$^{***}$" if t > 2.576 else "$^{**}$" if t > 1.96 else "$^{*}$" if t > 1.645 else ""
+    return f"{b:.4f}{star}"
+PROWS = [("conn_post", r"Connectivity $\times$ Post", "baseline"),
+         ("conn_pre",  r"Connectivity $\times$ Pre",  "baseline"),
+         ("ctrl_post", r"Control conn.\ $\times$ Post", None),
+         ("ctrl_pre",  r"Control conn.\ $\times$ Pre",  None)]
+L = [r"\begin{table}[H]\centering\scriptsize",
+     r"\caption{Placebo: connectivity to control (untreated) firms as an additional control}",
+     r"\label{tab:placebo_control}", r"\begin{tabular}{l cccccccc}", r"\toprule",
+     " & " + " & ".join(rf"\multicolumn{{2}}{{c}}{{{LAB[o]}}}" for o in OUT) + r" \\",
+     "".join(rf"\cmidrule(lr){{{2+2*i}-{3+2*i}}}" for i in range(4)),
+     " & " + " & ".join("Real & $+$Ctrl" for _ in OUT) + r" \\", r"\midrule"]
+for coef, lab, realspec in PROWS:
+    cells = [lab]
+    for o in OUT:
+        real = pcell(o, realspec, coef) if realspec else ""
+        cells += [real, pcell(o, "withctrl", coef)]
+    L.append(" & ".join(cells) + r" \\")
+L += [r"\bottomrule", r"\end{tabular}",
+      r"\begin{minipage}{\textwidth}\vspace{4pt}\scriptsize \textit{Notes:} Pooled spillover regression on "
+      r"untreated establishments. `Real' is the baseline (connectivity to treated firms $\times$ Post and its "
+      r"2009--2011 placebo $\times$ Pre); `$+$Ctrl' adds connectivity to \emph{control} (untreated) firms, "
+      r"interacted with Post and Pre. Connectivity to controls is built from the same pre-reform worker-flow "
+      r"weights as the treated measure, summed over untreated Lagos firms, and normalized to its own 90th "
+      r"percentile in the spillover sample. A near-zero control-connectivity coefficient with a stable treated "
+      r"coefficient indicates it is connectivity to \emph{treated} firms specifically, not general connectivity, "
+      r"that carries the effect. CBA clauses use the collective-bargaining-period structure. Standard errors "
+      r"clustered at the establishment level. $^{*}p<0.10$, $^{**}p<0.05$, $^{***}p<0.01$.\end{minipage}",
+      r"\end{table}"]
+(TAB / "placebo_control.tex").write_text("\n".join(L))
+print("wrote", TAB / "placebo_control.tex")
