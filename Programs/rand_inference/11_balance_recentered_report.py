@@ -175,3 +175,83 @@ L += [r"\bottomrule", r"\end{tabular}",
       r"\end{table}"]
 (TAB / "placebo_control.tex").write_text("\n".join(L))
 print("wrote", TAB / "placebo_control.tex")
+
+# ══════════════════════ 4. BERGEAUD-STYLE NONRANDOM-EXPOSURE TABLE ════════════
+# Two panels (A: control-connectivity placebo; B: recentered IV, industry x month)
+# mirroring Bergeaud et al. Table III: Estimate (beta) | Pre-trend p (true conn only)
+# | Control (gamma) | Obs. Pre-trend reported only for the true connectivity.
+import math
+hr = pd.read_csv(TAB / "horserace_recentered.csv")
+for cc in ["b", "se"]: hr[cc] = pd.to_numeric(hr[cc], errors="coerce")
+pcc = pd.read_csv(TAB / "placebo_control.csv")
+for cc in ["b", "se"]: pcc[cc] = pd.to_numeric(pcc[cc], errors="coerce")
+LABO = {"lr_remdezr_w": "Log wages", "lr_remdezr_h_w": "Log hourly wages",
+        "l_firm_emp": "Log employment", "numb_clauses": "CBA clauses"}
+OUT4 = ["lr_remdezr_w", "lr_remdezr_h_w", "l_firm_emp", "numb_clauses"]
+
+def get(df, out, coef, **kw):
+    q = (df.outcome == out) & (df.coef == coef)
+    for k, v in kw.items(): q &= (df[k] == v)
+    r = df[q]
+    return (None, None, None) if r.empty else (r.b.iloc[0], r.se.iloc[0], r.n.iloc[0])
+
+def star(b, se):
+    if b is None or se in (None, 0) or pd.isna(b) or pd.isna(se): return ""
+    t = abs(b / se); return "$^{***}$" if t > 2.576 else "$^{**}$" if t > 1.96 else "$^{*}$" if t > 1.645 else ""
+def est(b, se):    # coefficient (stars) with se in parentheses
+    return "" if b is None or pd.isna(b) else f"{b:.4f}{star(b,se)} ({se:.4f})"
+def ptrend(b, se): # p-value of the (true) pre coefficient
+    if b is None or se in (None, 0) or pd.isna(b): return ""
+    z = abs(b / se); p = math.erfc(z / math.sqrt(2)); return f"$[{p:.2f}]$"
+
+def block(title, rows):
+    L = [rf"\multicolumn{{5}}{{l}}{{\textit{{{title}}}}} \\"]
+    for out, bpost, sepost, bpre, sepre, gb, gse, n in rows:
+        ctrl = est(gb, gse) if gb is not None else "---"
+        nn = "" if n is None or pd.isna(n) else f"{int(n):,}".replace(",", "{,}")
+        L.append(f"{LABO[out]} & {est(bpost,sepost)} & {ptrend(bpre,sepre)} & {ctrl} & {nn} \\\\")
+    return L
+
+L = [r"\begin{table}[H]\centering\scriptsize",
+     r"\caption{Robustness to nonrandom exposure to treated firms}",
+     r"\label{tab:nonrandom_exposure}", r"\begin{tabular}{l c c c c}", r"\toprule",
+     r" & Estimate & Pre-trend & Control & Obs. \\",
+     r" & (Conn.\ $\times$ Post) & (test, $p$) & (counterfactual $\times$ Post) & \\", r"\midrule"]
+# Baseline
+base = []
+for o in OUT4:
+    bp, sp, n = get(hr, o, "conn_post", scheme="baseline")
+    br, sr, _ = get(hr, o, "conn_pre", scheme="baseline")
+    base.append((o, bp, sp, br, sr, None, None, n))
+L += block("Baseline (no counterfactual)", base); L.append(r"\midrule")
+# Panel A: control-connectivity placebo
+pa = []
+for o in OUT4:
+    bp, sp, n = get(pcc, o, "conn_post", spec="withctrl")
+    br, sr, _ = get(pcc, o, "conn_pre", spec="withctrl")
+    gb, gs, _ = get(pcc, o, "ctrl_post", spec="withctrl")
+    pa.append((o, bp, sp, br, sr, gb, gs, n))
+L += block("Panel A: Control-connectivity placebo", pa); L.append(r"\midrule")
+# Panel B: recentered IV, industry x month
+pb = []
+for o in OUT4:
+    bp, sp, n = get(hr, o, "conn_post", scheme="ind_month")
+    br, sr, _ = get(hr, o, "conn_pre", scheme="ind_month")
+    gb, gs, _ = get(hr, o, "mu_post", scheme="ind_month")
+    pb.append((o, bp, sp, br, sr, gb, gs, n))
+L += block("Panel B: Recentered instrument (industry $\\times$ month)", pb)
+L += [r"\bottomrule", r"\end{tabular}",
+      r"\begin{minipage}{0.98\textwidth}\vspace{4pt}\scriptsize \textit{Notes:} Pooled spillover regressions on "
+      r"untreated establishments, mirroring the specification of Bergeaud et al.\ (2025, Table III). "
+      r"\emph{Estimate} is the coefficient on connectivity to treated firms $\times$ Post; \emph{Pre-trend} is "
+      r"the $p$-value of connectivity to treated firms $\times$ Pre (the 2009--2011 placebo), reported only for "
+      r"the true connectivity. \emph{Control} is the coefficient on the counterfactual connectivity $\times$ Post: "
+      r"connectivity to \emph{control} (untreated) firms in Panel A, and expected connectivity under reshuffling "
+      r"the treated set within industry $\times$ negotiation-month cells in Panel B (mean over 1{,}000 draws). "
+      r"All regressions include establishment fixed effects, industry, microregion and negotiation-month fixed "
+      r"effects interacted with year, and quartile bins of pre-treatment size, per-worker flows, and the outcome, "
+      r"interacted with year. CBA clauses use the collective-bargaining-period structure. Standard errors "
+      r"(in parentheses) clustered at the establishment level. $^{*}p<0.10$, $^{**}p<0.05$, $^{***}p<0.01$."
+      r"\end{minipage}", r"\end{table}"]
+(TAB / "nonrandom_exposure.tex").write_text("\n".join(L))
+print("wrote", TAB / "nonrandom_exposure.tex")
