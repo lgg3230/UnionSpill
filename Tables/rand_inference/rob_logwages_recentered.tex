@@ -1,0 +1,41 @@
+\begin{table}[H]
+\centering
+\caption{Log wage spillover: recentered connectivity}
+\label{tab:rob_logwages_recentered}
+\footnotesize
+\begin{tabular}{lcc}
+\toprule\toprule
+ & Baseline & \shortstack{Recentered\\(Ind.\ $\times$ Month)} \\
+ & (1) & (2) \\
+\midrule
+Post $\times$ Connectivity             & $0.0051^{**}$ & $0.0055^{**}$ \\
+                                       & $(0.0023)$ & $(0.0025)$ \\[2pt]
+Post $\times$ Expected connectivity    & ---   & $-0.0011$ \\
+                                       &       & $(0.0019)$ \\[4pt]
+\quad Pre-trend (placebo)              & $0.0020$ & $0.0025$ \\
+                                       & $(0.0025)$ & $(0.0027)$ \\
+\midrule
+Establishments                         & 4,084 & 4,084 \\
+Observations                           & 32,495 & 32,495 \\
+\bottomrule\bottomrule
+\end{tabular}
+
+\begin{minipage}{0.9\linewidth}
+\scriptsize\vspace{4pt}
+\textit{Notes:} Pooled spillover regression of log wages on connectivity to
+treated firms $\times$ Post, estimated on untreated establishments. Column~(1) is
+the baseline specification. Column~(2) is the recentered instrument of Borusyak
+and Hull (2023): it adds \emph{expected} connectivity $\times$ Post, where the
+expectation is taken over $1{,}000$ reshuffles of the treated set within
+industry $\times$ negotiation-month cells; a stable connectivity estimate
+alongside an expected-connectivity coefficient near zero indicates that the
+spillover reflects realized rather than counterfactual exposure to treatment.
+The pre-trend row reports the coefficient on connectivity $\times$ Pre from the
+$2009$--$2011$ placebo. Both specifications include
+establishment fixed effects, industry, microregion and negotiation-month fixed
+effects interacted with year, and quartile bins of pre-treatment size,
+per-worker flows, and log wages interacted with year. Standard errors clustered
+at the establishment level in parentheses. $^{*}$ $p<0.10$, $^{**}$ $p<0.05$,
+$^{***}$ $p<0.01$.
+\end{minipage}
+\end{table}
