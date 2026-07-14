@@ -1,15 +1,15 @@
 ********************************************************************************
-* 16_recentered_eventstudy.do
+* 16_adjusted_eventstudy.do
 * Two-panel event-study figure for the log-wage spillover under recentering,
-* replacing the recentered-connectivity table.
+* replacing the adjusted-connectivity table.
 *   RIGHT panel: connectivity x year coefficients, main spillover (baseline) and
-*                recentered spillover (controlling for counterfactual exposure),
+*                adjusted spillover (controlling for counterfactual exposure),
 *                overlaid.
 *   LEFT panel : counterfactual exposure (mu) x year coefficients + 95% CIs.
 * Pooled DiD estimates are annotated in-plot, in the fashion of the main-results
 * event studies (Main_Results_pct_tfpw_07_11.do). Industry x negotiation-month
 * reshuffle scheme (mu_C_ind_month).
-* Output: Graphs/rand_inference/es_recentered_lr_remdezr_w.pdf (+ paper Figures/Main)
+* Output: Graphs/rand_inference/es_adjusted_lr_remdezr_w.pdf (+ paper Figures/Main)
 ********************************************************************************
 version 17.0
 set more off
@@ -65,24 +65,24 @@ testparm c.`mu'#i(2009 2010).year
 local pmu = string(r(p), "%5.3f")
 
 * common vertical scale so the two panels are comparable; square canvas
-local yopt "ylabel(-0.005(0.005)0.015, labsize(medium)) yscale(range(-0.006 0.016))"
-local sq   "xsize(3) ysize(3) aspectratio(1)"
+local yopt "ylabel(-0.005(0.005)0.015, labsize(small)) yscale(range(-0.006 0.016))"
+local sq   "xsize(4) ysize(3)"
 
-* ── SPILLOVER panel: main + recentered (subfigure a, left) ───────────────────
+* ── SPILLOVER panel: main + adjusted (subfigure a, left) ───────────────────
 coefplot ///
     (es_base, offset(-0.12) msymbol(diamond) mcolor(navy)  ciopts(recast(rcap) color(navy))  label("Main")) ///
-    (es_rec,  offset(0.12)  msymbol(square)  mcolor(maroon) ciopts(recast(rcap) color(maroon)) label("Recentered")), ///
+    (es_rec,  offset(0.12)  msymbol(square)  mcolor(maroon) ciopts(recast(rcap) color(maroon)) label("Adjusted")), ///
     keep(*#*c.`conn') vert omitted baselevels yline(0) xline(3.75, lpattern(dash)) ///
     coeflabels(2009.year#c.`conn' = "2009" 2010.year#c.`conn' = "2010" ///
                2011.year#c.`conn' = "2011" 2012.year#c.`conn' = "2012" ///
                2013.year#c.`conn' = "2013" 2014.year#c.`conn' = "2014" ///
                2015.year#c.`conn' = "2015" 2016.year#c.`conn' = "2016") ///
-    `yopt' ytitle("Dynamic DiD coefficient", size(medium)) ///
-    note("Pre-trend p: main = `pbase', recentered = `prec'", size(small)) ///
+    `yopt' ytitle("Dynamic DiD coefficient", size(small)) ///
+    note("Joint F-test p-values: main = `pbase', adjusted = `prec'", size(small)) ///
     graphregion(color(white)) bgcolor(white) ///
     legend(ring(0) position(6) rows(1) size(small) region(lcolor(none))) ///
-    text(0.0140 1.4 "Main: `b0s' (`se0s')", color(navy) size(small) placement(e)) ///
-    text(0.0120 1.4 "Recentered: `b1s' (`se1s')", color(maroon) size(small) placement(e)) ///
+    text(0.0140 1.1 "Main: `b0s' (`se0s')", color(navy) size(small) placement(e)) ///
+    text(0.0120 1.1 "Adjusted: `b1s' (`se1s')", color(maroon) size(small) placement(e)) ///
     `sq' name(gSpill, replace)
 graph export "$graphs/es_spill_lr_remdezr_w.pdf", as(pdf) replace
 cap graph export "$paperfig/es_spill_lr_remdezr_w.pdf", as(pdf) replace
@@ -94,15 +94,15 @@ coefplot (es_rec, msymbol(circle) mcolor(dkgreen) ciopts(recast(rcap) color(dkgr
                2011.year#c.`mu' = "2011" 2012.year#c.`mu' = "2012" ///
                2013.year#c.`mu' = "2013" 2014.year#c.`mu' = "2014" ///
                2015.year#c.`mu' = "2015" 2016.year#c.`mu' = "2016") ///
-    `yopt' ytitle("Dynamic DiD coefficient", size(medium)) ///
-    note("Pre-trend p = `pmu'", size(small)) ///
+    `yopt' ytitle("Dynamic DiD coefficient", size(small)) ///
+    note("Joint F-test p-value: `pmu'", size(small)) ///
     graphregion(color(white)) bgcolor(white) legend(off) ///
-    text(0.0140 2.0 "Pooled: `bms' (`sems')", color(dkgreen) size(small) placement(e)) ///
+    text(0.0075 5 "Pooled: `bms' (`sems')", color(dkgreen) size(small) placement(e)) ///
     `sq' name(gExp, replace)
 graph export "$graphs/es_counterfactual_lr_remdezr_w.pdf", as(pdf) replace
 cap graph export "$paperfig/es_counterfactual_lr_remdezr_w.pdf", as(pdf) replace
 
 di as result "=== es_spill + es_counterfactual PDFs written ==="
-di as result "pooled: main `b0s' (`se0s'); recentered `b1s' (`se1s'); mu `bms' (`sems')"
+di as result "pooled: main `b0s' (`se0s'); adjusted `b1s' (`se1s'); mu `bms' (`sems')"
 
-shell source /gpfs/kellogg/proj/lgg3230/UnionSpill/Programs/notify.sh && notify "ES recentered done" "es_spill + es_counterfactual written"
+shell source /gpfs/kellogg/proj/lgg3230/UnionSpill/Programs/notify.sh && notify "ES adjusted done" "es_spill + es_counterfactual written"
