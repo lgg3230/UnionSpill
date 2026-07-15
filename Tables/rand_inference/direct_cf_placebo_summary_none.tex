@@ -1,0 +1,24 @@
+\begin{table}[H]
+\centering
+\scriptsize
+\caption{Counterfactual-connectivity placebo: direct effect under permuted pure-control classification}
+\label{tab:direct_cf_placebo}
+\begin{tabular}{lcccccccc}
+\toprule
+ & \multicolumn{4}{c}{Log wages} & \multicolumn{4}{c}{Log hourly wages} \\
+\cmidrule(lr){2-5}\cmidrule(lr){6-9}
+Specification & \shortstack{Est.} & \shortstack{S.E.} & \shortstack{$N$} & \shortstack{Control\\firms} & \shortstack{Est.} & \shortstack{S.E.} & \shortstack{$N$} & \shortstack{Control\\firms} \\
+\midrule
+Baseline direct effect (all controls) & 0.0178 & (0.0032) & 130,712 & 4,196 & 0.0202 & (0.0033) & 130,712 & 4,196 \\
+Observed pure controls (zero connectivity) & 0.0262 & (0.0049) & 112,683 & 1,931 & 0.0287 & (0.0050) & 112,683 & 1,931 \\
+Permutation mean, Procedure A & 0.0169 & (0.0064) & 105,942 & 1,088 & 0.0165 & (0.0063) & 105,942 & 1,088 \\
+Permutation mean, Procedure B & 0.0122 & (0.0043) & 112,673 & 1,931 & 0.0122 & (0.0043) & 112,673 & 1,931 \\
+\midrule
+Randomization $p$-value, Procedure A & \multicolumn{4}{c}{0.010} & \multicolumn{4}{c}{0.002} \\
+Randomization $p$-value, Procedure B & \multicolumn{4}{c}{0.001} & \multicolumn{4}{c}{0.001} \\
+\bottomrule
+\end{tabular}
+\begin{minipage}{\textwidth}\vspace{2mm}\scriptsize
+\textit{Notes:} This table reports a randomization-inference-style robustness exercise for the direct effect. The actual treated group and the treatment indicator in the regression are held fixed throughout; what varies across permutation draws is only the connectivity object used to classify untreated firms as ``pure'' controls. Each draw reshuffles the treated label within strata over the analysis sample, rebuilds counterfactual connectivity for every actual control firm, and reselects the control group: Procedure A keeps controls with counterfactual zero connectivity; Procedure B keeps the bottom 46.0\% of controls by counterfactual connectivity, the empirical share of observed pure controls, so that the placebo control group matches the observed one in size. The regression specification, outcome, fixed effects, clustering and sample restrictions are identical to the main direct-effect specification. The randomization $p$-value is the share of draws whose placebo estimate weakly exceeds the observed pure-control estimate. Permutation draws: $R=1,000$, stratification scheme: none. This is a placebo-style validation exercise, not a formally established estimator.
+\end{minipage}
+\end{table}
