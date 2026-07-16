@@ -1,6 +1,21 @@
-.claude/
+# ----- .claude: track the research pipeline, ignore machine-specific state -----
+# Ported from github.com/hugosantanna/clo-author (2026-07-16). Agents, skills,
+# rules and references are the shared system and belong in git so they reach the Mac.
+# settings.local.json and state/ stay local: machine paths and session guards.
+#
+# NOTE: this must be `.claude/*`, not `.claude/`. Git does not descend into an
+# excluded *directory*, so `!` negations under it never get evaluated. That is why
+# commands/pull-paper.md sat uncommitted for months under the old `.claude/` rule.
+.claude/*
 !.claude/commands/
-!.claude/commands/**
+!.claude/agents/
+!.claude/hooks/
+!.claude/references/
+!.claude/rules/
+!.claude/scripts/
+!.claude/skills/
+!.claude/settings.json
+!.claude/WORKFLOW_QUICK_REF.md
 .vscode/
 *.log
 

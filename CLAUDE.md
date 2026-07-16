@@ -20,6 +20,45 @@ UnionSpill is an economics research project studying union spillover effects in 
 - `Data/`: Input and intermediate datasets (excluded from git)
 - `Tables/`: Regression output tables (CSV)
 - `Graphs/`: Event study and distribution plots (PNG)
+- `UnionSpill-paper/`: LaTeX manuscript — **separate Overleaf repo**, gitignored here. `Draft.tex` is the paper, `bib.bib` the bibliography. Sync via `/pull-paper` and `/push-paper`.
+- `quality_reports/`: Plans, session logs, agent reviews, research journal
+- `.claude/`: Research pipeline — agents, skills, rules, references, hooks
+
+## Research Pipeline (ported from clo-author, 2026-07-16)
+
+Adapted from [clo-author](https://github.com/hugosantanna/clo-author): 21 worker/critic
+agents, 14 skills, and a quality-gate system. Every creator agent has a paired critic;
+critics score but never edit. Full rules in `.claude/rules/`, agent registry in
+`.claude/rules/permissions.md`.
+
+| Skill | What it does |
+|-------|-------------|
+| `/discover [mode] [topic]` | Literature search, data discovery, research interview |
+| `/strategize [mode] [q]` | Identification strategy, pre-analysis plan, formal theory |
+| `/analyze [dataset]` | End-to-end analysis (coder + data-engineer + coder-critic) |
+| `/write [section]` | Draft paper sections + AI-pattern cleanup pass |
+| `/paper-review [file]` | Quality reviews — paper, code, or simulated peer review |
+| `/revise [report]` | R&R cycle: classify and route referee comments |
+| `/talk [mode] [format]` | Beamer / Quarto presentations |
+| `/submit [mode]` | Journal targeting, replication package, final gate |
+| `/checkpoint` | Session handoff to memory + SESSION_REPORT + journal |
+| `/careful`, `/freeze [dirs]` | Session guards: block destructive commands / edits |
+| `/tools [subcommand]` | commit, compile, validate-bib, lint, journal |
+| `/dashboard` | Regenerate `project_dashboard.html` |
+
+**Local deviations from upstream clo-author** — the port is not vanilla:
+
+- `/review` → **`/paper-review`** (upstream's name collides with Claude Code's built-in `/review`).
+- Paths remapped to this repo: `paper/tables/` → `Tables/`, `paper/figures/` → `Graphs/`,
+  `scripts/` → `Programs/`, `paper/main.tex` → `UnionSpill-paper/Draft.tex`.
+- **Stata is not supported by `/analyze`** (upstream covers R/Python/Julia only). Stata work
+  stays on the existing `/new-pipeline` convention; `/analyze` suits the Python/DuckDB side.
+- `.claude/references/domain-profile.md` calibrates every agent to this project (field,
+  journals, conventions, referee concerns). **Edit it first** when agent output feels generic.
+- Hooks run via `.claude/hooks/run-hook.sh`, which probes for Python >= 3.10 — the cluster's
+  `/usr/bin/python3` is 3.6 and cannot parse the compact hooks' `dict | None` syntax.
+- `post-edit-lint.sh` is intentionally **not wired** (it enforces upstream's no-`print()` R/Python
+  standards against this repo's existing style). Run `/tools lint` on demand instead.
 
 ## Running the Analysis
 

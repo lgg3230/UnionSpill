@@ -1,0 +1,23 @@
+{
+  "description": "Phase transition quality gates for full pipeline",
+  "discovery_to_strategy": {
+    "required_score": null,
+    "required_artifacts": ["quality_reports/literature/", "quality_reports/data-assessment/"]
+  },
+  "strategy_to_execution": {
+    "required_score": 80,
+    "score_source": "strategist-critic",
+    "required_artifacts": ["quality_reports/strategy/strategy_memo.md"]
+  },
+  "execution_to_peer_review": {
+    "required_scores": {
+      "coder-critic": 80,
+      "writer-critic": 80
+    },
+    "required_artifacts": ["UnionSpill-paper/Draft.tex", "Tables/"]
+  },
+  "peer_review_to_submission": {
+    "required_overall": 95,
+    "required_per_component": 80
+  }
+}
