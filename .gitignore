@@ -233,6 +233,32 @@ layer_connectivity_standalone.zip
 *.dta
 *.parquet
 
+# ----- LaTeX compilation support files -----
+# *.log is already ignored at line 20. The same rules are mirrored in
+# UnionSpill-paper/.gitignore, which is a separate Overleaf repo.
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.fdb_latexmk
+*.fls
+*.idx
+*.ilg
+*.ind
+*.lof
+*.lot
+*.nav
+*.out
+*.run.xml
+*.snm
+*.synctex.gz
+*.toc
+*.vrb
+*.xdv
+*.auxlock
+*.figlist
+*.spl
+
 # Files already tracked under the rule above, re-asserted so the intent survives
 # if they are ever removed and re-added.
 !Data/RAIS_aux/totalflows_wide_2007_2011.csv
