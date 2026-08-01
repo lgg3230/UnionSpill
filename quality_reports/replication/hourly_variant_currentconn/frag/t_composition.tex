@@ -1,0 +1,37 @@
+\begin{table}[H]
+\centering
+\caption{Effects on Workforce Composition}
+\footnotesize
+\begin{tabular}{lcccc}
+\toprule\toprule
+ & \begin{tabular}[c]{@{}c@{}}Avg.\\Age\end{tabular} & \begin{tabular}[c]{@{}c@{}}\% Male\end{tabular} & \begin{tabular}[c]{@{}c@{}}\% White\end{tabular} & \begin{tabular}[c]{@{}c@{}}\% High\\School+\end{tabular} \\
+ & (1) & (2) & (3) & (4) \\
+\midrule
+\multicolumn{5}{l}{\textbf{Panel A:} Direct Effects} \\
+Post $\times$ Treatment & $-$0.0080 & $-$0.0091*** & $-$0.0061 & $-$0.0055\\
+ & (0.0976) & (0.0035) & (0.0048) & (0.0038)\\
+ &  &  &  & \\
+Mean & 36.1105 & 0.5853 & 0.6792 & 0.6720\\
+Observations & 113{,}112 & 113{,}112 & 113{,}112 & 113{,}112\\
+Establishments & 14{,}139 & 14{,}139 & 14{,}139 & 14{,}139\\
+\midrule
+Pre-trend (placebo) & $-$0.1501 & 0.0055* & $-$0.0028 & 0.0034\\
+ & (0.0915) & (0.0034) & (0.0046) & (0.0037)\\
+ &  &  &  & \\
+\midrule
+\multicolumn{5}{l}{\textbf{Panel B:} Spillover Effects} \\
+Post $\times$ Connectivity & $-$0.0117 & 0.0003 & 0.0004 & $-$0.0018\\
+ & (0.0443) & (0.0019) & (0.0022) & (0.0021)\\
+ &  &  &  & \\
+Mean & 35.4077 & 0.6341 & 0.6634 & 0.6637\\
+Observations & 32{,}704 & 32{,}704 & 32{,}704 & 32{,}704\\
+Establishments & 4{,}088 & 4{,}088 & 4{,}088 & 4{,}088\\
+\midrule
+Pre-trend (placebo) & 0.0510 & $-$0.0013 & $-$0.0019 & 0.0013\\
+ & (0.0403) & (0.0018) & (0.0020) & (0.0015)\\
+\bottomrule\bottomrule
+\end{tabular}
+\begin{minipage}{\linewidth}\vspace{4pt}
+\scriptsize\textit{Notes:} This table presents difference-in-differences estimates of the ultractivity reform's effects on establishment-level workforce composition using the current recomputable connectivity measure. Panel~A reports direct effects, comparing directly treated establishments to untreated establishments with zero pre-reform connectivity. Panel~B reports spillover effects on the full sample of untreated establishments, using continuous connectivity to treated firms as the exposure measure, normalized so that a value of 1 corresponds to the 90th percentile. Average age is the mean age of December-employed workers. High school+ is the share of workers with at least a completed high school degree. Mean reports the pre-treatment average across establishments in each panel's estimation sample. Standard errors clustered at the establishment level in parentheses. *** p$<$0.01, ** p$<$0.05, * p$<$0.10.
+\end{minipage}
+\end{table}

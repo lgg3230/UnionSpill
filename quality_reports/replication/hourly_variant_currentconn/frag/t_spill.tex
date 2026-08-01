@@ -1,0 +1,25 @@
+\begin{table}[H]
+\centering
+\caption{Spillover Effects: Current Recomputable Connectivity}
+\footnotesize
+\begin{tabular}{lcccc}
+\toprule\toprule
+ & \begin{tabular}[c]{@{}c@{}}Log \\ Wages\end{tabular} & \begin{tabular}[c]{@{}c@{}}Log Hourly \\ Wages\end{tabular} & \begin{tabular}[c]{@{}c@{}}Log \\ Employment\end{tabular} & \begin{tabular}[c]{@{}c@{}}Clause \\ Count\end{tabular}\\
+ & (1) & (2) & (3) & (4)\\
+\midrule
+Post $\times$ Connectivity & 0.0050** & 0.0065*** & 0.0009 & 0.0227\\
+ & (0.0022) & (0.0023) & (0.0081) & (0.1175)\\
+ &  &  &  & \\
+Observations & 32{,}495 & 32{,}495 & 32{,}704 & 19{,}693\\
+Establishments & 4{,}084 & 4{,}084 & 4{,}088 & 4{,}142\\
+\midrule
+Pre-trend (placebo) & 0.0018 & 0.0014 & $-$0.0015 & 0.3256\\
+ & (0.0025) & (0.0026) & (0.0063) & (0.2014)\\
+\bottomrule\bottomrule
+\end{tabular}
+
+\begin{minipage}{\linewidth}
+\scriptsize\vspace{4pt}
+    \textit{Notes:} This table presents difference-in-differences estimates of the reform's spillover effects (equation (\ref{eq:spill_spec})) on the full sample of untreated establishments using the current recomputable connectivity measure from \texttt{Data/RAIS\_aux/connectivity\_treat\_2007\_2011\_agg.dta}. Connectivity is \texttt{totaltreat\_pw\_n\_current}, normalized by its 90th percentile among untreated establishments, so that a value of 1 corresponds to the 90th percentile. Wages and employment are measured in December of each year; clause counts are observed only when a CBA is filed, reducing the number of observations in column~(4). Post $\times$ Connectivity reports the average effect for 2012--2016, with 2011 as the reference year. Pre-trend (placebo) reports the coefficient from a placebo regression estimated on pre-treatment data only (2009--2010 relative to 2011). All specifications include establishment fixed effects and year or CBA-period fixed effects interacted with two-digit industry, microregion, and negotiation-month indicators and with quartile bins of pre-treatment firm size, per-worker flows, and the outcome. Standard errors clustered at the establishment level in parentheses. *** p$<$0.01, ** p$<$0.05, * p$<$0.10.
+\end{minipage}
+\end{table}

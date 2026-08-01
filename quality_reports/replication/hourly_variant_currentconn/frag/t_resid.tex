@@ -1,0 +1,29 @@
+\begin{table}[H]
+\centering
+\caption{Effects on Residualized Wages}
+\footnotesize
+\begin{tabular}{lcccc}
+\toprule\toprule
+ & \multicolumn{2}{c}{Direct Effects} & \multicolumn{2}{c}{Spillover Effects} \\
+ \cmidrule(lr){2-3} \cmidrule(lr){4-5}
+ & \begin{tabular}[c]{@{}c@{}}Log\\ Wages\end{tabular} & \begin{tabular}[c]{@{}c@{}}Residualized\\ Log\\ Wages\end{tabular} & \begin{tabular}[c]{@{}c@{}}Log\\ Wages\end{tabular} & \begin{tabular}[c]{@{}c@{}}Residualized\\ Log\\ Wages\end{tabular} \\
+ & (1) & (2) & (3) & (4) \\
+\midrule
+Post $\times$ Treatment & 0.0262*** & 0.0291*** &  & \\
+ & (0.0049) & (0.0052) &  & \\
+ &  &  &  & \\
+Post $\times$ Connectivity &  &  & 0.0050** & 0.0046**\\
+ &  &  & (0.0022) & (0.0021)\\
+ &  &  &  & \\
+Observations & 112{,}695 & 112{,}702 & 32{,}495 & 32{,}498\\
+Establishments & 14{,}136 & 14{,}138 & 4{,}084 & 4{,}085\\
+\midrule
+Pre-trend (placebo) & $-$0.0002 & $-$0.0026 & 0.0018 & $-$0.0019\\
+ & (0.0046) & (0.0052) & (0.0025) & (0.0028)\\
+\bottomrule\bottomrule
+\end{tabular}
+\begin{minipage}{\linewidth}
+    \scriptsize\vspace{4pt}
+\textit{Notes:} This table presents current-connectivity estimates using raw and Mincer-residualized log December wages. Columns~(1)--(2) report direct effects, comparing directly treated establishments to untreated establishments with zero pre-reform connectivity. Columns~(3)--(4) report spillover effects on the full sample of untreated establishments. Worker-level residuals are obtained by projecting wages on a quartic age polynomial with race $\times$ education $\times$ gender $\times$ year cells. Post effects average 2012--2016, with 2011 as the reference year. Standard errors clustered at the establishment level in parentheses. *** p$<$0.01, ** p$<$0.05, * p$<$0.10.
+\end{minipage}
+\end{table}

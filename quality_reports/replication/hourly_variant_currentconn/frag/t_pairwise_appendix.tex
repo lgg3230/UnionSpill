@@ -1,0 +1,54 @@
+\begin{table}[H]
+\centering
+\caption{Predictors of Pairwise Connectivity}
+\label{tab:pairwise_conn_appendix}
+\footnotesize
+\begin{tabular}{lcccc}
+\toprule\toprule
+ & \multicolumn{2}{c}{Connectivity} & \multicolumn{2}{c}{Late connectivity} \\
+\cmidrule(lr){2-3} \cmidrule(lr){4-5}
+ & Univariate & Multivariate & Univariate & Multivariate \\
+ & (1) & (2) & (3) & (4) \\
+\midrule
+\multicolumn{5}{l}{\textbf{Panel A:} Continuous measures} \\
+Spatial & 0.0404*** & 0.0211*** & 0.0241*** & 0.0100*** \\
+ & (0.0009) & (0.0006) & (0.0009) & (0.0004) \\
+Turnover & 0.0014* & 0.0002** & 0.0009* & 0.0002*** \\
+ & (0.0008) & (0.0001) & (0.0005) & (0.0001) \\
+Size & 0.0036*** & -0.0014*** & 0.0007** & -0.0020*** \\
+ & (0.0002) & (0.0003) & (0.0003) & (0.0004) \\
+Wage & 0.0117*** & -0.0012*** & 0.0069*** & -0.0004*** \\
+ & (0.0003) & (0.0001) & (0.0003) & (0.0001) \\
+\% Female & 0.0065*** & 0.0019*** & 0.0039*** & 0.0011*** \\
+ & (0.0002) & (0.0001) & (0.0002) & (0.0001) \\
+\% Non-white & 0.0073*** & -0.0022*** & 0.0044*** & -0.0009*** \\
+ & (0.0002) & (0.0001) & (0.0002) & (0.0001) \\
+\% Higher ed. & 0.0102*** & 0.0016*** & 0.0058*** & 0.0005*** \\
+ & (0.0003) & (0.0001) & (0.0002) & (0.0001) \\
+\% High school & 0.0060*** & 0.0018*** & 0.0033*** & 0.0007*** \\
+ & (0.0002) & (0.0001) & (0.0001) & (0.0001) \\
+\# CBA clauses & 0.0128*** & 0.0017*** & 0.0076*** & 0.0009*** \\
+ & (0.0003) & (0.0001) & (0.0003) & (0.0001) \\
+Early connectivity & --- & --- & 0.2425*** & 0.2390*** \\
+ &  &  & (0.0218) & (0.0217) \\
+ &  &  &  & \\
+\multicolumn{5}{l}{\textbf{Panel B:} Indicator measures} \\
+Microregion & 0.3176*** & -0.0131*** & 0.1890*** & -0.0076*** \\
+ & (0.0077) & (0.0026) & (0.0076) & (0.0021) \\
+Union & 0.2974*** & 0.2476*** & 0.1756*** & 0.1169*** \\
+ & (0.0061) & (0.0062) & (0.0070) & (0.0049) \\
+Industry & 0.1810*** & -0.0903*** & 0.1066*** & -0.0427*** \\
+ & (0.0037) & (0.0033) & (0.0045) & (0.0024) \\
+Industry $\times$ microregion & 3.0620*** & 2.9034*** & 1.8341*** & 1.3935*** \\
+ & (0.0959) & (0.0949) & (0.0915) & (0.0737) \\
+ &  &  &  & \\
+\midrule
+$R^2$ & 0.0016 & 0.0147 & 0.0589 & 0.0622 \\
+Observations & 254{,}482{,}256 & 254{,}482{,}256 & 254{,}482{,}256 & 254{,}482{,}256 \\
+\bottomrule\bottomrule
+\end{tabular}
+\begin{minipage}{\linewidth}
+    \scriptsize\vspace{4pt}
+    \textit{Notes:} This table reports the estimates plotted in the pairwise-connectivity coefficient figure. The unit of observation is an establishment pair. Columns~(1)--(2) take pairwise connectivity as the dependent variable; columns~(3)--(4) take late pre-reform connectivity, with early pre-reform connectivity included as a regressor. Univariate columns report one regression per row; multivariate columns report a single regression including all listed regressors jointly, so the reported $R^2$ is common to every row in that column. Panel~A reports the continuous proximity measures, each defined as the negative absolute difference between the two establishments' values so that higher means more similar; Panel~B reports the indicator measures for shared classifications. All regressors are standardized, so coefficients are in standard-deviation units of the dependent variable. Standard errors in parentheses. *** p$<$0.01, ** p$<$0.05, * p$<$0.10.
+\end{minipage}
+\end{table}

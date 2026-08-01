@@ -1,0 +1,1182 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsfonts,mathtools}
+\usepackage{dsfont}
+\usepackage{array,booktabs,makecell,multirow}
+\usepackage{siunitx}
+\usepackage{threeparttable}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{caption}
+\usepackage{float}
+\usepackage{xcolor}
+\usepackage{xparse}
+\usepackage[colorlinks=true,linkcolor=blue,urlcolor=blue]{hyperref}
+\graphicspath{{Figures/}}
+
+% ---- citation / cref stubs: this is a standalone working doc with no bibliography ----
+\NewDocumentCommand{\citet}{o m}{\textsc{[cite]}}
+\NewDocumentCommand{\citep}{o m}{[cite]}
+\NewDocumentCommand{\citealp}{o m}{[cite]}
+\NewDocumentCommand{\citeauthor}{m}{[author]}
+\NewDocumentCommand{\citeyear}{m}{[year]}
+\AtBeginDocument{\renewcommand{\ref}[1]{ref.}}
+\NewDocumentCommand{\cref}{m}{ref.}
+\NewDocumentCommand{\Cref}{m}{Ref.}
+
+\newcommand{\monthly}{log monthly wages}
+\newcommand{\hourly}{log hourly wages}
+
+% Placeholder box for objects whose hourly version still needs a (fast) rerun
+\newcommand{\pending}[1]{%
+  \begin{center}\fcolorbox{red!50}{red!5}{\parbox{0.9\textwidth}{%
+  \textbf{\textcolor{red!70!black}{PENDING HOURLY RERUN.}} #1}}\end{center}}
+\newcommand{\deferred}[1]{%
+  \begin{center}\fcolorbox{gray!50}{gray!8}{\parbox{0.9\textwidth}{%
+  \textbf{\textcolor{gray!50!black}{DEFERRED (SLOW).}} #1}}\end{center}}
+\newcommand{\identical}[1]{\textit{\small (Identical under both wage definitions #1.)}}
+
+\title{\textbf{Wages vs.\ Log Hourly Wages}\\[4pt]
+\large Current Recomputable Connectivity Variant}
+\author{UnionSpill --- internal robustness document}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\noindent This document keeps the same format as \texttt{quality\_reports/replication/hourly\_variant/Wages\_vs\_HourlyWages.pdf}, but replaces the connectivity-dependent results with estimates built from the current recomputable connectivity measure, \texttt{totaltreat\_pw\_n\_current}, sourced from \texttt{Data/RAIS\_aux/connectivity\_treat\_2007\_2011\_agg.dta}. Re-estimated tables include the main direct and spillover effects, clause composition/value, union controls, robustness bins and controls, turnover/employment decomposition, workforce composition, residualized wages, and the firm-level benchmark cells inside the group-level spillover tables. Rebuilt figures include the connectivity histogram, binscatters, recentered/counterfactual connectivity event studies, and Honest DiD sensitivity plots.
+
+\tableofcontents
+\clearpage
+
+%======================================================================
+\part*{Part I --- Current Paper: Log Monthly Wages}
+\addcontentsline{toc}{part}{Part I --- Current Paper (Log Monthly Wages)}
+%======================================================================
+
+\section{Predictors of Pairwise Connectivity (Fig.)}
+\begin{figure}[H]\centering
+\includegraphics[width=\textwidth]{bilateral_coefplot.pdf}
+\caption*{\textbf{Predictors of Pairwise Connectivity.} \identical{--- connectivity gravity, no wage outcome}}
+\end{figure}
+
+\section{Direct Effects on Wages (Fig.)}
+\begin{figure}[H]\centering
+\includegraphics[width=0.62\textwidth]{m_dir_es.pdf}
+\caption*{\textbf{Direct effect event study --- log monthly wages.}}
+\end{figure}
+
+\section{Direct Effects (Table)}
+% BEGIN inlined t_direct.tex
+\begin{table}[H]
+\centering
+\caption{Direct Effects: Current Recomputable Connectivity}
+\footnotesize
+\begin{tabular}{lcccc}
+\toprule\toprule
+ & \begin{tabular}[c]{@{}c@{}}Log \\ Wages\end{tabular} & \begin{tabular}[c]{@{}c@{}}Log Hourly \\ Wages\end{tabular} & \begin{tabular}[c]{@{}c@{}}Log \\ Employment\end{tabular} & \begin{tabular}[c]{@{}c@{}}Clause \\ Count\end{tabular}\\
+ & (1) & (2) & (3) & (4)\\
+\midrule
+\multicolumn{5}{l}{\textit{Panel A: Zero-Connectivity Untreated Firms}}\\
+\midrule
+Post $\times$ Treatment & 0.0262*** & 0.0285*** & $-$0.0013 & 1.5544***\\
+ & (0.0049) & (0.0050) & (0.0152) & (0.3044)\\
+ &  &  &  & \\
+Observations & 112{,}695 & 112{,}695 & 113{,}112 & 73{,}181\\
+Establishments & 14{,}136 & 14{,}136 & 14{,}139 & 14{,}178\\
+ &  &  &  & \\
+Pre-trend (placebo) & $-$0.0002 & $-$0.0013 & 0.0156 & 0.1465\\
+ & (0.0046) & (0.0054) & (0.0101) & (0.3484)\\
+ &  &  &  & \\
+\midrule
+\multicolumn{5}{l}{\textit{Panel B: All Untreated Firms}}\\
+\midrule
+Post $\times$ Treatment & 0.0178*** & 0.0202*** & 0.0024 & 1.3481***\\
+ & (0.0032) & (0.0033) & (0.0111) & (0.2350)\\
+ &  &  &  & \\
+Observations & 130{,}708 & 130{,}708 & 131{,}232 & 84{,}080\\
+Establishments & 16{,}398 & 16{,}398 & 16{,}404 & 16{,}444\\
+ &  &  &  & \\
+Pre-trend (placebo) & 0.0042 & 0.0048 & $-$0.0012 & 0.2660\\
+ & (0.0030) & (0.0035) & (0.0076) & (0.2471)\\
+ &  &  &  & \\
+\midrule
+\multicolumn{5}{l}{\textit{Equality of effects, Panel A vs.\ Panel B}}\\
+$p$-value & [0.009] & [0.013] & [0.741] & [0.386]\\
+\bottomrule\bottomrule
+\end{tabular}
+\begin{minipage}{\linewidth}
+    \scriptsize\vspace{4pt}
+     \textit{Notes:} This table presents difference-in-differences estimates of the ultractivity reform's direct effects (equation (\ref{eq:dir_spec})) using the current recomputable connectivity measure from \texttt{Data/RAIS\_aux/connectivity\_treat\_2007\_2011\_agg.dta}. An establishment is directly treated if it had a firm-level CBA filed before September 25, 2012 with a contractual end date after that date. Panel~A restricts the comparison group to untreated establishments with \texttt{totaltreat\_pw\_n\_current == 0}; Panel~B includes all untreated establishments. The final row reports the $p$-value of the test that the Post $\times$ Treatment effect is equal across the two panels. The test is estimated from a single stacked regression of the two samples in which each copy receives its own complete set of fixed effects and the difference-in-differences term is fully interacted with a copy indicator, so that the interaction coefficient equals the difference between the two panels. Standard errors are clustered at the establishment level, so that an establishment entering both copies forms a single cluster, which recovers the covariance between the two estimators and yields a valid test despite the overlapping samples. Wages and employment are measured in December of each year. Clause counts are observed only when a CBA is filed, reducing the number of observations in column~(4). Post $\times$ Treatment reports the average effect for 2012--2016, with 2011 as the reference year. Pre-trend (placebo) reports the coefficient from a placebo regression estimated on pre-treatment data only (2009--2010 relative to 2011). All specifications include establishment fixed effects and year or CBA-period fixed effects interacted with two-digit industry, microregion, and negotiation-month indicators and with quartile bins of pre-treatment firm size, per-worker flows, and the outcome. Standard errors clustered at the establishment level in parentheses. *** p$<$0.01, ** p$<$0.05, * p$<$0.10.
+\end{minipage}
+\end{table}
+% END inlined t_direct.tex
+
+\section{Spillover Effects on Wages (Fig.)}
+\begin{figure}[H]\centering
+\includegraphics[width=0.62\textwidth]{m_spill_es.pdf}
+\caption*{\textbf{Spillover effect event study --- log monthly wages.}}
+\end{figure}
+
+\section{Spillover Effects (Table)}
+% BEGIN inlined t_spill.tex
+\begin{table}[H]
+\centering
+\caption{Spillover Effects: Current Recomputable Connectivity}
+\footnotesize
+\begin{tabular}{lcccc}
+\toprule\toprule
+ & \begin{tabular}[c]{@{}c@{}}Log \\ Wages\end{tabular} & \begin{tabular}[c]{@{}c@{}}Log Hourly \\ Wages\end{tabular} & \begin{tabular}[c]{@{}c@{}}Log \\ Employment\end{tabular} & \begin{tabular}[c]{@{}c@{}}Clause \\ Count\end{tabular}\\
+ & (1) & (2) & (3) & (4)\\
+\midrule
+Post $\times$ Connectivity & 0.0050** & 0.0065*** & 0.0009 & 0.0227\\
+ & (0.0022) & (0.0023) & (0.0081) & (0.1175)\\
+ &  &  &  & \\
+Observations & 32{,}495 & 32{,}495 & 32{,}704 & 19{,}693\\
+Establishments & 4{,}084 & 4{,}084 & 4{,}088 & 4{,}142\\
+\midrule
+Pre-trend (placebo) & 0.0018 & 0.0014 & $-$0.0015 & 0.3256\\
+ & (0.0025) & (0.0026) & (0.0063) & (0.2014)\\
+\bottomrule\bottomrule
+\end{tabular}
+
+\begin{minipage}{\linewidth}
+\scriptsize\vspace{4pt}
+    \textit{Notes:} This table presents difference-in-differences estimates of the reform's spillover effects (equation (\ref{eq:spill_spec})) on the full sample of untreated establishments using the current recomputable connectivity measure from \texttt{Data/RAIS\_aux/connectivity\_treat\_2007\_2011\_agg.dta}. Connectivity is \texttt{totaltreat\_pw\_n\_current}, normalized by its 90th percentile among untreated establishments, so that a value of 1 corresponds to the 90th percentile. Wages and employment are measured in December of each year; clause counts are observed only when a CBA is filed, reducing the number of observations in column~(4). Post $\times$ Connectivity reports the average effect for 2012--2016, with 2011 as the reference year. Pre-trend (placebo) reports the coefficient from a placebo regression estimated on pre-treatment data only (2009--2010 relative to 2011). All specifications include establishment fixed effects and year or CBA-period fixed effects interacted with two-digit industry, microregion, and negotiation-month indicators and with quartile bins of pre-treatment firm size, per-worker flows, and the outcome. Standard errors clustered at the establishment level in parentheses. *** p$<$0.01, ** p$<$0.05, * p$<$0.10.
+\end{minipage}
+\end{table}
+% END inlined t_spill.tex
+
+\section{Spillover Effects on CBA Composition and Value (Table)}
+% BEGIN inlined t_clause.tex
+\begin{table}[H]
+\centering
+\caption{Spillover Effects on CBA Composition and Value}
+\footnotesize
+\begin{tabular}{lccccccc}
+\toprule\toprule
+ & \multicolumn{3}{c}{Clause-type counts} & \multicolumn{3}{c}{Clause-type shares} & \begin{tabular}[c]{@{}c@{}}Wage-equivalent\\ value\end{tabular} \\
+\cmidrule(lr){2-4}\cmidrule(lr){5-7}\cmidrule(lr){8-8}
+ & Wage & Employment & Other & Wage & Employment & Other & \\
+ & (1) & (2) & (3) & (4) & (5) & (6) & (7) \\
+\midrule
+Post $\times$ Connectivity & $-$0.0180 & 0.0581 & $-$0.0089 & $-$0.0018 & $-$0.0003 & 0.0016 & $-$0.0009\\
+ & (0.0276) & (0.0380) & (0.0809) & (0.0013) & (0.0012) & (0.0017) & (0.0016)\\
+ &  &  &  &  &  &  & \\
+Observations & 19{,}693 & 19{,}693 & 19{,}693 & 19{,}692 & 19{,}692 & 19{,}692 & 19{,}693\\
+Establishments & 4{,}142 & 4{,}142 & 4{,}142 & 4{,}142 & 4{,}142 & 4{,}142 & 4{,}142\\
+\midrule
+Pre-trend (placebo) & 0.0723 & 0.0444 & 0.2268* & 0.0002 & 0.0015 & $-$0.0018 & 0.0019\\
+ & (0.0472) & (0.0345) & (0.1323) & (0.0011) & (0.0010) & (0.0013) & (0.0029)\\
+\bottomrule\bottomrule
+\end{tabular}
+\begin{minipage}{\linewidth}
+\scriptsize\vspace{4pt}
+    \textit{Notes:} This table presents difference-in-differences estimates of the reform's spillover effects (equation (\ref{eq:spill_spec})) on the content of collective agreements, on the full sample of untreated establishments, using the current recomputable connectivity measure. Columns (1)--(3) report effects on the counts of wage-related, employment-related, and other clauses, following \textit{Sistema Mediador}'s classification; columns (4)--(6) report effects on each type's share of total clauses. Column (7) reports the effect on agreement value, the sum across the 24 \textit{Sistema Mediador} subgroups of each subgroup's clause count weighted by its wage-equivalent value from \citet{Lagos2026}, expressed in log wage points. Connectivity is normalized so that a value of 1 corresponds to the 90th percentile among untreated establishments. Post $\times$ Connectivity reports the average effect for 2012--2016, with 2011 as the reference year. Pre-trend (placebo) reports the coefficient from a placebo regression estimated on pre-treatment data only (2009--2010 relative to 2011). All specifications include establishment fixed effects and year fixed effects interacted with two-digit industry, microregion, and negotiation-month indicators and with quartile bins of pre-treatment firm size, per-worker flows, and outcome. Standard errors clustered at the establishment level in parentheses. *** p$<$0.01, ** p$<$0.05, * p$<$0.10.
+\end{minipage}
+\end{table}
+% END inlined t_clause.tex
+
+\section{Spillover Wage Effects: Robustness to Union Controls (Table)}
+\begin{table}[H]
+\centering
+\caption{Spillover Effects on Log Wages: Robustness to Union-Level Confounders}
+\scriptsize
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lcccccccccc}
+\toprule\toprule
+ & \multicolumn{10}{c}{Log December wage}\\
+\cmidrule(lr){2-11}
+ & (1) & (2) & (3) & (4) & (5) & (6) & (7) & (8) & (9) & (10)\\
+\midrule
+Post $\times$ Connectivity & 0.0050** & 0.0043 & 0.0055** & 0.0054** & 0.0052** & 0.0052** & 0.0057** & 0.0048** & 0.0046** & 0.0046**\\
+ & (0.0022) & (0.0026) & (0.0023) & (0.0023) & (0.0023) & (0.0023) & (0.0023) & (0.0023) & (0.0023) & (0.0023)\\
+ &  &  &  &  &  &  &  &  &  & \\
+Spillover / direct effect & 0.19 & 0.16 & 0.21 & 0.21 & 0.20 & 0.20 & 0.22 & 0.18 & 0.18 & 0.18\\
+ &  &  &  &  &  &  &  &  &  & \\
+Observations & 32{,}495 & 28{,}714 & 32{,}495 & 32{,}495 & 32{,}495 & 32{,}495 & 32{,}495 & 32{,}495 & 32{,}495 & 32{,}495\\
+Establishments & 4{,}084 & 3{,}614 & 4{,}084 & 4{,}084 & 4{,}084 & 4{,}084 & 4{,}084 & 4{,}084 & 4{,}084 & 4{,}084\\
+\midrule
+Pre-trend (placebo) & 0.0018 & $-$0.0014 & 0.0011 & 0.0012 & 0.0009 & 0.0013 & 0.0007 & 0.0010 & 0.0011 & 0.0008\\
+ & (0.0025) & (0.0029) & (0.0025) & (0.0025) & (0.0026) & (0.0025) & (0.0025) & (0.0025) & (0.0025) & (0.0026)\\
+\midrule
+\multicolumn{11}{l}{\textit{Union controls}} \\
+Union $\times$ year FE & --- & \checkmark & --- & --- & --- & --- & --- & --- & --- & --- \\
+Union exposure (firms), linear & --- & --- & \checkmark & --- & --- & --- & --- & --- & --- & --- \\
+Union exposure (workers), linear & --- & --- & --- & \checkmark & --- & --- & --- & --- & --- & --- \\
+Union exposure (firms), quartiles & --- & --- & --- & --- & \checkmark & --- & --- & --- & --- & --- \\
+Union exposure (workers), quartiles & --- & --- & --- & --- & --- & \checkmark & --- & --- & --- & --- \\
+Union exposure (firms), deciles & --- & --- & --- & --- & --- & --- & \checkmark & --- & --- & --- \\
+Union exposure (workers), deciles & --- & --- & --- & --- & --- & --- & --- & \checkmark & --- & --- \\
+Union exposure (firms), vingtiles & --- & --- & --- & --- & --- & --- & --- & --- & \checkmark & --- \\
+Union exposure (workers), vingtiles & --- & --- & --- & --- & --- & --- & --- & --- & --- & \checkmark \\
+\bottomrule\bottomrule
+\end{tabular}
+}
+
+\begin{minipage}{\linewidth}
+    \scriptsize\vspace{4pt}
+    \textit{Notes:} This table assesses whether current-connectivity spillover log wage estimates survive controls for union-level exposure to the reform, on the full sample of untreated establishments. Connectivity is the current recomputable per-worker volume of pre-reform (2007--2011) worker flows to treated firms, normalized to the 90th percentile. The reported ratio divides each column's spillover estimate by the main direct-effect estimate (0.0262). Column~(1) reproduces the baseline specification; column~(2) adds union $\times$ year fixed effects. Columns~(3)--(4) add linear controls for the share of the union's covered establishments or workers that are directly treated. Columns~(5)--(10) replace those linear terms with indicators for the quartile, decile, or vingtile of the same two union-exposure measures, defined on the 2009 balanced-panel sample in the same manner as the quartile controls. All columns include the baseline controls from equation (\ref{eq:spill_spec}). Standard errors clustered at the establishment level in parentheses. *** p$<$0.01, ** p$<$0.05, * p$<$0.10.
+\end{minipage}
+\footnotesize
+\end{table}
+
+\section{Sample Descriptives (Table)}
+% BEGIN inlined t_desc.tex
+\begin{table}[H]
+\centering
+\caption{Sample Descriptives}
+\footnotesize
+% \begin{threeparttable}
+\begin{tabular}{lccc}
+\toprule\toprule
+ & \multicolumn{1}{c}{Directly Treated} & \multicolumn{2}{c}{Untreated} \\
+ \cmidrule(lr){3-4}
+ & & All (Spillover Sample) & Zero-Connectivity \\
+ & (1) & (2) & (3) \\
+\midrule
+\multicolumn{4}{l}{\textit{Panel A: Sample Size}} \\[0.5ex]
+Number of establishments & 12,276 & 4,196 & 1,931 \\
+Establishment size & 143.4 & 161.0 & 23.3 \\
+&&& \\
+\multicolumn{4}{l}{\textit{Panel B: Workforce Characteristics}} \\[0.5ex]
+\% High School Degree & 0.73 & 0.67 & 0.68 \\
+\% Female & 0.37 & 0.37 & 0.41 \\
+\% Non-white & 0.31 & 0.34 & 0.32 \\
+Age (years) & 36.9 & 35.4 & 36.1 \\
+Tenure (years) & 6.8 & 4.8 & 5.3 \\
+&&& \\
+\multicolumn{4}{l}{\textit{Panel C: Compensation}} \\[0.5ex]
+Mean Wage & 3,624 & 2,748 & 2,596 \\
+Median Wage & 3,112 & 2,327 & 2,296 \\
+Mean Clause Count & 31.9 & 27.1 & 28.2 \\
+&&& \\
+\multicolumn{4}{l}{\textit{Panel D: Worker Flows}} \\[0.5ex]
+Per-worker flows & 0.271 & 0.241 & 0.228 \\
+Network size & 47.6 & 57.1 & 9.7 \\
+\bottomrule\bottomrule
+\end{tabular}
+\begin{minipage}{\linewidth}
+    \scriptsize\vspace{4pt}
+    \textit{Notes:} This table presents establishment-level descriptive statistics, averaged over 2009--2011 unless otherwise noted. Column~(1) reports directly treated establishments; column~(2) all untreated establishments; column~(3) the subset of untreated establishments with zero connectivity to the directly treated ($C_i = 0$, equation (\ref{eq:conn})), which serve as the comparison group for the direct-effect estimates. Age and tenure are in years. Wages are December earnings in 2015 Brazilian Reais. Clause count is the number of provisions in the establishment's first post-2009 CBA. Per-worker flows are total worker flows divided by average employment. Network size is the total number of distinct establishments with which the establishment exchanges workers. Per-worker flows and network size are measured over 2007--2011, matching the connectivity measurement window.
+\end{minipage}
+% \end{threeparttable}
+\end{table}
+% END inlined t_desc.tex
+
+\section{Robustness of Wage Effects (Table)}
+% BEGIN inlined t_rob.tex
+\begin{table}[H]
+\centering
+\caption{Robustness of Wage Effects}
+\footnotesize
+\begin{tabular}{lcccccc}
+\toprule\toprule
+ & & \multicolumn{2}{c}{Controls: \# Bins} & Controls: & \multicolumn{2}{c}{Controls: Local Industry} \\
+\cmidrule(lr){3-4} \cmidrule(lr){5-5} \cmidrule(lr){6-7}
+ & \begin{tabular}[c]{@{}c@{}}Main\end{tabular} & \begin{tabular}[c]{@{}c@{}}10 Bins\end{tabular} & \begin{tabular}[c]{@{}c@{}}20 Bins\end{tabular} & \begin{tabular}[c]{@{}c@{}}Workforce\\Characteristics\end{tabular} & \begin{tabular}[c]{@{}c@{}}\% Firms\\Treated\end{tabular} & \begin{tabular}[c]{@{}c@{}}\% Workers\\Treated\end{tabular} \\
+ & (1) & (2) & (3) & (4) & (5) & (6) \\
+\midrule
+\multicolumn{7}{l}{\textbf{Panel A:} Direct Effects } \\
+Post $\times$ Treatment & 0.0262*** & 0.0257*** & 0.0247*** & 0.0260*** & --- & ---\\
+ & (0.0049) & (0.0049) & (0.0048) & (0.0049) &  & \\
+ &  &  &  &  &  & \\
+Observations & 112{,}695 & 112{,}695 & 112{,}695 & 112{,}695 & --- & ---\\
+Establishments & 14{,}136 & 14{,}136 & 14{,}136 & 14{,}136 & --- & ---\\
+\midrule
+Pre-trend (placebo) & $-$0.0002 & $-$0.0005 & $-$0.0006 & $-$0.0001 & --- & ---\\
+ & (0.0046) & (0.0046) & (0.0047) & (0.0046) &  & \\
+ &  &  &  &  &  & \\
+ \midrule
+\multicolumn{7}{l}{\textbf{Panel B:} Spillover Effects} \\
+Post $\times$ Connectivity & 0.0050** & 0.0055** & 0.0052** & 0.0051** & 0.0044** & 0.0047**\\
+ & (0.0022) & (0.0024) & (0.0024) & (0.0023) & (0.0022) & (0.0022)\\
+ &  &  &  &  &  & \\
+Spillover / direct effect & 0.19 & 0.21 & 0.21 & 0.20 & 0.17$^\dagger$ & 0.18$^\dagger$\\
+ &  &  &  &  &  & \\
+Observations & 32{,}495 & 32{,}495 & 32{,}495 & 32{,}495 & 32{,}495 & 32{,}495\\
+Establishments & 4{,}084 & 4{,}084 & 4{,}084 & 4{,}084 & 4{,}084 & 4{,}084\\
+\midrule
+Pre-trend (placebo) & 0.0018 & 0.0016 & 0.0014 & 0.0017 & 0.0018 & 0.0017\\
+ & (0.0025) & (0.0026) & (0.0026) & (0.0025) & (0.0026) & (0.0026)\\
+\bottomrule\bottomrule
+\end{tabular}
+\begin{minipage}{\linewidth}
+    \scriptsize\vspace{4pt}
+    \textit{Notes:} This table summarizes the robustness of the current-connectivity log wage results across alternative specifications. Panel~A reports direct effects using zero-connectivity untreated establishments as the comparison group; Panel~B reports spillover effects on the full sample of untreated establishments. The reported ratio divides the spillover estimate by the direct-effect estimate from the same column; entries marked with $^\dagger$ use the main direct-effect estimate (0.0262) as the denominator because those local-industry specifications do not produce re-estimated direct-effect CSVs in the isolated current-connectivity run. Column~(1) is the baseline specification with quartile-bin controls. Columns~(2)--(3) replace quartile bins with $N$-bin controls. Column~(4) adds the full set of workforce-characteristic controls emitted by the demo-controls scripts for both direct and spillover effects. Columns~(5)--(6) add local treatment exposure within each establishment's industry $\times$ microregion cell. Standard errors clustered at the establishment level in parentheses. *** p$<$0.01, ** p$<$0.05, * p$<$0.10.
+\end{minipage}
+\end{table}
+% END inlined t_rob.tex
+
+\section{Decomposing Employment Effects (Table)}
+% BEGIN inlined t_turnover.tex
+\begin{table}[H]
+\centering
+\caption{Decomposing Employment Effects}
+\footnotesize
+\begin{tabular}{lccccccc}
+\toprule\toprule
+ & \begin{tabular}[c]{@{}c@{}}Log\\Hours\end{tabular} & \begin{tabular}[c]{@{}c@{}}Retention\\Rate\end{tabular} & \begin{tabular}[c]{@{}c@{}}Hiring\\Rate\end{tabular} & \begin{tabular}[c]{@{}c@{}}Separation\\Rate\end{tabular} & \begin{tabular}[c]{@{}c@{}}Quit\\Rate\end{tabular} & \begin{tabular}[c]{@{}c@{}}Layoff\\Rate\end{tabular} & \begin{tabular}[c]{@{}c@{}}Churn\\Rate\end{tabular} \\
+ & (1) & (2) & (3) & (4) & (5) & (6) & (7) \\
+\midrule
+\multicolumn{8}{l}{\textbf{Panel A:} Direct Effects} \\
+Post $\times$ Treatment & 0.0003 & 0.0057* & 0.0171 & $-$0.0037 & $-$0.0031 & 0.0045 & 0.0122\\
+ & (0.0153) & (0.0032) & (0.0128) & (0.0125) & (0.0036) & (0.0070) & (0.0245)\\
+ &  &  &  &  &  &  & \\
+Mean & 6.1501 & 0.7804 & 0.5367 & 0.4733 & 0.0975 & 0.2298 & 1.0100\\
+Observations & 113{,}112 & 112{,}620 & 113{,}112 & 113{,}112 & 113{,}112 & 113{,}112 & 113{,}112\\
+Establishments & 14{,}139 & 14{,}139 & 14{,}139 & 14{,}139 & 14{,}139 & 14{,}139 & 14{,}139\\
+\midrule
+Pre-trend (placebo) & 0.0128 & 0.0014 & $-$0.0352** & $-$0.0144 & $-$0.0066 & $-$0.0116 & $-$0.0498\\
+ & (0.0105) & (0.0056) & (0.0169) & (0.0159) & (0.0048) & (0.0091) & (0.0305)\\
+ &  &  &  &  &  &  & \\
+\midrule
+\multicolumn{8}{l}{\textbf{Panel B:} Spillover Effects} \\
+Post $\times$ Connectivity & $-$0.0002 & 0.0014 & $-$0.0094 & $-$0.0035 & $-$0.0027* & $-$0.0016 & $-$0.0121\\
+ & (0.0080) & (0.0017) & (0.0095) & (0.0066) & (0.0015) & (0.0048) & (0.0153)\\
+ &  &  &  &  &  &  & \\
+Mean & 7.2869 & 0.7642 & 0.5812 & 0.5194 & 0.1182 & 0.2600 & 1.1006\\
+Observations & 32{,}704 & 32{,}471 & 32{,}704 & 32{,}704 & 32{,}704 & 32{,}704 & 32{,}704\\
+Establishments & 4{,}088 & 4{,}088 & 4{,}088 & 4{,}088 & 4{,}088 & 4{,}088 & 4{,}088\\
+\midrule
+Pre-trend (placebo) & $-$0.0017 & 0.0037 & $-$0.0086 & $-$0.0172 & $-$0.0073** & $-$0.0095 & $-$0.0269\\
+ & (0.0062) & (0.0033) & (0.0221) & (0.0184) & (0.0034) & (0.0132) & (0.0391)\\
+\bottomrule\bottomrule
+\end{tabular}
+\begin{minipage}{\linewidth}\vspace{4pt}
+\scriptsize\textit{Notes:} This table presents difference-in-differences estimates of the ultractivity reform's effects on establishment-level employment flow outcomes using the current recomputable connectivity measure. Panel~A reports direct effects, comparing directly treated establishments to untreated establishments with zero pre-reform connectivity. Panel~B reports spillover effects on the full sample of untreated establishments, using continuous connectivity to treated firms as the exposure measure, normalized so that a value of 1 corresponds to the 90th percentile. Mean reports the pre-treatment average across establishments in each panel's estimation sample. Post $\times$ Treatment and Post $\times$ Connectivity measure average effects for 2012--2016. Pre-trend (placebo) reports the coefficient from a placebo regression estimated on pre-treatment data only. Standard errors clustered at the establishment level in parentheses. *** p$<$0.01, ** p$<$0.05, * p$<$0.10.
+\end{minipage}
+\end{table}
+% END inlined t_turnover.tex
+
+\section{Effects on Workforce Composition (Table)}
+% BEGIN inlined t_composition.tex
+\begin{table}[H]
+\centering
+\caption{Effects on Workforce Composition}
+\footnotesize
+\begin{tabular}{lcccc}
+\toprule\toprule
+ & \begin{tabular}[c]{@{}c@{}}Avg.\\Age\end{tabular} & \begin{tabular}[c]{@{}c@{}}\% Male\end{tabular} & \begin{tabular}[c]{@{}c@{}}\% White\end{tabular} & \begin{tabular}[c]{@{}c@{}}\% High\\School+\end{tabular} \\
+ & (1) & (2) & (3) & (4) \\
+\midrule
+\multicolumn{5}{l}{\textbf{Panel A:} Direct Effects} \\
+Post $\times$ Treatment & $-$0.0080 & $-$0.0091*** & $-$0.0061 & $-$0.0055\\
+ & (0.0976) & (0.0035) & (0.0048) & (0.0038)\\
+ &  &  &  & \\
+Mean & 36.1105 & 0.5853 & 0.6792 & 0.6720\\
+Observations & 113{,}112 & 113{,}112 & 113{,}112 & 113{,}112\\
+Establishments & 14{,}139 & 14{,}139 & 14{,}139 & 14{,}139\\
+\midrule
+Pre-trend (placebo) & $-$0.1501 & 0.0055* & $-$0.0028 & 0.0034\\
+ & (0.0915) & (0.0034) & (0.0046) & (0.0037)\\
+ &  &  &  & \\
+\midrule
+\multicolumn{5}{l}{\textbf{Panel B:} Spillover Effects} \\
+Post $\times$ Connectivity & $-$0.0117 & 0.0003 & 0.0004 & $-$0.0018\\
+ & (0.0443) & (0.0019) & (0.0022) & (0.0021)\\
+ &  &  &  & \\
+Mean & 35.4077 & 0.6341 & 0.6634 & 0.6637\\
+Observations & 32{,}704 & 32{,}704 & 32{,}704 & 32{,}704\\
+Establishments & 4{,}088 & 4{,}088 & 4{,}088 & 4{,}088\\
+\midrule
+Pre-trend (placebo) & 0.0510 & $-$0.0013 & $-$0.0019 & 0.0013\\
+ & (0.0403) & (0.0018) & (0.0020) & (0.0015)\\
+\bottomrule\bottomrule
+\end{tabular}
+\begin{minipage}{\linewidth}\vspace{4pt}
+\scriptsize\textit{Notes:} This table presents difference-in-differences estimates of the ultractivity reform's effects on establishment-level workforce composition using the current recomputable connectivity measure. Panel~A reports direct effects, comparing directly treated establishments to untreated establishments with zero pre-reform connectivity. Panel~B reports spillover effects on the full sample of untreated establishments, using continuous connectivity to treated firms as the exposure measure, normalized so that a value of 1 corresponds to the 90th percentile. Average age is the mean age of December-employed workers. High school+ is the share of workers with at least a completed high school degree. Mean reports the pre-treatment average across establishments in each panel's estimation sample. Standard errors clustered at the establishment level in parentheses. *** p$<$0.01, ** p$<$0.05, * p$<$0.10.
+\end{minipage}
+\end{table}
+% END inlined t_composition.tex
+
+\section{Effects on Residualized Wages (Table)}
+% BEGIN inlined t_resid.tex
+\begin{table}[H]
+\centering
+\caption{Effects on Residualized Wages}
+\footnotesize
+\begin{tabular}{lcccc}
+\toprule\toprule
+ & \multicolumn{2}{c}{Direct Effects} & \multicolumn{2}{c}{Spillover Effects} \\
+ \cmidrule(lr){2-3} \cmidrule(lr){4-5}
+ & \begin{tabular}[c]{@{}c@{}}Log\\ Wages\end{tabular} & \begin{tabular}[c]{@{}c@{}}Residualized\\ Log\\ Wages\end{tabular} & \begin{tabular}[c]{@{}c@{}}Log\\ Wages\end{tabular} & \begin{tabular}[c]{@{}c@{}}Residualized\\ Log\\ Wages\end{tabular} \\
+ & (1) & (2) & (3) & (4) \\
+\midrule
+Post $\times$ Treatment & 0.0262*** & 0.0264*** &  & \\
+ & (0.0049) & (0.0050) &  & \\
+ &  &  &  & \\
+Post $\times$ Connectivity &  &  & 0.0050** & 0.0032\\
+ &  &  & (0.0022) & (0.0020)\\
+ &  &  &  & \\
+Observations & 112{,}695 & 112{,}702 & 32{,}495 & 32{,}498\\
+Establishments & 14{,}136 & 14{,}138 & 4{,}084 & 4{,}085\\
+\midrule
+Pre-trend (placebo) & $-$0.0002 & $-$0.0034 & 0.0018 & $-$0.0027\\
+ & (0.0046) & (0.0050) & (0.0025) & (0.0027)\\
+\bottomrule\bottomrule
+\end{tabular}
+\begin{minipage}{\linewidth}
+    \scriptsize\vspace{4pt}
+\textit{Notes:} This table presents current-connectivity estimates using raw and Mincer-residualized log December wages. Columns~(1)--(2) report direct effects, comparing directly treated establishments to untreated establishments with zero pre-reform connectivity. Columns~(3)--(4) report spillover effects on the full sample of untreated establishments. Worker-level residuals are estimated on the full RAIS worker sample by projecting wages within race $\times$ education $\times$ gender $\times$ year cells on quartic age and establishment-tenure polynomials, then collapsing residuals to establishment-year means for Lagos-sample establishments. Post effects average 2012--2016, with 2011 as the reference year. Standard errors clustered at the establishment level in parentheses. *** p$<$0.01, ** p$<$0.05, * p$<$0.10.
+\end{minipage}
+\end{table}
+% END inlined t_resid.tex
+
+\section{Group-Level Connectivity Descriptives (Table)}
+% BEGIN inlined t_layerdesc.tex
+\begin{table}[H]
+  \centering
+  \caption{Group-Level Connectivity Descriptives}
+  \footnotesize
+  \begin{tabular}{lcccccc}
+    \toprule\toprule
+     & \multicolumn{2}{c}{\textit{Education}} & \multicolumn{2}{c}{\textit{Gender}} & \multicolumn{2}{c}{\textit{Tenure}} \\
+    \cmidrule(lr){2-3} \cmidrule(lr){4-5} \cmidrule(lr){6-7}
+     & \shortstack{No high\\school} & \shortstack{High\\school+} & Female & Male
+     & \shortstack{$<$12\\months} & \shortstack{$\geq$12\\months} \\
+    \midrule
+    \quad Avg.\ employment & 60.2 & 104.3 & 55.7 & 107.9 & 48.8 & 110.1 \\
+    \quad Avg.\ wage & 1,796 & 2,613 & 2,149 & 2,596 & 2,054 & 2,610 \\
+    \quad Avg.\ per-worker flows & 0.2055 & 0.2732 & 0.2449 & 0.2687 & 0.5208 & 0.1083 \\
+    \quad Connectivity & 0.0094 & 0.0148 & 0.0103 & 0.0149 & 0.0259 & 0.0067 \\
+    \midrule
+    \quad \% firms w/ both groups & \multicolumn{2}{c}{85.8\%} & \multicolumn{2}{c}{88.0\%} & \multicolumn{2}{c}{96.5\%} \\
+    \quad \% of connectivity variance within firms & \multicolumn{2}{c}{27.5\%} & \multicolumn{2}{c}{33.8\%} & \multicolumn{2}{c}{45.3\%} \\
+    \quad \% of connectivity variance between firms & \multicolumn{2}{c}{72.5\%} & \multicolumn{2}{c}{66.2\%} & \multicolumn{2}{c}{54.7\%} \\
+    \bottomrule\bottomrule
+  \end{tabular}
+  \begin{minipage}{\linewidth}
+    \scriptsize\vspace{4pt}
+\textit{Notes:} This table summarizes pre-treatment (2009--2011) descriptive statistics for group-level connectivity under three worker partitions. The unit of observation is a group $\times$ firm cell. Tenure groups are defined by whether a worker has completed twelve months at the establishment. ``Avg.\ per-worker flows'' is total worker flows per group worker, averaged across year pairs 2007--08 through 2010--11. ``Connectivity'' is the average pre-treatment worker flow between a firm's group-$g$ workers and directly treated establishments, per group-$g$ worker (footnote~\ref{fn:groupconn}); a firm's connectivity therefore varies across its worker groups. ``\% firms w/ both groups'' is the share of spillover-sample firms with non-missing connectivity for both groups. The final two rows decompose the total variance of group connectivity into its within- and between-firm components on firms with both groups, following the ANOVA identity $\mathrm{Var}(X) = \mathrm{E}[\mathrm{Var}(X \mid \mathrm{firm})] + \mathrm{Var}(\mathrm{E}[X \mid \mathrm{firm}])$, and report each as a share of the total.
+\end{minipage}
+\end{table}
+% END inlined t_layerdesc.tex
+
+\section{Group-level Spillover Effects (Table)}
+% BEGIN inlined t_groupspecs.tex
+\begin{table}[H]
+\centering
+\caption{Group-level spillover effects --- education, gender, tenure}
+\scriptsize
+\begin{tabular}{lcccccc}
+\toprule\toprule
+ & \multicolumn{3}{c}{Log Wages} & \multicolumn{3}{c}{Log Employment} \\
+\cmidrule(lr){2-4} \cmidrule(lr){5-7}
+ & \shortstack{Firm-\\level} & \shortstack{Within\\firms} & Overall
+ & \shortstack{Firm-\\level} & \shortstack{Within\\firms} & Overall \\
+ & (1) & (2) & (3) & (4) & (5) & (6) \\
+\midrule
+\textbf{Panel A:} Education (no HS / HS+) &  &  &  &  &  &  \\
+Connectivity $\times$ Post & 0.0050** &  &  & 0.0008 &  &  \\
+ & (0.0022) &  &  & (0.0081) &  &  \\
+Group-Connectivity $\times$ Post &  & $-$0.0021 & 0.0027 &  & $-$0.0023 & $-$0.0052 \\
+ &  & (0.0041) & (0.0023) &  & (0.0102) & (0.0065) \\
+ &  &  &  &  &  &  \\
+Observations & 32{,}498 & 52{,}458 & 59{,}391 & 32{,}704 & 52{,}458 & 59{,}391 \\
+Groups $\times$ firms & --- & 7{,}160 & 7{,}762 & --- & 7{,}160 & 7{,}762 \\
+Firms & 4{,}085 & 3{,}580 & 4{,}172 & 4{,}088 & 3{,}580 & 4{,}172 \\
+Pre-trend (placebo) & 0.0019 & 0.0041 & 0.0018 & $-$0.0015 & 0.0126 & 0.0049 \\
+ & (0.0025) & (0.0050) & (0.0028) & (0.0063) & (0.0110) & (0.0051) \\
+\midrule
+\textbf{Panel B:} Gender (female / male) &  &  &  &  &  &  \\
+Connectivity $\times$ Post & 0.0050** &  &  & 0.0008 &  &  \\
+ & (0.0022) &  &  & (0.0081) &  &  \\
+Group-Connectivity $\times$ Post &  & 0.0001 & 0.0026 &  & $-$0.0024 & 0.0016 \\
+ &  & (0.0030) & (0.0020) &  & (0.0048) & (0.0044) \\
+ &  &  &  &  &  &  \\
+Observations & 32{,}498 & 55{,}358 & 60{,}864 & 32{,}704 & 55{,}358 & 60{,}864 \\
+Groups $\times$ firms & --- & 7{,}368 & 7{,}867 & --- & 7{,}368 & 7{,}867 \\
+Firms & 4{,}085 & 3{,}684 & 4{,}175 & 4{,}088 & 3{,}684 & 4{,}175 \\
+Pre-trend (placebo) & 0.0019 & $-$0.0011 & $-$0.0005 & $-$0.0015 & $-$0.0025 & 0.0000 \\
+ & (0.0025) & (0.0049) & (0.0025) & (0.0063) & (0.0097) & (0.0057) \\
+\midrule
+\textbf{Panel C:} Tenure ($<$12mo / $\geq$12mo) &  &  &  &  &  &  \\
+Connectivity $\times$ Post & 0.0050** &  &  & 0.0008 &  &  \\
+ & (0.0022) &  &  & (0.0081) &  &  \\
+Group-Connectivity $\times$ Post &  & $-$0.0006 & 0.0001 &  & $-$0.0080 & $-$0.0007 \\
+ &  & (0.0028) & (0.0022) &  & (0.0069) & (0.0058) \\
+ &  &  &  &  &  &  \\
+Observations & 32{,}498 & 56{,}318 & 61{,}285 & 32{,}704 & 56{,}318 & 61{,}285 \\
+Groups $\times$ firms & --- & 8{,}046 & 8{,}236 & --- & 8{,}046 & 8{,}236 \\
+Firms & 4{,}085 & 4{,}023 & 4{,}181 & 4{,}088 & 4{,}023 & 4{,}181 \\
+Pre-trend (placebo) & 0.0019 & 0.0041 & 0.0048* & $-$0.0015 & $-$0.0116 & $-$0.0113* \\
+ & (0.0025) & (0.0037) & (0.0025) & (0.0063) & (0.0082) & (0.0060) \\
+\midrule
+\textbf{Additional Controls} &  &  &  &  &  &  \\
+Group-level Variables &  & \checkmark & \checkmark &  & \checkmark & \checkmark \\
+Firm $\times$ Year FE &  & \checkmark &  &  & \checkmark &  \\
+\bottomrule\bottomrule
+\end{tabular}
+\begin{minipage}{\linewidth}\vspace{4pt}\scriptsize\textit{Notes:} Each panel partitions workers into two groups---by education (Panel~A), gender (Panel~B), or tenure (Panel~C)---and estimates spillover effects at the firm and group level, on the sample of untreated, balanced-panel establishments. Group-Connectivity is defined analogously to firm-level Connectivity, replacing total firm employment with group-specific employment when normalizing worker flows to directly treated establishments. Both measures are scaled so that a value of~1 corresponds to the 90th percentile of the firm-level distribution. In the ``Within firms'' and ``Overall'' columns, the unit of observation is a group $\times$ firm $\times$ year cell and all regressions include group $\times$ firm fixed effects. ``Within firms'' columns add firm $\times$ year fixed effects; ``Overall'' columns instead include microregion $\times$ year, industry $\times$ year, and negotiation-month $\times$ year fixed effects. Group-level controls are year-interacted quartile bins of pre-treatment group wage, group employment, and group per-worker flows. Pre-trend (placebo) reports the coefficient from a placebo regression estimated on pre-treatment data only (2009--2010 relative to 2011). Standard errors clustered at the establishment level in parentheses. *** p$<$0.01, ** p$<$0.05, * p$<$0.10.\end{minipage}
+\end{table}
+% END inlined t_groupspecs.tex
+
+\section{Group-Specific Connectivity and Firm Outcomes (Table)}
+% BEGIN inlined t_horserace.tex
+\begin{table}[H]
+\centering
+\caption{Group-Specific Connectivity and Firm-Level Outcomes}
+\footnotesize
+\sbox0{%
+\begin{tabular}{l S[table-format=-1.4] S[table-format=-1.4] @{\hskip 20pt} S[table-format=-1.4] S[table-format=-1.4]}
+\toprule\toprule
+ & \multicolumn{2}{c}{Post $\times$ Connectivity} & \multicolumn{2}{c}{Pre-trend (placebo)} \\
+\cmidrule(lr){2-3}\cmidrule(lr){4-5}
+\textit{Firm-level outcome:} & \multicolumn{1}{c}{\makecell{Log\\Wages}} & \multicolumn{1}{c}{\makecell{Log\\Employment}} & \multicolumn{1}{c}{\makecell{Log\\Wages}} & \multicolumn{1}{c}{\makecell{Log\\Employment}} \\
+ & \multicolumn{1}{c}{(1)} & \multicolumn{1}{c}{(2)} & \multicolumn{1}{c}{(3)} & \multicolumn{1}{c}{(4)} \\
+\midrule
+\multicolumn{5}{l}{\textbf{Panel A:} Education (no HS / HS+)} \\[2pt]
+Low-Education Connectivity & 0.0027 & 0.0021 & -0.0010 & 0.0010 \\
+ & \multicolumn{1}{c}{(0.0018)} & \multicolumn{1}{c}{(0.0076)} & \multicolumn{1}{c}{(0.0025)} & \multicolumn{1}{c}{(0.0067)} \\
+\addlinespace
+High-Education Connectivity & 0.0020 & 0.0035 & 0.0020 & 0.0025 \\
+ & \multicolumn{1}{c}{(0.0022)} & \multicolumn{1}{c}{(0.0076)} & \multicolumn{1}{c}{(0.0023)} & \multicolumn{1}{c}{(0.0056)} \\
+\addlinespace
+Equality test ($p$-value) & \multicolumn{1}{c}{0.839} & \multicolumn{1}{c}{0.901} & & \\
+Observations & \multicolumn{1}{c}{28{,}227} & \multicolumn{1}{c}{28{,}368} & & \\
+Firms & \multicolumn{1}{c}{3{,}546} & \multicolumn{1}{c}{3{,}546} & & \\
+\midrule
+\multicolumn{5}{l}{\textbf{Panel B:} Gender (female / male)} \\[2pt]
+Female Connectivity & 0.0012 & 0.0025 & 0.0006 & 0.0011 \\
+ & \multicolumn{1}{c}{(0.0011)} & \multicolumn{1}{c}{(0.0031)} & \multicolumn{1}{c}{(0.0016)} & \multicolumn{1}{c}{(0.0025)} \\
+\addlinespace
+Male Connectivity & 0.0020 & 0.0018 & 0.0020 & -0.0008 \\
+ & \multicolumn{1}{c}{(0.0016)} & \multicolumn{1}{c}{(0.0051)} & \multicolumn{1}{c}{(0.0028)} & \multicolumn{1}{c}{(0.0058)} \\
+\addlinespace
+Equality test ($p$-value) & \multicolumn{1}{c}{0.712} & \multicolumn{1}{c}{0.911} & & \\
+Observations & \multicolumn{1}{c}{28{,}903} & \multicolumn{1}{c}{29{,}056} & & \\
+Firms & \multicolumn{1}{c}{3{,}632} & \multicolumn{1}{c}{3{,}632} & & \\
+\midrule
+\multicolumn{5}{l}{\textbf{Panel C:} Tenure ($<$12mo / $\geq$12mo)} \\[2pt]
+Low-Tenure Connectivity & 0.0006 & -0.0034 & 0.0021 & -0.0006 \\
+ & \multicolumn{1}{c}{(0.0013)} & \multicolumn{1}{c}{(0.0039)} & \multicolumn{1}{c}{(0.0013)} & \multicolumn{1}{c}{(0.0034)} \\
+\addlinespace
+High-Tenure Connectivity & {0.0052**} & 0.0090 & 0.0002 & 0.0034 \\
+ & \multicolumn{1}{c}{(0.0022)} & \multicolumn{1}{c}{(0.0085)} & \multicolumn{1}{c}{(0.0024)} & \multicolumn{1}{c}{(0.0056)} \\
+\addlinespace
+Equality test ($p$-value) & \multicolumn{1}{c}{0.078} & \multicolumn{1}{c}{0.178} & & \\
+Observations & \multicolumn{1}{c}{31{,}829} & \multicolumn{1}{c}{32{,}000} & & \\
+Firms & \multicolumn{1}{c}{4{,}000} & \multicolumn{1}{c}{4{,}000} & & \\
+\bottomrule\bottomrule
+\end{tabular}}
+\usebox0
+\begin{minipage}{\wd0}\vspace{4pt}
+\scriptsize\textit{Notes:} Each panel partitions workers into two groups and jointly estimates the spillover effects of the two resulting group-specific connectivity measures on firm-level outcomes, on the sample of untreated establishments. Low-education workers are those without a high school degree and high-education workers those with at least a high school degree; low-tenure workers are those with fewer than twelve months at the establishment and high-tenure workers those with twelve months or more. Both measures enter regressions simultaneously. Group-specific connectivity is defined as in Table~\ref{tab:group_specs}, and both measures are scaled so that a value of~1 corresponds to the 90th percentile of the firm-level distribution. The unit of observation is a firm $\times$ year cell, and all regressions include the fixed effects and time-varying controls of equation~(\ref{eq:spill_spec}). Columns (1)--(2) report average effects for 2012--2016, with 2011 as the reference year. Columns (3)--(4) report coefficients from placebo regressions estimated on pre-treatment data only (2009--2010 relative to 2011); the equality test, observation counts, and firm counts refer to the specifications in columns (1)--(2). Equality test reports the $p$-value of the test that the two coefficients in the column are equal. Samples are smaller than in Table~\ref{tab:spill_main_4tf_out} because both group-specific measures must be non-missing. Standard errors clustered at the establishment level in parentheses. *** p$<$0.01, ** p$<$0.05, * p$<$0.10.
+\end{minipage}
+\end{table}
+% END inlined t_horserace.tex
+
+\section{Distribution of Establishments by Characteristics (Fig.)}
+\begin{figure}[H]\centering
+\includegraphics[width=0.9\textwidth]{distro_region.pdf}\\[4pt]
+\includegraphics[width=0.9\textwidth]{distro_industry.pdf}\\[4pt]
+\includegraphics[width=0.9\textwidth]{distro_month.pdf}
+\caption*{\textbf{Distribution by region / broad industry / negotiation month.} \identical{}}
+\end{figure}
+
+\section{Distribution of Connectivity to Directly Treated Firms (Fig.)}
+\begin{figure}[H]\centering
+\includegraphics[width=0.7\textwidth]{conn_hist.pdf}
+\caption*{\textbf{Connectivity histogram.} \identical{}}
+\end{figure}
+
+\section{Scatterplots: Firm Characteristics and Connectivity (Fig.)}
+\begin{figure}[H]\centering
+\begin{subfigure}{0.48\textwidth}\includegraphics[width=\textwidth]{binscatter_wage.pdf}\caption*{Log monthly wages}\end{subfigure}\hfill
+\begin{subfigure}{0.48\textwidth}\includegraphics[width=\textwidth]{binscatter_hwage.pdf}\caption*{Log hourly wages}\end{subfigure}\\[4pt]
+\begin{subfigure}{0.48\textwidth}\includegraphics[width=\textwidth]{binscatter_emp.pdf}\caption*{Log employment}\end{subfigure}\hfill
+\begin{subfigure}{0.48\textwidth}\includegraphics[width=\textwidth]{binscatter_clauses.pdf}\caption*{CBA clauses}\end{subfigure}
+\caption*{\textbf{Binscatters.} This figure already contains both the monthly and hourly wage panels.}
+\end{figure}
+
+\section{Wage Spillovers: Robustness to Counterfactual Connectivity (Fig.)}
+\begin{figure}[H]\centering
+\begin{subfigure}{0.48\textwidth}\includegraphics[width=\textwidth]{m_recentered_spill.pdf}\caption*{Connectivity}\end{subfigure}\hfill
+\begin{subfigure}{0.48\textwidth}\includegraphics[width=\textwidth]{m_recentered_cf.pdf}\caption*{Counterfactual connectivity}\end{subfigure}
+\caption*{\textbf{Recentered spillover --- log monthly wages.}}
+\end{figure}
+
+\section{Sensitivity to Violations of Parallel Trends (Fig.)}
+\begin{figure}[H]\centering
+\begin{subfigure}{0.48\textwidth}\includegraphics[width=\textwidth]{m_honest_direct.pdf}\caption*{Direct effect}\end{subfigure}\hfill
+\begin{subfigure}{0.48\textwidth}\includegraphics[width=\textwidth]{m_honest_spill.pdf}\caption*{Spillover effect}\end{subfigure}
+\caption*{\textbf{Honest DiD --- log monthly wages.}}
+\end{figure}
+
+\clearpage
+%======================================================================
+\part*{Part II --- Variant: Log Hourly Wages}
+\addcontentsline{toc}{part}{Part II --- Variant (Log Hourly Wages)}
+%======================================================================
+
+\section{Predictors of Pairwise Connectivity (Fig.)}
+\begin{figure}[H]\centering
+\includegraphics[width=\textwidth]{bilateral_coefplot.pdf}
+\caption*{\textbf{Predictors of Pairwise Connectivity.} \identical{}}
+\end{figure}
+
+\section{Direct Effects on Wages (Fig.)}
+\begin{figure}[H]\centering
+\includegraphics[width=0.62\textwidth]{h_dir_es.pdf}
+\caption*{\textbf{Direct effect event study --- log hourly wages.}}
+\end{figure}
+
+\section{Direct Effects (Table)}
+% BEGIN inlined t_direct.tex
+\begin{table}[H]
+\centering
+\caption{Direct Effects: Current Recomputable Connectivity}
+\footnotesize
+\begin{tabular}{lcccc}
+\toprule\toprule
+ & \begin{tabular}[c]{@{}c@{}}Log \\ Wages\end{tabular} & \begin{tabular}[c]{@{}c@{}}Log Hourly \\ Wages\end{tabular} & \begin{tabular}[c]{@{}c@{}}Log \\ Employment\end{tabular} & \begin{tabular}[c]{@{}c@{}}Clause \\ Count\end{tabular}\\
+ & (1) & (2) & (3) & (4)\\
+\midrule
+\multicolumn{5}{l}{\textit{Panel A: Zero-Connectivity Untreated Firms}}\\
+\midrule
+Post $\times$ Treatment & 0.0262*** & 0.0285*** & $-$0.0013 & 1.5544***\\
+ & (0.0049) & (0.0050) & (0.0152) & (0.3044)\\
+ &  &  &  & \\
+Observations & 112{,}695 & 112{,}695 & 113{,}112 & 73{,}181\\
+Establishments & 14{,}136 & 14{,}136 & 14{,}139 & 14{,}178\\
+ &  &  &  & \\
+Pre-trend (placebo) & $-$0.0002 & $-$0.0013 & 0.0156 & 0.1465\\
+ & (0.0046) & (0.0054) & (0.0101) & (0.3484)\\
+ &  &  &  & \\
+\midrule
+\multicolumn{5}{l}{\textit{Panel B: All Untreated Firms}}\\
+\midrule
+Post $\times$ Treatment & 0.0178*** & 0.0202*** & 0.0024 & 1.3481***\\
+ & (0.0032) & (0.0033) & (0.0111) & (0.2350)\\
+ &  &  &  & \\
+Observations & 130{,}708 & 130{,}708 & 131{,}232 & 84{,}080\\
+Establishments & 16{,}398 & 16{,}398 & 16{,}404 & 16{,}444\\
+ &  &  &  & \\
+Pre-trend (placebo) & 0.0042 & 0.0048 & $-$0.0012 & 0.2660\\
+ & (0.0030) & (0.0035) & (0.0076) & (0.2471)\\
+ &  &  &  & \\
+\midrule
+\multicolumn{5}{l}{\textit{Equality of effects, Panel A vs.\ Panel B}}\\
+$p$-value & [0.009] & [0.013] & [0.741] & [0.386]\\
+\bottomrule\bottomrule
+\end{tabular}
+\begin{minipage}{\linewidth}
+    \scriptsize\vspace{4pt}
+     \textit{Notes:} This table presents difference-in-differences estimates of the ultractivity reform's direct effects (equation (\ref{eq:dir_spec})) using the current recomputable connectivity measure from \texttt{Data/RAIS\_aux/connectivity\_treat\_2007\_2011\_agg.dta}. An establishment is directly treated if it had a firm-level CBA filed before September 25, 2012 with a contractual end date after that date. Panel~A restricts the comparison group to untreated establishments with \texttt{totaltreat\_pw\_n\_current == 0}; Panel~B includes all untreated establishments. The final row reports the $p$-value of the test that the Post $\times$ Treatment effect is equal across the two panels. The test is estimated from a single stacked regression of the two samples in which each copy receives its own complete set of fixed effects and the difference-in-differences term is fully interacted with a copy indicator, so that the interaction coefficient equals the difference between the two panels. Standard errors are clustered at the establishment level, so that an establishment entering both copies forms a single cluster, which recovers the covariance between the two estimators and yields a valid test despite the overlapping samples. Wages and employment are measured in December of each year. Clause counts are observed only when a CBA is filed, reducing the number of observations in column~(4). Post $\times$ Treatment reports the average effect for 2012--2016, with 2011 as the reference year. Pre-trend (placebo) reports the coefficient from a placebo regression estimated on pre-treatment data only (2009--2010 relative to 2011). All specifications include establishment fixed effects and year or CBA-period fixed effects interacted with two-digit industry, microregion, and negotiation-month indicators and with quartile bins of pre-treatment firm size, per-worker flows, and the outcome. Standard errors clustered at the establishment level in parentheses. *** p$<$0.01, ** p$<$0.05, * p$<$0.10.
+\end{minipage}
+\end{table}
+% END inlined t_direct.tex
+
+\section{Spillover Effects on Wages (Fig.)}
+\begin{figure}[H]\centering
+\includegraphics[width=0.62\textwidth]{h_spill_es.pdf}
+\caption*{\textbf{Spillover effect event study --- log hourly wages.}}
+\end{figure}
+
+\section{Spillover Effects (Table)}
+% BEGIN inlined t_spill.tex
+\begin{table}[H]
+\centering
+\caption{Spillover Effects: Current Recomputable Connectivity}
+\footnotesize
+\begin{tabular}{lcccc}
+\toprule\toprule
+ & \begin{tabular}[c]{@{}c@{}}Log \\ Wages\end{tabular} & \begin{tabular}[c]{@{}c@{}}Log Hourly \\ Wages\end{tabular} & \begin{tabular}[c]{@{}c@{}}Log \\ Employment\end{tabular} & \begin{tabular}[c]{@{}c@{}}Clause \\ Count\end{tabular}\\
+ & (1) & (2) & (3) & (4)\\
+\midrule
+Post $\times$ Connectivity & 0.0050** & 0.0065*** & 0.0009 & 0.0227\\
+ & (0.0022) & (0.0023) & (0.0081) & (0.1175)\\
+ &  &  &  & \\
+Observations & 32{,}495 & 32{,}495 & 32{,}704 & 19{,}693\\
+Establishments & 4{,}084 & 4{,}084 & 4{,}088 & 4{,}142\\
+\midrule
+Pre-trend (placebo) & 0.0018 & 0.0014 & $-$0.0015 & 0.3256\\
+ & (0.0025) & (0.0026) & (0.0063) & (0.2014)\\
+\bottomrule\bottomrule
+\end{tabular}
+
+\begin{minipage}{\linewidth}
+\scriptsize\vspace{4pt}
+    \textit{Notes:} This table presents difference-in-differences estimates of the reform's spillover effects (equation (\ref{eq:spill_spec})) on the full sample of untreated establishments using the current recomputable connectivity measure from \texttt{Data/RAIS\_aux/connectivity\_treat\_2007\_2011\_agg.dta}. Connectivity is \texttt{totaltreat\_pw\_n\_current}, normalized by its 90th percentile among untreated establishments, so that a value of 1 corresponds to the 90th percentile. Wages and employment are measured in December of each year; clause counts are observed only when a CBA is filed, reducing the number of observations in column~(4). Post $\times$ Connectivity reports the average effect for 2012--2016, with 2011 as the reference year. Pre-trend (placebo) reports the coefficient from a placebo regression estimated on pre-treatment data only (2009--2010 relative to 2011). All specifications include establishment fixed effects and year or CBA-period fixed effects interacted with two-digit industry, microregion, and negotiation-month indicators and with quartile bins of pre-treatment firm size, per-worker flows, and the outcome. Standard errors clustered at the establishment level in parentheses. *** p$<$0.01, ** p$<$0.05, * p$<$0.10.
+\end{minipage}
+\end{table}
+% END inlined t_spill.tex
+
+\section{Spillover Effects on CBA Composition and Value (Table)}
+% BEGIN inlined t_clause.tex
+\begin{table}[H]
+\centering
+\caption{Spillover Effects on CBA Composition and Value}
+\footnotesize
+\begin{tabular}{lccccccc}
+\toprule\toprule
+ & \multicolumn{3}{c}{Clause-type counts} & \multicolumn{3}{c}{Clause-type shares} & \begin{tabular}[c]{@{}c@{}}Wage-equivalent\\ value\end{tabular} \\
+\cmidrule(lr){2-4}\cmidrule(lr){5-7}\cmidrule(lr){8-8}
+ & Wage & Employment & Other & Wage & Employment & Other & \\
+ & (1) & (2) & (3) & (4) & (5) & (6) & (7) \\
+\midrule
+Post $\times$ Connectivity & $-$0.0180 & 0.0581 & $-$0.0089 & $-$0.0018 & $-$0.0003 & 0.0016 & $-$0.0009\\
+ & (0.0276) & (0.0380) & (0.0809) & (0.0013) & (0.0012) & (0.0017) & (0.0016)\\
+ &  &  &  &  &  &  & \\
+Observations & 19{,}693 & 19{,}693 & 19{,}693 & 19{,}692 & 19{,}692 & 19{,}692 & 19{,}693\\
+Establishments & 4{,}142 & 4{,}142 & 4{,}142 & 4{,}142 & 4{,}142 & 4{,}142 & 4{,}142\\
+\midrule
+Pre-trend (placebo) & 0.0723 & 0.0444 & 0.2268* & 0.0002 & 0.0015 & $-$0.0018 & 0.0019\\
+ & (0.0472) & (0.0345) & (0.1323) & (0.0011) & (0.0010) & (0.0013) & (0.0029)\\
+\bottomrule\bottomrule
+\end{tabular}
+\begin{minipage}{\linewidth}
+\scriptsize\vspace{4pt}
+    \textit{Notes:} This table presents difference-in-differences estimates of the reform's spillover effects (equation (\ref{eq:spill_spec})) on the content of collective agreements, on the full sample of untreated establishments, using the current recomputable connectivity measure. Columns (1)--(3) report effects on the counts of wage-related, employment-related, and other clauses, following \textit{Sistema Mediador}'s classification; columns (4)--(6) report effects on each type's share of total clauses. Column (7) reports the effect on agreement value, the sum across the 24 \textit{Sistema Mediador} subgroups of each subgroup's clause count weighted by its wage-equivalent value from \citet{Lagos2026}, expressed in log wage points. Connectivity is normalized so that a value of 1 corresponds to the 90th percentile among untreated establishments. Post $\times$ Connectivity reports the average effect for 2012--2016, with 2011 as the reference year. Pre-trend (placebo) reports the coefficient from a placebo regression estimated on pre-treatment data only (2009--2010 relative to 2011). All specifications include establishment fixed effects and year fixed effects interacted with two-digit industry, microregion, and negotiation-month indicators and with quartile bins of pre-treatment firm size, per-worker flows, and outcome. Standard errors clustered at the establishment level in parentheses. *** p$<$0.01, ** p$<$0.05, * p$<$0.10.
+\end{minipage}
+\end{table}
+% END inlined t_clause.tex
+
+\section{Spillover Wage Effects: Robustness to Union Controls (Table)}
+\begin{table}[H]
+\centering
+\caption{Spillover Effects on Log Hourly Wages: Robustness to Union-Level Confounders}
+\scriptsize
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lcccccccccc}
+\toprule\toprule
+ & \multicolumn{10}{c}{Log hourly wages}\\
+\cmidrule(lr){2-11}
+ & (1) & (2) & (3) & (4) & (5) & (6) & (7) & (8) & (9) & (10)\\
+\midrule
+Post $\times$ Connectivity & 0.0065*** & 0.0041* & 0.0070*** & 0.0069*** & 0.0067*** & 0.0067*** & 0.0071*** & 0.0065*** & 0.0059** & 0.0062***\\
+ & (0.0023) & (0.0024) & (0.0023) & (0.0023) & (0.0023) & (0.0023) & (0.0023) & (0.0023) & (0.0024) & (0.0023)\\
+ &  &  &  &  &  &  &  &  &  & \\
+Spillover / direct effect & 0.23 & 0.14 & 0.25 & 0.24 & 0.24 & 0.24 & 0.25 & 0.23 & 0.21 & 0.22\\
+ &  &  &  &  &  &  &  &  &  & \\
+Observations & 32{,}495 & 28{,}714 & 32{,}495 & 32{,}495 & 32{,}495 & 32{,}495 & 32{,}495 & 32{,}495 & 32{,}495 & 32{,}495\\
+Establishments & 4{,}084 & 3{,}614 & 4{,}084 & 4{,}084 & 4{,}084 & 4{,}084 & 4{,}084 & 4{,}084 & 4{,}084 & 4{,}084\\
+\midrule
+Pre-trend (placebo) & 0.0014 & $-$0.0014 & 0.0008 & 0.0006 & 0.0008 & 0.0009 & 0.0007 & 0.0005 & 0.0010 & 0.0005\\
+ & (0.0026) & (0.0029) & (0.0026) & (0.0026) & (0.0026) & (0.0025) & (0.0025) & (0.0026) & (0.0025) & (0.0025)\\
+\midrule
+\multicolumn{11}{l}{\textit{Union controls}} \\
+Union $\times$ year FE & --- & \checkmark & --- & --- & --- & --- & --- & --- & --- & --- \\
+Union exposure (firms), linear & --- & --- & \checkmark & --- & --- & --- & --- & --- & --- & --- \\
+Union exposure (workers), linear & --- & --- & --- & \checkmark & --- & --- & --- & --- & --- & --- \\
+Union exposure (firms), quartiles & --- & --- & --- & --- & \checkmark & --- & --- & --- & --- & --- \\
+Union exposure (workers), quartiles & --- & --- & --- & --- & --- & \checkmark & --- & --- & --- & --- \\
+Union exposure (firms), deciles & --- & --- & --- & --- & --- & --- & \checkmark & --- & --- & --- \\
+Union exposure (workers), deciles & --- & --- & --- & --- & --- & --- & --- & \checkmark & --- & --- \\
+Union exposure (firms), vingtiles & --- & --- & --- & --- & --- & --- & --- & --- & \checkmark & --- \\
+Union exposure (workers), vingtiles & --- & --- & --- & --- & --- & --- & --- & --- & --- & \checkmark \\
+\bottomrule\bottomrule
+\end{tabular}
+}
+
+\begin{minipage}{\linewidth}
+    \scriptsize\vspace{4pt}
+    \textit{Notes:} This table assesses whether current-connectivity spillover log hourly wage estimates survive controls for union-level exposure to the reform, on the full sample of untreated establishments. Connectivity is the current recomputable per-worker volume of pre-reform (2007--2011) worker flows to treated firms, normalized to the 90th percentile. The reported ratio divides each column's spillover estimate by the main hourly direct-effect estimate (0.0285). Column~(1) reproduces the baseline specification; column~(2) adds union $\times$ year fixed effects. Columns~(3)--(4) add linear controls for the share of the union's covered establishments or workers that are directly treated. Columns~(5)--(10) replace those linear terms with indicators for the quartile, decile, or vingtile of the same two union-exposure measures, defined on the 2009 balanced-panel sample in the same manner as the quartile controls. All columns include the baseline controls from equation (\ref{eq:spill_spec}). Standard errors clustered at the establishment level in parentheses. *** p$<$0.01, ** p$<$0.05, * p$<$0.10.
+\end{minipage}
+\footnotesize
+\end{table}
+
+\section{Sample Descriptives (Table)}
+% BEGIN inlined t_desc.tex
+\begin{table}[H]
+\centering
+\caption{Sample Descriptives}
+\footnotesize
+% \begin{threeparttable}
+\begin{tabular}{lccc}
+\toprule\toprule
+ & \multicolumn{1}{c}{Directly Treated} & \multicolumn{2}{c}{Untreated} \\
+ \cmidrule(lr){3-4}
+ & & All (Spillover Sample) & Zero-Connectivity \\
+ & (1) & (2) & (3) \\
+\midrule
+\multicolumn{4}{l}{\textit{Panel A: Sample Size}} \\[0.5ex]
+Number of establishments & 12,276 & 4,196 & 1,931 \\
+Establishment size & 143.4 & 161.0 & 23.3 \\
+&&& \\
+\multicolumn{4}{l}{\textit{Panel B: Workforce Characteristics}} \\[0.5ex]
+\% High School Degree & 0.73 & 0.67 & 0.68 \\
+\% Female & 0.37 & 0.37 & 0.41 \\
+\% Non-white & 0.31 & 0.34 & 0.32 \\
+Age (years) & 36.9 & 35.4 & 36.1 \\
+Tenure (years) & 6.8 & 4.8 & 5.3 \\
+&&& \\
+\multicolumn{4}{l}{\textit{Panel C: Compensation}} \\[0.5ex]
+Mean Wage & 3,624 & 2,748 & 2,596 \\
+Median Wage & 3,112 & 2,327 & 2,296 \\
+Mean Clause Count & 31.9 & 27.1 & 28.2 \\
+&&& \\
+\multicolumn{4}{l}{\textit{Panel D: Worker Flows}} \\[0.5ex]
+Per-worker flows & 0.271 & 0.241 & 0.228 \\
+Network size & 47.6 & 57.1 & 9.7 \\
+\bottomrule\bottomrule
+\end{tabular}
+\begin{minipage}{\linewidth}
+    \scriptsize\vspace{4pt}
+    \textit{Notes:} This table presents establishment-level descriptive statistics, averaged over 2009--2011 unless otherwise noted. Column~(1) reports directly treated establishments; column~(2) all untreated establishments; column~(3) the subset of untreated establishments with zero connectivity to the directly treated ($C_i = 0$, equation (\ref{eq:conn})), which serve as the comparison group for the direct-effect estimates. Age and tenure are in years. Wages are December earnings in 2015 Brazilian Reais. Clause count is the number of provisions in the establishment's first post-2009 CBA. Per-worker flows are total worker flows divided by average employment. Network size is the total number of distinct establishments with which the establishment exchanges workers. Per-worker flows and network size are measured over 2007--2011, matching the connectivity measurement window.
+\end{minipage}
+% \end{threeparttable}
+\end{table}
+% END inlined t_desc.tex
+
+\section{Robustness of Wage Effects (Table)}
+% BEGIN inlined t_rob_hw.tex
+\begin{table}[H]
+\centering
+\caption{Robustness of Wage Effects --- \textbf{Log Hourly Wages}}
+\footnotesize
+\begin{tabular}{lcccccc}
+\toprule\toprule
+ & & \multicolumn{2}{c}{Controls: \# Bins} & Controls: & \multicolumn{2}{c}{Controls: Local Industry} \\
+\cmidrule(lr){3-4} \cmidrule(lr){5-5} \cmidrule(lr){6-7}
+ & \begin{tabular}[c]{@{}c@{}}Main\end{tabular} & \begin{tabular}[c]{@{}c@{}}10 Bins\end{tabular} & \begin{tabular}[c]{@{}c@{}}20 Bins\end{tabular} & \begin{tabular}[c]{@{}c@{}}Workforce\\Characteristics\end{tabular} & \begin{tabular}[c]{@{}c@{}}\% Firms\\Treated\end{tabular} & \begin{tabular}[c]{@{}c@{}}\% Workers\\Treated\end{tabular} \\
+ & (1) & (2) & (3) & (4) & (5) & (6) \\
+\midrule
+\multicolumn{7}{l}{\textbf{Panel A:} Direct Effects } \\
+Post $\times$ Treatment & 0.0285*** & 0.0283*** & 0.0277*** & 0.0284*** & --- & ---\\
+ & (0.0050) & (0.0050) & (0.0050) & (0.0050) &  & \\
+ &  &  &  &  &  & \\
+Observations & 112{,}695 & 112{,}695 & 112{,}695 & 112{,}695 & --- & ---\\
+Establishments & 14{,}136 & 14{,}136 & 14{,}136 & 14{,}136 & --- & ---\\
+\midrule
+Pre-trend (placebo) & $-$0.0013 & $-$0.0010 & $-$0.0011 & $-$0.0014 & --- & ---\\
+ & (0.0054) & (0.0055) & (0.0055) & (0.0054) &  & \\
+ &  &  &  &  &  & \\
+ \midrule
+\multicolumn{7}{l}{\textbf{Panel B:} Spillover Effects} \\
+Post $\times$ Connectivity & 0.0065*** & 0.0073*** & 0.0070*** & 0.0066*** & 0.0060*** & 0.0063***\\
+ & (0.0023) & (0.0024) & (0.0024) & (0.0023) & (0.0023) & (0.0023)\\
+ &  &  &  &  &  & \\
+Spillover / direct effect & 0.23 & 0.26 & 0.25 & 0.23 & 0.21$^\dagger$ & 0.22$^\dagger$\\
+ &  &  &  &  &  & \\
+Observations & 32{,}495 & 32{,}495 & 32{,}495 & 32{,}495 & 32{,}495 & 32{,}495\\
+Establishments & 4{,}084 & 4{,}084 & 4{,}084 & 4{,}084 & 4{,}084 & 4{,}084\\
+\midrule
+Pre-trend (placebo) & 0.0014 & 0.0012 & 0.0009 & 0.0013 & 0.0013 & 0.0012\\
+ & (0.0026) & (0.0026) & (0.0026) & (0.0026) & (0.0026) & (0.0026)\\
+\bottomrule\bottomrule
+\end{tabular}
+\begin{minipage}{\linewidth}
+    \scriptsize\vspace{4pt}
+    \textit{Notes:} This table summarizes the robustness of the current-connectivity log hourly wage results across alternative specifications. Panel~A reports direct effects using zero-connectivity untreated establishments as the comparison group; Panel~B reports spillover effects on the full sample of untreated establishments. The reported ratio divides the spillover estimate by the direct-effect estimate from the same column; entries marked with $^\dagger$ use the main direct-effect estimate (0.0285) as the denominator because those local-industry specifications do not produce re-estimated direct-effect CSVs in the isolated current-connectivity run. Column~(1) is the baseline specification with quartile-bin controls. Columns~(2)--(3) replace quartile bins with $N$-bin controls. Column~(4) adds the full set of workforce-characteristic controls emitted by the demo-controls scripts for both direct and spillover effects. Columns~(5)--(6) add local treatment exposure within each establishment's industry $\times$ microregion cell. Standard errors clustered at the establishment level in parentheses. *** p$<$0.01, ** p$<$0.05, * p$<$0.10.
+\end{minipage}
+\end{table}
+% END inlined t_rob_hw.tex
+
+\section{Decomposing Employment Effects (Table)}
+% BEGIN inlined t_turnover.tex
+\begin{table}[H]
+\centering
+\caption{Decomposing Employment Effects}
+\footnotesize
+\begin{tabular}{lccccccc}
+\toprule\toprule
+ & \begin{tabular}[c]{@{}c@{}}Log\\Hours\end{tabular} & \begin{tabular}[c]{@{}c@{}}Retention\\Rate\end{tabular} & \begin{tabular}[c]{@{}c@{}}Hiring\\Rate\end{tabular} & \begin{tabular}[c]{@{}c@{}}Separation\\Rate\end{tabular} & \begin{tabular}[c]{@{}c@{}}Quit\\Rate\end{tabular} & \begin{tabular}[c]{@{}c@{}}Layoff\\Rate\end{tabular} & \begin{tabular}[c]{@{}c@{}}Churn\\Rate\end{tabular} \\
+ & (1) & (2) & (3) & (4) & (5) & (6) & (7) \\
+\midrule
+\multicolumn{8}{l}{\textbf{Panel A:} Direct Effects} \\
+Post $\times$ Treatment & 0.0003 & 0.0057* & 0.0171 & $-$0.0037 & $-$0.0031 & 0.0045 & 0.0122\\
+ & (0.0153) & (0.0032) & (0.0128) & (0.0125) & (0.0036) & (0.0070) & (0.0245)\\
+ &  &  &  &  &  &  & \\
+Mean & 6.1501 & 0.7804 & 0.5367 & 0.4733 & 0.0975 & 0.2298 & 1.0100\\
+Observations & 113{,}112 & 112{,}620 & 113{,}112 & 113{,}112 & 113{,}112 & 113{,}112 & 113{,}112\\
+Establishments & 14{,}139 & 14{,}139 & 14{,}139 & 14{,}139 & 14{,}139 & 14{,}139 & 14{,}139\\
+\midrule
+Pre-trend (placebo) & 0.0128 & 0.0014 & $-$0.0352** & $-$0.0144 & $-$0.0066 & $-$0.0116 & $-$0.0498\\
+ & (0.0105) & (0.0056) & (0.0169) & (0.0159) & (0.0048) & (0.0091) & (0.0305)\\
+ &  &  &  &  &  &  & \\
+\midrule
+\multicolumn{8}{l}{\textbf{Panel B:} Spillover Effects} \\
+Post $\times$ Connectivity & $-$0.0002 & 0.0014 & $-$0.0094 & $-$0.0035 & $-$0.0027* & $-$0.0016 & $-$0.0121\\
+ & (0.0080) & (0.0017) & (0.0095) & (0.0066) & (0.0015) & (0.0048) & (0.0153)\\
+ &  &  &  &  &  &  & \\
+Mean & 7.2869 & 0.7642 & 0.5812 & 0.5194 & 0.1182 & 0.2600 & 1.1006\\
+Observations & 32{,}704 & 32{,}471 & 32{,}704 & 32{,}704 & 32{,}704 & 32{,}704 & 32{,}704\\
+Establishments & 4{,}088 & 4{,}088 & 4{,}088 & 4{,}088 & 4{,}088 & 4{,}088 & 4{,}088\\
+\midrule
+Pre-trend (placebo) & $-$0.0017 & 0.0037 & $-$0.0086 & $-$0.0172 & $-$0.0073** & $-$0.0095 & $-$0.0269\\
+ & (0.0062) & (0.0033) & (0.0221) & (0.0184) & (0.0034) & (0.0132) & (0.0391)\\
+\bottomrule\bottomrule
+\end{tabular}
+\begin{minipage}{\linewidth}\vspace{4pt}
+\scriptsize\textit{Notes:} This table presents difference-in-differences estimates of the ultractivity reform's effects on establishment-level employment flow outcomes using the current recomputable connectivity measure. Panel~A reports direct effects, comparing directly treated establishments to untreated establishments with zero pre-reform connectivity. Panel~B reports spillover effects on the full sample of untreated establishments, using continuous connectivity to treated firms as the exposure measure, normalized so that a value of 1 corresponds to the 90th percentile. Mean reports the pre-treatment average across establishments in each panel's estimation sample. Post $\times$ Treatment and Post $\times$ Connectivity measure average effects for 2012--2016. Pre-trend (placebo) reports the coefficient from a placebo regression estimated on pre-treatment data only. Standard errors clustered at the establishment level in parentheses. *** p$<$0.01, ** p$<$0.05, * p$<$0.10.
+\end{minipage}
+\end{table}
+% END inlined t_turnover.tex
+
+\section{Effects on Workforce Composition (Table)}
+% BEGIN inlined t_composition.tex
+\begin{table}[H]
+\centering
+\caption{Effects on Workforce Composition}
+\footnotesize
+\begin{tabular}{lcccc}
+\toprule\toprule
+ & \begin{tabular}[c]{@{}c@{}}Avg.\\Age\end{tabular} & \begin{tabular}[c]{@{}c@{}}\% Male\end{tabular} & \begin{tabular}[c]{@{}c@{}}\% White\end{tabular} & \begin{tabular}[c]{@{}c@{}}\% High\\School+\end{tabular} \\
+ & (1) & (2) & (3) & (4) \\
+\midrule
+\multicolumn{5}{l}{\textbf{Panel A:} Direct Effects} \\
+Post $\times$ Treatment & $-$0.0080 & $-$0.0091*** & $-$0.0061 & $-$0.0055\\
+ & (0.0976) & (0.0035) & (0.0048) & (0.0038)\\
+ &  &  &  & \\
+Mean & 36.1105 & 0.5853 & 0.6792 & 0.6720\\
+Observations & 113{,}112 & 113{,}112 & 113{,}112 & 113{,}112\\
+Establishments & 14{,}139 & 14{,}139 & 14{,}139 & 14{,}139\\
+\midrule
+Pre-trend (placebo) & $-$0.1501 & 0.0055* & $-$0.0028 & 0.0034\\
+ & (0.0915) & (0.0034) & (0.0046) & (0.0037)\\
+ &  &  &  & \\
+\midrule
+\multicolumn{5}{l}{\textbf{Panel B:} Spillover Effects} \\
+Post $\times$ Connectivity & $-$0.0117 & 0.0003 & 0.0004 & $-$0.0018\\
+ & (0.0443) & (0.0019) & (0.0022) & (0.0021)\\
+ &  &  &  & \\
+Mean & 35.4077 & 0.6341 & 0.6634 & 0.6637\\
+Observations & 32{,}704 & 32{,}704 & 32{,}704 & 32{,}704\\
+Establishments & 4{,}088 & 4{,}088 & 4{,}088 & 4{,}088\\
+\midrule
+Pre-trend (placebo) & 0.0510 & $-$0.0013 & $-$0.0019 & 0.0013\\
+ & (0.0403) & (0.0018) & (0.0020) & (0.0015)\\
+\bottomrule\bottomrule
+\end{tabular}
+\begin{minipage}{\linewidth}\vspace{4pt}
+\scriptsize\textit{Notes:} This table presents difference-in-differences estimates of the ultractivity reform's effects on establishment-level workforce composition using the current recomputable connectivity measure. Panel~A reports direct effects, comparing directly treated establishments to untreated establishments with zero pre-reform connectivity. Panel~B reports spillover effects on the full sample of untreated establishments, using continuous connectivity to treated firms as the exposure measure, normalized so that a value of 1 corresponds to the 90th percentile. Average age is the mean age of December-employed workers. High school+ is the share of workers with at least a completed high school degree. Mean reports the pre-treatment average across establishments in each panel's estimation sample. Standard errors clustered at the establishment level in parentheses. *** p$<$0.01, ** p$<$0.05, * p$<$0.10.
+\end{minipage}
+\end{table}
+% END inlined t_composition.tex
+
+\section{Effects on Residualized Wages (Table)}
+% BEGIN inlined t_resid_hw.tex
+\begin{table}[H]
+\centering
+\caption{Effects on Residualized Hourly Wages}
+\footnotesize
+\begin{tabular}{lcccc}
+\toprule\toprule
+ & \multicolumn{2}{c}{Direct Effects} & \multicolumn{2}{c}{Spillover Effects} \\
+ \cmidrule(lr){2-3} \cmidrule(lr){4-5}
+ & \begin{tabular}[c]{@{}c@{}}Log\\ Hourly\\ Wages\end{tabular} & \begin{tabular}[c]{@{}c@{}}Residualized\\ Log\\ Hourly\\ Wages\end{tabular} & \begin{tabular}[c]{@{}c@{}}Log\\ Hourly\\ Wages\end{tabular} & \begin{tabular}[c]{@{}c@{}}Residualized\\ Log\\ Hourly\\ Wages\end{tabular} \\
+ & (1) & (2) & (3) & (4) \\
+\midrule
+Post $\times$ Treatment & 0.0285*** & 0.0285*** &  & \\
+ & (0.0050) & (0.0054) &  & \\
+ &  &  &  & \\
+Post $\times$ Connectivity &  &  & 0.0065*** & 0.0049**\\
+ &  &  & (0.0023) & (0.0023)\\
+ &  &  &  & \\
+Observations & 112{,}695 & 112{,}702 & 32{,}495 & 32{,}498\\
+Establishments & 14{,}136 & 14{,}138 & 4{,}084 & 4{,}085\\
+\midrule
+Pre-trend (placebo) & $-$0.0013 & $-$0.0043 & 0.0014 & $-$0.0038\\
+ & (0.0054) & (0.0057) & (0.0026) & (0.0028)\\
+\bottomrule\bottomrule
+\end{tabular}
+\begin{minipage}{\linewidth}
+    \scriptsize\vspace{4pt}
+\textit{Notes:} This table presents current-connectivity estimates using raw and Mincer-residualized log hourly wages. Columns~(1)--(2) report direct effects, comparing directly treated establishments to untreated establishments with zero pre-reform connectivity. Columns~(3)--(4) report spillover effects on the full sample of untreated establishments. Worker-level residuals are estimated on the full RAIS worker sample by projecting wages within race $\times$ education $\times$ gender $\times$ year cells on quartic age and establishment-tenure polynomials, then collapsing residuals to establishment-year means for Lagos-sample establishments. Post effects average 2012--2016, with 2011 as the reference year. Standard errors clustered at the establishment level in parentheses. *** p$<$0.01, ** p$<$0.05, * p$<$0.10.
+\end{minipage}
+\end{table}
+% END inlined t_resid_hw.tex
+
+\section{Group-Level Connectivity Descriptives (Table)}
+% BEGIN inlined t_layerdesc_hw.tex
+\begin{table}[H]
+  \centering
+  \caption{Group-Level Connectivity Descriptives --- hourly wages}
+  \footnotesize
+  \begin{tabular}{lcccccc}
+    \toprule\toprule
+     & \multicolumn{2}{c}{\textit{Education}} & \multicolumn{2}{c}{\textit{Gender}} & \multicolumn{2}{c}{\textit{Tenure}} \\
+    \cmidrule(lr){2-3} \cmidrule(lr){4-5} \cmidrule(lr){6-7}
+     & \shortstack{No high\\school} & \shortstack{High\\school+} & Female & Male
+     & \shortstack{$<$12\\months} & \shortstack{$\geq$12\\months} \\
+    \midrule
+    \quad Avg.\ employment & 60.2 & 104.3 & 55.7 & 107.9 & 48.8 & 110.1 \\
+    \quad Avg.\ hourly wage & 9.9 & 14.8 & 12.2 & 14.7 & 11.7 & 14.7 \\
+    \quad Avg.\ per-worker flows & 0.2055 & 0.2732 & 0.2449 & 0.2687 & 0.5208 & 0.1083 \\
+    \quad Connectivity & 0.0094 & 0.0148 & 0.0103 & 0.0149 & 0.0259 & 0.0067 \\
+    \midrule
+    \quad \% firms w/ both groups & \multicolumn{2}{c}{85.8\%} & \multicolumn{2}{c}{88.0\%} & \multicolumn{2}{c}{96.5\%} \\
+    \quad \% of connectivity variance within firms & \multicolumn{2}{c}{27.5\%} & \multicolumn{2}{c}{33.8\%} & \multicolumn{2}{c}{45.3\%} \\
+    \quad \% of connectivity variance between firms & \multicolumn{2}{c}{72.5\%} & \multicolumn{2}{c}{66.2\%} & \multicolumn{2}{c}{54.7\%} \\
+    \bottomrule\bottomrule
+  \end{tabular}
+  \begin{minipage}{\linewidth}
+    \scriptsize\vspace{4pt}
+\textit{Notes:} This table summarizes pre-treatment (2009--2011) descriptive statistics for group-level connectivity under three worker partitions. The unit of observation is a group $\times$ firm cell. The average hourly wage row reports the level implied by the corrected layer-level hourly wage outcome, computed from natural-log real hourly wages using monthly hours equal to \texttt{horascontr} $\times$ 4.348. Tenure groups are defined by whether a worker has completed twelve months at the establishment. ``Avg.\ per-worker flows'' is total worker flows per group worker, averaged across year pairs 2007--08 through 2010--11. ``Connectivity'' is the average pre-treatment worker flow between a firm's group-$g$ workers and directly treated establishments, per group-$g$ worker (footnote~\ref{fn:groupconn}); a firm's connectivity therefore varies across its worker groups. ``\% firms w/ both groups'' is the share of spillover-sample firms with non-missing connectivity for both groups. The final two rows decompose the total variance of group connectivity into its within- and between-firm components on firms with both groups, following the ANOVA identity $\mathrm{Var}(X) = \mathrm{E}[\mathrm{Var}(X \mid \mathrm{firm})] + \mathrm{Var}(\mathrm{E}[X \mid \mathrm{firm}])$, and report each as a share of the total.
+\end{minipage}
+\end{table}
+% END inlined t_layerdesc_hw.tex
+
+\section{Group-level Spillover Effects (Table)}
+% BEGIN inlined t_groupspecs_hw.tex
+\begin{table}[H]
+\centering
+\caption{Group-level spillover effects --- education, gender, tenure (\textbf{log hourly wages})}
+\scriptsize
+\begin{tabular}{lcccccc}
+\toprule\toprule
+ & \multicolumn{3}{c}{Log Hourly Wages} & \multicolumn{3}{c}{Log Employment} \\
+\cmidrule(lr){2-4} \cmidrule(lr){5-7}
+ & \shortstack{Firm-\\level} & \shortstack{Within\\firms} & Overall
+ & \shortstack{Firm-\\level} & \shortstack{Within\\firms} & Overall \\
+ & (1) & (2) & (3) & (4) & (5) & (6) \\
+\midrule
+\textbf{Panel A:} Education (no HS / HS+) &  &  &  &  &  &  \\
+Connectivity $\times$ Post & 0.0065*** &  &  & 0.0008 &  &  \\
+ & (0.0023) &  &  & (0.0081) &  &  \\
+Group-Connectivity $\times$ Post &  & $-$0.0029 & 0.0023 &  & $-$0.0023 & $-$0.0052 \\
+ &  & (0.0039) & (0.0023) &  & (0.0102) & (0.0065) \\
+ &  &  &  &  &  &  \\
+Observations & 32{,}498 & 52{,}458 & 59{,}391 & 32{,}704 & 52{,}458 & 59{,}391 \\
+Groups $\times$ firms & --- & 7{,}160 & 7{,}762 & --- & 7{,}160 & 7{,}762 \\
+Firms & 4{,}085 & 3{,}580 & 4{,}172 & 4{,}088 & 3{,}580 & 4{,}172 \\
+Pre-trend (placebo) & 0.0014 & 0.0048 & 0.0017 & $-$0.0015 & 0.0126 & 0.0049 \\
+ & (0.0026) & (0.0050) & (0.0028) & (0.0063) & (0.0110) & (0.0051) \\
+\midrule
+\textbf{Panel B:} Gender (female / male) &  &  &  &  &  &  \\
+Connectivity $\times$ Post & 0.0065*** &  &  & 0.0008 &  &  \\
+ & (0.0023) &  &  & (0.0081) &  &  \\
+Group-Connectivity $\times$ Post &  & 0.0003 & 0.0039* &  & $-$0.0024 & 0.0016 \\
+ &  & (0.0028) & (0.0020) &  & (0.0048) & (0.0044) \\
+ &  &  &  &  &  &  \\
+Observations & 32{,}498 & 55{,}358 & 60{,}864 & 32{,}704 & 55{,}358 & 60{,}864 \\
+Groups $\times$ firms & --- & 7{,}368 & 7{,}867 & --- & 7{,}368 & 7{,}867 \\
+Firms & 4{,}085 & 3{,}684 & 4{,}175 & 4{,}088 & 3{,}684 & 4{,}175 \\
+Pre-trend (placebo) & 0.0014 & $-$0.0008 & $-$0.0001 & $-$0.0015 & $-$0.0025 & 0.0000 \\
+ & (0.0026) & (0.0048) & (0.0024) & (0.0063) & (0.0097) & (0.0057) \\
+\midrule
+\textbf{Panel C:} Tenure ($<$12mo / $\geq$12mo) &  &  &  &  &  &  \\
+Connectivity $\times$ Post & 0.0065*** &  &  & 0.0008 &  &  \\
+ & (0.0023) &  &  & (0.0081) &  &  \\
+Group-Connectivity $\times$ Post &  & $-$0.0033 & 0.0002 &  & $-$0.0080 & $-$0.0007 \\
+ &  & (0.0029) & (0.0023) &  & (0.0069) & (0.0058) \\
+ &  &  &  &  &  &  \\
+Observations & 32{,}498 & 56{,}318 & 61{,}285 & 32{,}704 & 56{,}318 & 61{,}285 \\
+Groups $\times$ firms & --- & 8{,}046 & 8{,}236 & --- & 8{,}046 & 8{,}236 \\
+Firms & 4{,}085 & 4{,}023 & 4{,}181 & 4{,}088 & 4{,}023 & 4{,}181 \\
+Pre-trend (placebo) & 0.0014 & 0.0063* & 0.0061** & $-$0.0015 & $-$0.0116 & $-$0.0113* \\
+ & (0.0026) & (0.0037) & (0.0026) & (0.0063) & (0.0082) & (0.0060) \\
+\midrule
+\textbf{Additional Controls} &  &  &  &  &  &  \\
+Group-level Variables &  & \checkmark & \checkmark &  & \checkmark & \checkmark \\
+Firm $\times$ Year FE &  & \checkmark &  &  & \checkmark &  \\
+\bottomrule\bottomrule
+\end{tabular}
+\begin{minipage}{\linewidth}\vspace{3pt}\scriptsize\textit{Notes:} Hourly-wage counterpart of the group-level spillover table. The firm-level hourly spillover benchmark is 0.0065 with standard error 0.0023. The ``Within firms'' columns add firm $\times$ year fixed effects, so identification comes from differential group connectivity across groups within the same firm-year; the ``Overall'' columns instead use industry, microregion, and negotiation-month interactions with year. Group-level employment columns are reported for completeness but remain mechanically division-biased because group employment enters the connectivity denominator. Standard errors are clustered by establishment. Produced from the 2026-07-29 run of the hourly within-firm pipeline using corrected layer-level hourly wages.\end{minipage}
+\end{table}
+% END inlined t_groupspecs_hw.tex
+
+\section{Group-Specific Connectivity and Firm Outcomes (Table)}
+% BEGIN inlined t_horserace_hw.tex
+\begin{table}[H]
+\centering
+\caption{Group-Specific Connectivity and Firm-Level Outcomes --- Log Hourly Wages}
+\footnotesize
+\sbox0{%
+\begin{tabular}{l S[table-format=-1.4] S[table-format=-1.4] @{\hskip 20pt} S[table-format=-1.4] S[table-format=-1.4]}
+\toprule\toprule
+ & \multicolumn{2}{c}{Post $\times$ Connectivity} & \multicolumn{2}{c}{Pre-trend (placebo)} \\
+\cmidrule(lr){2-3}\cmidrule(lr){4-5}
+\textit{Firm-level outcome:} & \multicolumn{1}{c}{\makecell{Log Hourly\\Wages}} & \multicolumn{1}{c}{\makecell{Log\\Employment}} & \multicolumn{1}{c}{\makecell{Log Hourly\\Wages}} & \multicolumn{1}{c}{\makecell{Log\\Employment}} \\
+ & \multicolumn{1}{c}{(1)} & \multicolumn{1}{c}{(2)} & \multicolumn{1}{c}{(3)} & \multicolumn{1}{c}{(4)} \\
+\midrule
+\multicolumn{5}{l}{\textbf{Panel A:} Education (no HS / HS+)} \\[2pt]
+Low-Education Connectivity & 0.0027 & 0.0021 & -0.0008 & 0.0010 \\
+ & \multicolumn{1}{c}{(0.0021)} & \multicolumn{1}{c}{(0.0076)} & \multicolumn{1}{c}{(0.0026)} & \multicolumn{1}{c}{(0.0067)} \\
+\addlinespace
+High-Education Connectivity & 0.0033 & 0.0035 & 0.0017 & 0.0025 \\
+ & \multicolumn{1}{c}{(0.0024)} & \multicolumn{1}{c}{(0.0076)} & \multicolumn{1}{c}{(0.0024)} & \multicolumn{1}{c}{(0.0056)} \\
+\addlinespace
+Equality test ($p$-value) & \multicolumn{1}{c}{0.875} & \multicolumn{1}{c}{0.901} & & \\
+Observations & \multicolumn{1}{c}{28{,}227} & \multicolumn{1}{c}{28{,}368} & & \\
+Firms & \multicolumn{1}{c}{3{,}546} & \multicolumn{1}{c}{3{,}546} & & \\
+\midrule
+\multicolumn{5}{l}{\textbf{Panel B:} Gender (female / male)} \\[2pt]
+Female Connectivity & {0.0019*} & 0.0025 & 0.0006 & 0.0011 \\
+ & \multicolumn{1}{c}{(0.0011)} & \multicolumn{1}{c}{(0.0031)} & \multicolumn{1}{c}{(0.0016)} & \multicolumn{1}{c}{(0.0025)} \\
+\addlinespace
+Male Connectivity & 0.0027 & 0.0018 & 0.0017 & -0.0008 \\
+ & \multicolumn{1}{c}{(0.0017)} & \multicolumn{1}{c}{(0.0051)} & \multicolumn{1}{c}{(0.0027)} & \multicolumn{1}{c}{(0.0058)} \\
+\addlinespace
+Equality test ($p$-value) & \multicolumn{1}{c}{0.720} & \multicolumn{1}{c}{0.911} & & \\
+Observations & \multicolumn{1}{c}{28{,}903} & \multicolumn{1}{c}{29{,}056} & & \\
+Firms & \multicolumn{1}{c}{3{,}632} & \multicolumn{1}{c}{3{,}632} & & \\
+\midrule
+\multicolumn{5}{l}{\textbf{Panel C:} Tenure ($<$12mo / $\geq$12mo)} \\[2pt]
+Low-Tenure Connectivity & 0.0005 & -0.0034 & 0.0021 & -0.0006 \\
+ & \multicolumn{1}{c}{(0.0013)} & \multicolumn{1}{c}{(0.0039)} & \multicolumn{1}{c}{(0.0013)} & \multicolumn{1}{c}{(0.0034)} \\
+\addlinespace
+High-Tenure Connectivity & {0.0088***} & 0.0090 & 0.0002 & 0.0034 \\
+ & \multicolumn{1}{c}{(0.0028)} & \multicolumn{1}{c}{(0.0085)} & \multicolumn{1}{c}{(0.0024)} & \multicolumn{1}{c}{(0.0056)} \\
+\addlinespace
+Equality test ($p$-value) & \multicolumn{1}{c}{0.010} & \multicolumn{1}{c}{0.178} & & \\
+Observations & \multicolumn{1}{c}{31{,}829} & \multicolumn{1}{c}{32{,}000} & & \\
+Firms & \multicolumn{1}{c}{4{,}000} & \multicolumn{1}{c}{4{,}000} & & \\
+\bottomrule\bottomrule
+\end{tabular}}
+\usebox0
+\begin{minipage}{\wd0}\vspace{4pt}
+\scriptsize\textit{Notes:} Hourly-wage counterpart of the horse-race table. Each panel partitions workers into two groups and jointly estimates the spillover effects of the two resulting group-specific connectivity measures on firm-level outcomes, on the sample of untreated establishments. Low-education workers are those without a high school degree and high-education workers those with at least a high school degree; low-tenure workers are those with fewer than twelve months at the establishment and high-tenure workers those with twelve months or more. Both measures enter regressions simultaneously. Group-specific connectivity is defined as in Table~\ref{tab:group_specs}, and both measures are scaled so that a value of~1 corresponds to the 90th percentile of the firm-level distribution. The unit of observation is a firm $\times$ year cell, and all regressions include the fixed effects and time-varying controls of equation~(\ref{eq:spill_spec}). Columns (1)--(2) report average effects for 2012--2016, with 2011 as the reference year. Columns (3)--(4) report coefficients from placebo regressions estimated on pre-treatment data only (2009--2010 relative to 2011); the equality test, observation counts, and firm counts refer to the specifications in columns (1)--(2). Equality test reports the $p$-value of the test that the two coefficients in the column are equal. Samples are smaller than in Table~\ref{tab:spill_main_4tf_out} because both group-specific measures must be non-missing. Standard errors clustered at the establishment level in parentheses. *** p$<$0.01, ** p$<$0.05, * p$<$0.10.
+\end{minipage}
+\end{table}
+% END inlined t_horserace_hw.tex
+
+\section{Distribution of Establishments by Characteristics (Fig.)}
+\begin{figure}[H]\centering
+\includegraphics[width=0.9\textwidth]{distro_region.pdf}\\[4pt]
+\includegraphics[width=0.9\textwidth]{distro_industry.pdf}\\[4pt]
+\includegraphics[width=0.9\textwidth]{distro_month.pdf}
+\caption*{\textbf{Distribution by region / broad industry / negotiation month.} \identical{}}
+\end{figure}
+
+\section{Distribution of Connectivity to Directly Treated Firms (Fig.)}
+\begin{figure}[H]\centering
+\includegraphics[width=0.7\textwidth]{conn_hist.pdf}
+\caption*{\textbf{Connectivity histogram.} \identical{}}
+\end{figure}
+
+\section{Scatterplots: Firm Characteristics and Connectivity (Fig.)}
+\begin{figure}[H]\centering
+\begin{subfigure}{0.48\textwidth}\includegraphics[width=\textwidth]{binscatter_wage.pdf}\caption*{Log monthly wages}\end{subfigure}\hfill
+\begin{subfigure}{0.48\textwidth}\includegraphics[width=\textwidth]{binscatter_hwage.pdf}\caption*{Log hourly wages}\end{subfigure}\\[4pt]
+\begin{subfigure}{0.48\textwidth}\includegraphics[width=\textwidth]{binscatter_emp.pdf}\caption*{Log employment}\end{subfigure}\hfill
+\begin{subfigure}{0.48\textwidth}\includegraphics[width=\textwidth]{binscatter_clauses.pdf}\caption*{CBA clauses}\end{subfigure}
+\caption*{\textbf{Binscatters.} Already contains both wage panels; the hourly panel (top-right) is the log-hourly-wage binscatter.}
+\end{figure}
+
+\section{Wage Spillovers: Robustness to Counterfactual Connectivity (Fig.)}
+\begin{figure}[H]\centering
+\begin{subfigure}{0.48\textwidth}\includegraphics[width=\textwidth]{h_recentered_spill.pdf}\caption*{Connectivity}\end{subfigure}\hfill
+\begin{subfigure}{0.48\textwidth}\includegraphics[width=\textwidth]{h_recentered_cf.pdf}\caption*{Counterfactual connectivity}\end{subfigure}
+\caption*{\textbf{Recentered spillover --- log hourly wages.} Produced by
+\texttt{rand\_inference/16\_recentered\_eventstudy\_hw.do}.}
+\end{figure}
+
+\section{Sensitivity to Violations of Parallel Trends (Fig.)}
+\begin{figure}[H]\centering
+\begin{subfigure}{0.48\textwidth}\includegraphics[width=\textwidth]{h_honest_direct.pdf}\caption*{Direct effect}\end{subfigure}\hfill
+\begin{subfigure}{0.48\textwidth}\includegraphics[width=\textwidth]{h_honest_spill.pdf}\caption*{Spillover effect}\end{subfigure}
+\caption*{\textbf{Honest DiD --- log hourly wages.}}
+\end{figure}
+
+\clearpage
+\section*{Status note --- current-connectivity variant}
+\addcontentsline{toc}{section}{Status note}
+
+\noindent\textbf{Current-connectivity objects re-estimated in this PDF:}
+\begin{itemize}
+\item Direct-effects table, including log wages, log hourly wages, log employment, and clause count.
+\item Spillover-effects table, including log wages, log hourly wages, log employment, and clause count.
+\item Clause composition/value, union controls, robustness checks, turnover/employment decomposition, workforce composition, and residualized-wage tables.
+\item Firm-level benchmark columns in the group-level spillover tables.
+\item Direct and spillover wage event-study figures for log wages and log hourly wages.
+\item Connectivity histogram, binscatters, recentered/counterfactual connectivity event studies, and Honest DiD plots.
+\end{itemize}
+
+\noindent\textbf{Inherited objects:} pairwise-connectivity predictors, group-specific connectivity columns, non-connectivity descriptives, and horserace/group-specific connectivity tables are retained from the source hourly-variant report unless explicitly marked above.
+
+\medskip
+\noindent\textit{Headline read with current recomputable connectivity: direct effects are 0.0262*** for log wages and 0.0285*** for log hourly wages in Panel A; using all untreated controls, the corresponding estimates are 0.0178*** and 0.0202***. Spillover effects are 0.0050** for log wages and 0.0065*** for log hourly wages. Employment effects are near zero in both direct and spillover specifications; clause-count direct effects remain positive and significant, while clause spillovers are small and not statistically significant.}
+\end{document}

@@ -1,0 +1,31 @@
+\begin{table}[H]
+\centering
+\caption{Group-level spillover effects --- tenure}
+\scriptsize
+\begin{tabular}{lcccccc}
+\toprule\toprule
+ & \multicolumn{3}{c}{Log Wages} & \multicolumn{3}{c}{Log Employment} \\
+\cmidrule(lr){2-4} \cmidrule(lr){5-7}
+ & \shortstack{Firm-\\level} & \shortstack{Within\\firms} & Overall
+ & \shortstack{Firm-\\level} & \shortstack{Within\\firms} & Overall \\
+ & (1) & (2) & (3) & (4) & (5) & (6) \\
+\midrule
+\textbf{Panel C:} Tenure ($<$12mo / $\geq$12mo) &  &  &  &  &  &  \\
+Connectivity $\times$ Post & 0.0050** &  &  & 0.0008 &  &  \\
+ & (0.0022) &  &  & (0.0081) &  &  \\
+Group-Connectivity $\times$ Post &  & $-$0.0006 & 0.0001 &  & $-$0.0080 & $-$0.0007 \\
+ &  & (0.0028) & (0.0022) &  & (0.0069) & (0.0058) \\
+ &  &  &  &  &  &  \\
+Observations & 32{,}498 & 56{,}318 & 61{,}285 & 32{,}704 & 56{,}318 & 61{,}285 \\
+Groups $\times$ firms & --- & 8{,}046 & 8{,}236 & --- & 8{,}046 & 8{,}236 \\
+Firms & 4{,}085 & 4{,}023 & 4{,}181 & 4{,}088 & 4{,}023 & 4{,}181 \\
+Pre-trend (placebo) & 0.0019 & 0.0041 & 0.0048* & $-$0.0015 & $-$0.0116 & $-$0.0113* \\
+ & (0.0025) & (0.0037) & (0.0025) & (0.0063) & (0.0082) & (0.0060) \\
+\midrule
+\textbf{Additional Controls} &  &  &  &  &  &  \\
+Group-level Variables &  & \checkmark & \checkmark &  & \checkmark & \checkmark \\
+Firm $\times$ Year FE &  & \checkmark &  &  & \checkmark &  \\
+\bottomrule\bottomrule
+\end{tabular}
+\begin{minipage}{\linewidth}\vspace{4pt}\scriptsize\textit{Notes:} Each panel partitions workers into two groups---by education (Panel~A), gender (Panel~B), or tenure (Panel~C)---and estimates spillover effects at the firm and group level, on the sample of untreated, balanced-panel establishments. Group-Connectivity is defined analogously to firm-level Connectivity, replacing total firm employment with group-specific employment when normalizing worker flows to directly treated establishments. Both measures are scaled so that a value of~1 corresponds to the 90th percentile of the firm-level distribution. In the ``Within firms'' and ``Overall'' columns, the unit of observation is a group $\times$ firm $\times$ year cell and all regressions include group $\times$ firm fixed effects. ``Within firms'' columns add firm $\times$ year fixed effects; ``Overall'' columns instead include microregion $\times$ year, industry $\times$ year, and negotiation-month $\times$ year fixed effects. Group-level controls are year-interacted quartile bins of pre-treatment group wage, group employment, and group per-worker flows. Pre-trend (placebo) reports the coefficient from a placebo regression estimated on pre-treatment data only (2009--2010 relative to 2011). Standard errors clustered at the establishment level in parentheses. *** p$<$0.01, ** p$<$0.05, * p$<$0.10.\end{minipage}
+\end{table}

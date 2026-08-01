@@ -1,0 +1,55 @@
+\begin{table}[H]
+\centering
+\caption{Group-level spillover effects --- education, gender, tenure (\textbf{log hourly wages})}
+\scriptsize
+\begin{tabular}{lcccccc}
+\toprule\toprule
+ & \multicolumn{3}{c}{Log Hourly Wages} & \multicolumn{3}{c}{Log Employment} \\
+\cmidrule(lr){2-4} \cmidrule(lr){5-7}
+ & \shortstack{Firm-\\level} & \shortstack{Within\\firms} & Overall
+ & \shortstack{Firm-\\level} & \shortstack{Within\\firms} & Overall \\
+ & (1) & (2) & (3) & (4) & (5) & (6) \\
+\midrule
+\textbf{Panel A:} Education (no HS / HS+) &  &  &  &  &  &  \\
+Connectivity $\times$ Post & 0.0065*** &  &  & 0.0008 &  &  \\
+ & (0.0023) &  &  & (0.0081) &  &  \\
+Group-Connectivity $\times$ Post &  & $-$0.0039 & 0.0024 &  & $-$0.0123 & $-$0.0070 \\
+ &  & (0.0043) & (0.0023) &  & (0.0102) & (0.0068) \\
+ &  &  &  &  &  &  \\
+Observations & 32{,}498 & 50{,}612 & 57{,}789 & 32{,}704 & 50{,}612 & 57{,}789 \\
+Groups $\times$ firms & --- & 6{,}938 & 7{,}565 & --- & 6{,}938 & 7{,}565 \\
+Firms & 4{,}085 & 3{,}469 & 4{,}085 & 4{,}088 & 3{,}469 & 4{,}085 \\
+Pre-trend (placebo) & 0.0014 & 0.0054 & 0.0012 & $-$0.0015 & 0.0101 & 0.0041 \\
+ & (0.0026) & (0.0057) & (0.0029) & (0.0063) & (0.0101) & (0.0051) \\
+\midrule
+\textbf{Panel B:} Gender (female / male) &  &  &  &  &  &  \\
+Connectivity $\times$ Post & 0.0065*** &  &  & 0.0008 &  &  \\
+ & (0.0023) &  &  & (0.0081) &  &  \\
+Group-Connectivity $\times$ Post &  & 0.0023 & 0.0046** &  & $-$0.0006 & 0.0038 \\
+ &  & (0.0022) & (0.0019) &  & (0.0047) & (0.0048) \\
+ &  &  &  &  &  &  \\
+Observations & 32{,}498 & 53{,}592 & 59{,}289 & 32{,}704 & 53{,}592 & 59{,}289 \\
+Groups $\times$ firms & --- & 7{,}156 & 7{,}672 & --- & 7{,}156 & 7{,}672 \\
+Firms & 4{,}085 & 3{,}578 & 4{,}085 & 4{,}088 & 3{,}578 & 4{,}085 \\
+Pre-trend (placebo) & 0.0014 & 0.0002 & 0.0002 & $-$0.0015 & $-$0.0067 & $-$0.0022 \\
+ & (0.0026) & (0.0053) & (0.0024) & (0.0063) & (0.0110) & (0.0061) \\
+\midrule
+\textbf{Panel C:} Tenure ($<$12mo / $\geq$12mo) &  &  &  &  &  &  \\
+Connectivity $\times$ Post & 0.0065*** &  &  & 0.0008 &  &  \\
+ & (0.0023) &  &  & (0.0081) &  &  \\
+Group-Connectivity $\times$ Post &  & $-$0.0007 & 0.0024 &  & $-$0.0038 & 0.0025 \\
+ &  & (0.0024) & (0.0023) &  & (0.0067) & (0.0059) \\
+ &  &  &  &  &  &  \\
+Observations & 32{,}498 & 54{,}650 & 59{,}786 & 32{,}704 & 54{,}650 & 59{,}786 \\
+Groups $\times$ firms & --- & 7{,}846 & 8{,}042 & --- & 7{,}846 & 8{,}042 \\
+Firms & 4{,}085 & 3{,}923 & 4{,}085 & 4{,}088 & 3{,}923 & 4{,}085 \\
+Pre-trend (placebo) & 0.0014 & 0.0036 & 0.0048* & $-$0.0015 & $-$0.0108 & $-$0.0106 \\
+ & (0.0026) & (0.0038) & (0.0026) & (0.0063) & (0.0089) & (0.0065) \\
+\midrule
+\textbf{Additional Controls} &  &  &  &  &  &  \\
+Group-level Variables &  & \checkmark & \checkmark &  & \checkmark & \checkmark \\
+Firm $\times$ Year FE &  & \checkmark &  &  & \checkmark &  \\
+\bottomrule\bottomrule
+\end{tabular}
+\begin{minipage}{\linewidth}\vspace{3pt}\scriptsize\textit{Notes:} Hourly-wage counterpart of the group-level spillover table. The firm-level hourly spillover benchmark is 0.0065 with standard error 0.0023. The ``Within firms'' columns add firm $\times$ year fixed effects, so identification comes from differential group connectivity across groups within the same firm-year; the ``Overall'' columns instead use industry, microregion, and negotiation-month interactions with year. Group-level employment columns are reported for completeness but remain mechanically division-biased because group employment enters the connectivity denominator. Standard errors are clustered by establishment. Produced from the 2026-07-31 run of the hourly within-firm pipeline using corrected layer-level hourly wages.\end{minipage}
+\end{table}

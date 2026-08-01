@@ -1,0 +1,34 @@
+\begin{table}[H]
+\centering
+\caption{Spillover Wage Effects: Robustness to Union Controls --- \textbf{Log Hourly Wages}}
+\footnotesize
+\begin{tabular}{lcccc}
+\toprule\toprule
+ & \multicolumn{4}{c}{Log Hourly Wages}\\
+ \cmidrule(lr){2-5}
+ & (1) & (2) & (3) & (4)\\
+\midrule
+Post $\times$ Connectivity & 0.0065*** & 0.0041* & 0.0070*** & 0.0069***\\
+ & (0.0023) & (0.0024) & (0.0023) & (0.0023)\\
+ &  &  &  & \\
+Spillover / direct effect & 0.23 & 0.14 & 0.25 & 0.24\\
+ &  &  &  & \\
+Observations & 32{,}495 & 28{,}714 & 32{,}495 & 32{,}495\\
+Establishments & 4{,}084 & 3{,}614 & 4{,}084 & 4{,}084\\
+\midrule
+Pre-trend (placebo) & 0.0014 & $-$0.0014 & 0.0008 & 0.0006\\
+ & (0.0026) & (0.0029) & (0.0026) & (0.0026)\\
+\midrule
+\textbf{Additional Controls} &  &  &  & \\
+Union FE $\times$ Year FE &  & \checkmark &  & \\
+Union Exposure (firm) $\times$ Year FE &  &  & \checkmark & \\
+Union Exposure (workers) $\times$ Year FE &  &  &  & \checkmark\\
+\bottomrule\bottomrule
+\end{tabular}
+
+\begin{minipage}{\linewidth}
+    \scriptsize\vspace{4pt}
+    \textit{Notes:} This table assesses the robustness of the current-connectivity spillover hourly wage estimates to controls for union exposure to the reform, on the full sample of untreated establishments. The reported ratio divides each column's spillover estimate by the main hourly direct-effect estimate (0.0285). Column~(1) reproduces the baseline specification; column~(2) adds union $\times$ year fixed effects; columns~(3)--(4) add the share of the union's covered establishments or workers that are directly treated, interacted with year fixed effects. All columns include the baseline controls from equation (\ref{eq:spill_spec}). Standard errors clustered at the establishment level in parentheses. *** p$<$0.01, ** p$<$0.05, * p$<$0.10.
+\end{minipage}
+\footnotesize
+\end{table}
