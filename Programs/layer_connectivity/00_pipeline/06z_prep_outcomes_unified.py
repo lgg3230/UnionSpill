@@ -32,7 +32,13 @@ import numpy as np
 import pandas as pd
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
-from layer_config import OUT_BASE, WORKER_PANEL_PARQUET
+from layer_config import IPCA, OUT_BASE, WORKER_PANEL_PARQUET
+
+
+def ipca_case_sql() -> str:
+    """DuckDB CASE expression for deflating nominal wages by worker year."""
+    clauses = " ".join(f"WHEN year = {year} THEN {value}" for year, value in sorted(IPCA.items()))
+    return f"CASE {clauses} ELSE NULL END"
 
 # --- Layer dispatch -----------------------------------------------------------
 
@@ -109,6 +115,8 @@ def build(layer: str) -> pd.DataFrame:
 
     control_sql = ",\n            ".join(control_cols)
 
+    ipca_case = ipca_case_sql()
+
     con = duckdb.connect()
     con.execute("PRAGMA threads=8")
     con.execute("PRAGMA memory_limit='32GB'")
@@ -120,7 +128,7 @@ def build(layer: str) -> pd.DataFrame:
             year,
             COUNT(PIS)                                              AS layer_emp,
             AVG(lr_remdezr)                                         AS lr_remdezr_layer,
-            AVG(LOG(remdezr / NULLIF(horascontr, 0)))               AS lr_remdezr_h_layer,
+            AVG(LN((remdezr / NULLIF(horascontr * 4.348, 0)) / ({ipca_case}))) AS lr_remdezr_h_layer,
             {control_sql}
         FROM read_parquet('{WORKER_PANEL_PARQUET}')
         WHERE {null_filter}

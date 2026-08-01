@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Distribution plots: Treated vs All Untreated vs Zero-Connectivity Controls
+Distribution plots: Treated vs All Untreated vs Zero Connectivity Untreated
 
 Three grouped bar charts (B&W-safe, Libertinus Serif font):
   1. Regional distribution         -> Graphs/descriptives/distro_region.pdf
@@ -11,7 +11,7 @@ Sample: year == 2011, lagos_sample_avg == 1, in_balanced_panel == 1
 Groups:
   - Treated             : treat_ultra == 1
   - All untreated       : treat_ultra == 0  (all controls)
-  - Zero-conn. controls : treat_ultra == 0 & totaltreat_pw_n == 0  (subset)
+  - Zero connectivity untreated : treat_ultra == 0 & totaltreat_pw_n == 0  (subset)
 """
 
 from pathlib import Path
@@ -27,7 +27,7 @@ import matplotlib.patches as mpatches
 
 ROOT      = Path(__file__).resolve().parent.parent.parent
 DATA_DIR  = ROOT / "Data" / "CBA_RAIS_firm_level"
-FONTS_DIR = ROOT / "fonts"
+FONTS_DIR = ROOT / "Programs" / "fonts"
 GRAPH_DIR = ROOT / "Graphs" / "descriptives"
 GRAPH_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -58,7 +58,7 @@ plt.rcParams.update({
 
 # Groups: treated | untreated (all controls) | zero-conn (subset of untreated)
 GROUPS       = ["treated", "untreated", "zero"]
-GROUP_LABELS = ["Treated", "All untreated", "Zero-conn. controls"]
+GROUP_LABELS = ["Treated", "All untreated", "Zero connectivity untreated"]
 
 DARK_BLUE  = "#08306b"
 LIGHT_BLUE = "#6baed6"
@@ -92,7 +92,7 @@ MASKS = {
 
 print(f"  Treated: {MASKS['treated'].sum():,}  |"
       f"  All untreated: {MASKS['untreated'].sum():,}  |"
-      f"  Zero controls: {MASKS['zero'].sum():,}")
+      f"  Zero connectivity untreated: {MASKS['zero'].sum():,}")
 
 # -- Map raw CNAE 2-digit codes -> 18 broad industry categories ----------------
 

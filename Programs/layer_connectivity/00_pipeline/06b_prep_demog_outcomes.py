@@ -37,7 +37,12 @@ import pandas as pd
 import subprocess
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
-from layer_config import OUT_BASE, WORKER_PANEL_PARQUET
+from layer_config import IPCA, OUT_BASE, WORKER_PANEL_PARQUET
+
+
+def ipca_case_sql() -> str:
+    clauses = " ".join(f"WHEN year = {year} THEN {value}" for year, value in sorted(IPCA.items()))
+    return f"CASE {clauses} ELSE NULL END"
 
 DEMOG_OUTCOME_DEFS = {
     "gender": {
@@ -75,6 +80,8 @@ def build_outcomes(layer: str) -> pd.DataFrame:
     null_filter = defn["null_filter"]
     all_layers  = defn["all_layers"]
 
+    ipca_case = ipca_case_sql()
+
     con = duckdb.connect()
     con.execute("PRAGMA threads=8")
     con.execute("PRAGMA memory_limit='32GB'")
@@ -87,7 +94,7 @@ def build_outcomes(layer: str) -> pd.DataFrame:
             year,
             COUNT(PIS)                                      AS layer_emp,
             AVG(lr_remdezr)                                 AS lr_remdezr_layer,
-            AVG(LOG(remdezr / NULLIF(horascontr, 0)))       AS lr_remdezr_h_layer
+            AVG(LN((remdezr / NULLIF(horascontr * 4.348, 0)) / ({ipca_case}))) AS lr_remdezr_h_layer
         FROM read_parquet('{WORKER_PANEL_PARQUET}')
         WHERE {null_filter}
           AND ({layer_expr}) IS NOT NULL

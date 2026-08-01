@@ -401,7 +401,10 @@ foreach panel in A B C {
 		local pre_ftest_pval = cond(_rc == 0, r(p), .)
 
 		* Baseline mean of the RAW count (untreated control group, 2011)
-		quietly sum `v' if `s_use_pre' & year == 2011
+	* POOLED over the estimation sample (treated + control), per the table
+	* note "average across establishments in each panel's estimation sample".
+	* Was `s_use_pre' (control group only), which contradicted that note.
+		quietly sum `v' if `s_use' & year == 2011
 		local mean_pre_val = r(mean)
 
 		* Write (outcome key is the raw variable name for consistent CSV lookup)

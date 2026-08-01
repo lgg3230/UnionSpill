@@ -339,7 +339,10 @@ foreach panel in A B {
 		local pre_ftest_pval = r(p)
 
 		* Baseline mean (untreated control group, 2009)
-		quietly sum `outcome' if `s_use_pre' & year == 2009
+	* POOLED over the estimation sample (treated + control), per the table
+	* note "average across establishments in each panel's estimation sample".
+	* Was `s_use_pre' (control group only), which contradicted that note.
+		quietly sum `outcome' if `s_use' & year == 2009
 		local mean_pre_val = r(mean)
 
 		* Write to CSV

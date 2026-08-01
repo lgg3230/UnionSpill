@@ -395,7 +395,10 @@ foreach panel in A B C {
 		local pre_ftest_pval = cond(_rc == 0, r(p), .)
 
 		* Baseline mean (untreated control group, avg 2009-2011)
-		quietly sum `outcome' if `s_use_pre' & inrange(year, 2009, 2011)
+	* POOLED over the estimation sample (treated + control), per the table
+	* note "average across establishments in each panel's estimation sample".
+	* Was `s_use_pre' (control group only), which contradicted that note.
+		quietly sum `outcome' if `s_use' & inrange(year, 2009, 2011)
 		local mean_pre_val = r(mean)
 
 		* Write

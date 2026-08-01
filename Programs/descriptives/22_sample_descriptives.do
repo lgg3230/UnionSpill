@@ -61,6 +61,57 @@ keep if lagos_sample_avg == 1
 di as result "Sample size after restrictions: " _N
 
 ********************************************************************************
+* SECTION 1b: CBA ESTIMATION-SAMPLE FLAG  ($EST_SAMPLE_ONLY)
+********************************************************************************
+* The clause / CBA-value effects are estimated on CBA negotiation periods, not
+* calendar years, so their estimation sample is smaller than the full untreated
+* panel. When $EST_SAMPLE_ONLY == "1" the descriptive columns are restricted to
+* establishments that actually contribute to those regressions: firms observed
+* with non-missing CBA data in BOTH a pre period (cba_period 1-2) and a post
+* period (cba_period 3-6).
+*
+* cba_period is copied verbatim from Programs/clause_types/clause_types.do.
+
+cap drop cba_period
+gen cba_period = .
+replace cba_period = 1 if avg_file_date == earliest2009_avg - 1 & !missing(avg_file_date)
+replace cba_period = 2 if avg_file_date == second_cba_avg & !missing(avg_file_date)
+replace cba_period = 3 if inrange(avg_file_date, mdy(1,1,2013), mdy(12,31,2013)) & cba_period == .
+replace cba_period = 4 if inrange(avg_file_date, mdy(1,1,2014), mdy(12,31,2014)) & cba_period == .
+replace cba_period = 5 if inrange(avg_file_date, mdy(1,1,2015), mdy(12,31,2015)) & cba_period == .
+replace cba_period = 6 if inrange(avg_file_date, mdy(1,1,2016), mdy(12,31,2016)) & cba_period == .
+label var cba_period "CBA negotiation period"
+
+cap drop has_cba_pre_o
+cap drop has_cba_post_o
+cap drop has_cba_pre
+cap drop has_cba_post
+cap drop cba_est_sample
+quietly {
+	gen byte has_cba_pre_o  = inrange(cba_period, 1, 2)
+	gen byte has_cba_post_o = inrange(cba_period, 3, 6)
+	bys identificad: egen byte has_cba_pre  = max(has_cba_pre_o)
+	bys identificad: egen byte has_cba_post = max(has_cba_post_o)
+	gen byte cba_est_sample = (has_cba_pre == 1 & has_cba_post == 1)
+	drop has_cba_pre_o
+	drop has_cba_post_o
+}
+label var cba_est_sample "Firm has CBA data in both a pre and a post negotiation period"
+
+* Diagnostics: untreated establishment counts under each candidate restriction
+local dbase "lagos_sample_avg==1 & in_balanced_panel==1 & treat_ultra==0"
+quietly distinct identificad if `dbase' & year == 2009
+di as result "Untreated estabs, no CBA restriction:        " r(ndistinct)
+quietly distinct identificad if `dbase' & year == 2009 & !missing(cba_period)
+di as result "Untreated estabs, any non-missing cba_period: " r(ndistinct)
+quietly distinct identificad if `dbase' & year == 2009 & cba_est_sample == 1
+di as result "Untreated estabs, pre AND post cba_period:    " r(ndistinct)
+
+if "$EST_SAMPLE_ONLY" == "1" {
+	di as result "EST_SAMPLE_ONLY=1 -> restricting descriptives to cba_est_sample"
+}
+
+********************************************************************************
 * SECTION 2: VARIABLE CREATION
 ********************************************************************************
 
@@ -160,6 +211,7 @@ di as result "Variables created successfully."
 * reference year of each table (2011 for Table 1, pretreat avg for Table 2).
 
 local base "lagos_sample_avg==1 & in_balanced_panel==1"
+if "$EST_SAMPLE_ONLY" == "1" local base "`base' & cba_est_sample==1"
 
 * Table 1 (year==2011) groups
 local g1_cond_t1 "`base'"
@@ -412,7 +464,9 @@ foreach tver in 1 2 {
 	}
 
 	* ── Write CSV ─────────────────────────────────────────────────────────────
-	local outfile "$tables/descriptives/descriptive_stats_`tab_suffix'.csv"
+	local est_suffix ""
+	if "$EST_SAMPLE_ONLY" == "1" local est_suffix "_estsample"
+	local outfile "$tables/descriptives/descriptive_stats_`tab_suffix'`est_suffix'.csv"
 	capture erase "`outfile'"
 	tempname fh
 	file open `fh' using "`outfile'", write replace

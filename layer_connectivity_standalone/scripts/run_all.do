@@ -101,8 +101,15 @@ di "Exercise 4 complete: `c(current_time)'"
 ********************************************************************************
 
 di _n "======================================================================"
-di "All exercises complete: `c(current_date)' `c(current_time)'"
+di "Exercises 1-4 complete: `c(current_date)' `c(current_time)'"
 di "Results in: $output"
+di ""
+di "NEXT: exercise 5 (within-firm group exhibits, Tables 10/11/12/22/23/24)"
+di "must run as its own Stata process -- reghdfe carries session state that"
+di "shifts the ten2 group-level coefficients. From the shell:"
+di "    stata-mp -b do scripts/05_run_within_firm.do"
+di "    stata-mp -b do scripts/05_run_within_firm_hw.do"
+di "or simply use run_all.sh, which does all of this in the right order."
 di "======================================================================"
 
 log close run_all_log

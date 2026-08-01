@@ -334,7 +334,10 @@ foreach panel in A B C {
 
 		* Baseline mean of the RAW outcome (untreated control group, 2011)
 		local raw_outcome = subinstr("`outcome'", "l_", "", 1)
-		quietly sum `raw_outcome' if `s_use_pre' & year == 2011
+	* POOLED over the estimation sample (treated + control), per the table
+	* note "average across establishments in each panel's estimation sample".
+	* Was `s_use_pre' (control group only), which contradicted that note.
+		quietly sum `raw_outcome' if `s_use' & year == 2011
 		local mean_pre_val = r(mean)
 
 		* Write

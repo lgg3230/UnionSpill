@@ -16,6 +16,7 @@ Column layout (same for both tables):
 Output: UnionSpill/Tables/residuals/mincer_tables.tex
 """
 
+import sys
 import re
 from pathlib import Path
 
@@ -285,14 +286,24 @@ def latex_document(tables):
 # ── Main ─────────────────────────────────────────────────────────────────────
 
 def main():
+    # Optional results suffix (argv[1]); default "" reproduces prior behaviour.
+    # Suffixed runs (e.g. _currentconn_ten_fullrais) write their CSVs under
+    # Tables/currentconn_full/residuals/, so the input directory follows the
+    # suffix while the .tex stays in Tables/residuals/.
+    suffix = sys.argv[1] if len(sys.argv) > 1 else ""
+
     tables_dir   = Path(__file__).resolve().parent.parent.parent / "Tables"
     pipeline_dir = tables_dir / "residuals"
-    output_file  = pipeline_dir / "mincer_tables.tex"
+    input_dir    = pipeline_dir
+    if suffix.startswith("_currentconn"):
+        input_dir = tables_dir / "currentconn_full" / "residuals"
 
-    pa_file = pipeline_dir / f"results_direct_panelA_{SPEC}.csv"
-    pb_file = pipeline_dir / f"results_direct_panelB_{SPEC}.csv"
-    pc_file = pipeline_dir / f"results_direct_panelC_{SPEC}.csv"
-    sp_file = pipeline_dir / f"results_spill_{SPEC}.csv"
+    output_file  = pipeline_dir / f"mincer_tables{suffix}.tex"
+
+    pa_file = input_dir / f"results_direct_panelA_{SPEC}{suffix}.csv"
+    pb_file = input_dir / f"results_direct_panelB_{SPEC}{suffix}.csv"
+    pc_file = input_dir / f"results_direct_panelC_{SPEC}{suffix}.csv"
+    sp_file = input_dir / f"results_spill_{SPEC}{suffix}.csv"
 
     missing = [f.name for f in [pa_file, pb_file, pc_file, sp_file] if not f.exists()]
     if missing:

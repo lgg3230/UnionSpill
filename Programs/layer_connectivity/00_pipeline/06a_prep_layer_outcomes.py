@@ -33,7 +33,12 @@ import numpy as np
 import pandas as pd
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
-from layer_config import OUT_BASE, WORKER_PANEL_PARQUET
+from layer_config import IPCA, OUT_BASE, WORKER_PANEL_PARQUET
+
+
+def ipca_case_sql() -> str:
+    clauses = " ".join(f"WHEN year = {year} THEN {value}" for year, value in sorted(IPCA.items()))
+    return f"CASE {clauses} ELSE NULL END"
 
 
 def build_outcomes(layer: str) -> pd.DataFrame:
@@ -53,6 +58,8 @@ def build_outcomes(layer: str) -> pd.DataFrame:
     else:
         raise ValueError(f"Unknown layer: {layer}")
 
+    ipca_case = ipca_case_sql()
+
     # --- Step 1: wage/employment aggregates for cells with positive wages ---
     agg_query = f"""
         SELECT
@@ -61,7 +68,7 @@ def build_outcomes(layer: str) -> pd.DataFrame:
             year,
             COUNT(PIS)                     AS layer_emp,
             AVG(lr_remdezr)                AS lr_remdezr_layer,
-            AVG(LOG(remdezr / NULLIF(horascontr, 0))) AS lr_remdezr_h_layer
+            AVG(LN((remdezr / NULLIF(horascontr * 4.348, 0)) / ({ipca_case}))) AS lr_remdezr_h_layer
         FROM read_parquet('{WORKER_PANEL_PARQUET}')
         WHERE educ_bin IS NOT NULL
           AND educ_bin != 'nan'
