@@ -227,6 +227,12 @@ layer_connectivity_standalone.zip
 *.csv
 *.pdf
 
+# Data formats. Same policy: no NEW data files enter the repo. 51 are already
+# tracked (22 .dta, 29 .parquet), mostly under Data/layer_connectivity/, and
+# they stay tracked -- see the note above.
+*.dta
+*.parquet
+
 # Files already tracked under the rule above, re-asserted so the intent survives
 # if they are ever removed and re-added.
 !Data/RAIS_aux/totalflows_wide_2007_2011.csv
