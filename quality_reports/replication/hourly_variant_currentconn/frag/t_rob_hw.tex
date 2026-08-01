@@ -1,0 +1,43 @@
+\begin{table}[H]
+\centering
+\caption{Robustness of Wage Effects --- \textbf{Log Hourly Wages}}
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lcccccccc}
+\toprule\toprule
+ & & \multicolumn{2}{c}{Controls: \# Bins} & Controls: & \multicolumn{4}{c}{Controls: Local Industry} \\
+\cmidrule(lr){3-4} \cmidrule(lr){5-5} \cmidrule(lr){6-9}
+ & & & & & \multicolumn{2}{c}{Linear} & \multicolumn{2}{c}{Quartile bins} \\
+\cmidrule(lr){6-7} \cmidrule(lr){8-9}
+ & \begin{tabular}[c]{@{}c@{}}Main\end{tabular} & \begin{tabular}[c]{@{}c@{}}10 Bins\end{tabular} & \begin{tabular}[c]{@{}c@{}}20 Bins\end{tabular} & \begin{tabular}[c]{@{}c@{}}Workforce\\Characteristics\end{tabular} & \begin{tabular}[c]{@{}c@{}}\% Firms\\Treated\end{tabular} & \begin{tabular}[c]{@{}c@{}}\% Workers\\Treated\end{tabular} & \begin{tabular}[c]{@{}c@{}}\% Firms\\Treated\end{tabular} & \begin{tabular}[c]{@{}c@{}}\% Workers\\Treated\end{tabular} \\
+ & (1) & (2) & (3) & (4) & (5) & (6) & (7) & (8) \\
+\midrule
+\multicolumn{9}{l}{\textbf{Panel A:} Direct Effects } \\
+Post $\times$ Treatment & 0.0285*** & 0.0283*** & 0.0277*** & 0.0284*** & 0.0275*** & 0.0312*** & 0.0262*** & 0.0298***\\
+  & (0.0050) & (0.0050) & (0.0050) & (0.0050) & (0.0075) & (0.0067) & (0.0059) & (0.0059)\\
+ &  &  &  &  &  &  &  & \\
+Observations & 112{,}695 & 112{,}695 & 112{,}695 & 112{,}695 & 112{,}695 & 112{,}695 & 112{,}695 & 112{,}695\\
+Establishments & 14{,}136 & 14{,}136 & 14{,}136 & 14{,}136 & 14{,}136 & 14{,}136 & 14{,}136 & 14{,}136\\
+\midrule
+Pre-trend (placebo) & $-$0.0013 & $-$0.0010 & $-$0.0011 & $-$0.0014 & 0.0088 & 0.0031 & 0.0027 & 0.0098\\
+  & (0.0054) & (0.0055) & (0.0055) & (0.0054) & (0.0077) & (0.0070) & (0.0059) & (0.0061)\\
+ &  &  &  &  &  &  &  & \\
+ \midrule
+\multicolumn{9}{l}{\textbf{Panel B:} Spillover Effects} \\
+Post $\times$ Connectivity & 0.0065*** & 0.0073*** & 0.0070*** & 0.0066*** & 0.0060*** & 0.0063*** & 0.0062*** & 0.0061***\\
+  & (0.0023) & (0.0024) & (0.0024) & (0.0023) & (0.0023) & (0.0023) & (0.0023) & (0.0023)\\
+ &  &  &  &  &  &  &  & \\
+Spillover / direct effect & 0.23 & 0.26 & 0.25 & 0.23 & 0.22 & 0.20 & 0.24 & 0.20\\
+ &  &  &  &  &  &  &  & \\
+Observations & 32{,}495 & 32{,}495 & 32{,}495 & 32{,}495 & 32{,}495 & 32{,}495 & 32{,}495 & 32{,}495\\
+Establishments & 4{,}084 & 4{,}084 & 4{,}084 & 4{,}084 & 4{,}084 & 4{,}084 & 4{,}084 & 4{,}084\\
+\midrule
+Pre-trend (placebo) & 0.0014 & 0.0012 & 0.0009 & 0.0013 & 0.0013 & 0.0012 & 0.0013 & 0.0013\\
+  & (0.0026) & (0.0026) & (0.0026) & (0.0026) & (0.0026) & (0.0026) & (0.0026) & (0.0026)\\
+\bottomrule\bottomrule
+\end{tabular}
+\begin{minipage}{\linewidth}
+    \scriptsize\vspace{4pt}
+    \textit{Notes:} This table summarizes the robustness of the current-connectivity log hourly wage results across alternative specifications. Panel~A reports direct effects, comparing directly treated establishments to untreated establishments with zero pre-reform connectivity; Panel~B reports spillover effects on the full sample of untreated establishments. Column~(1) is the baseline specification with quartile-bin controls. Columns~(2)--(3) replace quartile bins with $N$-bin controls. Column~(4) adds workforce-characteristic controls. Columns~(5)--(8) add controls for local treatment exposure within each establishment's industry $\times$ microregion cell, measured as the share of directly treated establishments (columns 5 and 7) or the share of employment in directly treated establishments (columns 6 and 8). Columns~(5)--(6) enter these controls linearly and columns~(7)--(8) as quartile bins cut on the 2009 value; both are interacted with year fixed effects, so the columns differ only in functional form. Local exposure is normalized to its 90th percentile among untreated (spillover-sample) establishments in both panels, so the direct and spillover coefficients in a column share one scale. The spillover/direct ratio divides the Panel~B estimate by the Panel~A estimate from the same column. Standard errors clustered at the establishment level in parentheses. *** p$<$0.01, ** p$<$0.05, * p$<$0.10.
+\end{minipage}
+\end{table}
