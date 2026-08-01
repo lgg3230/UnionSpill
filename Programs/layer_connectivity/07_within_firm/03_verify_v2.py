@@ -21,9 +21,21 @@ import sys
 import pandas as pd
 
 
+HERE = Path(__file__).resolve().parent
 ROOT = Path(__file__).resolve().parents[3]
 TABLES = ROOT / "Tables/layer_connectivity/07_within_firm"
-R_OUT = ROOT / "Programs/within_firm_final/output"
+
+# Pre-revision baseline. The v2 wrappers now write the canonical names, so the
+# "unchanged" checks compare against the archived old-spec CSVs. Comparing
+# a7.csv to a7_v2.csv after the rename would compare v2 to itself and pass
+# vacuously.
+OLD = TABLES / "archive_oldspec_2026-07-31"
+
+# Reference R estimates, vendored so this pipeline never reads
+# Programs/within_firm_final/. These are test fixtures, not output, and are
+# force-added to git despite the repo-wide *.csv ignore.
+R_OUT = HERE / "reference_r"
+
 REPORT = ROOT / "quality_reports/audits/2026-07-31_within_firm_verify.md"
 
 
@@ -69,7 +81,7 @@ def fmt4(x: float) -> str:
 
 
 def is_byte_identical(old_name: str, new_name: str) -> bool:
-    return (TABLES / old_name).read_bytes() == (TABLES / new_name).read_bytes()
+    return (OLD / old_name).read_bytes() == (TABLES / new_name).read_bytes()
 
 
 def subset_string_equal(
@@ -79,7 +91,7 @@ def subset_string_equal(
     mask_col: str,
     mask_values: set[str],
 ) -> tuple[bool, str]:
-    old = read_csv_str(TABLES / old_name)
+    old = read_csv_str(OLD / old_name)
     new = read_csv_str(TABLES / new_name)
     old_s = old[old[mask_col].isin(mask_values)].sort_values(key).reset_index(drop=True)
     new_s = new[new[mask_col].isin(mask_values)].sort_values(key).reset_index(drop=True)
@@ -99,15 +111,15 @@ def subset_string_equal(
 
 def verify_unchanged() -> None:
     for old_name, new_name in [
-        ("a6_group.csv", "a6_group_v2.csv"),
-        ("a6_partition.csv", "a6_partition_v2.csv"),
-        ("a6_group_hw.csv", "a6_group_hw_v2.csv"),
-        ("a6_partition_hw.csv", "a6_partition_hw_v2.csv"),
+        ("a6_group.csv", "a6_group.csv"),
+        ("a6_partition.csv", "a6_partition.csv"),
+        ("a6_group_hw.csv", "a6_group_hw.csv"),
+        ("a6_partition_hw.csv", "a6_partition_hw.csv"),
     ]:
         ok = is_byte_identical(old_name, new_name)
         add("A6 unchanged", f"{old_name} vs {new_name}", ok, "byte-identical" if ok else "file bytes differ")
 
-    for old_name, new_name in [("a8.csv", "a8_v2.csv"), ("a8_hw.csv", "a8_hw_v2.csv")]:
+    for old_name, new_name in [("a8.csv", "a8.csv"), ("a8_hw.csv", "a8_hw.csv")]:
         ok, detail = subset_string_equal(
             old_name,
             new_name,
@@ -117,7 +129,7 @@ def verify_unchanged() -> None:
         )
         add("A8 printed rows unchanged", f"{old_name} col==firm", ok, detail)
 
-    for old_name, new_name in [("a7.csv", "a7_v2.csv"), ("a7_hw.csv", "a7_hw_v2.csv")]:
+    for old_name, new_name in [("a7.csv", "a7.csv"), ("a7_hw.csv", "a7_hw.csv")]:
         ok, detail = subset_string_equal(
             old_name,
             new_name,
@@ -205,8 +217,8 @@ def verify_a7_against_r(stata_name: str, r_name: str, exercise: str) -> pd.DataF
 
 
 def verify_a8_key() -> None:
-    for old_name, new_name in [("a8.csv", "a8_v2.csv"), ("a8_hw.csv", "a8_hw_v2.csv")]:
-        old = read_csv(TABLES / old_name)
+    for old_name, new_name in [("a8.csv", "a8.csv"), ("a8_hw.csv", "a8_hw.csv")]:
+        old = read_csv(OLD / old_name)
         new = read_csv(TABLES / new_name)
         try:
             old.merge(
@@ -222,7 +234,7 @@ def verify_a8_key() -> None:
 
 def load_balance() -> pd.DataFrame:
     frames = []
-    for name in ["singleton_balance_v2.csv", "singleton_balance_hw_v2.csv"]:
+    for name in ["singleton_balance.csv", "singleton_balance_hw.csv"]:
         path = TABLES / name
         if path.exists():
             frames.append(read_csv(path))
@@ -336,8 +348,8 @@ def write_report(a7_detail: pd.DataFrame, bal_wide: pd.DataFrame) -> None:
 def main() -> int:
     verify_unchanged()
     verify_a8_key()
-    a7_monthly = verify_a7_against_r("a7_v2.csv", "a7.csv", "monthly")
-    a7_hourly = verify_a7_against_r("a7_hw_v2.csv", "a7_hw.csv", "hourly")
+    a7_monthly = verify_a7_against_r("a7.csv", "a7.csv", "monthly")
+    a7_hourly = verify_a7_against_r("a7_hw.csv", "a7_hw.csv", "hourly")
     bal = load_balance()
     bal_wide = balance_summary(bal)
     a7_detail = pd.concat([a7_monthly, a7_hourly], ignore_index=True)
