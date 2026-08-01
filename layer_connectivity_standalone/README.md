@@ -6,17 +6,33 @@ Replication code for the layer connectivity exercises in Azevedo-Gomes & Neri, "
 
 ## Setup
 
-No editing required — the wrapper detects its own location automatically. Run from within Stata:
+No editing required — every wrapper detects its own location automatically.
 
-```stata
-do "scripts/run_all.do"
-```
-
-Or from the terminal (from any directory):
+**Recommended: run the whole package from the shell.**
 
 ```bash
-stata-mp -b do /path/to/layer_connectivity_standalone/scripts/run_all.do
+bash run_all.sh
 ```
+
+This runs exercises 1–4 in one Stata process, exercise 5's two passes in their own
+Stata processes, then builds every LaTeX table.
+
+**Pure-Stata path.** Exercises 1–4 run together; exercise 5 must be launched separately:
+
+```bash
+stata-mp -b do scripts/run_all.do              # exercises 1-4
+stata-mp -b do scripts/05_run_within_firm.do   # exercise 5, monthly wages
+stata-mp -b do scripts/05_run_within_firm_hw.do # exercise 5, hourly wages
+```
+
+> **Exercise 5 must be its own Stata process — this is a correctness requirement, not
+> a style preference.** When the within-firm estimates run after another estimation
+> exercise in the same Stata session, `reghdfe` carries solver state that moves the
+> `ten2` group-level coefficients in the 6th significant digit (e.g. the within-firm
+> hourly tenure coefficient shifts from `-0.0032969` to `-0.0033053`). `clear all`
+> between exercises is *not* sufficient. Rounded to the four decimals the tables print
+> the difference is invisible, but the CSVs will not match the published estimates
+> exactly. `run_all.sh` handles this for you.
 
 ---
 
@@ -42,6 +58,7 @@ Each layer ships two `.dta` files:
 | `firm_layer_connectivity_occ5_sara.dta` | Firm × layer connectivity to treated firms (Sara's 5-bin occupation) |
 | `firm_layer_connectivity_ten2.dta` | Firm × layer connectivity to treated firms (binary tenure) |
 | `lagos_sample_sep24_pct_unionexp_ext_df2.dta` | Firm panel: treatment status, balanced panel flag, size, union exposure |
+| `currentconn_overlay_totaltreat.dta` | Current-connectivity overlay: recomputed `totaltreat_pw_n` per firm × year, plus the frozen legacy value it replaces |
 | `totalflows_wide_2007_2011.csv` | Firm-level total worker flows 2007–2011 (pre-trend controls) |
 
 ### Layer-level controls (in every `firm_layer_outcomes_*.dta`)
@@ -70,6 +87,29 @@ omitted (e.g. `share_higher_ed` is not produced for the `edu2` outcomes).
 | `ten2` | `lt12mo` (<1yr) / `ge12mo` (≥1yr) | `tempempr`; cutoff at 12 months chosen after a pooled+within-firm diagnostic showing ~23% of workers below the cutoff and substantial within-firm variation in the short-tenure share (p10=6%, p90=48%) |
 
 ---
+
+## Two corrections in this build
+
+Both matter for exercise 5; neither changes exercises 1–4.
+
+**1. Current connectivity.** The Lagos firm panel ships a *frozen* `totaltreat_pw_n`.
+Exercise 5 replaces it with the current recomputable measure from
+`currentconn_overlay_totaltreat.dta`. Note the trap: the panel's `totaltreat_pw_norm`
+is normalized by the **legacy** p90, so swapping the level variable alone silently
+leaves the regressor on the old scale. `05a_within_firm_estimates.do` rebuilds
+`totaltreat_pw_norm` from the current measure (p90 = 0.02926) rather than reading it.
+
+**2. Corrected log hourly wages.** `firm_layer_outcomes_*.dta` now carries
+
+```
+lr_remdezr_h_layer = ln((remdezr / (horascontr * 4.348)) / IPCA_year)
+```
+
+The May 2026 build of this package computed it with DuckDB's `LOG()`, which is **base
+10, not natural log**. Every hourly group-level magnitude was therefore a factor of
+ln(10) ≈ 2.303 too small. Because the bug scaled coefficients and standard errors
+identically, all t-statistics and stars in the old output were already correct — only
+the magnitudes were wrong. The monthly wage and employment columns are unaffected.
 
 ## Exercises
 
@@ -158,6 +198,76 @@ python scripts/04b_make_table_horse_race_occ4.py
 
 ---
 
+### Exercise 5 — Within-firm group-level exhibits (`05_run_within_firm{,_hw}.do`)
+
+Reproduces **Tables 10, 11, 12, 22, 23 and 24** of *Replication: Wages vs Hourly Wages*.
+
+Workers are partitioned three ways — education (no HS / HS+), gender (female / male),
+and tenure (<12mo / ≥12mo) — and group-specific connectivity is compared against the
+firm-level measure. Both wage definitions are estimated: log monthly wages (Tables 10–12)
+and corrected log hourly wages (Tables 22–24).
+
+**Three estimation blocks per partition:**
+
+1. **A6 — descriptives.** Group employment, wage, per-worker flows and connectivity over
+   2009–2011, plus a within/between-firm variance decomposition of group connectivity.
+2. **A7 — group-level spillovers.** Three columns per outcome: the firm-level benchmark,
+   a *within firms* spec (firm × year FE, so identification is across groups inside the
+   same firm-year), and an *overall* spec (microregion × year, industry × year,
+   negotiation-month × year FE). Each with a pre-treatment placebo.
+3. **A8 — horse race.** Both group-specific connectivity measures entered jointly on
+   firm-level outcomes, with an equality test. Estimated under three scalings
+   (`own` group p90, common `firm` p90, per-SD); the tables print the `firm` scaling.
+
+**Sample:** untreated establishments in the balanced panel. Connectivity is scaled so
+that 1 equals the 90th percentile of the firm-level distribution.
+
+**Outputs** → `output/`:
+
+| File | Feeds |
+|------|-------|
+| `a6_group{,_hw}.csv`, `a6_partition{,_hw}.csv` | Tables 10, 22 |
+| `a7{,_hw}.csv` | Tables 11, 23 |
+| `a8{,_hw}.csv` | Tables 12, 24 |
+| `t_layerdesc{,_hw}.tex` | Table 10, Table 22 |
+| `t_groupspecs{,_hw}.tex` | Table 11, Table 23 |
+| `t_horserace{,_hw}.tex` | Table 12, Table 24 |
+
+Each `.tex` is a complete `table` float, ready to `\input`. Tables 12 and 24 use
+`siunitx` `S` columns and `\makecell`, so the host document needs `siunitx`,
+`makecell` and `booktabs`.
+
+```bash
+stata-mp -b do scripts/05_run_within_firm.do      # -> a6/a7/a8 .csv
+stata-mp -b do scripts/05_run_within_firm_hw.do   # -> a6/a7/a8 _hw.csv
+python scripts/05b_make_tables_within_firm.py     # -> the six .tex files
+```
+
+**Previewing the tables.** To eyeball the six tables without pasting them into the paper:
+
+```bash
+module load texlive/2026        # or ensure pdflatex is on PATH
+python scripts/05c_preview_tables.py
+```
+
+This writes `output/preview/` — one cropped PDF per table, numbered as in the replication
+document, plus `tables_within_firm_all.pdf` with all six. Optional; `run_all.sh` does not
+call it. Needs `pdflatex`, and PyMuPDF for the cropping (without PyMuPDF the PDFs are
+still produced, just uncropped).
+
+`05a_within_firm_estimates.do` is the shared engine; the two `05_run_*` files just set
+`wf_wage_firm` / `wf_wage_layer` / `wf_suffix` and call it. It is a port of
+`Programs/layer_connectivity/07_within_firm/01_within_firm_estimates{,_hw}.do`, itself a
+Stata port of the original R package, and reproduces those estimates to ~1e-12.
+
+**Known discrepancy against the PDF.** Of the 564 numbers printed across the six tables,
+562 reproduce exactly. The two exceptions are the same cell in Tables 12 and 24 — Panel B,
+Male Connectivity, pre-trend log employment standard error — where the PDF prints
+`0.0058` but the underlying estimate is `0.00574397`, i.e. `0.0057`. The value in the PDF
+does not match its own source CSV; this package prints the value the regression produces.
+
+---
+
 ## Requirements
 
 **Stata 17** with:
@@ -167,7 +277,7 @@ ssc install ftools
 ssc install coefplot
 ```
 
-**Python 3.9+** with `pandas` (only needed for the LaTeX table generators, `0?b_make_table_*.py`):
+**Python 3.9+** for the LaTeX table generators. `01b`–`04b` need `pandas`; `05b_make_tables_within_firm.py` uses only the standard library:
 ```
 pip install pandas
 ```
