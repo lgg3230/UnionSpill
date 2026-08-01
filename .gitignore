@@ -216,5 +216,20 @@ UnionSpill-paper/
 # ----- Packaged standalone archive (exceeds GitHub 100MB limit; dir itself is tracked) -----
 layer_connectivity_standalone.zip
 
+# ----- Generated outputs: no NEW .tex / .csv / .pdf enter the repo -----
+# Repo-wide, deliberate policy change (2026-07-31). Supersedes the CLAUDE.md
+# note that Tables/*.csv, Tables/*.tex and Graphs/*.pdf are tracked.
+#
+# NOTE: this does not untrack anything. The ~1,959 such files already committed
+# stay tracked and keep their history -- git ignores only untracked paths. To
+# drop one later:  git rm --cached <path>
+*.tex
+*.csv
+*.pdf
+
+# Files already tracked under the rule above, re-asserted so the intent survives
+# if they are ever removed and re-added.
+!Data/RAIS_aux/totalflows_wide_2007_2011.csv
+
 # ----- Re-ignore macOS noise even inside force-included dirs (must come last) -----
 **/.DS_Store
