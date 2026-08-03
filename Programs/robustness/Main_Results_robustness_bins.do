@@ -422,6 +422,11 @@ foreach nbins in 10 20 50 100 {
 			local n_obs   = e(N)
 			local n_estab = e(N_clust)
 
+			* Pre-treatment mean on this column's estimation sample (plan 2026-08-01),
+			* taken before the placebo regression below replaces e(sample).
+			quietly sum `outcome' if e(sample) & inrange(year, 2009, 2011)
+			local mean_pre_val = r(mean)
+
 			* Pre-treatment placebo
 			reghdfe `outcome' treat_ultra##i.placebo_year if `s_use' & year <= 2011, ///
 				absorb(`absorb') vce(cluster identificad)
@@ -450,6 +455,7 @@ foreach nbins in 10 20 50 100 {
 			file write `fh' `""`spec'";"`section'";"`outcome'";"pre_se";"' %9.4f (`se_pre') `"""' _n
 			file write `fh' `""`spec'";"`section'";"`outcome'";"n_obs";"' %12.0fc (`n_obs') `"""' _n
 			file write `fh' `""`spec'";"`section'";"`outcome'";"n_estab";"' %12.0fc (`n_estab') `"""' _n
+			file write `fh' `""`spec'";"`section'";"`outcome'";"mean_pre";"' %9.4f (`mean_pre_val') `"""' _n
 			file write `fh' `""`spec'";"`section'";"`outcome'";"pre_pval";"' %9.4f (`p_pre') `"""' _n
 			file close `fh'
 		}
@@ -473,6 +479,11 @@ foreach nbins in 10 20 50 100 {
 			local p_post  = 2*ttail(e(df_r), abs(`b_post'/`se_post'))
 			local n_obs   = e(N)
 			local n_estab = e(N_clust)
+
+			* Pre-treatment mean on this column's estimation sample (plan 2026-08-01),
+			* taken before the placebo regression below replaces e(sample).
+			quietly sum numb_clauses if e(sample) & inrange(year, 2009, 2011)
+			local mean_pre_val = r(mean)
 
 			* Pre-treatment
 			reghdfe numb_clauses i.treat_ultra##pre_treat_cba ///
@@ -503,6 +514,7 @@ foreach nbins in 10 20 50 100 {
 			file write `fh' `""`spec'";"`section'";"numb_clauses";"pre_se";"' %9.4f (`se_pre') `"""' _n
 			file write `fh' `""`spec'";"`section'";"numb_clauses";"n_obs";"' %12.0fc (`n_obs') `"""' _n
 			file write `fh' `""`spec'";"`section'";"numb_clauses";"n_estab";"' %12.0fc (`n_estab') `"""' _n
+			file write `fh' `""`spec'";"`section'";"numb_clauses";"mean_pre";"' %9.4f (`mean_pre_val') `"""' _n
 			file write `fh' `""`spec'";"`section'";"numb_clauses";"pre_pval";"' %9.4f (`p_pre') `"""' _n
 			file close `fh'
 		}
@@ -533,6 +545,11 @@ foreach nbins in 10 20 50 100 {
 		local n_obs   = e(N)
 		local n_estab = e(N_clust)
 
+		* Pre-treatment mean on this column's estimation sample (plan 2026-08-01),
+		* taken before the placebo regression below replaces e(sample).
+		quietly sum `outcome' if e(sample) & inrange(year, 2009, 2011)
+		local mean_pre_val = r(mean)
+
 		* Pre-treatment placebo
 		reghdfe `outcome' c.`conn'##i.placebo_year if `s_spill' & year <= 2011, ///
 			absorb(`absorb') vce(cluster identificad)
@@ -561,6 +578,7 @@ foreach nbins in 10 20 50 100 {
 		file write `fh' `""`spec'";"spill";"`outcome'";"pre_se";"' %9.4f (`se_pre') `"""' _n
 		file write `fh' `""`spec'";"spill";"`outcome'";"n_obs";"' %12.0fc (`n_obs') `"""' _n
 		file write `fh' `""`spec'";"spill";"`outcome'";"n_estab";"' %12.0fc (`n_estab') `"""' _n
+		file write `fh' `""`spec'";"spill";"`outcome'";"mean_pre";"' %9.4f (`mean_pre_val') `"""' _n
 		file write `fh' `""`spec'";"spill";"`outcome'";"pre_pval";"' %9.4f (`p_pre') `"""' _n
 		file close `fh'
 	}
@@ -583,6 +601,11 @@ foreach nbins in 10 20 50 100 {
 		local p_post  = 2*ttail(e(df_r), abs(`b_post'/`se_post'))
 		local n_obs   = e(N)
 		local n_estab = e(N_clust)
+
+		* Pre-treatment mean on this column's estimation sample (plan 2026-08-01),
+		* taken before the placebo regression below replaces e(sample).
+		quietly sum numb_clauses if e(sample) & inrange(year, 2009, 2011)
+		local mean_pre_val = r(mean)
 
 		* Pre-treatment
 		reghdfe numb_clauses c.`conn'##pre_treat_cba ///
@@ -613,6 +636,7 @@ foreach nbins in 10 20 50 100 {
 		file write `fh' `""`spec'";"spill";"numb_clauses";"pre_se";"' %9.4f (`se_pre') `"""' _n
 		file write `fh' `""`spec'";"spill";"numb_clauses";"n_obs";"' %12.0fc (`n_obs') `"""' _n
 		file write `fh' `""`spec'";"spill";"numb_clauses";"n_estab";"' %12.0fc (`n_estab') `"""' _n
+		file write `fh' `""`spec'";"spill";"numb_clauses";"mean_pre";"' %9.4f (`mean_pre_val') `"""' _n
 		file write `fh' `""`spec'";"spill";"numb_clauses";"pre_pval";"' %9.4f (`p_pre') `"""' _n
 		file close `fh'
 	}

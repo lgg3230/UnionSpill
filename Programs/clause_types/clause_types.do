@@ -303,6 +303,13 @@ foreach panel in A B C {
 		local n_obs   = e(N)
 		local n_estab = e(N_clust)
 
+		* Pre-treatment mean on this column's estimation sample (plan
+		* 2026-08-01). The CBA-period spec runs on firm-YEAR rows, so the
+		* 2009-2011 window matches the other tables. Taken before the
+		* regression below replaces e(sample).
+		quietly sum `outcome' if e(sample) & inrange(year, 2009, 2011)
+		local mean_pre_val = r(mean)
+
 		reghdfe `outcome' i.treat_ultra##pre_treat_cba ///
 			if `s_use' & !missing(cba_period) & cba_period <= 2, ///
 			absorb(`absorb_cba') vce(cluster identificad)
@@ -335,6 +342,7 @@ foreach panel in A B C {
 		file write `fh' `""`spec'";"`section'";"`outcome'";"pre_se";"' %9.4f (`se_pre') `"""' _n
 		file write `fh' `""`spec'";"`section'";"`outcome'";"n_obs";"' %12.0fc (`n_obs') `"""' _n
 		file write `fh' `""`spec'";"`section'";"`outcome'";"n_estab";"' %12.0fc (`n_estab') `"""' _n
+		file write `fh' `""`spec'";"`section'";"`outcome'";"mean_pre";"' %9.4f (`mean_pre_val') `"""' _n
 		file write `fh' `""`spec'";"`section'";"`outcome'";"pre_pval";"' %9.4f (`pre_ftest_pval') `"""' _n
 		file close `fh'
 	}
@@ -373,6 +381,11 @@ foreach outcome of local outcomes {
 	local n_obs   = e(N)
 	local n_estab = e(N_clust)
 
+	* Pre-treatment mean on this column's estimation sample (plan 2026-08-01),
+	* taken before the regressions below replace e(sample).
+	quietly sum `outcome' if e(sample) & inrange(year, 2009, 2011)
+	local mean_pre_val = r(mean)
+
 	reghdfe `outcome' c.`conn'##pre_treat_cba ///
 		if `s_spill' & !missing(cba_period) & cba_period <= 2, ///
 		absorb(`absorb_cba') vce(cluster identificad)
@@ -405,6 +418,7 @@ foreach outcome of local outcomes {
 	file write `fh' `""`spec'";"spill";"`outcome'";"pre_se";"' %9.4f (`se_pre') `"""' _n
 	file write `fh' `""`spec'";"spill";"`outcome'";"n_obs";"' %12.0fc (`n_obs') `"""' _n
 	file write `fh' `""`spec'";"spill";"`outcome'";"n_estab";"' %12.0fc (`n_estab') `"""' _n
+	file write `fh' `""`spec'";"spill";"`outcome'";"mean_pre";"' %9.4f (`mean_pre_val') `"""' _n
 	file write `fh' `""`spec'";"spill";"`outcome'";"pre_pval";"' %9.4f (`pre_ftest_pval') `"""' _n
 	file close `fh'
 }

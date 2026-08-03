@@ -25,11 +25,15 @@ version 17.0
 set more off
 set varabbrev off
 
-global main      "/kellogg/proj/lgg3230/UnionSpill"
-global rais_firm "$main/Data/CBA_RAIS_firm_level"
-global rais_aux  "$main/Data/RAIS_aux"
-global tables    "$main/Tables"
-global logs      "$main/Logs"
+* Globals are defaults only (2026-08-01), so a wrapper can point this at the
+* current-connectivity overlay without editing the script. Unset behaviour is
+* unchanged: the frozen panel and the legacy Tables/ root.
+if "$main"      == "" global main      "/kellogg/proj/lgg3230/UnionSpill"
+if "$rais_firm" == "" global rais_firm "$main/Data/CBA_RAIS_firm_level"
+if "$rais_aux"  == "" global rais_aux  "$main/Data/RAIS_aux"
+if "$tables"    == "" global tables    "$main/Tables"
+if "$logs"      == "" global logs      "$main/Logs"
+if "$testsuf"   == "" global testsuf   ""
 
 capture log close
 local d = subinstr("`c(current_date)'"," ","_",.)
@@ -141,7 +145,7 @@ save `base'
 global basefile "`base'"
 
 tempname fh
-file open `fh' using "$tables/conn_margins/direct_sample_coef_test.csv", write replace
+file open `fh' using "$tables/conn_margins/direct_sample_coef_test$testsuf.csv", write replace
 file write `fh' "outcome,comparison,b_small,b_C,diff_C_minus_small,se_diff,p_diff" _n
 file close `fh'
 
@@ -179,7 +183,7 @@ program define _stacktest
 			"   diff(C-`slabel') = " %9.5f `diff' "   se = " %9.5f `se_diff' "   p = " %6.4f `p_diff'
 
 		tempname fh2
-		file open `fh2' using "$tables/conn_margins/direct_sample_coef_test.csv", write append
+		file open `fh2' using "$tables/conn_margins/direct_sample_coef_test$testsuf.csv", write append
 		file write `fh2' `"`outcome',`slabel'_vs_C,`b_small',`b_C',`diff',`se_diff',`p_diff'"' _n
 		file close `fh2'
 	restore
@@ -218,7 +222,7 @@ program define _stacktest_cba
 			"   diff(C-`slabel') = " %9.5f `diff' "   se = " %9.5f `se_diff' "   p = " %6.4f `p_diff'
 
 		tempname fh2
-		file open `fh2' using "$tables/conn_margins/direct_sample_coef_test.csv", write append
+		file open `fh2' using "$tables/conn_margins/direct_sample_coef_test$testsuf.csv", write append
 		file write `fh2' `"`outcome',`slabel'_vs_C,`b_small',`b_C',`diff',`se_diff',`p_diff'"' _n
 		file close `fh2'
 	restore
@@ -238,7 +242,7 @@ global scond "$s_B"
 _stacktest_cba numb_clauses B
 
 di _newline "======================================================="
-type "$tables/conn_margins/direct_sample_coef_test.csv"
+type "$tables/conn_margins/direct_sample_coef_test$testsuf.csv"
 
 capture log close
 shell source /gpfs/kellogg/proj/lgg3230/UnionSpill/Programs/notify.sh && ///

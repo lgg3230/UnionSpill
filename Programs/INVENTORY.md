@@ -1,0 +1,194 @@
+# Programs Inventory — exhibit → producer map
+
+**Built 2026-08-02. Nothing was moved, renamed, or deleted to produce this file.**
+
+Purpose: record which script produces each exhibit in the two live documents, and
+how confident that mapping is. This is the prerequisite for any future archiving
+decision — not the decision itself.
+
+## Live documents
+
+| Document | Path | Floats |
+|---|---|---|
+| Paper | `UnionSpill-paper/Draft.tex` | 13 tables, 6 figures |
+| Replication | `UnionSpill-paper/Replication/Replication_Wages vs Hourly.tex` | 19 unique table fragments, 22 figures |
+
+Two further replication trees exist and are **not** covered here:
+`quality_reports/replication/hourly_variant/` and `.../hourly_variant_currentconn/`.
+The latter holds the `frag/` fragments the live replication doc inlines, so it is
+partly covered by transitivity; `hourly_variant/` is untraced.
+
+## Confidence grades
+
+| Grade | Meaning |
+|---|---|
+| **HIGH** | Producer named by an explicit marker, an exact write-target string, or a byte-identical file hash. |
+| **MEDIUM** | Producer inferred from naming plus matching content; a sibling script could also have produced it. |
+| **LOW** | Plausible producer only. Do not act on this row. |
+
+Method: figures matched by MD5 against every PDF in the repo, then by embedded
+plot text and page geometry where no hash matched. Tables matched by inlining
+markers in the replication doc, and by 6-number coefficient signatures for the
+paper. Upstream Stata located by grepping exact `file open` / `export delimited`
+write targets, not by filename resemblance.
+
+---
+
+## A. Paper tables — `UnionSpill-paper/Draft.tex`
+
+Draft.tex has no `\input` for tables; every table is pasted LaTeX. The map below
+is therefore reconstructed from coefficient signatures, not from a build step.
+
+| Label | Matching output | Generator | Upstream estimator | Conf. |
+|---|---|---|---|---|
+| `tab:direct_connectivity_robust` | `Tables/main_results/t_direct.tex` | `main_results/generate_direct_replication_table.py` | `Main_Results_pct_tfpw_07_11.do` + `conn_margins/direct_sample_coef_test.do` | HIGH |
+| `tab:spill_main_4tf_out` | `Tables/main_results/t_spill.tex` | `main_results/generate_spill_replication_table.py` | `Main_Results_pct_tfpw_07_11.do` | HIGH |
+| `tab:spill_clause_decomp` | `Tables/clause_types/t_clause.tex` | `clause_types/generate_clause_replication_table.py` | `clause_types/clause_types.do` + `cba_value/Main_Results_cba_value.do` | HIGH |
+| `tab:rob_logwages` | `frag/t_rob_hw.tex` | `robustness/generate_rob_logwages_8col.py` | `robustness/Main_Results_micro_ind_q.do` | HIGH |
+| `tab:spill_union_4tfpe_4out` | `Tables/robustness/t_union_hw.tex` | `robustness/generate_union_replication_table.py` | `robustness/Main_Results_union_controls.do` | HIGH |
+| `tab:composition` | `Tables/composition/t_composition.tex` | `main_results/generate_twopanel_replication_tables.py` | `composition/Main_Results_composition.do` | HIGH |
+| `tab:layer_desc_full` | `Tables/layer_connectivity/07_within_firm/t_layerdesc{,_hw}.tex` | `layer_connectivity/07_within_firm/02b_make_tables_all.py` | see §D2 | HIGH gen / MED source |
+| `tab:turnover` | `frag/t_turnover.tex` | `main_results/generate_twopanel_replication_tables.py` | `turnover/Main_Results_turnover.do` | MED — see §D1 |
+| `tab:resid_raw_base` | `Tables/residuals/t_resid_hw_currentconn_age_fullrais_rb.tex` | `residuals/generate_resid_replication_tables.py` | `residuals/Main_Results_mincer.do` with `$results_suffix = _currentconn_age_fullrais_rb` | MED |
+| `tab:group_specs` | `t_groupspecs*.tex` — 4 variants match equally | `layer_connectivity/07_within_firm/02b_make_tables_all.py` | see §D2 | MED |
+| `tab:horse_race` | no fragment matched; only the assembled doc | `layer_connectivity/07_within_firm/02b_make_tables_all.py` | see §D2 | MED |
+| `tab:descriptive_stats` | `Tables/descriptives/table_descriptives_pretreat.tex` **or** `..._2011.tex` | `descriptives/make_table_descriptives.py` | `descriptives/22_sample_descriptives.do` | MED — which suffix is published is unresolved |
+
+**`tab:rob_logwages` and `tab:spill_union_4tfpe_4out` display the _hw (hourly)
+variant.** The other paper tables carry both wage columns. Anything that treats
+"hourly = appendix only" is wrong.
+
+## B. Replication-doc tables
+
+The replication doc carries `% BEGIN inlined <stem>.tex` markers, and
+`layer_connectivity/07_within_firm/05_inline_into_replication.py` holds the
+authoritative stem → source-directory map. **All HIGH by construction.**
+
+| Fragment stem | Source dir | Generator |
+|---|---|---|
+| `t_direct`, `t_spill` | `Tables/main_results/` | `main_results/generate_{direct,spill}_replication_table.py` |
+| `t_clause` | `Tables/clause_types/` | `clause_types/generate_clause_replication_table.py` |
+| `t_union`, `t_union_hw` | `Tables/robustness/` | `robustness/generate_union_replication_table.py` |
+| `t_composition` | `Tables/composition/` | `main_results/generate_twopanel_replication_tables.py` |
+| `t_rob`, `t_rob_hw` | `quality_reports/replication/hourly_variant_currentconn/frag/` | `robustness/generate_rob_logwages_8col.py` |
+| `t_layerdesc{,_hw}`, `t_groupspecs{,_hw}`, `t_horserace{,_hw}` | `Tables/layer_connectivity/07_within_firm/` | `layer_connectivity/07_within_firm/02b_make_tables_all.py` |
+| `t_resid`, `t_resid_hw` | written into the doc directly | `residuals/generate_resid_replication_tables.py` |
+| `t_pairwise_appendix` | `.../frag/` | `conn_descriptives/generate_pairwise_appendix_table.py` |
+| `t_turnover` | **not in the map** | see §D1 |
+| `t_desc` | **producer not found** | see §D3 |
+
+## C. Figures
+
+`UnionSpill-paper/Replication/Figures/` is populated by hand-copy with renaming;
+no script writes into it. Draft.tex references the same directory.
+
+Hash-exact (byte-identical source found in repo) — **HIGH**:
+
+| Figure | Source | Producer |
+|---|---|---|
+| `bilateral_coefplot.pdf` | `Graphs/connectivity/coefplot_bilateral_combined.pdf` | `conn_descriptives/06_bilateral_coefplot_combined.py` |
+| `distro_region.pdf` | `Graphs/descriptives/distro_region.pdf` | `descriptives/distribution_plots.py` |
+| `distro_industry.pdf` | `Graphs/descriptives/distro_broad_industry.pdf` | `descriptives/distribution_plots.py` |
+| `distro_month.pdf` | `Graphs/descriptives/distro_mode_base_month.pdf` | `descriptives/distribution_plots.py` |
+| `m_dir_es.pdf` | `Graphs/pct_tfpw_cc/es_lr_remdezr_w_directA__1_Aug_2026.pdf` | `_run_pct_tfpw_07_11_cc.do` → `Main_Results_pct_tfpw_07_11.do` |
+| `m_spill_es.pdf` | `Graphs/pct_tfpw_cc/es_lr_remdezr_w_spill__1_Aug_2026.pdf` | same |
+| `h_dir_es.pdf` | `Graphs/pct_tfpw_cc/es_lr_remdezr_h_w_directA__1_Aug_2026.pdf` | same |
+| `h_spill_es.pdf` | `Graphs/pct_tfpw_cc/es_lr_remdezr_h_w_spill__1_Aug_2026.pdf` | same |
+
+No hash match — matched on plot text and geometry — **MEDIUM**, and see §D4:
+
+| Figure | Nearest repo file | Producer |
+|---|---|---|
+| `m_honest_direct.pdf` | `Graphs/honest_did/honest_did_rm_direct_lr_remdezr_w.pdf` | `honest_did/honest_did_rm_2x2.py` |
+| `m_honest_spill.pdf` | `..._rm_spillover_lr_remdezr_w.pdf` | same |
+| `h_honest_direct.pdf` | `..._rm_direct_lr_remdezr_h_w.pdf` | same |
+| `h_honest_spill.pdf` | `..._rm_spillover_lr_remdezr_h_w.pdf` | same |
+| `m_recentered_spill.pdf` | `Graphs/rand_inference/es_spill_lr_remdezr_w.pdf` | `rand_inference/16_recentered_eventstudy.do` |
+| `m_recentered_cf.pdf` | `Graphs/rand_inference/es_counterfactual_lr_remdezr_w.pdf` | same |
+| `h_recentered_spill.pdf`, `h_recentered_cf.pdf` | none | `16_recentered_eventstudy.do` hardcodes `lr_remdezr_w`; the hourly pair cannot be reproduced by the committed script as written |
+| `binscatter_{wage,hwage,emp,clauses}.pdf` | `Graphs/rand_inference/binscatter_*_raw.pdf` | `rand_inference/13_binscatter.py` — same axis label, different figsize |
+| `conn_hist.pdf` | `Graphs/conn_descriptives/hist_connectivity.pdf` | `conn_descriptives/hist_connectivity.py` — different axis label and page size; may be a different vintage or a different script |
+
+---
+
+## D. Hazards found while building this map
+
+**D1 — `t_turnover` is deliberately excluded from the inline map.**
+`05_inline_into_replication.py:54` says re-running the turnover generator does not
+reproduce the published coefficients, so inlining it would silently change
+published numbers. `tab:turnover` in the paper is therefore **not currently
+reproducible from `Programs/`**. This is the single most important open item here.
+
+**D2 — within-firm v1/v2 write-target collision, confirmed.**
+`01_within_firm_estimates.do` and `01b_within_firm_estimates.do` both write
+`a6_group.csv`, `a6_partition.csv`, `a7.csv`, `a8.csv` when `$table_suffix` is
+empty, and `_run_within_firm_v2.do` sets it empty. Same for the `_hw` pair.
+Whichever ran last owns the CSVs. Published exhibits are believed to be v2 (`01b`),
+but the artifacts do not record which produced them. Affects
+`tab:layer_desc_full`, `tab:group_specs`, `tab:horse_race`.
+
+**D3 — `t_desc` has no located generator.** It is inlined twice in the replication
+doc and is absent from `SOURCES` in `05_inline_into_replication.py`. Closest
+candidate is `descriptives/make_table_descriptives.py`, which writes
+`ftable_descriptives_{suffix}.tex` — no file of that name exists in `Tables/`.
+
+**D4 — the replication figures are a different vintage from `Graphs/`.**
+The four honest-DiD figures in the paper are dated 2026-07-27; the corresponding
+files in `Graphs/honest_did/` are dated 2026-07-05 and differ numerically
+(direct-effect breakdown M = 1.76 published vs 1.77 on disk; hourly 1.40 vs 1.41).
+Same pattern for the recentered event studies (0.0050 vs 0.0051). The published
+figures came from runs whose output was never written back to `Graphs/`.
+
+**D5 — turnover variants do *not* collide** (checked, contrary to first
+impression): `Main_Results_turnover{,_scale,_log,_loglevel,_firmscale,_firmscale_ll}.do`
+each write a distinctly suffixed CSV.
+
+---
+
+## E. Directory roll-up
+
+"Traced" = the directory contains at least one script established above as
+producing a live exhibit. It does **not** mean every script in it is live.
+
+| Directory | Scripts | Status |
+|---|---|---|
+| `main_results/` | 20 | traced |
+| `layer_connectivity/` | 111 | traced (via `07_within_firm/`) |
+| `robustness/` | 31 | traced |
+| `clause_types/` | 14 | traced |
+| `composition/` | 10 | traced |
+| `residuals/` | 21 | traced |
+| `turnover/` | 31 | traced, but see D1 |
+| `descriptives/` | 14 | traced |
+| `conn_descriptives/` | 25 | traced |
+| `rand_inference/` | 19 | traced (figures) |
+| `honest_did/` | 14 | traced (figures) |
+| `cba_value/` | 10 | traced (feeds `t_clause`) |
+| `conn_margins/` | 52 | traced (`direct_sample_coef_test.do` only) |
+| *(Programs root)* | 111 | traced (`Main_Results_pct_tfpw_07_11.do`, `_run_pct_tfpw_07_11_cc.do`) |
+| `cba_similarity/` | 124 | **no traced exhibit** |
+| `Gui_coding/` | 42 | **no traced exhibit** |
+| `max_clause_row/` | 17 | **no traced exhibit** |
+| `entry_exit/` | 20 | **no traced exhibit** |
+| `numb_clauses_outliers/` | 13 | **no traced exhibit** |
+| `direction_convergence/` | 11 | **no traced exhibit** |
+| `results/` | 14 | **no traced exhibit** |
+| `within_firm_final/` | 9 | **no traced exhibit** — duplicates `07_within_firm/` generators |
+| `main_data_pipeline{,_duckdb}/` | 14 | no exhibit — data build, keep regardless |
+| `sample_nesting/`, `exit/`, `iv_late_conn_early_conn/`, `aipw_robust/`, `avg_within_firm_cdf/`, `worker_wages/`, `educ_premia_fullrais/`, `Python/`, `connectivity_diagram/` | 22 | **no traced exhibit** |
+| `Old/` | 51 | already archived |
+
+## F. What this inventory does not establish
+
+- **"No traced exhibit" ≠ dead.** These directories were not investigated for
+  robustness arms that a referee may demand, for scripts feeding *other* documents
+  (slides, memos, the two untraced replication trees), or for build dependencies.
+- **No reachability analysis was run.** Data-build stages (`011_*`, `05_*`, the
+  MATLAB connectivity scripts) produce no exhibit but every live script depends on
+  their output. `00_master.do` flags are all `0` in the steady state; that is not
+  evidence of death.
+- **Cross-script dependencies are untraced.** Stata `do`/`include`, `shell` calls
+  into MATLAB and Python, and hardcoded absolute paths were not enumerated. Moving
+  any file may break a caller silently.
+- **MEDIUM rows are not safe to act on.** They are where a wrong archive decision
+  would be invisible until re-estimation.

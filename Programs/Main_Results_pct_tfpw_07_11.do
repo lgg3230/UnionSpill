@@ -389,6 +389,14 @@ foreach panel in A B C {
 		local n_obs   = e(N)
 		local n_estab = e(N_clust)
 
+		* Pre-treatment mean of the dependent variable, on THIS column's
+		* estimation sample (plan 2026-08-01). e(sample) already carries the
+		* sample restriction and reghdfe's singleton drops, so no restriction
+		* is restated here. Must be taken before the placebo regression below
+		* replaces e(sample).
+		quietly sum `outcome' if e(sample) & inrange(year, 2009, 2011)
+		local mean_pre = r(mean)
+
 		* Pre-treatment placebo
 		reghdfe `outcome' treat_ultra##i.placebo_year if `s_use' & year <= 2011, ///
 			absorb(`absorb') vce(cluster identificad)
@@ -423,6 +431,7 @@ foreach panel in A B C {
 		file write `fh' `""`spec'";"`section'";"`outcome'";"pre_se";"' %9.4f (`se_pre') `"""' _n
 		file write `fh' `""`spec'";"`section'";"`outcome'";"n_obs";"' %12.0fc (`n_obs') `"""' _n
 		file write `fh' `""`spec'";"`section'";"`outcome'";"n_estab";"' %12.0fc (`n_estab') `"""' _n
+		file write `fh' `""`spec'";"`section'";"`outcome'";"mean_pre";"' %9.4f (`mean_pre') `"""' _n
 		file write `fh' `""`spec'";"`section'";"`outcome'";"pre_pval";"' %9.4f (`pre_ftest_pval') `"""' _n
 		file close `fh'
 
@@ -435,7 +444,44 @@ foreach panel in A B C {
 			estimates store _es_d_tmp
 			local post_coef_s = string(`b_post', "%9.4f")
 			local post_se_s   = string(`se_post', "%9.4f")
-			local pre_pval_s  = string(`p_pre',   "%9.3f")
+			local pre_pval_s  = string(`pre_ftest_pval', "%9.3f")
+
+			* Data-driven y range: span every plotted 95% CI, then reserve
+			* headroom at the top for the pooled-OLS annotation so the label
+			* always lands inside the axis and never overlaps a coefficient
+			* or its CI. Outcomes here differ in scale (log wages vs log
+			* employment), so a hardcoded range would clip some of them.
+			local ymax_ci = .
+			local ymin_ci = .
+			foreach yr in 2009 2010 2011 2012 2013 2014 2015 2016 {
+				local bb = .
+				local ss = .
+				capture {
+					local bb = _b[1.treat_ultra#`yr'.year]
+					local ss = _se[1.treat_ultra#`yr'.year]
+				}
+				if !mi(`bb') & !mi(`ss') {
+					local hi = `bb' + 1.96*`ss'
+					local lo = `bb' - 1.96*`ss'
+					if mi(`ymax_ci') | `hi' > `ymax_ci' local ymax_ci = `hi'
+					if mi(`ymin_ci') | `lo' < `ymin_ci' local ymin_ci = `lo'
+				}
+			}
+			if mi(`ymax_ci') | mi(`ymin_ci') {
+				local ymax_ci = 0
+				local ymin_ci = 0
+			}
+			local yspan = `ymax_ci' - `ymin_ci'
+			if `yspan' <= 0 local yspan = 0.01
+			* In-plot coefficient label sits in the BOTTOM-RIGHT quadrant
+			* (2026-08-02): post-treatment side of the dashed line at x=3.75, and
+			* below the zero line. It was originally 17% of the span ABOVE the
+			* highest CI, which forced 30% headroom into yhi purely to fit it and
+			* stretched the y-axis. With nothing above the data, yhi now carries
+			* only 5% headroom.
+			local ylo   = `ymin_ci' - 0.10*`yspan'
+			local yhi   = `ymax_ci' + 0.05*`yspan'
+			local ytext = `ymin_ci' + 0.15*`yspan'
 
 			coefplot _es_d_tmp, ///
 				keep(1.treat_ultra#2009.year 1.treat_ultra#2010.year 1.treat_ultra#2011.year ///
@@ -450,11 +496,12 @@ foreach panel in A B C {
 				           1.treat_ultra#2015.year = "2015" ///
 				           1.treat_ultra#2016.year = "2016") ///
 				vert omitted baselevels yline(0) xline(3.75, lpattern(dash)) ///
+				yscale(range(`ylo' `yhi')) ///
 				ytitle("Dynamic DiD coefficients", size(small)) ///
-				note("P-value for placebo pre-trend = `pre_pval_s'") ///
+				note("Joint pre-trend F-test p-value = `pre_pval_s'") ///
 				graphregion(color(white)) bgcolor(white) ///
 				ci(95) ciopts(recast(rcap) color(blue)) mcolor(blue) ///
-				text(0.05 6 "`post_coef_s' (`post_se_s')", color(blue) size(small))
+				text(`ytext' 6 "`post_coef_s' (`post_se_s')", color(blue) size(small) placement(w))
 
 			cap graph export "$graphs/es_`outcome'_direct`panel'_`d'.pdf", as(pdf) replace
 			estimates drop _es_d_tmp
@@ -480,6 +527,14 @@ foreach panel in A B C {
 		local p_post  = 2*ttail(e(df_r), abs(`b_post'/`se_post'))
 		local n_obs   = e(N)
 		local n_estab = e(N_clust)
+
+		* Pre-treatment mean, on this column's estimation sample (plan
+		* 2026-08-01). The CBA-period spec still runs on firm-YEAR rows, so
+		* the 2009-2011 window is the same calendar window as the other
+		* columns. An agreement spanning several rows of one cba_period is
+		* counted once per row, exactly as the regression weights it.
+		quietly sum numb_clauses if e(sample) & inrange(year, 2009, 2011)
+		local mean_pre = r(mean)
 
 		* Pre-treatment
 		 reghdfe numb_clauses i.treat_ultra##pre_treat_cba ///
@@ -517,6 +572,7 @@ foreach panel in A B C {
 		file write `fh' `""`spec'";"`section'";"numb_clauses";"pre_se";"' %9.4f (`se_pre') `"""' _n
 		file write `fh' `""`spec'";"`section'";"numb_clauses";"n_obs";"' %12.0fc (`n_obs') `"""' _n
 		file write `fh' `""`spec'";"`section'";"numb_clauses";"n_estab";"' %12.0fc (`n_estab') `"""' _n
+		file write `fh' `""`spec'";"`section'";"numb_clauses";"mean_pre";"' %9.4f (`mean_pre') `"""' _n
 		file write `fh' `""`spec'";"`section'";"numb_clauses";"pre_pval";"' %9.4f (`pre_ftest_pval') `"""' _n
 		file close `fh'
 
@@ -574,6 +630,11 @@ foreach outcome in $base_outcomes $pct_outcomes_dec $pct_outcomes_hr $ratio_outc
 	local n_obs   = e(N)
 	local n_estab = e(N_clust)
 
+	* Pre-treatment mean on this column's estimation sample (plan 2026-08-01),
+	* taken before the placebo regression replaces e(sample).
+	quietly sum `outcome' if e(sample) & inrange(year, 2009, 2011)
+	local mean_pre = r(mean)
+
 	* Pre-treatment placebo
 	 reghdfe `outcome' c.`conn'##i.placebo_year if `s_spill' & year <= 2011, ///
 		absorb(`absorb') vce(cluster identificad)
@@ -608,6 +669,7 @@ foreach outcome in $base_outcomes $pct_outcomes_dec $pct_outcomes_hr $ratio_outc
 	file write `fh' `""`spec'";"spill";"`outcome'";"pre_se";"' %9.4f (`se_pre') `"""' _n
 	file write `fh' `""`spec'";"spill";"`outcome'";"n_obs";"' %12.0fc (`n_obs') `"""' _n
 	file write `fh' `""`spec'";"spill";"`outcome'";"n_estab";"' %12.0fc (`n_estab') `"""' _n
+	file write `fh' `""`spec'";"spill";"`outcome'";"mean_pre";"' %9.4f (`mean_pre') `"""' _n
 	file write `fh' `""`spec'";"spill";"`outcome'";"pre_pval";"' %9.4f (`pre_ftest_pval') `"""' _n
 	file close `fh'
 
@@ -620,7 +682,40 @@ foreach outcome in $base_outcomes $pct_outcomes_dec $pct_outcomes_hr $ratio_outc
 		estimates store _es_sp_tmp
 		local post_coef_s = string(`b_post', "%9.4f")
 		local post_se_s   = string(`se_post', "%9.4f")
-		local pre_pval_s  = string(`p_pre',   "%9.3f")
+		local pre_pval_s  = string(`pre_ftest_pval', "%9.3f")
+
+		* Data-driven y range (see the direct block above for rationale).
+		local ymax_ci = .
+		local ymin_ci = .
+		foreach yr in 2009 2010 2011 2012 2013 2014 2015 2016 {
+			local bb = .
+			local ss = .
+			capture {
+				local bb = _b[`yr'.year#c.`conn']
+				local ss = _se[`yr'.year#c.`conn']
+			}
+			if !mi(`bb') & !mi(`ss') {
+				local hi = `bb' + 1.96*`ss'
+				local lo = `bb' - 1.96*`ss'
+				if mi(`ymax_ci') | `hi' > `ymax_ci' local ymax_ci = `hi'
+				if mi(`ymin_ci') | `lo' < `ymin_ci' local ymin_ci = `lo'
+			}
+		}
+		if mi(`ymax_ci') | mi(`ymin_ci') {
+			local ymax_ci = 0
+			local ymin_ci = 0
+		}
+		local yspan = `ymax_ci' - `ymin_ci'
+		if `yspan' <= 0 local yspan = 0.01
+		* In-plot coefficient label sits in the BOTTOM-RIGHT quadrant
+		* (2026-08-02): post-treatment side of the dashed line at x=3.75, and
+		* below the zero line. It was originally 17% of the span ABOVE the
+		* highest CI, which forced 30% headroom into yhi purely to fit it and
+		* stretched the y-axis. With nothing above the data, yhi now carries
+		* only 5% headroom.
+		local ylo   = `ymin_ci' - 0.10*`yspan'
+		local yhi   = `ymax_ci' + 0.05*`yspan'
+		local ytext = `ymin_ci' + 0.15*`yspan'
 
 		coefplot _es_sp_tmp, ///
 			keep(*#*c.`conn') ///
@@ -634,11 +729,12 @@ foreach outcome in $base_outcomes $pct_outcomes_dec $pct_outcomes_hr $ratio_outc
 			           2015.year#c.`conn' = "2015" ///
 			           2016.year#c.`conn' = "2016") ///
 			vert omitted baselevels yline(0) xline(3.75, lpattern(dash)) ///
+			yscale(range(`ylo' `yhi')) ///
 			ytitle("Dynamic DiD coefficients", size(small)) ///
-			note("P-value for placebo pre-trend = `pre_pval_s'") ///
+			note("Joint pre-trend F-test p-value = `pre_pval_s'") ///
 			graphregion(color(white)) bgcolor(white) ///
 			ci(95) ciopts(recast(rcap) color(blue)) mcolor(blue) ///
-			text(0.015 5 "`post_coef_s' (`post_se_s')", color(blue) size(small))
+			text(`ytext' 6 "`post_coef_s' (`post_se_s')", color(blue) size(small) placement(w))
 
 		cap graph export "$graphs/es_`outcome'_spill_`d'.pdf", as(pdf) replace
 		estimates drop _es_sp_tmp
@@ -663,6 +759,10 @@ if _rc == 0 {
 	local p_post  = 2*ttail(e(df_r), abs(`b_post'/`se_post'))
 	local n_obs   = e(N)
 	local n_estab = e(N_clust)
+
+	* Pre-treatment mean on this column's estimation sample (plan 2026-08-01).
+	quietly sum numb_clauses if e(sample) & inrange(year, 2009, 2011)
+	local mean_pre = r(mean)
 
 	* Pre-treatment
 	 reghdfe numb_clauses c.`conn'##pre_treat_cba ///
@@ -700,6 +800,7 @@ if _rc == 0 {
 	file write `fh' `""`spec'";"spill";"numb_clauses";"pre_se";"' %9.4f (`se_pre') `"""' _n
 	file write `fh' `""`spec'";"spill";"numb_clauses";"n_obs";"' %12.0fc (`n_obs') `"""' _n
 	file write `fh' `""`spec'";"spill";"numb_clauses";"n_estab";"' %12.0fc (`n_estab') `"""' _n
+	file write `fh' `""`spec'";"spill";"numb_clauses";"mean_pre";"' %9.4f (`mean_pre') `"""' _n
 	file write `fh' `""`spec'";"spill";"numb_clauses";"pre_pval";"' %9.4f (`pre_ftest_pval') `"""' _n
 	file close `fh'
 

@@ -12,6 +12,7 @@
 Post $\times$ Treatment & 0.0262*** & 0.0285*** & $-$0.0013 & 1.5544***\\
  & (0.0049) & (0.0050) & (0.0152) & (0.3044)\\
  &  &  &  & \\
+Pre-treatment mean & 7.767 & 2.648 & 3.320 & 32.316\\
 Observations & 112{,}695 & 112{,}695 & 113{,}112 & 73{,}181\\
 Establishments & 14{,}136 & 14{,}136 & 14{,}139 & 14{,}178\\
  &  &  &  & \\
@@ -24,6 +25,7 @@ Pre-trend (placebo) & $-$0.0002 & $-$0.0013 & 0.0156 & 0.1465\\
 Post $\times$ Treatment & 0.0178*** & 0.0202*** & 0.0024 & 1.3481***\\
  & (0.0032) & (0.0033) & (0.0111) & (0.2350)\\
  &  &  &  & \\
+Pre-treatment mean & 7.743 & 2.613 & 3.484 & 31.586\\
 Observations & 130{,}708 & 130{,}708 & 131{,}232 & 84{,}080\\
 Establishments & 16{,}398 & 16{,}398 & 16{,}404 & 16{,}444\\
  &  &  &  & \\
@@ -32,11 +34,11 @@ Pre-trend (placebo) & 0.0042 & 0.0048 & $-$0.0012 & 0.2660\\
  &  &  &  & \\
 \midrule
 \multicolumn{5}{l}{\textit{Equality of effects, Panel A vs.\ Panel B}}\\
-$p$-value & [0.009] & [0.013] & [0.741] & [0.386]\\
+$p$-value & [0.009] & [0.012] & [0.741] & [0.386]\\
 \bottomrule\bottomrule
 \end{tabular}
 \begin{minipage}{\linewidth}
     \scriptsize\vspace{4pt}
-     \textit{Notes:} This table presents difference-in-differences estimates of the ultractivity reform's direct effects (equation (\ref{eq:dir_spec})) using the current recomputable connectivity measure from \texttt{Data/RAIS\_aux/connectivity\_treat\_2007\_2011\_agg.dta}. An establishment is directly treated if it had a firm-level CBA filed before September 25, 2012 with a contractual end date after that date. Panel~A restricts the comparison group to untreated establishments with \texttt{totaltreat\_pw\_n\_current == 0}; Panel~B includes all untreated establishments. The final row reports the $p$-value of the test that the Post $\times$ Treatment effect is equal across the two panels. The test is estimated from a single stacked regression of the two samples in which each copy receives its own complete set of fixed effects and the difference-in-differences term is fully interacted with a copy indicator, so that the interaction coefficient equals the difference between the two panels. Standard errors are clustered at the establishment level, so that an establishment entering both copies forms a single cluster, which recovers the covariance between the two estimators and yields a valid test despite the overlapping samples. Wages and employment are measured in December of each year. Clause counts are observed only when a CBA is filed, reducing the number of observations in column~(4). Post $\times$ Treatment reports the average effect for 2012--2016, with 2011 as the reference year. Pre-trend (placebo) reports the coefficient from a placebo regression estimated on pre-treatment data only (2009--2010 relative to 2011). All specifications include establishment fixed effects and year or CBA-period fixed effects interacted with two-digit industry, microregion, and negotiation-month indicators and with quartile bins of pre-treatment firm size, per-worker flows, and the outcome. Standard errors clustered at the establishment level in parentheses. *** p$<$0.01, ** p$<$0.05, * p$<$0.10.
+     \textit{Notes:} This table presents difference-in-differences estimates of the ultractivity reform's direct effects (equation (\ref{eq:dir_spec})) using the current recomputable connectivity measure from \texttt{Data/RAIS\_aux/connectivity\_treat\_2007\_2011\_agg.dta}. An establishment is directly treated if it had a firm-level CBA filed before September 25, 2012 with a contractual end date after that date. Panel~A restricts the comparison group to untreated establishments with \texttt{totaltreat\_pw\_n\_current == 0}; Panel~B includes all untreated establishments. The final row reports the $p$-value of the test that the Post $\times$ Treatment effect is equal across the two panels. The test is estimated from a single stacked regression of the two samples in which each copy receives its own complete set of fixed effects and the difference-in-differences term is fully interacted with a copy indicator, so that the interaction coefficient equals the difference between the two panels. Standard errors are clustered at the establishment level, so that an establishment entering both copies forms a single cluster, which recovers the covariance between the two estimators and yields a valid test despite the overlapping samples. Wages and employment are measured in December of each year. Clause counts are observed only when a CBA is filed, reducing the number of observations in column~(4). Post $\times$ Treatment reports the average effect for 2012--2016, with 2011 as the reference year. Pre-trend (placebo) reports the coefficient from a placebo regression estimated on pre-treatment data only (2009--2010 relative to 2011). All specifications include establishment fixed effects and year or CBA-period fixed effects interacted with two-digit industry, microregion, and negotiation-month indicators and with quartile bins of pre-treatment firm size, per-worker flows, and the outcome. Standard errors clustered at the establishment level in parentheses. *** p$<$0.01, ** p$<$0.05, * p$<$0.10. Pre-treatment mean is the mean of the dependent variable over 2009--2011 in the estimation sample of the corresponding column.
 \end{minipage}
 \end{table}

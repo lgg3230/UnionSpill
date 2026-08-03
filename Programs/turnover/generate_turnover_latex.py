@@ -13,6 +13,16 @@ Output: UnionSpill/Tables/turnover/turnover_tables.tex
 import re
 from pathlib import Path
 
+def fmt_mean(raw):
+    """Pre-treatment mean: CSV keeps 4 decimals, the table shows 3
+    (decision 2026-08-01), so precision is reversible without re-estimating."""
+    raw = raw.strip()
+    if raw in ("--", ""):
+        return "--"
+    val = float(raw)
+    return ("$-$" if val < 0 else "") + f"{abs(val):.3f}"
+
+
 SPEC = "turnover"
 
 # ── LaTeX cell helpers ───────────────────────────────────────────────────────
@@ -231,8 +241,8 @@ def panel_section(pdata, outcomes, panel_bold, panel_italic, col_headers,
     lines.append(blank)
 
     # Baseline mean (2009-2011)
-    row = r"Mean (2009--2011)" + "".join(
-        " & " + get_val(pdata, o, "mean_pre") for o in outcomes)
+    row = r"Pre-treatment mean" + "".join(
+        " & " + fmt_mean(pdata[o]["mean_pre"]) if "mean_pre" in pdata.get(o, {}) else "--" for o in outcomes)
     lines.append(row + r" \\")
 
     # Observations / Establishments
@@ -357,8 +367,8 @@ def make_spill_table(group):
     lines.append(blank)
 
     # Baseline mean (2009-2011)
-    row = r"Mean (2009--2011)" + "".join(
-        " & " + get_val(pdata, o, "mean_pre") for o in outcomes)
+    row = r"Pre-treatment mean" + "".join(
+        " & " + fmt_mean(pdata[o]["mean_pre"]) if "mean_pre" in pdata.get(o, {}) else "--" for o in outcomes)
     lines.append(row + r" \\")
 
     # Observations / Establishments

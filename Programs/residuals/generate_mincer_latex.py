@@ -20,6 +20,16 @@ import sys
 import re
 from pathlib import Path
 
+def fmt_mean(raw):
+    """Pre-treatment mean: CSV keeps 4 decimals, the table shows 3
+    (decision 2026-08-01), so precision is reversible without re-estimating."""
+    raw = raw.strip()
+    if raw in ("--", ""):
+        return "--"
+    val = float(raw)
+    return ("$-$" if val < 0 else "") + f"{abs(val):.3f}"
+
+
 SPEC = "mincer"
 
 COL_HEADERS = [
@@ -225,9 +235,9 @@ def make_mincer_table(panel_a, panel_b, panel_c, spill,
     lines.append(blank)
 
     # Mean (2009)
-    row = r"Mean (2009)"
+    row = r"Pre-treatment mean"
     for d, o in cols:
-        row += " & " + get_val(d, o, "mean_pre")
+        row += " & " + fmt_mean(d[o]["mean_pre"]) if "mean_pre" in d.get(o, {}) else "--"
     lines.append(row + r" \\")
 
     # Observations

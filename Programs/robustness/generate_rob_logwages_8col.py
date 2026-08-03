@@ -32,8 +32,8 @@ linear coefficients in a column share one scale and their ratio is meaningful.
 Every column's spillover/direct ratio divides by the direct estimate from that
 same column. No dagger mechanism.
 
-Pre-treatment Mean rows are emitted only when INCLUDE_MEAN=1 (task 6 is still
-under review).
+Pre-treatment mean rows are emitted by default (plan 2026-08-01); set
+INCLUDE_MEAN=0 to suppress them.
 """
 import os
 import re
@@ -42,7 +42,13 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent.parent
 FRAG = ROOT / "quality_reports/replication/hourly_variant_currentconn/frag"
 CSVD = ROOT / "Tables/currentconn_full/robustness"
-INCLUDE_MEAN = os.environ.get("INCLUDE_MEAN", "0") == "1"
+def fmt_mean(raw):
+    """CSV keeps 4 decimals; the table shows 3 (decision 2026-08-02)."""
+    val = float(str(raw).strip())
+    return ("$-$" if val < 0 else "") + f"{abs(val):.3f}"
+
+
+INCLUDE_MEAN = os.environ.get("INCLUDE_MEAN", "1") == "1"
 
 # column -> (spillover spec, direct spec) for columns 5..8
 COLSPECS = [
@@ -165,8 +171,8 @@ def build(suf):
         [f"({q[d]['main_se']})" for _, d in COLSPECS])
     A(r" &  &  &  &  &  &  &  & \\")
     if INCLUDE_MEAN:
-        row("Mean", [q["dir_base"]["mean_pre"]] * 4,
-            [q[d]["mean_pre"] for _, d in COLSPECS])
+        row("Pre-treatment mean", [fmt_mean(q["dir_base"]["mean_pre"])] * 4,
+            [fmt_mean(q[d]["mean_pre"]) for _, d in COLSPECS])
     row("Observations", k("A", "Observations"), [thou(d, "n_obs") for _, d in COLSPECS])
     row("Establishments", k("A", "Establishments"), [thou(d, "n_estab") for _, d in COLSPECS])
     A(r"\midrule")
@@ -187,8 +193,8 @@ def build(suf):
     A(r"Spillover / direct effect & " + " & ".join(ratios) + r"\\")
     A(r" &  &  &  &  &  &  &  & \\")
     if INCLUDE_MEAN:
-        row("Mean", [q["mif_lin"]["mean_pre"]] * 4,
-            [q[s]["mean_pre"] for s, _ in COLSPECS])
+        row("Pre-treatment mean", [fmt_mean(q["mif_lin"]["mean_pre"])] * 4,
+            [fmt_mean(q[s]["mean_pre"]) for s, _ in COLSPECS])
     row("Observations", k("B", "Observations"), [thou(s, "n_obs") for s, _ in COLSPECS])
     row("Establishments", k("B", "Establishments"), [thou(s, "n_estab") for s, _ in COLSPECS])
     A(r"\midrule")
@@ -219,9 +225,8 @@ def build(suf):
       r"establishments in both panels, so the direct and spillover coefficients "
       r"in a column share one scale. The spillover/direct ratio divides the "
       r"Panel~B estimate by the Panel~A estimate from the same column. "
-      + (r"Mean is the pre-treatment (2009--2011) average of the dependent "
-         r"variable across establishments in each panel's estimation sample, "
-         r"pooling treated and control establishments. " if INCLUDE_MEAN else "")
+      + (r"Pre-treatment mean is the mean of the dependent variable over "
+         r"2009--2011 in the estimation sample of the corresponding column. " if INCLUDE_MEAN else "")
       + r"Standard errors clustered at the establishment level in parentheses. "
         r"*** p$<$0.01, ** p$<$0.05, * p$<$0.10.")
     A(r"\end{minipage}")

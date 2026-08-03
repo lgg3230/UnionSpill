@@ -56,3 +56,10 @@
 
 ### 2026-07-29 23:40 — Coder (correction to the 23:15 entry)
 **Verdict:** The 23:15 entry said A8 was "verified unchanged." That was wrong for 8 cells. A cell-by-cell audit of all six tables (372 cells) against the fresh CSVs found the A8 **employment** columns stale by one unit in the 4th decimal — edu2 Low-Ed se1 0.0077→0.0076, edu2 High-Ed b2 0.0036→0.0035 and se2 0.0077→0.0076, ten2 High-Ten bp2 0.0035→0.0034 — in both the monthly and hourly A8 tables (employment columns are identical across the two, as expected). Cause: the A8 group-connectivity regressors are scaled by P90_FIRM, which moved 0.02932→0.02926 with the `totaltreat_pw_norm` rebuild. Applied 8 line-targeted edits (no generator exists for `t_horserace{,_hw}.tex`), recompiled (40pp, clean). Final state: **372/372 cells match the fresh CSVs.**
+
+### 2026-07-31 21:50 — Codex rescue (sample nesting) + direct analysis
+**Phase:** Execution
+**Target:** Table 3 estimation-sample nesting; CBA-period duplicate rows; max-clause-row robustness
+**Score:** N/A (diagnostic, not a critic-scored artifact)
+**Verdict:** Table 3 samples nest cleanly (wages ⊆ employment ⊆ clause count); the 58 extra clause-column establishments are 54 singleton-cascade drops under year-FE, not a data-coverage fact. Restricting to one row per firm × cba_period leaves every CBA coefficient unchanged — no sign flips, no significance changes.
+**Report:** SESSION_REPORT.md 2026-07-31; Tables/sample_nesting/, Tables/max_clause_row/

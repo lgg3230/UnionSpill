@@ -185,14 +185,21 @@ foreach v in lr_remdezr_w lr_remdezr_h_w {
 	}
 }
 
-* Mincer residual bins (merged variables — zero-fill missing → reference category)
+* Mincer residual bins — built exactly like the raw wage bins above, with NO
+* zero-fill. The previous version filled missing bins with 0, but cut(...,
+* group(4)) numbers bins 0-3, so 0 is the bottom quartile and (via ib0.) the
+* omitted category. The fill therefore pooled establishments with no bin in with
+* genuine bottom-quartile establishments, and it did so only for the residual
+* outcomes, leaving the residual and raw columns controlling for differently
+* defined objects. The establishments affected are almost entirely those with no
+* 2009 balanced-panel row (1,364 of 1,367), not establishments with missing
+* wages. Dropping the fill makes both columns treat them the same way.
 foreach v in lr_remdezr_resid lr_hourly_resid {
 	cap drop `v'_pre4_o `v'_pre4
 	quietly {
 		egen `v'_pre4_o = cut(`v'_pre) if year == 2009 & in_balanced_panel == 1, group(4)
 		bys identificad: egen `v'_pre4 = min(`v'_pre4_o)
 		drop `v'_pre4_o
-		replace `v'_pre4 = 0 if missing(`v'_pre4)
 	}
 }
 
@@ -313,6 +320,12 @@ foreach panel in A B {
 		local n_obs   = e(N)
 		local n_estab = e(N_clust)
 
+		* Pre-treatment mean on this column's estimation sample (plan
+		* 2026-08-01). Window is 2009-2011, not the single year 2009 used
+		* before. Taken before the placebo regression replaces e(sample).
+		quietly sum `outcome' if e(sample) & inrange(year, 2009, 2011)
+		local mean_pre_val = r(mean)
+
 		* Pre-treatment placebo
 		reghdfe `outcome' treat_ultra##i.placebo_year if `s_use' & year <= 2011, ///
 			absorb(`absorb') vce(cluster identificad)
@@ -338,12 +351,8 @@ foreach panel in A B {
 		testparm 1.treat_ultra#i(2009 2010).year
 		local pre_ftest_pval = r(p)
 
-		* Baseline mean (untreated control group, 2009)
-	* POOLED over the estimation sample (treated + control), per the table
-	* note "average across establishments in each panel's estimation sample".
-	* Was `s_use_pre' (control group only), which contradicted that note.
-		quietly sum `outcome' if `s_use' & year == 2009
-		local mean_pre_val = r(mean)
+		* (Pre-treatment mean is computed above, on e(sample) of the main
+		* regression.)
 
 		* Write to CSV
 		tempname fh
@@ -387,6 +396,11 @@ foreach outcome in lr_remdezr_w lr_remdezr_resid lr_remdezr_h_w lr_hourly_resid 
 	local n_obs   = e(N)
 	local n_estab = e(N_clust)
 
+	* Pre-treatment mean on this column's estimation sample (plan 2026-08-01),
+	* taken before the regressions below replace e(sample).
+	quietly sum `outcome' if e(sample) & inrange(year, 2009, 2011)
+	local mean_pre_val = r(mean)
+
 	* Pre-treatment placebo
 	reghdfe `outcome' c.`conn'##i.placebo_year if `s_spill' & year <= 2011, ///
 		absorb(`absorb') vce(cluster identificad)
@@ -412,9 +426,8 @@ foreach outcome in lr_remdezr_w lr_remdezr_resid lr_remdezr_h_w lr_hourly_resid 
 	testparm c.`conn'#i(2009 2010).year
 	local pre_ftest_pval = r(p)
 
-	* Baseline mean (spillover sample, 2009)
-	quietly sum `outcome' if `s_spill' & year == 2009
-	local mean_pre_val = r(mean)
+	* (Pre-treatment mean is computed above, on e(sample) of the main
+	* regression.)
 
 	* Write to CSV
 	tempname fh

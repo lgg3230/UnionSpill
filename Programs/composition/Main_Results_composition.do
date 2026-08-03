@@ -320,6 +320,13 @@ foreach panel in A B C {
 		local n_obs   = e(N)
 		local n_estab = e(N_clust)
 
+		* Pre-treatment mean on this column's estimation sample (plan
+		* 2026-08-01). Taken here, immediately after the main regression,
+		* because the placebo and event-study regressions below replace
+		* e(sample).
+		quietly sum `outcome' if e(sample) & inrange(year, 2009, 2011)
+		local mean_pre_val = r(mean)
+
 		* Pre-treatment placebo
 		reghdfe `outcome' treat_ultra##i.placebo_year if `s_use' & year <= 2011, ///
 			absorb(`absorb') vce(cluster identificad)
@@ -345,12 +352,9 @@ foreach panel in A B C {
 		testparm 1.treat_ultra#i(2009 2010).year
 		local pre_ftest_pval = r(p)
 
-		* Baseline mean (untreated control group, firm avg 2009-2011)
-	* POOLED over the estimation sample (treated + control), per the table
-	* note "average across establishments in each panel's estimation sample".
-	* Was `s_use_pre' (control group only), which contradicted that note.
-		quietly sum `outcome'_pre if `s_use' & year == 2009
-		local mean_pre_val = r(mean)
+		* (Pre-treatment mean is computed above, on e(sample) of the main
+		* regression. It superseded a firm-average-at-2009 construction that
+		* did not account for singleton dropping.)
 
 		* Write
 		tempname fh
@@ -394,6 +398,11 @@ foreach outcome of global composition_outcomes {
 	local n_obs   = e(N)
 	local n_estab = e(N_clust)
 
+	* Pre-treatment mean on this column's estimation sample (plan 2026-08-01),
+	* taken before the placebo and event-study regressions replace e(sample).
+	quietly sum `outcome' if e(sample) & inrange(year, 2009, 2011)
+	local mean_pre_val = r(mean)
+
 	* Pre-treatment placebo
 	reghdfe `outcome' c.`conn'##i.placebo_year if `s_spill' & year <= 2011, ///
 		absorb(`absorb') vce(cluster identificad)
@@ -419,9 +428,8 @@ foreach outcome of global composition_outcomes {
 	testparm c.`conn'#i(2009 2010).year
 	local pre_ftest_pval = r(p)
 
-	* Baseline mean (spillover sample, firm avg 2009-2011)
-	quietly sum `outcome'_pre if `s_spill' & year == 2009
-	local mean_pre_val = r(mean)
+	* (Pre-treatment mean is computed above, on e(sample) of the main
+	* regression.)
 
 	* Write
 	tempname fh

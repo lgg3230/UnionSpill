@@ -71,6 +71,11 @@ program define didcol, rclass
     return scalar se    = _se[c.`conn'#c.treat_year]
     return scalar n     = e(N)
     return scalar firms = e(N_clust)
+    * Pre-treatment mean on this column's estimation sample (plan 2026-08-01).
+    * Unit is whatever the regression uses -- group x firm x year here -- and
+    * e(sample) carries the singleton drops. Taken before the placebo below.
+    quietly sum `y' if e(sample) & inrange(year, 2009, 2011)
+    return scalar meanpre = r(mean)
     if "`samplevar'" != "" {
         cap drop `samplevar'
         gen byte `samplevar' = e(sample)
@@ -103,6 +108,10 @@ program define didrace, rclass
     return scalar se2   = _se[c.`r2'#c.treat_year]
     return scalar n     = e(N)
     return scalar firms = e(N_clust)
+    * Pre-treatment mean on this column's estimation sample (plan 2026-08-01),
+    * taken before the placebo regression below replaces e(sample).
+    quietly sum `y' if e(sample) & inrange(year, 2009, 2011)
+    return scalar meanpre = r(mean)
     lincom _b[c.`r1'#c.treat_year] - _b[c.`r2'#c.treat_year]
     return scalar peq = 2*normal(-abs(r(estimate)/r(se)))
     reghdfe `y' c.`r1'#c.placebo_year c.`r2'#c.placebo_year if `ifpre', absorb(`absorb') vce(cluster identificad)
@@ -212,9 +221,9 @@ save `FIRM'
 tempname A7 A8 A6G A6P BAL
 tempfile A7dta A8dta A6Gdta A6Pdta BALdta
 postfile `A7' str10 partition str12 col str6 outcome ///
-    double(b se bpre sepre) long(n firms gxf) using "`A7dta'", replace
+    double(b se bpre sepre) long(n firms gxf) double(meanpre) using "`A7dta'", replace
 postfile `A8' str10 partition str8 col str6 p90 str6 outcome ///
-    double(b1 se1 b2 se2 bp1 sp1 bp2 sp2 peq) long(n firms) using "`A8dta'", replace
+    double(b1 se1 b2 se2 bp1 sp1 bp2 sp2 peq) long(n firms) double(meanpre) using "`A8dta'", replace
 postfile `A6G' str10 partition str10 group double(avg_emp avg_wage avg_flows conn) ///
     using "`A6Gdta'", replace
 postfile `A6P' str10 partition double(pct_both v_tot v_wi v_bw wi_pct bw_pct) ///
@@ -240,7 +249,7 @@ foreach y in lr_remdezr_w l_firm_emp {
     didcol `y' totaltreat_pw_norm "`abs'" `"`cond'"' `"`cond' & year<=2011"' ""
     * write same firm_full row under each partition (mirrors R output layout)
     foreach p in `partitions' {
-        post `A7' ("`p'") ("firm_full") ("`oc'") (r(b)) (r(se)) (r(bpre)) (r(sepre)) (r(n)) (r(firms)) (.)
+        post `A7' ("`p'") ("firm_full") ("`oc'") (r(b)) (r(se)) (r(bpre)) (r(sepre)) (r(n)) (r(firms)) (.) (r(meanpre))
     }
 }
 
@@ -389,7 +398,7 @@ foreach p in `partitions' {
 	            }
 	            local cond "s_base==1 & !mi(`y') & !mi(conn)"
 	            didcol `y' conn "`fes'" `"`cond'"' `"`cond' & year<=2011"' "firm_layer_id" "__v2_keep"
-	            post `A7' ("`p'") ("`kind'") ("`oc'") (r(b)) (r(se)) (r(bpre)) (r(sepre)) (r(n)) (r(firms)) (r(gxf))
+	            post `A7' ("`p'") ("`kind'") ("`oc'") (r(b)) (r(se)) (r(bpre)) (r(sepre)) (r(n)) (r(firms)) (r(gxf)) (r(meanpre))
 	            if "`y'"=="lr_remdezr_layer" {
 	                balance_post `BAL' "`p'" "`kind'" "`oc'" `"`cond'"' "__v2_keep"
 	            }
@@ -449,7 +458,7 @@ foreach p in `partitions' {
         local abs "identificad `bins' i.industry1_num#i.year i.mode_base_month_num#i.year i.microregion_num#i.year"
         local cond "treat_ultra==0 & in_balanced_panel==1 & !mi(`y')"
         didcol `y' totaltreat_pw_norm "`abs'" `"`cond'"' `"`cond' & year<=2011"' ""
-        post `A7' ("`p'") ("firm") ("`oc'") (r(b)) (r(se)) (r(bpre)) (r(sepre)) (r(n)) (r(firms)) (.)
+        post `A7' ("`p'") ("firm") ("`oc'") (r(b)) (r(se)) (r(bpre)) (r(sepre)) (r(n)) (r(firms)) (.) (r(meanpre))
     }
 
     * ------------------------------------------------------------------
@@ -476,7 +485,7 @@ foreach p in `partitions' {
             local cond "!mi(`y')"
             didrace `y' cG1 cG2 "`abs'" `"`cond'"' `"`cond' & year<=2011"'
             post `A8' ("`p'") ("firm") ("`mode'") ("`oc'") (r(b1)) (r(se1)) (r(b2)) (r(se2)) ///
-                (r(bp1)) (r(sp1)) (r(bp2)) (r(sp2)) (r(peq)) (r(n)) (r(firms))
+                (r(bp1)) (r(sp1)) (r(bp2)) (r(sp2)) (r(peq)) (r(n)) (r(firms)) (r(meanpre))
         }
     }
 
@@ -497,7 +506,7 @@ foreach p in `partitions' {
             local cond `"s_base==1 & layer_id=="`gl'" & !mi(`y') & !mi(cG1) & !mi(cG2)"'
             didrace `y' cG1 cG2 "`abs'" `"`cond'"' `"`cond' & year<=2011"'
             post `A8' ("`p'") ("g`gi'") ("firm") ("`oc'") (r(b1)) (r(se1)) (r(b2)) (r(se2)) ///
-                (r(bp1)) (r(sp1)) (r(bp2)) (r(sp2)) (r(peq)) (r(n)) (r(firms))
+                (r(bp1)) (r(sp1)) (r(bp2)) (r(sp2)) (r(peq)) (r(n)) (r(firms)) (r(meanpre))
         }
         local ++gi
     }

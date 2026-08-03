@@ -219,6 +219,11 @@ local p_post  = 2*ttail(e(df_r), abs(`b_post'/`se_post'))
 local n_obs   = e(N)
 local n_estab = e(N_clust)
 
+* Pre-treatment mean on this column's estimation sample (plan 2026-08-01),
+* taken before the placebo regression below replaces e(sample).
+quietly sum `outcome' if e(sample) & inrange(year, 2009, 2011)
+local mean_pre_val = r(mean)
+
 reghdfe `outcome' c.`conn'##i.placebo_year if `s_spill' & year <= 2011, ///
 	absorb(`absorb_base') vce(cluster identificad)
 
@@ -244,6 +249,7 @@ file write `fh' `""`outcome'";1;"pre";"' %9.4f (`b_pre') `"`stars_pre'""' _n
 file write `fh' `""`outcome'";1;"pre_se";"' %9.4f (`se_pre') `"""' _n
 file write `fh' `""`outcome'";1;"n_obs";"' %12.0fc (`n_obs') `"""' _n
 file write `fh' `""`outcome'";1;"n_estab";"' %12.0fc (`n_estab') `"""' _n
+file write `fh' `""`outcome'";1;"mean_pre";"' %9.4f (`mean_pre_val') `"""' _n
 file close `fh'
 
 * ── Col 2: + Gender ──────────────────────────────────────────────────────────
@@ -258,6 +264,11 @@ local se_post = _se[1.treat_year#c.`conn']
 local p_post  = 2*ttail(e(df_r), abs(`b_post'/`se_post'))
 local n_obs   = e(N)
 local n_estab = e(N_clust)
+
+* Pre-treatment mean on this column's estimation sample (plan 2026-08-01),
+* taken before the placebo regression below replaces e(sample).
+quietly sum `outcome' if e(sample) & inrange(year, 2009, 2011)
+local mean_pre_val = r(mean)
 
 reghdfe `outcome' c.`conn'##i.placebo_year if `s_spill' & year <= 2011, ///
 	absorb(`absorb_base' `demo_gender') vce(cluster identificad)
@@ -284,6 +295,7 @@ file write `fh' `""`outcome'";2;"pre";"' %9.4f (`b_pre') `"`stars_pre'""' _n
 file write `fh' `""`outcome'";2;"pre_se";"' %9.4f (`se_pre') `"""' _n
 file write `fh' `""`outcome'";2;"n_obs";"' %12.0fc (`n_obs') `"""' _n
 file write `fh' `""`outcome'";2;"n_estab";"' %12.0fc (`n_estab') `"""' _n
+file write `fh' `""`outcome'";2;"mean_pre";"' %9.4f (`mean_pre_val') `"""' _n
 file close `fh'
 
 * ── Col 3: + Gender + Race ───────────────────────────────────────────────────
@@ -298,6 +310,11 @@ local se_post = _se[1.treat_year#c.`conn']
 local p_post  = 2*ttail(e(df_r), abs(`b_post'/`se_post'))
 local n_obs   = e(N)
 local n_estab = e(N_clust)
+
+* Pre-treatment mean on this column's estimation sample (plan 2026-08-01),
+* taken before the placebo regression below replaces e(sample).
+quietly sum `outcome' if e(sample) & inrange(year, 2009, 2011)
+local mean_pre_val = r(mean)
 
 reghdfe `outcome' c.`conn'##i.placebo_year if `s_spill' & year <= 2011, ///
 	absorb(`absorb_base' `demo_gender' `demo_race') vce(cluster identificad)
@@ -324,6 +341,7 @@ file write `fh' `""`outcome'";3;"pre";"' %9.4f (`b_pre') `"`stars_pre'""' _n
 file write `fh' `""`outcome'";3;"pre_se";"' %9.4f (`se_pre') `"""' _n
 file write `fh' `""`outcome'";3;"n_obs";"' %12.0fc (`n_obs') `"""' _n
 file write `fh' `""`outcome'";3;"n_estab";"' %12.0fc (`n_estab') `"""' _n
+file write `fh' `""`outcome'";3;"mean_pre";"' %9.4f (`mean_pre_val') `"""' _n
 file close `fh'
 
 * ── Col 4: + Gender + Race + Education ───────────────────────────────────────
@@ -338,6 +356,11 @@ local se_post = _se[1.treat_year#c.`conn']
 local p_post  = 2*ttail(e(df_r), abs(`b_post'/`se_post'))
 local n_obs   = e(N)
 local n_estab = e(N_clust)
+
+* Pre-treatment mean on this column's estimation sample (plan 2026-08-01),
+* taken before the placebo regression below replaces e(sample).
+quietly sum `outcome' if e(sample) & inrange(year, 2009, 2011)
+local mean_pre_val = r(mean)
 
 reghdfe `outcome' c.`conn'##i.placebo_year if `s_spill' & year <= 2011, ///
 	absorb(`absorb_base' `demo_gender' `demo_race' `demo_educ') vce(cluster identificad)
@@ -364,6 +387,7 @@ file write `fh' `""`outcome'";4;"pre";"' %9.4f (`b_pre') `"`stars_pre'""' _n
 file write `fh' `""`outcome'";4;"pre_se";"' %9.4f (`se_pre') `"""' _n
 file write `fh' `""`outcome'";4;"n_obs";"' %12.0fc (`n_obs') `"""' _n
 file write `fh' `""`outcome'";4;"n_estab";"' %12.0fc (`n_estab') `"""' _n
+file write `fh' `""`outcome'";4;"mean_pre";"' %9.4f (`mean_pre_val') `"""' _n
 file close `fh'
 
 * ── Col 5: + Gender + Race + Education + Age ─────────────────────────────────
@@ -378,6 +402,11 @@ local se_post = _se[1.treat_year#c.`conn']
 local p_post  = 2*ttail(e(df_r), abs(`b_post'/`se_post'))
 local n_obs   = e(N)
 local n_estab = e(N_clust)
+
+* Pre-treatment mean on this column's estimation sample (plan 2026-08-01),
+* taken before the placebo regression below replaces e(sample).
+quietly sum `outcome' if e(sample) & inrange(year, 2009, 2011)
+local mean_pre_val = r(mean)
 
 reghdfe `outcome' c.`conn'##i.placebo_year if `s_spill' & year <= 2011, ///
 	absorb(`absorb_base' `demo_gender' `demo_race' `demo_educ' `demo_age') vce(cluster identificad)
@@ -404,6 +433,7 @@ file write `fh' `""`outcome'";5;"pre";"' %9.4f (`b_pre') `"`stars_pre'""' _n
 file write `fh' `""`outcome'";5;"pre_se";"' %9.4f (`se_pre') `"""' _n
 file write `fh' `""`outcome'";5;"n_obs";"' %12.0fc (`n_obs') `"""' _n
 file write `fh' `""`outcome'";5;"n_estab";"' %12.0fc (`n_estab') `"""' _n
+file write `fh' `""`outcome'";5;"mean_pre";"' %9.4f (`mean_pre_val') `"""' _n
 file close `fh'
 
 * ── Col 6: All Demographics (+ Tenure) ───────────────────────────────────────
@@ -419,6 +449,11 @@ local se_post = _se[1.treat_year#c.`conn']
 local p_post  = 2*ttail(e(df_r), abs(`b_post'/`se_post'))
 local n_obs   = e(N)
 local n_estab = e(N_clust)
+
+* Pre-treatment mean on this column's estimation sample (plan 2026-08-01),
+* taken before the placebo regression below replaces e(sample).
+quietly sum `outcome' if e(sample) & inrange(year, 2009, 2011)
+local mean_pre_val = r(mean)
 
 reghdfe `outcome' c.`conn'##i.placebo_year if `s_spill' & year <= 2011, ///
 	absorb(`absorb_base' `demo_gender' `demo_race' `demo_educ' `demo_age' `demo_tenure') ///
@@ -446,6 +481,7 @@ file write `fh' `""`outcome'";6;"pre";"' %9.4f (`b_pre') `"`stars_pre'""' _n
 file write `fh' `""`outcome'";6;"pre_se";"' %9.4f (`se_pre') `"""' _n
 file write `fh' `""`outcome'";6;"n_obs";"' %12.0fc (`n_obs') `"""' _n
 file write `fh' `""`outcome'";6;"n_estab";"' %12.0fc (`n_estab') `"""' _n
+file write `fh' `""`outcome'";6;"mean_pre";"' %9.4f (`mean_pre_val') `"""' _n
 file close `fh'
 
 ********************************************************************************

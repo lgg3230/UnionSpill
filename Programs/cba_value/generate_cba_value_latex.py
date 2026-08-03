@@ -12,6 +12,16 @@ Output: Tables/cba_value/cba_value_tables.tex
 import re
 from pathlib import Path
 
+def fmt_mean(raw):
+    """Pre-treatment mean: CSV keeps 4 decimals, the table shows 3
+    (decision 2026-08-01), so precision is reversible without re-estimating."""
+    raw = raw.strip()
+    if raw in ("--", ""):
+        return "--"
+    val = float(raw)
+    return ("$-$" if val < 0 else "") + f"{abs(val):.3f}"
+
+
 SPEC = "cba_value"
 
 # ── CSV parsing ───────────────────────────────────────────────────────────────
@@ -120,11 +130,11 @@ def make_table(pa_cv, pb_cv, pc_cv, sp_cv):
                      + r" \\")
         lines.append(blank)
         # stats
-        lines.append(r"Mean (pre-treatment)"
-                     + " & " + get(dA, "mean_pre")
-                     + " & " + get(dB, "mean_pre")
-                     + " & " + get(dC, "mean_pre")
-                     + " & " + get(dS, "mean_pre")
+        lines.append(r"Pre-treatment mean"
+                     + " & " + fmt_mean(dA.get("mean_pre", "--"))
+                     + " & " + fmt_mean(dB.get("mean_pre", "--"))
+                     + " & " + fmt_mean(dC.get("mean_pre", "--"))
+                     + " & " + fmt_mean(dS.get("mean_pre", "--"))
                      + r" \\")
         lines.append(r"Observations"
                      + " & " + get(dA, "n_obs", is_count=True)

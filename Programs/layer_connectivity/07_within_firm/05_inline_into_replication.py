@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Inline the six within-firm fragments into the replication document.
+"""Inline the generated table fragments into the replication document.
 
     ~/.conda/envs/venv_python312/bin/python 05_inline_into_replication.py [--dry-run]
 
@@ -28,10 +28,34 @@ ROOT = Path(__file__).resolve().parents[3]
 TABLE_DIR = ROOT / "Tables" / "layer_connectivity" / "07_within_firm"
 TARGET = ROOT / "UnionSpill-paper" / "Replication" / "Replication_Wages vs Hourly.tex"
 
-STEMS = [
-    "t_layerdesc", "t_groupspecs", "t_horserace",
-    "t_layerdesc_hw", "t_groupspecs_hw", "t_horserace_hw",
-]
+# stem -> directory holding the generated fragment.
+# Extended 2026-08-01 from the six within-firm stems to every fragment in the
+# document, now that each has a generator (plan 2026-08-01).
+WITHIN = ROOT / "Tables" / "layer_connectivity" / "07_within_firm"
+SOURCES = {
+    "t_layerdesc":     WITHIN,
+    "t_groupspecs":    WITHIN,
+    "t_horserace":     WITHIN,
+    "t_layerdesc_hw":  WITHIN,
+    "t_groupspecs_hw": WITHIN,
+    "t_horserace_hw":  WITHIN,
+    "t_direct":        ROOT / "Tables" / "main_results",
+    "t_spill":         ROOT / "Tables" / "main_results",
+    "t_clause":        ROOT / "Tables" / "clause_types",
+    "t_union":         ROOT / "Tables" / "robustness",
+    "t_union_hw":      ROOT / "Tables" / "robustness",
+    "t_composition":   ROOT / "Tables" / "composition",
+    "t_rob":           ROOT / "quality_reports" / "replication"
+                            / "hourly_variant_currentconn" / "frag",
+    "t_rob_hw":        ROOT / "quality_reports" / "replication"
+                            / "hourly_variant_currentconn" / "frag",
+}
+
+# t_turnover is deliberately ABSENT. Its re-run does not reproduce the published
+# coefficients (see plan 2026-08-01, gap 5), so inlining it would silently
+# change published numbers. Restore it here once that is resolved.
+
+STEMS = list(SOURCES)
 
 
 def main() -> int:
@@ -45,9 +69,9 @@ def main() -> int:
     original = text
 
     for stem in STEMS:
-        frag = TABLE_DIR / f"{stem}.tex"
+        frag = SOURCES[stem] / f"{stem}.tex"
         if not frag.exists():
-            sys.exit(f"missing fragment: {frag} -- run 02b_make_tables_all.py first")
+            sys.exit(f"missing fragment: {frag} -- run its generator first")
         begin = f"% BEGIN inlined {stem}.tex"
         end = f"% END inlined {stem}.tex"
         pattern = re.compile(
@@ -55,9 +79,16 @@ def main() -> int:
         if not pattern.search(text):
             sys.exit(f"markers not found for {stem} in {TARGET.name}")
         body = frag.read_text().rstrip("\n")
+        # Replace EVERY occurrence, not just the first. Five fragments
+        # (t_direct, t_spill, t_clause, t_turnover, t_composition) are inlined
+        # twice -- once in the monthly half, once in the hourly half -- because
+        # each already carries both wage columns. count=1 was correct only for
+        # the six within-firm stems this script originally handled, and left the
+        # hourly copies stale when it was generalized (fixed 2026-08-02).
         # re.sub would interpret backslashes in the LaTeX body as escapes
-        text = pattern.sub(lambda _m, b=body: f"{begin}\n{b}\n{end}", text, count=1)
-        print(f"inlined {stem}")
+        n = len(pattern.findall(text))
+        text = pattern.sub(lambda _m, b=body: f"{begin}\n{b}\n{end}", text)
+        print(f"inlined {stem} ({n} occurrence{'s' if n != 1 else ''})")
 
     if text == original:
         print("no change")

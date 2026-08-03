@@ -111,6 +111,16 @@ def fmt_se(row: dict[str, str], key: str = "se") -> str:
     return f"({fmt_num(as_float(row, key))})"
 
 
+def fmt_mean(row: dict[str, str], key: str = "meanpre") -> str:
+    """Pre-treatment mean: 4 decimals in the CSV, 2 in the table
+    (decision 2026-08-01)."""
+    val = row.get(key, "")
+    if val in ("", "."):
+        return "---"
+    v = float(val)
+    return ("$-$" if v < 0 else "") + f"{abs(v):.3f}"
+
+
 def fmt_int(row: dict[str, str], key: str) -> str:
     val = row[key]
     if val in ("", "."):
@@ -277,6 +287,7 @@ def make_groupspecs(rows, *, hourly: bool, panels) -> str:
             rf"Group-Connectivity $\times$ Post &  & {fmt_est(ww)} & {fmt_est(ow)} &  & {fmt_est(we)} & {fmt_est(oe)} \\",
             rf" &  & {fmt_se(ww)} & {fmt_se(ow)} &  & {fmt_se(we)} & {fmt_se(oe)} \\",
             r" &  &  &  &  &  &  \\",
+            rf"Pre-treatment mean & {fmt_mean(fw)} & {fmt_mean(ww)} & {fmt_mean(ow)} & {fmt_mean(fe)} & {fmt_mean(we)} & {fmt_mean(oe)} \\",
             rf"Observations & {fmt_int(fw, 'n')} & {fmt_int(ww, 'n')} & {fmt_int(ow, 'n')} & {fmt_int(fe, 'n')} & {fmt_int(we, 'n')} & {fmt_int(oe, 'n')} \\",
             rf"Groups $\times$ firms & --- & {fmt_int(ww, 'gxf')} & {fmt_int(ow, 'gxf')} & --- & {fmt_int(we, 'gxf')} & {fmt_int(oe, 'gxf')} \\",
             rf"Firms & {fmt_int(fw, 'firms')} & {fmt_int(ww, 'firms')} & {fmt_int(ow, 'firms')} & {fmt_int(fe, 'firms')} & {fmt_int(we, 'firms')} & {fmt_int(oe, 'firms')} \\",
@@ -319,8 +330,9 @@ def make_groupspecs(rows, *, hourly: bool, panels) -> str:
             r"Both measures are scaled so that a value of~1 corresponds to the 90th "
             r"percentile of the firm-level distribution. " + _A7_SPEC +
             r" Pre-trend (placebo) reports the coefficient from a placebo regression "
-            r"estimated on pre-treatment data only (2009--2010 relative to 2011). Standard "
-            r"errors clustered at the establishment level in parentheses. "
+            r"estimated on pre-treatment data only (2009--2010 relative to 2011). "
+            r"Pre-treatment mean is the mean of the dependent variable over 2009--2011 in the estimation sample of the corresponding column. "
+            r"Standard errors clustered at the establishment level in parentheses. "
             r"*** p$<$0.01, ** p$<$0.05, * p$<$0.10."
             r"\end{minipage}"
         )
@@ -377,12 +389,18 @@ def make_horserace(rows, *, hourly: bool, panels) -> str:
         peq_e = f"{as_float(e, 'peq'):.3f}"
         out.extend([
             rf"Equality test ($p$-value) & {ctr(peq_w)} & {ctr(peq_e)} & & \\",
+            rf"Pre-treatment mean & {ctr(fmt_mean(w))} & {ctr(fmt_mean(e))} & & \\",
             rf"Observations & {ctr(fmt_int(w, 'n'))} & {ctr(fmt_int(e, 'n'))} & & \\",
             rf"Firms & {ctr(fmt_int(w, 'firms'))} & {ctr(fmt_int(e, 'firms'))} & & \\",
         ])
         out.append(r"\midrule" if idx < len(panels) - 1 else r"\bottomrule\bottomrule")
 
-    out.extend([r"\end{tabular}}", r"\usebox0", r"\begin{minipage}{\wd0}\vspace{4pt}"])
+    # Notes span the full text width, matching every other table in the
+    # replication document (2026-08-02). Previously \wd0 -- the width of the
+    # boxed table -- which squeezed the notes into a narrow column because this
+    # table is only four numeric columns wide. The \sbox0/\usebox0 machinery is
+    # kept: it still centres the table, it just no longer sizes the notes.
+    out.extend([r"\end{tabular}}", r"\usebox0", r"\begin{minipage}{\linewidth}\vspace{4pt}"])
 
     lead = "Hourly-wage counterpart of the horse-race table. " if hourly else ""
     out.append(
@@ -406,6 +424,7 @@ def make_horserace(rows, *, hourly: bool, panels) -> str:
         "(1)--(2). Equality test reports the $p$-value of the test that the two coefficients "
         "in the column are equal, using the normal approximation. Samples are smaller than in "
         "the main spillover table because both group-specific measures must be non-missing. "
+        "Pre-treatment mean is the mean of the dependent variable over 2009--2011 in the estimation sample of the corresponding column. "
         "Standard errors clustered at the establishment level in parentheses. "
         "*** p$<$0.01, ** p$<$0.05, * p$<$0.10."
     )

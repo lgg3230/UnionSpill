@@ -359,6 +359,12 @@ foreach spec of local speclist {
 	local n_obs   = e(N)
 	local n_estab = e(N_clust)
 
+	* ── Pre-treatment mean on this column's estimation sample ────────────────
+	* Plan 2026-08-01. Taken here, before the placebo regression below replaces
+	* e(sample), so singleton drops and covariate missingness are inherited.
+	quietly sum `outcome' if e(sample) & inrange(year, 2009, 2011)
+	local mean_pre_val = r(mean)
+
 	* ── Placebo regression ───────────────────────────────────────────────────
 	if "`mode'" == "spill" {
 		reghdfe `outcome' c.`conn'##i.placebo_year `cov' if `samp' & year <= 2011, ///
@@ -374,11 +380,9 @@ foreach spec of local speclist {
 	}
 	local p_pre = 2*ttail(e(df_r), abs(`b_pre'/`se_pre'))
 
-	* ── Pooled pre-period mean of the outcome on this estimation sample ──────
-	* Same definition as Programs/main_results/pre_period_means.do: treated and
-	* control pooled over the estimation sample, 2009-2011 firm average.
-	quietly sum `outcome'_pre if `samp' & year == 2009
-	local mean_pre_val = r(mean)
+	* (Pre-treatment mean is computed above, on e(sample) of the post
+	* regression. It superseded a firm-average-at-2009 construction that did
+	* not account for singleton dropping.)
 
 	* ── Stars ────────────────────────────────────────────────────────────────
 	local stars_post ""

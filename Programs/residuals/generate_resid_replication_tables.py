@@ -107,9 +107,21 @@ def notes(wage_label, mode):
         r", then collapsing residuals to establishment-year means for "
         r"Lagos-sample establishments. "
         r"Post effects average 2012--2016, with 2011 as the reference year. "
+        r"Pre-treatment mean is the mean of the dependent variable over "
+        r"2009--2011 in the estimation sample of the corresponding column. "
         r"Standard errors clustered at the establishment level in parentheses. "
         r"*** p$<$0.01, ** p$<$0.05, * p$<$0.10."
     )
+
+
+def mean2(d, o, key):
+    """Pre-treatment mean: 4 decimals in the CSV, 2 in the table
+    (decision 2026-08-01)."""
+    raw = d.get(o, {}).get(key)
+    if raw in (None, "", "--"):
+        return "--"
+    val = float(str(raw).strip())
+    return ("$-$" if val < 0 else "") + f"{abs(val):.3f}"
 
 
 # ── Table builder ────────────────────────────────────────────────────────────
@@ -159,6 +171,7 @@ def build_table(panel_a, spill, raw_outcome, resid_outcome,
         line(r"Post $\times$ Connectivity", row(num, "main", "spill")),
         line("", row(se, "main_se", "spill")),
         line("", ["", "", "", ""]),
+        line("Pre-treatment mean", row(mean2, "mean_pre", "all")),
         line("Observations", row(count, "n_obs", "all")),
         line("Establishments", row(count, "n_estab", "all")),
         r"\midrule",

@@ -46,7 +46,7 @@ global ibge "$main/UnionSpill/Data/IBGE"
 global programs "$main/UnionSpill/Programs"
 global tables "$main/UnionSpill/Tables"
 global graphs "$main/UnionSpill/Graphs"
-global logs "main/UnionSpill/Logs"
+global logs "$main/UnionSpill/Logs"
 
 
 // CONTROL WHICH PROGRAMS RUN

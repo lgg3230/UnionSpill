@@ -248,6 +248,14 @@ foreach panel in A B C {
 		local n_obs   = e(N)
 		local n_estab = e(N_clust)
 
+		* Pre-treatment mean on this column's estimation sample (plan
+		* 2026-08-01). Window is CALENDAR 2009-2011, not cba_period 1-2 as
+		* before, so this column matches the clause-count columns it sits
+		* beside in the CBA composition and value table. Taken before the
+		* placebo regression replaces e(sample).
+		quietly sum `outcome' if e(sample) & inrange(year, 2009, 2011)
+		local mean_pre_val = r(mean)
+
 		* Pre-treatment placebo
 		reghdfe `outcome' i.treat_ultra##pre_treat_cba ///
 			if `s_use' & !missing(cba_period) & cba_period <= 2, ///

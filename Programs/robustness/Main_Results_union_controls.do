@@ -4,18 +4,33 @@
 *          FE spec identical to Main_Results_pct_tfpw_07_11.do:
 *            absorb = base_fe + outcome_pre4×year + l_firm_emp_pre4×year
 *                     + totalflows_pw_pre_07_114×year
-*          Four specifications:
+*          Ten specifications:
 *            (1) Baseline
 *            (2) Union × Year FE  (added to absorb)
 *            (3) Union Exposure (firm share)  × Year (added as covariate)
 *            (4) Union Exposure (worker share) × Year (added as covariate)
-* Output:   Tables/robustness/results_spill_union_controls.csv
+*            (5) Union Exposure (firm share),   quartile bins
+*            (6) Union Exposure (worker share), quartile bins
+*            (7) Union Exposure (firm share),   decile bins
+*            (8) Union Exposure (worker share), decile bins
+*            (9) Union Exposure (firm share),   vingtile bins
+*           (10) Union Exposure (worker share), vingtile bins
+*          Columns 7-10 reconstructed 2026-08-01; see the note above them.
+* Output:   $tables/robustness/results_spill_union_controls.csv
 ********************************************************************************
+
+* Outcome and CSV suffix are parameterized (2026-08-01) so the hourly variant is
+* reproducible from a committed wrapper. Previously the outcome was hardcoded to
+* lr_remdezr_w and the _hw CSV in the currentconn tree had no script that could
+* produce it. Defaults preserve the original monthly behaviour. Set here, before
+* SECTION 2 builds the ${OUTVAR}_pre and ${OUTVAR}_pre4 bin controls.
+if "$OUTVAR" == "" global OUTVAR "lr_remdezr_w"
+if "$OUTSUF" == "" global OUTSUF ""
 
 capture log close
 local d = subinstr("`c(current_date)'"," ","_",.)
 local t = subinstr("`c(current_time)'",":","",.)
-log using "$logs/robustness/Main_Results_union_controls_`d'_`t'.log", replace text
+log using "$logs/robustness/Main_Results_union_controls${OUTSUF}_`d'_`t'.log", replace text
 
 di "Started: `c(current_date)' `c(current_time)'"
 di "Stata version: `c(stata_version)'"
@@ -87,12 +102,12 @@ quietly {
 	drop firm_emp_pre_o
 }
 
-cap drop lr_remdezr_w_pre_o
-cap drop lr_remdezr_w_pre
+cap drop ${OUTVAR}_pre_o
+cap drop ${OUTVAR}_pre
 quietly {
-	bys identificad: egen lr_remdezr_w_pre_o = mean(lr_remdezr_w) if inrange(year, 2009, 2011)
-	bys identificad: egen lr_remdezr_w_pre = min(lr_remdezr_w_pre_o)
-	drop lr_remdezr_w_pre_o
+	bys identificad: egen ${OUTVAR}_pre_o = mean($OUTVAR) if inrange(year, 2009, 2011)
+	bys identificad: egen ${OUTVAR}_pre = min(${OUTVAR}_pre_o)
+	drop ${OUTVAR}_pre_o
 }
 
 cap drop l_firm_emp_pre
@@ -108,12 +123,12 @@ quietly {
 	drop l_firm_emp_pre4_o
 }
 
-cap drop lr_remdezr_w_pre4_o
-cap drop lr_remdezr_w_pre4
+cap drop ${OUTVAR}_pre4_o
+cap drop ${OUTVAR}_pre4
 quietly {
-	egen lr_remdezr_w_pre4_o = cut(lr_remdezr_w_pre) if year == 2009 & in_balanced_panel == 1, group(4)
-	bys identificad: egen lr_remdezr_w_pre4 = min(lr_remdezr_w_pre4_o)
-	drop lr_remdezr_w_pre4_o
+	egen ${OUTVAR}_pre4_o = cut(${OUTVAR}_pre) if year == 2009 & in_balanced_panel == 1, group(4)
+	bys identificad: egen ${OUTVAR}_pre4 = min(${OUTVAR}_pre4_o)
+	drop ${OUTVAR}_pre4_o
 }
 
 cap drop totalflows_pw_pre_07_114_o
@@ -151,20 +166,50 @@ quietly {
 }
 label var union_emp_exp_q4 "Quartile of union exposure to treated employees"
 
+* Decile and vingtile bins for columns 7-10. RECONSTRUCTED 2026-08-01: these
+* columns appear in the published table and in the currentconn CSV, but the
+* code that produced them was never committed (the last commit to this file,
+* a2c5b74, added only the quartile columns 5-6). Built here "in the same manner
+* as the quartile controls", per the table note: cut on the 2009 balanced-panel
+* firm distribution, then min over firm so the bin is time-invariant.
+foreach g in 10 20 {
+	cap drop treat_union_exp_all_q`g'_o
+	cap drop treat_union_exp_all_q`g'
+	quietly {
+		egen treat_union_exp_all_q`g'_o = cut(treat_union_exp_all) ///
+			if year == 2009 & in_balanced_panel == 1, group(`g')
+		bys identificad: egen treat_union_exp_all_q`g' = min(treat_union_exp_all_q`g'_o)
+		drop treat_union_exp_all_q`g'_o
+	}
+
+	cap drop union_emp_exp_q`g'_o
+	cap drop union_emp_exp_q`g'
+	quietly {
+		egen union_emp_exp_q`g'_o = cut(union_emp_exp) ///
+			if year == 2009 & in_balanced_panel == 1, group(`g')
+		bys identificad: egen union_emp_exp_q`g' = min(union_emp_exp_q`g'_o)
+		drop union_emp_exp_q`g'_o
+	}
+}
+label var treat_union_exp_all_q10 "Decile of union exposure to treated firms"
+label var union_emp_exp_q10       "Decile of union exposure to treated employees"
+label var treat_union_exp_all_q20 "Vingtile of union exposure to treated firms"
+label var union_emp_exp_q20       "Vingtile of union exposure to treated employees"
+
 di as result "All variables created."
 
 ********************************************************************************
 * SECTION 3: INITIALIZE OUTPUT CSV
 ********************************************************************************
 
-capture erase "$tables/robustness/results_spill_union_controls.csv"
+local outcome "$OUTVAR"
+local csv     "$tables/robustness/results_spill_union_controls$OUTSUF.csv"
+
+capture erase "`csv'"
 tempname fh
-file open `fh' using "$tables/robustness/results_spill_union_controls.csv", write replace
+file open `fh' using "`csv'", write replace
 file write `fh' "outcome;col;row_type;value" _n
 file close `fh'
-
-local csv     "$tables/robustness/results_spill_union_controls.csv"
-local outcome "lr_remdezr_w"
 
 ********************************************************************************
 * SECTION 4: REGRESSIONS
@@ -186,6 +231,11 @@ local se_post = _se[1.treat_year#c.`conn']
 local p_post  = 2*ttail(e(df_r), abs(`b_post'/`se_post'))
 local n_obs   = e(N)
 local n_estab = e(N_clust)
+
+* Pre-treatment mean on this column's estimation sample (plan 2026-08-01),
+* taken before the placebo regression below replaces e(sample).
+quietly sum `outcome' if e(sample) & inrange(year, 2009, 2011)
+local mean_pre_val = r(mean)
 
 reghdfe `outcome' c.`conn'##i.placebo_year if `s_spill' & year <= 2011, ///
 	absorb(`absorb_base') vce(cluster identificad)
@@ -212,6 +262,7 @@ file write `fh' `""`outcome'";1;"pre";"' %9.4f (`b_pre') `"`stars_pre'""' _n
 file write `fh' `""`outcome'";1;"pre_se";"' %9.4f (`se_pre') `"""' _n
 file write `fh' `""`outcome'";1;"n_obs";"' %12.0fc (`n_obs') `"""' _n
 file write `fh' `""`outcome'";1;"n_estab";"' %12.0fc (`n_estab') `"""' _n
+file write `fh' `""`outcome'";1;"mean_pre";"' %9.4f (`mean_pre_val') `"""' _n
 file close `fh'
 
 * ── Col 2: Union × Year FE ───────────────────────────────────────────────────
@@ -226,6 +277,11 @@ local se_post = _se[1.treat_year#c.`conn']
 local p_post  = 2*ttail(e(df_r), abs(`b_post'/`se_post'))
 local n_obs   = e(N)
 local n_estab = e(N_clust)
+
+* Pre-treatment mean on this column's estimation sample (plan 2026-08-01),
+* taken before the placebo regression below replaces e(sample).
+quietly sum `outcome' if e(sample) & inrange(year, 2009, 2011)
+local mean_pre_val = r(mean)
 
 reghdfe `outcome' c.`conn'##i.placebo_year if `s_spill' & year <= 2011, ///
 	absorb(`absorb_base' i.mode_union#i.year) vce(cluster identificad)
@@ -252,6 +308,7 @@ file write `fh' `""`outcome'";2;"pre";"' %9.4f (`b_pre') `"`stars_pre'""' _n
 file write `fh' `""`outcome'";2;"pre_se";"' %9.4f (`se_pre') `"""' _n
 file write `fh' `""`outcome'";2;"n_obs";"' %12.0fc (`n_obs') `"""' _n
 file write `fh' `""`outcome'";2;"n_estab";"' %12.0fc (`n_estab') `"""' _n
+file write `fh' `""`outcome'";2;"mean_pre";"' %9.4f (`mean_pre_val') `"""' _n
 file close `fh'
 
 * ── Col 3: Union Exposure (firm share) ───────────────────────────────────────
@@ -266,6 +323,11 @@ local se_post = _se[1.treat_year#c.`conn']
 local p_post  = 2*ttail(e(df_r), abs(`b_post'/`se_post'))
 local n_obs   = e(N)
 local n_estab = e(N_clust)
+
+* Pre-treatment mean on this column's estimation sample (plan 2026-08-01),
+* taken before the placebo regression below replaces e(sample).
+quietly sum `outcome' if e(sample) & inrange(year, 2009, 2011)
+local mean_pre_val = r(mean)
 
 reghdfe `outcome' c.`conn'##i.placebo_year c.treat_union_exp_all#i.year if `s_spill' & year <= 2011, ///
 	absorb(`absorb_base') vce(cluster identificad)
@@ -292,6 +354,7 @@ file write `fh' `""`outcome'";3;"pre";"' %9.4f (`b_pre') `"`stars_pre'""' _n
 file write `fh' `""`outcome'";3;"pre_se";"' %9.4f (`se_pre') `"""' _n
 file write `fh' `""`outcome'";3;"n_obs";"' %12.0fc (`n_obs') `"""' _n
 file write `fh' `""`outcome'";3;"n_estab";"' %12.0fc (`n_estab') `"""' _n
+file write `fh' `""`outcome'";3;"mean_pre";"' %9.4f (`mean_pre_val') `"""' _n
 file close `fh'
 
 * ── Col 4: Union Exposure (worker share) ─────────────────────────────────────
@@ -306,6 +369,11 @@ local se_post = _se[1.treat_year#c.`conn']
 local p_post  = 2*ttail(e(df_r), abs(`b_post'/`se_post'))
 local n_obs   = e(N)
 local n_estab = e(N_clust)
+
+* Pre-treatment mean on this column's estimation sample (plan 2026-08-01),
+* taken before the placebo regression below replaces e(sample).
+quietly sum `outcome' if e(sample) & inrange(year, 2009, 2011)
+local mean_pre_val = r(mean)
 
 reghdfe `outcome' c.`conn'##i.placebo_year c.union_emp_exp#i.placebo_year if `s_spill' & year <= 2011, ///
 	absorb(`absorb_base') vce(cluster identificad)
@@ -332,6 +400,7 @@ file write `fh' `""`outcome'";4;"pre";"' %9.4f (`b_pre') `"`stars_pre'""' _n
 file write `fh' `""`outcome'";4;"pre_se";"' %9.4f (`se_pre') `"""' _n
 file write `fh' `""`outcome'";4;"n_obs";"' %12.0fc (`n_obs') `"""' _n
 file write `fh' `""`outcome'";4;"n_estab";"' %12.0fc (`n_estab') `"""' _n
+file write `fh' `""`outcome'";4;"mean_pre";"' %9.4f (`mean_pre_val') `"""' _n
 file close `fh'
 
 * ── Col 5: Union Exposure (firm share) — quartiles ───────────────────────────
@@ -346,6 +415,11 @@ local se_post = _se[1.treat_year#c.`conn']
 local p_post  = 2*ttail(e(df_r), abs(`b_post'/`se_post'))
 local n_obs   = e(N)
 local n_estab = e(N_clust)
+
+* Pre-treatment mean on this column's estimation sample (plan 2026-08-01),
+* taken before the placebo regression below replaces e(sample).
+quietly sum `outcome' if e(sample) & inrange(year, 2009, 2011)
+local mean_pre_val = r(mean)
 
 reghdfe `outcome' c.`conn'##i.placebo_year i.treat_union_exp_all_q4#i.year if `s_spill' & year <= 2011, ///
 	absorb(`absorb_base') vce(cluster identificad)
@@ -372,6 +446,7 @@ file write `fh' `""`outcome'";5;"pre";"' %9.4f (`b_pre') `"`stars_pre'""' _n
 file write `fh' `""`outcome'";5;"pre_se";"' %9.4f (`se_pre') `"""' _n
 file write `fh' `""`outcome'";5;"n_obs";"' %12.0fc (`n_obs') `"""' _n
 file write `fh' `""`outcome'";5;"n_estab";"' %12.0fc (`n_estab') `"""' _n
+file write `fh' `""`outcome'";5;"mean_pre";"' %9.4f (`mean_pre_val') `"""' _n
 file close `fh'
 
 * ── Col 6: Union Exposure (worker share) — quartiles ─────────────────────────
@@ -386,6 +461,11 @@ local se_post = _se[1.treat_year#c.`conn']
 local p_post  = 2*ttail(e(df_r), abs(`b_post'/`se_post'))
 local n_obs   = e(N)
 local n_estab = e(N_clust)
+
+* Pre-treatment mean on this column's estimation sample (plan 2026-08-01),
+* taken before the placebo regression below replaces e(sample).
+quietly sum `outcome' if e(sample) & inrange(year, 2009, 2011)
+local mean_pre_val = r(mean)
 
 reghdfe `outcome' c.`conn'##i.placebo_year i.union_emp_exp_q4#i.placebo_year if `s_spill' & year <= 2011, ///
 	absorb(`absorb_base') vce(cluster identificad)
@@ -412,7 +492,86 @@ file write `fh' `""`outcome'";6;"pre";"' %9.4f (`b_pre') `"`stars_pre'""' _n
 file write `fh' `""`outcome'";6;"pre_se";"' %9.4f (`se_pre') `"""' _n
 file write `fh' `""`outcome'";6;"n_obs";"' %12.0fc (`n_obs') `"""' _n
 file write `fh' `""`outcome'";6;"n_estab";"' %12.0fc (`n_estab') `"""' _n
+file write `fh' `""`outcome'";6;"mean_pre";"' %9.4f (`mean_pre_val') `"""' _n
 file close `fh'
+
+********************************************************************************
+* Cols 7-10: deciles and vingtiles of the same two exposure measures
+*
+* RECONSTRUCTED 2026-08-01 -- see the bin-construction note above. Each column
+* mirrors its quartile counterpart exactly: the firm-share columns follow col 5
+* and interact the bins with full year fixed effects; the worker-share columns
+* follow col 6 and interact with treat_year (placebo_year in the placebo
+* regression). Only the number of bins differs.
+*
+* Whether these reproduce the published 0.0057 / 0.0048 / 0.0046 / 0.0046 is
+* the test of the reconstruction, not an assumption of it.
+********************************************************************************
+
+* col : bin variable stem : granularity label : interaction style (year|treat)
+foreach spec in "7 treat_union_exp_all_q10 deciles year" ///
+                "8 union_emp_exp_q10 deciles treat" ///
+                "9 treat_union_exp_all_q20 vingtiles year" ///
+                "10 union_emp_exp_q20 vingtiles treat" {
+
+	local col   : word 1 of `spec'
+	local binvar: word 2 of `spec'
+	local gran  : word 3 of `spec'
+	local style : word 4 of `spec'
+
+	di as result "Col `col' (`binvar', `gran')"
+
+	if "`style'" == "year" {
+		local ctrl_post "i.`binvar'#i.year"
+		local ctrl_pre  "i.`binvar'#i.year"
+	}
+	else {
+		local ctrl_post "i.`binvar'#i.treat_year"
+		local ctrl_pre  "i.`binvar'#i.placebo_year"
+	}
+
+	reghdfe `outcome' c.`conn'##i.treat_year `ctrl_post' if `s_spill', ///
+		absorb(`absorb_base') vce(cluster identificad)
+
+	local b_post  = _b[1.treat_year#c.`conn']
+	local se_post = _se[1.treat_year#c.`conn']
+	local p_post  = 2*ttail(e(df_r), abs(`b_post'/`se_post'))
+	local n_obs   = e(N)
+	local n_estab = e(N_clust)
+
+	* Pre-treatment mean on this column's estimation sample (plan 2026-08-01),
+	* taken before the placebo regression below replaces e(sample).
+	quietly sum `outcome' if e(sample) & inrange(year, 2009, 2011)
+	local mean_pre_val = r(mean)
+
+	reghdfe `outcome' c.`conn'##i.placebo_year `ctrl_pre' if `s_spill' & year <= 2011, ///
+		absorb(`absorb_base') vce(cluster identificad)
+
+	local b_pre  = _b[1.placebo_year#c.`conn']
+	local se_pre = _se[1.placebo_year#c.`conn']
+	local p_pre  = 2*ttail(e(df_r), abs(`b_pre'/`se_pre'))
+
+	local stars_post ""
+	if `p_post' < 0.01                              local stars_post "***"
+	else if (`p_post' < 0.05 & `p_post' > 0.01)    local stars_post "**"
+	else if (`p_post' < 0.10 & `p_post' > 0.05)    local stars_post "*"
+
+	local stars_pre ""
+	if `p_pre' < 0.01                               local stars_pre "***"
+	else if (`p_pre' < 0.05 & `p_pre' > 0.01)      local stars_pre "**"
+	else if (`p_pre' < 0.10 & `p_pre' > 0.05)      local stars_pre "*"
+
+	tempname fh
+	file open `fh' using "`csv'", write append
+	file write `fh' `""`outcome'";`col';"main";"' %9.4f (`b_post') `"`stars_post'""' _n
+	file write `fh' `""`outcome'";`col';"main_se";"' %9.4f (`se_post') `"""' _n
+	file write `fh' `""`outcome'";`col';"pre";"' %9.4f (`b_pre') `"`stars_pre'""' _n
+	file write `fh' `""`outcome'";`col';"pre_se";"' %9.4f (`se_pre') `"""' _n
+	file write `fh' `""`outcome'";`col';"n_obs";"' %12.0fc (`n_obs') `"""' _n
+	file write `fh' `""`outcome'";`col';"n_estab";"' %12.0fc (`n_estab') `"""' _n
+	file write `fh' `""`outcome'";`col';"mean_pre";"' %9.4f (`mean_pre_val') `"""' _n
+	file close `fh'
+}
 
 ********************************************************************************
 * SECTION 5: COMPLETION + NOTIFICATION
