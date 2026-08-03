@@ -304,11 +304,20 @@ carries no information in log-wage tables. 3 decimals would separate them;
 
 ## 6e. FINAL STATUS (2026-08-02)
 
-**Status: COMPLETE for 9 of 10 tables. 1 held back (turnover), whose published
-estimates do not reproduce from any script in the tree -- a pre-existing
-condition, not caused by this work.**
+**Status: COMPLETE for all 10 tables (turnover inlined 2026-08-02).**
 
-Document compiles, 46 pages, 39 `Pre-treatment mean` rows.
+Document compiles, 44 pages, 36 `Pre-treatment mean` rows. The only `Mean` rows
+left are the four in `t_desc` (Sample Descriptives, descriptive, out of scope).
+
+**Turnover inlined 2026-08-02.** Held back while its provenance was unclear;
+resolved as convergence slack, not a reproduction failure (see 6e). Printed
+numbers now come from code that can be re-run rather than from the deleted
+report builder. Changes to the published table: seven Panel A coefficients shift
+in the 4th decimal (all <= 0.094 SE), and the Panel A churn pre-trend crosses
+into significance, $-$0.0498 -> $-$0.0528*. Panel B is near-identical --
+retention, separation and quit reproduce to the digit. The old control-group-only
+`Mean` row is replaced by the pooled `e(sample)` row, which is why Panel A log
+hours moves 6.150 -> 6.983 while Panel B barely moves (7.287 -> 7.284).
 
 ### Delivered
 

@@ -45,15 +45,21 @@ SOURCES = {
     "t_union":         ROOT / "Tables" / "robustness",
     "t_union_hw":      ROOT / "Tables" / "robustness",
     "t_composition":   ROOT / "Tables" / "composition",
+    "t_turnover":      ROOT / "Tables" / "turnover",
     "t_rob":           ROOT / "quality_reports" / "replication"
                             / "hourly_variant_currentconn" / "frag",
     "t_rob_hw":        ROOT / "quality_reports" / "replication"
                             / "hourly_variant_currentconn" / "frag",
 }
 
-# t_turnover is deliberately ABSENT. Its re-run does not reproduce the published
-# coefficients (see plan 2026-08-01, gap 5), so inlining it would silently
-# change published numbers. Restore it here once that is resolved.
+# t_turnover was held out until 2026-08-02 while its provenance was unclear. It
+# reproduces the published SPECIFICATION exactly -- same absorb list, same
+# n=113,112, same p90 divisor (.0292579, the current measure) -- but the point
+# estimates differ by <= 0.094 SE, which is convergence slack in a demeaning
+# problem with microregion#year (3,560 categories) on top of 14,139 firm
+# effects. Now inlined by decision: the printed numbers come from code that can
+# be re-run, rather than from a deleted builder. One qualitative change: the
+# Panel A churn pre-trend crosses into significance ($-$0.0498 -> $-$0.0528*).
 
 STEMS = list(SOURCES)
 
