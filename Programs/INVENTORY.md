@@ -192,3 +192,66 @@ producing a live exhibit. It does **not** mean every script in it is live.
   any file may break a caller silently.
 - **MEDIUM rows are not safe to act on.** They are where a wrong archive decision
   would be invisible until re-estimation.
+
+
+
+## G. Barebones list of scripts:
+
+### Estimation
+
+Programs/_run_pct_tfpw_07_11_cc.do                      -> Programs/Main_Results_pct_tfpw_07_11.do
+Programs/conn_margins/_run_direct_sample_coef_test_cc.do-> Programs/conn_margins/direct_sample_coef_test.do
+Programs/clause_types/_run_clause_types_cc.do           -> Programs/clause_types/clause_types.do
+Programs/cba_value/_run_cba_value_cc.do                 -> Programs/cba_value/Main_Results_cba_value.do
+Programs/robustness/_run_robustness_cc.do               -> Programs/robustness/Main_Results_robustness_bins.do
+Programs/robustness/_run_micro_ind_q_hw.do              -> Programs/robustness/Main_Results_micro_ind_q.do
+Programs/robustness/_run_union_controls_hw_cc.do        -> Programs/robustness/Main_Results_union_controls.do
+Programs/turnover/_run_turnover_cc.do                   -> Programs/turnover/Main_Results_turnover.do
+Programs/composition/_run_composition_cc.do             -> Programs/composition/Main_Results_composition.do
+Programs/descriptives/_run_descriptives_estsample.do    -> Programs/descriptives/22_sample_descriptives.do
+Programs/main_results/_run_currentconn_mincer_age_fullrais.do -> Programs/residuals/Main_Results_mincer.do
+Programs/layer_connectivity/07_within_firm/_run_within_firm_v3.do    -> 01c_within_firm_estimates.do
+Programs/layer_connectivity/07_within_firm/_run_within_firm_hw_v3.do -> 01c_within_firm_estimates_hw.do
+
+### Table Generators
+
+Programs/main_results/generate_direct_replication_table.py      -> t_direct
+Programs/main_results/generate_spill_replication_table.py       -> t_spill
+Programs/main_results/generate_twopanel_replication_tables.py   -> t_turnover, t_composition
+Programs/clause_types/generate_clause_replication_table.py      -> t_clause
+Programs/robustness/generate_union_replication_table.py         -> t_union, t_union_hw
+Programs/robustness/generate_rob_logwages_8col.py               -> t_rob, t_rob_hw
+Programs/residuals/generate_resid_replication_tables.py         -> t_resid, t_resid_hw
+Programs/conn_descriptives/generate_pairwise_appendix_table.py  -> t_pairwise_appendix
+Programs/layer_connectivity/07_within_firm/02b_make_tables_all.py -> t_layerdesc/groupspecs/horserace {,_hw}
+Programs/layer_connectivity/07_within_firm/05_inline_into_replication.py  (inlines into the doc)
+
+
+2. Deletion — confirm before I touch anything
+Do not delete yet. Your premise is inverted: the obsolete scripts are in git; the canonical ones are not.
+
+
+01c_within_firm_estimates.do        ** UNTRACKED **   <- canonical
+01c_within_firm_estimates_hw.do     ** UNTRACKED **   <- canonical
+_run_within_firm_v3.do              ** UNTRACKED **   <- canonical
+_run_within_firm_hw_v3.do           ** UNTRACKED **   <- canonical
+_run_within_firm_v3ml.do            ** UNTRACKED **
+_run_within_firm_hw_v3ml.do         ** UNTRACKED **
+01_within_firm_estimates{,_hw}.do   TRACKED           <- obsolete
+01b_within_firm_estimates{,_hw}.do  TRACKED           <- obsolete
+_run_within_firm{,_hw}.do           TRACKED           <- obsolete
+_run_within_firm{,_hw}_v2.do        TRACKED           <- obsolete
+Commit the v3 files first. Until then the paper's canonical estimator exists only in the working tree.
+
+Proposed deletion set (8 files) — mean-of-log, cannot reproduce the published tables:
+
+
+01_within_firm_estimates.do        01_within_firm_estimates_hw.do
+01b_within_firm_estimates.do       01b_within_firm_estimates_hw.do
+_run_within_firm.do                _run_within_firm_hw.do
+_run_within_firm_v2.do             _run_within_firm_hw_v2.do
+Blocker: _run_tenure.do and _run_tenure_hw.do both call 01_within_firm_estimates{,_hw}.do. Deleting 01 breaks them. 01c covers all three partitions including ten2, so tenure looks superseded — but that's your call. Options: delete the tenure wrappers too, retarget them to 01c, or keep 01 alone.
+
+Also flagging: _run_within_firm{,_hw}_v3ml.do are the mean-of-log arm of 01c. They didn't generate anything wrongly — they're a legitimate robustness variant of the canonical script. I'd keep them unless you want the size-control question closed permanently.
+
+Separate fix worth doing: v3 writes _hlogic-suffixed files, but 02b_make_tables_all.py reads unsuffixed names, so publishing currently depends on a manual copy that no script records. That copy is what misled me. Giving v3 an empty table_suffix would remove the trap entirely.
