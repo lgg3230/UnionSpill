@@ -8,7 +8,7 @@
 *                                   and entry_exit_treat.csv for MATLAB
 *   connectivity_treat_unbal.m   → produces connectivity_treat_unbal_2007_2011.csv
 *
-* The employers_yyyy_yyyy.csv worker-flow files from 05_yearly_employers.do
+* The employers_yyyy_yyyy.csv worker-flow files from 1050_yearly_employers.do
 * are reused as-is (worker flows do not change).
 *
 * OUTPUT: $rais_firm/cba_rais_firm_unbal_flows.dta

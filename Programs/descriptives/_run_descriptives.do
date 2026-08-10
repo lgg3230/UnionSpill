@@ -1,6 +1,6 @@
 ********************************************************************************
 * WRAPPER: descriptives pipeline
-* Runs 22_sample_descriptives.do then make_table_descriptives.py
+* Runs 4102_sample_descriptives.do then make_table_descriptives.py
 ********************************************************************************
 
 * ── Set globals if running standalone ───────────────────────────────────────
@@ -17,7 +17,7 @@ global logs       "$main/UnionSpill/Logs"
 global programs   "$main/UnionSpill/Programs"
 
 * ── Step 1: Stata descriptives ───────────────────────────────────────────────
-do "$programs/descriptives/22_sample_descriptives.do"
+do "$programs/descriptives/4102_sample_descriptives.do"
 
 * ── Step 2: Python LaTeX table ───────────────────────────────────────────────
 shell ~/.conda/envs/venv_python312/bin/python ///

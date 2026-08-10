@@ -1,4 +1,4 @@
-* Wrapper: set globals then run Main_Results_pct_tfpw_07_11.do
+* Wrapper: set globals then run 4012_pct_tfpw.do
 set more off
 set varabbrev off
 
@@ -10,4 +10,4 @@ global graphs    "$main/UnionSpill/Graphs"
 global logs      "$main/UnionSpill/Logs"
 global programs  "$main/UnionSpill/Programs"
 
-do "$programs/Main_Results_pct_tfpw_07_11.do"
+do "$programs/4012_pct_tfpw.do"

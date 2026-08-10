@@ -6,7 +6,7 @@
 * OUTPUT: yearly_employers_2005.dta, yearly_employers_2006.dta
 *         employers_2005_2006.csv, employers_2006_2007.csv
 *
-* NOTE: Replicates logic from 05_yearly_employers.do lines 10-112
+* NOTE: Replicates logic from 1050_yearly_employers.do lines 10-112
 *       for years 2005-2006. yearly_employers_2007.dta already exists.
 ********************************************************************************
 

@@ -19,7 +19,7 @@ remove the firm FE from the running variable (within-transform), which spreads t
 atom — i.e. the residualized panel test (linearity_did_resid_cba.do) or the FD.
 
 Tests linearity of the dose-response in the PUBLISHED 6-level cba_period DiD
-(Main_Results_pct_tfpw_07_11.do PART D, numb_clauses spillover, beta = 0.0180)
+(4012_pct_tfpw.do PART D, numb_clauses spillover, beta = 0.0180)
 WITHOUT pre-residualizing anything.
 
 Method: run the Cattaneo, Crump, Farrell & Feng (2024) binstest directly on the

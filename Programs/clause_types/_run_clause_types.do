@@ -1,4 +1,4 @@
-* Wrapper: set globals then run clause_types.do
+* Wrapper: set globals then run 4032_clause_types.do
 set more off
 set varabbrev off
 
@@ -20,4 +20,4 @@ global graphs    "$main/UnionSpill/Graphs"
 global logs      "$main/UnionSpill/Logs"
 global programs  "$main/UnionSpill/Programs"
 
-do "$programs/clause_types/clause_types.do"
+do "$programs/clause_types/4032_clause_types.do"

@@ -12,7 +12,7 @@ pipeline.
 
 ## The design in one paragraph
 
-The spillover regression (see `Programs/Main_Results_pct_tfpw_07_11.do`, line
+The spillover regression (see `Programs/4012_pct_tfpw.do`, line
 ~568) estimates, on **untreated** firms only,
 
 ```

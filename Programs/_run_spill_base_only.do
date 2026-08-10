@@ -1,4 +1,4 @@
-* Minimal spillover regressions — mirrors Main_Results_pct_tfpw_07_11.do exactly
+* Minimal spillover regressions — mirrors 4012_pct_tfpw.do exactly
 * Purpose: compare with layer firmrestr results
 set more off
 set varabbrev off
@@ -16,7 +16,7 @@ log using "$logs/spill_base_only_`d'_`t'.log", replace text
 
 di "Started: `c(current_date)' `c(current_time)'"
 
-* ── Load data (same as Main_Results_pct_tfpw_07_11.do) ──────────────────────
+* ── Load data (same as 4012_pct_tfpw.do) ──────────────────────
 
 use "$rais_firm/lagos_sample_sep24_pct_unionexp_ext_df2.dta", clear
 
@@ -45,7 +45,7 @@ keep if lagos_sample_avg == 1
 
 di "Obs after sample restriction: " _N
 
-* ── Variable creation (mirroring Main_Results_pct_tfpw_07_11.do) ────────────
+* ── Variable creation (mirroring 4012_pct_tfpw.do) ────────────
 
 cap drop treat_year
 gen byte treat_year = (year >= 2012)

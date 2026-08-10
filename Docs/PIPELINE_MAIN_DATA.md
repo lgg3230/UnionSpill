@@ -14,7 +14,7 @@ Status: protected reference target. Do not overwrite or delete.
 
 Known direct construction step:
 
-`Programs/121_get_wage_pctiles_df2.do`
+`Programs/2030_get_wage_pctiles_df2.do`
 
 This script reads `worker_year_pre_new_vs_nonnew_dec26.dta`, computes firm-year
 worker wage percentiles, merges them into
@@ -29,7 +29,7 @@ lineage.
 
 Current path setup lives in:
 
-`Programs/00_master.do`
+`Programs/0000_master.do`
 
 It defines Stata globals for raw RAIS data, CBA data, auxiliary files, firm-level
 outputs, tables, graphs, and scripts. It is currently a legacy switchboard, not a
@@ -44,7 +44,7 @@ unless an explicit override is set.
 
 Primary scripts:
 
-- `Programs/011_rais_to_firm.do`
+- `Programs/1010_rais_to_firm.do`
 - `Programs/011_rais_to_firm_optimized.do`
 - `Programs/011_rais_to_firm_parallel.do`
 
@@ -74,7 +74,7 @@ stage output or a reproducible intermediate.
 
 Primary script:
 
-`Programs/031_clean_cba.do`
+`Programs/1030_clean_cba.do`
 
 Main raw/current input:
 
@@ -92,7 +92,7 @@ Important generated outputs:
 Notes:
 
 - Sectoral CBA code is present but largely commented out in the current script.
-- The firm-level path is the active path used by `041_merge_cba_rais.do`.
+- The firm-level path is the active path used by `1040_merge_cba_rais.do`.
 
 Cleanup status: large CBA exploded files are likely generated intermediates, but
 should not be deleted until the CBA stage can be rerun cleanly from raw inputs.
@@ -101,7 +101,7 @@ should not be deleted until the CBA stage can be rerun cleanly from raw inputs.
 
 Primary script:
 
-`Programs/041_merge_cba_rais.do`
+`Programs/1040_merge_cba_rais.do`
 
 Inputs:
 
@@ -134,12 +134,12 @@ replication-ready.
 
 Primary script:
 
-`Programs/05_yearly_employers.do`
+`Programs/1050_yearly_employers.do`
 
 Inputs:
 
 - Raw RAIS yearly files from `$rais_raw_dir/RAIS_*.dta`
-- Sample/treatment CSVs from `041_merge_cba_rais.do`
+- Sample/treatment CSVs from `1040_merge_cba_rais.do`
 
 Intermediate outputs:
 
@@ -152,11 +152,11 @@ Intermediate outputs:
 
 MATLAB scripts called:
 
-- `Programs/connectivity_full_lagos.m`
-- `Programs/connectivity_treat_lagos.m`
-- `Programs/connectivity_control_lagos.m`
-- `Programs/connectivity_treat_onecba.m`
-- `Programs/connectivity_treat_zerocba.m`
+- `Programs/1051_connectivity_full_lagos.m`
+- `Programs/1052_connectivity_treat_lagos.m`
+- `Programs/1053_connectivity_control_lagos.m`
+- `Programs/1054_connectivity_treat_onecba.m`
+- `Programs/1055_connectivity_treat_zerocba.m`
 
 MATLAB outputs:
 
@@ -183,7 +183,7 @@ Downstream firm-level outputs:
 
 Open reconstruction issue:
 
-The current `05_yearly_employers.do` gets close to the protected connectivity
+The current `1050_yearly_employers.do` gets close to the protected connectivity
 measure but is not confirmed to reproduce the exact connectivity in
 `lagos_sample_sep24_pct_unionexp_ext_df2.dta`. Until this is resolved, preserve
 all plausible connectivity inputs and outputs.
@@ -193,14 +193,14 @@ all plausible connectivity inputs and outputs.
 Known scripts:
 
 - `Programs/union_treat_exp.do`
-- `Programs/12_get_wage_pctiles.do`
-- `Programs/121_get_wage_pctiles_df2.do`
+- `Programs/2020_get_wage_pctiles.do`
+- `Programs/2030_get_wage_pctiles_df2.do`
 
 Known lineage:
 
 - `union_treat_exp.do` reads `cba_rais_firm_2007_2016.dta` and writes
   `Data/RAIS_aux/union_treat_exp_sep24.dta`.
-- `121_get_wage_pctiles_df2.do` reads worker-level wage data and
+- `2030_get_wage_pctiles_df2.do` reads worker-level wage data and
   `lagos_sample_sep24_pct_unionexp.dta`, then writes the protected target.
 
 Missing link to document:
@@ -213,12 +213,12 @@ connectivity-enriched sample needs to be identified.
 
 Main analysis scripts currently read the protected target directly:
 
-- `Programs/Main_Results_pct_tfpw_07_11.do`
+- `Programs/4012_pct_tfpw.do`
 - `Programs/UnionSpillovers_FinalResults_gtfpe_gout_alldir_0conn.do`
-- `Programs/composition/Main_Results_composition.do`
+- `Programs/composition/4092_composition.do`
 - `Programs/composition/Main_Results_composition_log.do`
 - `Programs/composition/Main_Results_composition_scale.do`
-- `Programs/descriptives/22_sample_descriptives.do`
+- `Programs/descriptives/4102_sample_descriptives.do`
 
 Common extra inputs:
 
@@ -234,8 +234,8 @@ patches.
 1. Identify the missing step that creates
    `lagos_sample_sep24_pct_unionexp.dta`.
 2. Compare the protected file's connectivity variables against current
-   `05_yearly_employers.do` outputs.
+   `1050_yearly_employers.do` outputs.
 3. Decide whether `Programs/pipeline_main_data.do` should become the canonical
-   runner or remain a transition runner beside `Programs/00_master.do`.
+   runner or remain a transition runner beside `Programs/0000_master.do`.
 4. Only after steps 1-3, classify large data files as required input, protected
    reference, reproducible intermediate, analysis output, or disposable clutter.

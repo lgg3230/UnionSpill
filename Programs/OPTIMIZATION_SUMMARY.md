@@ -2,7 +2,7 @@
 
 ## Performance Issues in Original Code
 
-The original `011_rais_to_firm.do` script has several performance bottlenecks:
+The original `1010_rais_to_firm.do` script has several performance bottlenecks:
 
 ### 1. Excessive `bysort` Operations
 - **Problem**: Multiple `bysort` commands are computationally expensive

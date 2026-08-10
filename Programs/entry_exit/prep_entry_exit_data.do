@@ -75,7 +75,7 @@ di "Extra firms still missing microregion after crosswalk: " r(N)
 
 ********************************************************************************
 * SECTION 4: FILL INDUSTRY1 FOR EXTRA FIRMS (from RAIS 2009)
-* industry1 = real("1" + substr(clascnae20, 1, 3)) per 041_merge_cba_rais.do
+* industry1 = real("1" + substr(clascnae20, 1, 3)) per 1040_merge_cba_rais.do
 ********************************************************************************
 
 * Build a list of extra firm IDs
@@ -93,7 +93,7 @@ preserve
     bys identificad: keep if _n == 1
     * Only keep extra firms
     merge 1:1 identificad using `extra_ids', keep(match) nogen
-    * Compute industry1 the same way as 041_merge_cba_rais.do
+    * Compute industry1 the same way as 1040_merge_cba_rais.do
     gen industry1_rais = real("1" + substr(clascnae20, 1, 3))
     keep identificad industry1_rais
     tempfile industry_extra

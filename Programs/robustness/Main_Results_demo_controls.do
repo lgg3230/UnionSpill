@@ -1,7 +1,7 @@
 ********************************************************************************
 * ROBUSTNESS: DEMOGRAPHIC CONTROLS (outcome: lr_remdezr_w)
 * Purpose: Test spillover estimates against pre-treatment workforce composition.
-*          FE spec identical to Main_Results_union_controls.do:
+*          FE spec identical to 4072_union_controls.do:
 *            absorb = base_fe + outcome_pre4×year + l_firm_emp_pre4×year
 *                     + totalflows_pw_pre_07_114×year
 *          Six specifications (cumulative demographic quartile bins × year):

@@ -4,7 +4,7 @@
 * Four ways of handling the duplicated CBA rows, estimated in one Stata process.
 *
 * THE PROBLEM (see project_cba_period_duplicate_rows):
-* 031_clean_cba.do:448 expands each agreement to every December it covers, so
+* 1030_clean_cba.do:448 expands each agreement to every December it covers, so
 * consecutive establishment-years carry the same avg_file_date and collapse onto
 * the same cba_period. 1,914 of 17,742 firm x cba_period cells hold >1 row.
 *
@@ -95,7 +95,7 @@ keep if year >= 2009
 keep if lagos_sample_avg == 1
 
 ********************************************************************************
-* SECTION 1b: CLAUSE-TYPE VARIABLES (verbatim from clause_types.do)
+* SECTION 1b: CLAUSE-TYPE VARIABLES (verbatim from 4032_clause_types.do)
 ********************************************************************************
 
 cap drop wage_clauses

@@ -22,7 +22,7 @@ log using "$logs/residuals/es_mincer_`d'_`t'.log", replace text
 di "Started: `c(current_date)' `c(current_time)'"
 
 ********************************************************************************
-* SECTION 1: DATA SETUP (mirrors Main_Results_mincer.do)
+* SECTION 1: DATA SETUP (mirrors 4112_mincer.do)
 ********************************************************************************
 
 * ── Load main firm-year dataset ──────────────────────────────────────────────

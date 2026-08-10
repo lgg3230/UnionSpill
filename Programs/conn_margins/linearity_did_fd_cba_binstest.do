@@ -26,7 +26,7 @@ The binstest N is the number of firms identified by the clause DiD (those with
 both a pre and a post CBA period) — the honest establishment count for this
 specification.
 
-Mirrors Main_Results_pct_tfpw_07_11.do PART D numb_clauses spillover.
+Mirrors 4012_pct_tfpw.do PART D numb_clauses spillover.
 ================================================================================
 */
 

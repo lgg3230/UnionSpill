@@ -1,7 +1,7 @@
 """
 Entry/Exit Pipeline — Build Unbalanced Dataset
 ===============================================
-Replicates the CBA sample logic from 041_merge_cba_rais.do but without the
+Replicates the CBA sample logic from 1040_merge_cba_rais.do but without the
 pos_emp == 1 restriction, so firms that enter or exit within 2009–2014 qualify.
 
 Steps:

@@ -21,7 +21,7 @@ from pathlib import Path
 RESULTS_DIR = Path('/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/RAIS_aux/bilateral_combined_results')
 OUTPUT_DIR = Path('/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/RAIS_aux')
 
-# Output filenames matching 06_bilateral_coefplot_combined.py expectations
+# Output filenames matching 5110_figure_bilateral_coefplot.py expectations
 OUTPUT_MAP = {
     ('gravity', 'univariate'): 'coef_connectivity_univ.csv',
     ('gravity', 'multivariate'): 'coef_connectivity_multi.csv',

@@ -1,6 +1,6 @@
 ********************************************************************************
 * UNION SPILLOVERS — CBA VALUE (year-level version)
-* Same as Main_Results_cba_value.do but runs at calendar year instead of
+* Same as 4042_cba_value.do but runs at calendar year instead of
 * cba_period. Outcomes: cba_value (subgroup weights) and numb_clauses.
 ********************************************************************************
 

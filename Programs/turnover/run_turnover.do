@@ -1,4 +1,4 @@
-* Wrapper: set globals then run Main_Results_turnover.do
+* Wrapper: set globals then run 4082_turnover.do
 set more off
 set varabbrev off
 clear all
@@ -15,4 +15,4 @@ global graphs    "$main/UnionSpill/Graphs"
 global programs  "$main/UnionSpill/Programs"
 global logs      "$main/UnionSpill/Logs"
 
-do "$programs/Main_Results_turnover.do"
+do "$programs/4082_turnover.do"

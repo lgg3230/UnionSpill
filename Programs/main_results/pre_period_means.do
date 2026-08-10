@@ -12,7 +12,7 @@
 *     at year == 2009.
 *
 *   DELIBERATE DEPARTURE FROM EXISTING CODE:
-*   Main_Results_composition.do and Main_Results_turnover.do currently compute
+*   4092_composition.do and 4082_turnover.do currently compute
 *   their mean_pre row over the CONTROL GROUP ONLY (`s_use_pre` excludes
 *   treated firms), even though the table note in Draft.tex reads "average
 *   across establishments in each panel's estimation sample". This script
@@ -53,7 +53,7 @@ di as result "Panel rows after sample keep: " _N
 ********************************************************************************
 * SECTION 2: SAMPLE DEFINITIONS
 ********************************************************************************
-* Copied verbatim from Main_Results_composition.do (lines 256-259).
+* Copied verbatim from 4092_composition.do (lines 256-259).
 
 local s_direct_A "(treat_ultra==0 & totaltreat_pw_n==0 | treat_ultra==1) & lagos_sample_avg==1 & in_balanced_panel==1"
 local s_direct_B "(treat_ultra==0 & totaltreat_pw_n<=0.01 | treat_ultra==1) & lagos_sample_avg==1 & in_balanced_panel==1"

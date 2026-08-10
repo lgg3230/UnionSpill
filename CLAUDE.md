@@ -63,7 +63,7 @@ critics score but never edit. Full rules in `.claude/rules/`, agent registry in
 ## Running the Analysis
 
 ### Master File
-The main entry point is `Programs/00_master.do`. It controls which programs run via local flags:
+The main entry point is `Programs/0000_master.do`. It controls which programs run via local flags:
 ```stata
 local 011_rais_to_firm   = 0
 local 02_clean_emp_assoc = 0
@@ -81,12 +81,12 @@ Requires Stata 17.0 (set in master file with `version 17.0`).
 From the Kellogg cluster, first load the Stata module:
 ```bash
 module load stata/17
-stata-mp -b do Programs/00_master.do
+stata-mp -b do Programs/0000_master.do
 ```
 
 Or use the full path directly:
 ```bash
-/software/Stata/stata17/stata-mp -b do Programs/00_master.do
+/software/Stata/stata17/stata-mp -b do Programs/0000_master.do
 ```
 
 For optimized parallel processing of RAIS data:
@@ -98,25 +98,25 @@ stata-mp -b do Programs/011_rais_to_firm_parallel.do
 ### MATLAB Connectivity Scripts
 Worker flow connectivity matrices are computed in MATLAB. Run from Stata via:
 ```stata
-shell "/software/matlab/R2020b/bin/matlab" -nojvm < "/kellogg/proj/lgg3230/UnionSpill/Programs/connectivity_full_lagos.m"
+shell "/software/matlab/R2020b/bin/matlab" -nojvm < "/kellogg/proj/lgg3230/UnionSpill/Programs/1051_connectivity_full_lagos.m"
 ```
 
 Key MATLAB scripts:
-- `connectivity_full_lagos.m`: Full sample connectivity
-- `connectivity_treat_lagos.m`: Flows to treated firms
-- `connectivity_control_lagos.m`: Flows to control firms
+- `1051_connectivity_full_lagos.m`: Full sample connectivity
+- `1052_connectivity_treat_lagos.m`: Flows to treated firms
+- `1053_connectivity_control_lagos.m`: Flows to control firms
 
 ## Pipeline Architecture
 
-1. **011_rais_to_firm.do**: Cleans RAIS data, selects one spell per worker-firm (ranking by hours, wages, random tiebreaker), generates firm-level outcomes (employment, wages, turnover, education composition), collapses to firm level
+1. **1010_rais_to_firm.do**: Cleans RAIS data, selects one spell per worker-firm (ranking by hours, wages, random tiebreaker), generates firm-level outcomes (employment, wages, turnover, education composition), collapses to firm level
 
-2. **02_clean_emp_assoc.do**: Cleans employer association data
+2. **1020_clean_emp_assoc.do**: Cleans employer association data
 
-3. **031_clean_cba.do**: Cleans CBA data, Python scripts (`explode_cba_coverage_*.py`) expand coverage to municipalities
+3. **1030_clean_cba.do**: Cleans CBA data, Python scripts (`explode_cba_coverage_*.py`) expand coverage to municipalities
 
-4. **041_merge_cba_rais.do**: Merges CBA and RAIS at firm level, defines treatment status (`treat_ultra`)
+4. **1040_merge_cba_rais.do**: Merges CBA and RAIS at firm level, defines treatment status (`treat_ultra`)
 
-5. **05_yearly_employers.do**: Constructs worker flow transition matrices between consecutive years (2007-2011), runs MATLAB connectivity scripts, computes connectivity measures (flows to treated/control/Lagos sample as proportion of total flows)
+5. **1050_yearly_employers.do**: Constructs worker flow transition matrices between consecutive years (2007-2011), runs MATLAB connectivity scripts, computes connectivity measures (flows to treated/control/Lagos sample as proportion of total flows)
 
 6. **results.do**: Runs balance tests, generates event study graphs, TWFE regressions
 
@@ -140,7 +140,7 @@ Key MATLAB scripts:
 
 ## Global Paths
 
-Defined in `00_master.do`:
+Defined in `0000_master.do`:
 ```stata
 global klc "/kellogg/proj/lgg3230"
 global rais_raw_dir "$main/RAIS/output/data/full"

@@ -1,4 +1,4 @@
-* Wrapper: set globals then run Main_Results_robustness_bins.do
+* Wrapper: set globals then run 4052_robustness_bins.do
 set more off
 set varabbrev off
 
@@ -11,4 +11,4 @@ global graphs    "$main/UnionSpill/Graphs"
 global logs      "$main/UnionSpill/Logs"
 global programs  "$main/UnionSpill/Programs"
 
-do "$programs/robustness/Main_Results_robustness_bins.do"
+do "$programs/robustness/4052_robustness_bins.do"

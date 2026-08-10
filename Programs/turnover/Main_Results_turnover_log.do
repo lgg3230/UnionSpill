@@ -1,6 +1,6 @@
 ********************************************************************************
 * UNION SPILLOVERS — EMPLOYMENT FLOWS & TURNOVER RATES, LOG SPEC (tfpw_07_11)
-* Purpose: Same regressions as Main_Results_turnover.do but using log outcomes.
+* Purpose: Same regressions as 4082_turnover.do but using log outcomes.
 *          Observations where the raw rate is zero yield a missing log and are
 *          dropped automatically by reghdfe — no manual trimming or offset.
 *          l_total_hours is already in logs and is included as-is.
@@ -29,7 +29,7 @@ di "Stata version: `c(stata_version)'"
 capture cls
 
 * ===============================
-* SET PATHNAMES (uncomment and edit if running standalone without 00_master.do)
+* SET PATHNAMES (uncomment and edit if running standalone without 0000_master.do)
 * ===============================
 // global main      "PATHNAME TO Replication-Mar-2"
 // global rais_firm "$main/UnionSpill/Data/CBA_RAIS_firm_level"

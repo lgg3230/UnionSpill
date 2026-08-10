@@ -3,7 +3,7 @@
 * Purpose: Test spillover estimates against local (industry×microregion)
 *          treatment exposure confounders.
 *
-*          FE spec identical to Main_Results_pct_tfpw_07_11.do:
+*          FE spec identical to 4012_pct_tfpw.do:
 *            absorb = base_fe + outcome_pre4×year + l_firm_emp_pre4×year
 *                     + totalflows_pw_pre_07_114×year
 *
@@ -189,7 +189,7 @@ label var mi_exp_w_n "Local exposure (worker share), normalized to P90"
 di as result "All variables created."
 
 ********************************************************************************
-* SECTION 3: FE SPEC (identical to Main_Results_pct_tfpw_07_11.do)
+* SECTION 3: FE SPEC (identical to 4012_pct_tfpw.do)
 ********************************************************************************
 
 local base_fe    "identificad i.industry1#i.year i.mode_base_month#i.year i.microregion#i.year"

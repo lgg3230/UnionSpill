@@ -10,11 +10,11 @@ within-year December snapshots so each year needs only its own RAIS — 2006 is 
 
 ## Pipeline (all local)
 1. `Simulating`/DuckDB selection from parquet → worker panels `Data/RAIS_aux/extpre/worker_pre_{2007,2008,2009}.dta`
-   and firm-employment counts `firmemp_pre_{...}.dta`. Worker selection replicates `012_rais_worker_panel.do`:
+   and firm-employment counts `firmemp_pre_{...}.dta`. Worker selection replicates `1060_rais_worker_panel.do`:
    Dec-active (`empem3112==1 & tempempr>1`), **max-hours spell within (firm,worker)**, one spell per worker-firm.
    Wages deflated `remdezr/ipca_y`, with **ipca pos = year−2006** (2007 = 0.607949, 2008 = 0.643835, 2009 = 0.671595);
-   the deflator was decoded from the 2009–2012 offsets and matches `012_rais_worker_panel.do` exactly.
-2. `extpre_build.do` — collapses worker panels to firm-year via the **exact** `121_get_wage_pctiles_df2.do`
+   the deflator was decoded from the 2009–2012 offsets and matches `1060_rais_worker_panel.do` exactly.
+2. `extpre_build.do` — collapses worker panels to firm-year via the **exact** `2030_get_wage_pctiles_df2.do`
    method (`egen pctile, by(cnpj_year)` + mean), merges the wage-filter-free `firm_emp`, then appends
    2007–2008 rows to the panel by cloning each firm's 2009 row (inherits all time-invariant covariates:
    treat_ultra, connectivity, sample flags, microregion/industry) and overwriting year + outcomes.

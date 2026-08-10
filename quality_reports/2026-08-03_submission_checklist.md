@@ -86,7 +86,7 @@ B5. [IGNORED] Section 4.2, L413 — add two sentences.
 
 B6. [DONE] Equations (1) and (2), L229 and L261 — three `\frac{1}{4}` still present.
     The code divides by the number of NON-MISSING year pairs, not by four
-    (Programs/05_yearly_employers.do:314-326). The appendix is correct; the equation
+    (Programs/1050_yearly_employers.do:314-326). The appendix is correct; the equation
     is not. The divisor is firm-specific, so the two conventions produce different
     RANKINGS of firms, not a common rescaling — and the measure is normalized by its
     own p90, so ranking is what the regressor is made of.
@@ -248,7 +248,7 @@ F3. [OPEN] Intra-company flow exclusion. 62.6% of network flows share an 8-digit
     CNPJ root.
 F4. [OPEN] Nonparametric dose-response. Tables/conn_margins/results_quartiles_vs_
     zero.csv is non-monotone with a null top quartile.
-F5. [OPEN] Missing-bin zero-fill at Main_Results_pct_tfpw_07_11.do:216.
+F5. [OPEN] Missing-bin zero-fill at 4012_pct_tfpw.do:216.
 F6. [OPEN] Tenure horse-race rescaling; origin-year group assignment for inflows.
 F7. [OPEN] December 2012 timing — 75% of the effect is realized three months
     post-ruling.

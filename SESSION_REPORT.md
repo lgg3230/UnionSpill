@@ -47,5 +47,5 @@
 - Pending: (1) within-cell **mean** collapse arm as a companion to the max rule — proposed, not
   run; (2) the `[H]` fragment needs a landscape page in the paper (overflows letter portrait);
   (3) the replication `.tex` note for the composition table says "year fixed effects" but
-  `clause_types.do:221` uses `i.cba_period`; (4) Table 3's note attributes the clause column's
+  `4032_clause_types.do:221` uses `i.cba_period`; (4) Table 3's note attributes the clause column's
   establishment count to CBA-filing coverage, which predicts the wrong direction

@@ -1,4 +1,4 @@
-* Run Main_Results_mincer.do with CURRENT connectivity and NATIONAL
+* Run 4112_mincer.do with CURRENT connectivity and NATIONAL
 * age+tenure full-RAIS Mincer residuals.
 set more off
 set varabbrev off
@@ -19,4 +19,4 @@ cap mkdir "$logs/residuals"
 global resid_csv_name "mincer_residuals_firm_year_ten_fullrais.csv"
 global results_suffix "_currentconn_ten_fullrais"
 
-do "$programs/residuals/Main_Results_mincer.do"
+do "$programs/residuals/4112_mincer.do"

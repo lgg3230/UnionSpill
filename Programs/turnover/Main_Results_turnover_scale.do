@@ -1,6 +1,6 @@
 ********************************************************************************
 * UNION SPILLOVERS — EMPLOYMENT FLOWS & TURNOVER RATES, SCALED SPEC (tfpw_07_11)
-* Purpose: Same regressions as Main_Results_turnover.do but outcomes are
+* Purpose: Same regressions as 4082_turnover.do but outcomes are
 *          divided by the relevant group's pre-treatment (2009-2011) mean:
 *            - Direct effects:  scale by the full panel-sample pre-treatment mean
 *                               (treated + panel-specific controls, 2009-2011)
@@ -34,7 +34,7 @@ di "Stata version: `c(stata_version)'"
 capture cls
 
 * ===============================
-* SET PATHNAMES (uncomment and edit if running standalone without 00_master.do)
+* SET PATHNAMES (uncomment and edit if running standalone without 0000_master.do)
 * ===============================
 // global main      "PATHNAME TO Replication-Mar-2"
 // global rais_firm "$main/UnionSpill/Data/CBA_RAIS_firm_level"

@@ -3,7 +3,7 @@ global main "/kellogg/proj/lgg3230"
 global rais_raw_dir "$main/RAIS/output/data/full"
 global rais_aux     "$main/UnionSpill/Data/RAIS_aux"
 
-do "/kellogg/proj/lgg3230/UnionSpill/Programs/012_rais_worker_panel.do"
+do "/kellogg/proj/lgg3230/UnionSpill/Programs/1060_rais_worker_panel.do"
 
 shell ~/.conda/envs/venv_python312/bin/python -c "
 import pandas as pd

@@ -6,7 +6,7 @@
 
 Reads the canonical CSVs written by _run_within_firm_v2.do and
 _run_within_firm_hw_v2.do, generates the LaTeX fragments via
-02b_make_tables_all.py, and compiles them.
+5090_table_within_firm.py, and compiles them.
 
 Self-contained: nothing outside Programs/layer_connectivity/07_within_firm/ is
 imported or read. The page setup below is vendored from the coauthor's
@@ -94,7 +94,7 @@ def main() -> int:
 
     # 1. fragments, straight from the canonical CSVs
     spec = importlib.util.spec_from_file_location(
-        "make_tables_all", HERE / "02b_make_tables_all.py")
+        "make_tables_all", HERE / "5090_table_within_firm.py")
     mt = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mt)
     mt.build(TABLE_DIR, ["edu2", "gender", "ten2"])

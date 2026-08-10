@@ -9,7 +9,7 @@
 *     one spell per worker-firm  -> validated vs live 2009 to machine precision.
 *   - deflator: raw remdezr / ipca_y, ipca pos = year-2006 (2007=.607949, 2008=.643835).
 *   - firm-year outcomes: (mean) log wages, (egen pctile by cnpj_year) percentiles,
-*     (count) employment -- identical method to 121_get_wage_pctiles_df2.do.
+*     (count) employment -- identical method to 2030_get_wage_pctiles_df2.do.
 *
 * Output: $rais_firm/lagos_sample_sep24_pct_unionexp_ext_df2_extpre.dta
 ********************************************************************************

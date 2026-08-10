@@ -3,7 +3,7 @@
 ====================
 Builds a worker × establishment × year panel (2009-2016) for firms in the
 Lagos analysis sample.  One spell per (identificad, PIS) is selected using
-the same ranking as 011_rais_to_firm.do:
+the same ranking as 1010_rais_to_firm.do:
     1. horascontr DESC (highest contracted hours)
     2. remdezr_h  DESC (highest hourly December wage)
     3. deterministic hash tiebreaker (salt "12345")

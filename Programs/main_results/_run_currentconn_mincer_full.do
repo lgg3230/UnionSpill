@@ -1,11 +1,11 @@
-* Run Main_Results_mincer.do with CURRENT connectivity and the DEFAULT Mincer
+* Run 4112_mincer.do with CURRENT connectivity and the DEFAULT Mincer
 * residuals (mincer_residuals_firm_year.csv), writing the _currentconn_full
 * suffix.
 *
 * Created 2026-08-01. This is the arm that feeds the Replication document's
 * "Effects on Residualized Wages" tables -- its spillover estimates (0.0050 raw,
 * 0.0046 residualized) are the ones printed there. Companions
-* _run_currentconn_mincer_age_fullrais.do and _run_currentconn_mincer_ten_fullrais.do
+* 4111_mincer.do and _run_currentconn_mincer_ten_fullrais.do
 * already existed; this one did not, even though its CSVs were in the tree.
 
 set more off
@@ -27,4 +27,4 @@ cap mkdir "$logs/residuals"
 global resid_csv_name "mincer_residuals_firm_year.csv"
 global results_suffix "_currentconn_full"
 
-do "$programs/residuals/Main_Results_mincer.do"
+do "$programs/residuals/4112_mincer.do"

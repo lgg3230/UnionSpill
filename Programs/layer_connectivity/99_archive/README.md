@@ -1,6 +1,6 @@
 # Layer Connectivity Pipeline
 
-Computes firm-level connectivity to treated firms, disaggregated by internal occupation or demographic layer, and runs spillover regressions. Extends the firm-level connectivity measure from `Programs/05_yearly_employers.do` by tracking not just _how much_ each firm trades workers with treated firms, but _which internal layer_ those workers belong to.
+Computes firm-level connectivity to treated firms, disaggregated by internal occupation or demographic layer, and runs spillover regressions. Extends the firm-level connectivity measure from `Programs/1050_yearly_employers.do` by tracking not just _how much_ each firm trades workers with treated firms, but _which internal layer_ those workers belong to.
 
 ## Motivation
 
@@ -44,7 +44,7 @@ Scripts 01–03 build the core connectivity measure:
 - `ratio_same`: contacts with treated workers _in the same layer_
 - `ratio_cross`: contacts with treated workers _in a different layer_
 
-**Script 03** averages year-pair ratios across 2007–2011 (NaN-aware, matching the `_n` logic in `05_yearly_employers.do`) to produce the final `layer_treat_pw_n`, `sametreat_pw_n`, `crosstreat_pw_n` variables per firm × layer.
+**Script 03** averages year-pair ratios across 2007–2011 (NaN-aware, matching the `_n` logic in `1050_yearly_employers.do`) to produce the final `layer_treat_pw_n`, `sametreat_pw_n`, `crosstreat_pw_n` variables per firm × layer.
 
 For **demographic layers** (gender, race), use the parallel `d`-suffix scripts:
 ```

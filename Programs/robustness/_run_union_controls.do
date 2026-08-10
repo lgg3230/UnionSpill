@@ -1,4 +1,4 @@
-* Wrapper: set globals then run Main_Results_union_controls.do
+* Wrapper: set globals then run 4072_union_controls.do
 set more off
 set varabbrev off
 
@@ -11,4 +11,4 @@ global graphs    "$main/UnionSpill/Graphs"
 global logs      "$main/UnionSpill/Logs"
 global programs  "$main/UnionSpill/Programs"
 
-do "$programs/robustness/Main_Results_union_controls.do"
+do "$programs/robustness/4072_union_controls.do"

@@ -25,7 +25,7 @@ WHAT IS HELD FIXED (this is the core rule of the design):
     `treat_ultra` in the regression -- we do NOT permute the regression's treated
     group, and we do NOT re-estimate treatment assignment;
   * the outcome, fixed effects, clustering, weights and event-time structure --
-    identical to Main_Results_pct_tfpw_07_11.do (lines 320-384);
+    identical to 4012_pct_tfpw.do (lines 320-384);
   * the pool of candidate controls (the 4,196 actual untreated balanced firms).
 
 WHAT VARIES ACROSS PERMUTATIONS:
@@ -49,7 +49,7 @@ permuted), and the 926 non-balanced treated are held fixed as always-treated
 destinations ("option C"), so every draw has 13,202 destinations, as observed.
 Stratification schemes are copied verbatim from 07_placebo_diag.py, INCLUDING the
 correct 2-digit CNAE division (04 uses `industry1 // 100`, which is wrong -- see
-041_merge_cba_rais.do:169-172, industry1 carries an artificial leading "1").
+1040_merge_cba_rais.do:169-172, industry1 carries an artificial leading "1").
 
 INTERPRETATION
 This is a robustness / validation / placebo-style exercise, not a formally

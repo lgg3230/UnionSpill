@@ -10,7 +10,7 @@ of the post indicator). For the balanced wage/employment panels w_i is constant,
 so the unweighted FD matched exactly. The clause panel is unbalanced (n_post
 varies), so the unweighted FD is off and the weighted FD should recover the slope.
 
-Mirrors Main_Results_pct_tfpw_07_11.do PART D numb_clauses spillover (line ~657):
+Mirrors 4012_pct_tfpw.do PART D numb_clauses spillover (line ~657):
   reghdfe numb_clauses c.conn##post_treat_cba if s_spill & !missing(cba_period),
       absorb(firm + group#cba_period + bins#cba_period) vce(cluster identificad)
 ================================================================================

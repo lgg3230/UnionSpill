@@ -10,7 +10,7 @@
 *   (1) Are the samples nested?
 *   (2) Why do they diverge at all?
 *
-* Prime suspect, from Main_Results_mincer.do lines 178-197: the raw wage bins
+* Prime suspect, from 4112_mincer.do lines 178-197: the raw wage bins
 * are NOT zero-filled, so an establishment with a missing pre-treatment raw wage
 * loses lr_remdezr_w_pre4 and drops out; the Mincer residual bins ARE zero-filled
 * (`replace `v'_pre4 = 0 if missing(`v'_pre4)`), so the same establishment keeps
@@ -18,7 +18,7 @@
 * it, the residual is merged in and can be missing where the raw wage is present.
 * This script measures both.
 *
-* Prep copied from Main_Results_mincer.do.
+* Prep copied from 4112_mincer.do.
 * Output: Tables/sample_nesting/resid_vs_raw_overlap.csv
 ********************************************************************************
 

@@ -46,7 +46,7 @@ merge 1:1 identificad year using `mincer', keep(master match) nogen
 keep if year >= 2009
 keep if lagos_sample_avg == 1
 
-* Pre-treatment means, exactly as in Main_Results_mincer.do
+* Pre-treatment means, exactly as in 4112_mincer.do
 foreach v in lr_remdezr_w lr_remdezr_resid {
 	cap drop `v'_pre_o
 	cap drop `v'_pre

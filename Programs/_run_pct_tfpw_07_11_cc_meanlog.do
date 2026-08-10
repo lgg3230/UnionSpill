@@ -5,7 +5,7 @@
 * Identical to _run_pct_tfpw_07_11_cluster.do except that rais_firm points at
 * the current-connectivity overlay panel instead of the frozen one. The Lagos
 * firm panel ships a frozen totaltreat_pw_n; the overlay directory carries the
-* recomputable measure. Main_Results_pct_tfpw_07_11.do rebuilds
+* recomputable measure. 4012_pct_tfpw.do rebuilds
 * totaltreat_pw_norm from totaltreat_pw_n's 2009 p90 itself (lines 140-146), so
 * swapping the input directory is sufficient - the regressor is renormalized on
 * the current measure rather than left on the legacy p90.

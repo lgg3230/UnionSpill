@@ -145,7 +145,7 @@ story.append(make_table(
 story.append(Paragraph(
     "Note: obs ≈ unique workers each year. The small gap (~5–6K workers, or ~0.2 %, appear "
     "at more than one establishment in the same year) is consistent with the one-spell-per-worker "
-    "selection in 011_rais_to_firm.do allowing a small number of exceptions. "
+    "selection in 1010_rais_to_firm.do allowing a small number of exceptions. "
     "The establishment count is identical every year — "
     "this is a <b>balanced panel on the firm side</b> (in_balanced_panel restriction).",
     note_style))
@@ -428,7 +428,7 @@ story.append(PageBreak())
 story.append(Paragraph("Part 2 — Derived Variables", part_style))
 story.append(Paragraph(
     "Variables constructed from raw RAIS fields during data cleaning "
-    "(011_rais_to_firm.do / 011c_worker_panel.py).",
+    "(1010_rais_to_firm.do / 011c_worker_panel.py).",
     note_style))
 
 # ------------------------------------------------------------------
@@ -617,7 +617,7 @@ notes = [
     "<b>One spell per worker per year:</b> n_obs ≈ n_unique_workers in every year. "
     "A small residual of ~5–6K workers per year (~0.2 %) appear at more than one establishment "
     "in the same year. This is consistent with the one-spell-per-worker selection algorithm "
-    "in 011_rais_to_firm.do (ranked by hours, then hourly wage, then random tiebreaker "
+    "in 1010_rais_to_firm.do (ranked by hours, then hourly wage, then random tiebreaker "
     "with seed 12345), which selects one spell per worker-firm pair but does not enforce "
     "uniqueness across firms.",
     "<b>Balanced firm panel:</b> the establishment count is exactly 16,472 in every year (2009–2016), "

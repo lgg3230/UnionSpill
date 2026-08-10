@@ -1,6 +1,6 @@
 ********************************************************************************
 * UNION SPILLOVERS — WORKFORCE COMPOSITION OUTCOMES, SCALED SPEC (tfpw_07_11)
-* Purpose: Same regressions as Main_Results_composition.do but outcomes are
+* Purpose: Same regressions as 4092_composition.do but outcomes are
 *          divided by the relevant group's pre-treatment (2009-2011) mean:
 *            - Direct effects:  scale by treated firms' pre-treatment mean
 *            - Spillover:       scale by all untreated firms' pre-treatment mean
@@ -13,7 +13,7 @@
 *          results_direct_panelB_composition_scale.csv
 *          results_direct_panelC_composition_scale.csv
 *          results_spill_composition_scale.csv
-* NOTE:    Variables verified in 011_rais_to_firm.do collapse block.
+* NOTE:    Variables verified in 1010_rais_to_firm.do collapse block.
 *          All come from lagos_sample_sep24_pct_unionexp_ext_df2.dta directly.
 * Panels:  A (zero-connectivity controls), B (<=1% connectivity controls),
 *          C (all untreated controls), D (spillover effects)
@@ -34,7 +34,7 @@ di "Stata version: `c(stata_version)'"
 capture cls
 
 * ===============================
-* SET PATHNAMES (uncomment and edit if running standalone without 00_master.do)
+* SET PATHNAMES (uncomment and edit if running standalone without 0000_master.do)
 * ===============================
 // global main      "PATHNAME TO Replication-Mar-2"
 // global rais_firm "$main/UnionSpill/Data/CBA_RAIS_firm_level"

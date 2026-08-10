@@ -1,4 +1,4 @@
-* Wrapper: set globals then run Main_Results_cba_value.do
+* Wrapper: set globals then run 4042_cba_value.do
 set more off
 set varabbrev off
 
@@ -10,4 +10,4 @@ global graphs    "$main/UnionSpill/Graphs"
 global logs      "$main/UnionSpill/Logs"
 global programs  "$main/UnionSpill/Programs"
 
-do "$programs/cba_value/Main_Results_cba_value.do"
+do "$programs/cba_value/4042_cba_value.do"

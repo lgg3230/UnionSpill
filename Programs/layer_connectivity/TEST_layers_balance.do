@@ -23,7 +23,7 @@
 * Must come first — log using needs $logs before anything else
 ********************************************************************************
 
-* ── Set globals (safe to set unconditionally — same values as 00_master.do) ──
+* ── Set globals (safe to set unconditionally — same values as 0000_master.do) ──
 global main      "/Users/luisg/Library/CloudStorage/OneDrive-NorthwesternUniversity/4 - PhD/02_Research/Org_Econ BR/UnionSpillovers/Cluster"
 global rais_firm "$main/UnionSpill/Data/CBA_RAIS_firm_level"
 global rais_aux  "$main/UnionSpill/Data/RAIS_aux"

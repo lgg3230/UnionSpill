@@ -4,14 +4,14 @@
 * Same four arms as cba_period_arms.do, but the pre-treatment control bins are
 * DECILES instead of quartiles: group(10) rather than group(4).
 *
-* Bin construction copied from Programs/robustness/Main_Results_robustness_bins.do,
+* Bin construction copied from Programs/robustness/4052_robustness_bins.do,
 * which runs the same sensitivity over nbins in {10, 20, 50, 100}:
 *   egen <v>_pre<n>_o = cut(<v>_pre) if year == 2009 & in_balanced_panel == 1, group(<n>)
 *   bys identificad: egen <v>_pre<n> = min(<v>_pre<n>_o)
 * with the flows bin zero-filled so missing becomes the reference category.
 *
 * THE PROBLEM (see project_cba_period_duplicate_rows):
-* 031_clean_cba.do:448 expands each agreement to every December it covers, so
+* 1030_clean_cba.do:448 expands each agreement to every December it covers, so
 * consecutive establishment-years carry the same avg_file_date and collapse onto
 * the same cba_period. 1,914 of 17,742 firm x cba_period cells hold >1 row.
 *
@@ -102,7 +102,7 @@ keep if year >= 2009
 keep if lagos_sample_avg == 1
 
 ********************************************************************************
-* SECTION 1b: CLAUSE-TYPE VARIABLES (verbatim from clause_types.do)
+* SECTION 1b: CLAUSE-TYPE VARIABLES (verbatim from 4032_clause_types.do)
 ********************************************************************************
 
 cap drop wage_clauses

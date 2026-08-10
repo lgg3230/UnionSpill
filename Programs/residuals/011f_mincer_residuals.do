@@ -4,7 +4,7 @@
 * Purpose: Residualize log December wages and log hourly wages on worker
 *          characteristics using reghdfe's varying-slopes absorb, then
 *          collapse to firm × year and export CSV consumed by
-*          Main_Results_mincer.do.
+*          4112_mincer.do.
 *
 * Specification (Gui's R formula translated to Stata):
 *   outcome ~ 1 | race_group^grinstrucao^genero^year[age1, age2, age3, age4]
@@ -29,7 +29,7 @@
 
 capture log close
 
-// ─── GLOBALS (set here for standalone use; overridden by 00_master.do) ────────
+// ─── GLOBALS (set here for standalone use; overridden by 0000_master.do) ────────
 
 if "`c(username)'" == "lgg3230" {
 	global klc      "/kellogg/proj/lgg3230"
@@ -190,7 +190,7 @@ di _newline(1)
 di as result "Collapsing to firm x year ..."
 
 * Convert string identificad to numeric so export delimited writes plain numbers
-* (Main_Results_mincer.do reads the CSV and runs tostring...format(%014.0f))
+* (4112_mincer.do reads the CSV and runs tostring...format(%014.0f))
 capture destring identificad, replace
 
 collapse                                              ///
@@ -206,7 +206,7 @@ di as result "  Firm-year rows: " _N
 di as result "  Unique firms  : " _N  // approximate; tab would be slow
 
 ********************************************************************************
-* STEP 9 — Export CSV (same format as Python version; consumed by Main_Results_mincer.do)
+* STEP 9 — Export CSV (same format as Python version; consumed by 4112_mincer.do)
 ********************************************************************************
 
 local csv_out "$rais_firm/mincer_residuals_firm_year.csv"

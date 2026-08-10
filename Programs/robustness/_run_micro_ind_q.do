@@ -14,4 +14,4 @@ global programs  "$main/UnionSpill/Programs"
 global OUTVAR "lr_remdezr_w"
 global OUTSUF ""
 
-do "$programs/robustness/Main_Results_micro_ind_q.do"
+do "$programs/robustness/4062_micro_ind_q.do"

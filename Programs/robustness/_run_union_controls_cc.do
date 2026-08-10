@@ -1,4 +1,4 @@
-* Wrapper: set globals then run Main_Results_union_controls.do (CURRENT
+* Wrapper: set globals then run 4072_union_controls.do (CURRENT
 * CONNECTIVITY).
 *
 * Identical to _run_union_controls.do except that rais_firm points at the
@@ -22,4 +22,4 @@ global graphs    "$main/UnionSpill/Graphs/currentconn_full"
 global logs      "$main/UnionSpill/Logs/currentconn_full"
 global programs  "$main/UnionSpill/Programs"
 
-do "$programs/robustness/Main_Results_union_controls.do"
+do "$programs/robustness/4072_union_controls.do"

@@ -10,18 +10,18 @@ parallel connectivity/layer pipeline.
 
 ```mermaid
 flowchart TD
-    A[Raw RAIS yearly files<br/>$rais_raw_dir/RAIS_*.dta] --> B[Programs/011_rais_to_firm.do]
+    A[Raw RAIS yearly files<br/>$rais_raw_dir/RAIS_*.dta] --> B[Programs/1010_rais_to_firm.do]
     B --> B1[Data/RAIS_aux/worker_estab_*.dta]
     B --> B2[Data/CBA_RAIS_firm_level/rais_firm_*.dta]
     B --> B3[Data/RAIS_aux/unique_estab_*.dta]
     B --> B4[Data/RAIS_aux/rais_mode_mun_ind.dta]
 
-    C[Raw employer association files<br/>Data/stata_emp_assoc/*.txt] --> D[Programs/02_clean_emp_assoc.do]
+    C[Raw employer association files<br/>Data/stata_emp_assoc/*.txt] --> D[Programs/1020_clean_emp_assoc.do]
     B3 --> D
     D --> D1[Data/stata_emp_assoc/emp_assoc_*.dta]
     D --> D2[Data/RAIS_aux/unique_firms_*.dta]
 
-    E[Raw CBA coverage file<br/>Data/CBA/cnes_contracts_coverage_updated.dta] --> F[Programs/031_clean_cba.do]
+    E[Raw CBA coverage file<br/>Data/CBA/cnes_contracts_coverage_updated.dta] --> F[Programs/1030_clean_cba.do]
     F --> F1[Data/CBA/cba_coverage_clean.dta]
     F --> F2[Data/CBA/cba_coverage_clean_firm.dta]
     F2 --> G[Programs/explode_cba_coverage_firm.py]
@@ -32,7 +32,7 @@ flowchart TD
     F --> F5[Data/CBA/collapsed_cba_bunit_updated.dta]
     F --> F6[Data/CBA/collapsed_cba_firm_updated.dta]
 
-    B2 --> H[Programs/041_merge_cba_rais.do]
+    B2 --> H[Programs/1040_merge_cba_rais.do]
     F6 --> H
     I[Data/IBGE/mun_microregion_ibge.dta] --> H
     D2 --> H
@@ -44,7 +44,7 @@ flowchart TD
     H --> H6[Data/RAIS_aux/1_cba_treat.csv/.dta]
     H --> H7[Data/RAIS_aux/0_cba_treat.csv]
 
-    A --> J[Programs/05_yearly_employers.do<br/>connectivity stage]
+    A --> J[Programs/1050_yearly_employers.do<br/>connectivity stage]
     H1 --> J
     H3 --> J
     H4 --> J
@@ -64,7 +64,7 @@ flowchart TD
     K --> K3[Data/RAIS_aux/connectivity_control_2007_2011.csv]
     K --> K4[Data/RAIS_aux/connectivity_onecba_2007_2011.csv]
     K --> K5[Data/RAIS_aux/connectivity_zerocba_2007_2011.csv]
-    K1 --> L[Aggregate connectivity in<br/>Programs/05_yearly_employers.do]
+    K1 --> L[Aggregate connectivity in<br/>Programs/1050_yearly_employers.do]
     K2 --> L
     K3 --> L
     K4 --> L
@@ -98,7 +98,7 @@ flowchart TD
 
     W4 --> P0[Derive worker wage-percentile input<br/>or update wage-percentile script to read parquet]
     P0 --> P[Current expected Stata input<br/>Data/CBA_RAIS_firm_level/worker_year_pre_new_vs_nonnew_dec26.dta]
-    P --> Q[Programs/121_get_wage_pctiles_df2.do]
+    P --> Q[Programs/2030_get_wage_pctiles_df2.do]
     O1 --> Q
     Q --> R[Data/CBA_RAIS_firm_level/lagos_sample_sep24_pct_unionexp_ext_df2.dta]
 
@@ -110,10 +110,10 @@ flowchart TD
 
 ```mermaid
 flowchart LR
-    A[Programs/pipeline_main_data.do] --> B[011_rais_to_firm.do]
-    A --> C[031_clean_cba.do]
-    A --> D[041_merge_cba_rais.do]
-    A --> E[05_yearly_employers.do<br/>with MATLAB connectivity]
+    A[Programs/pipeline_main_data.do] --> B[1010_rais_to_firm.do]
+    A --> C[1030_clean_cba.do]
+    A --> D[1040_merge_cba_rais.do]
+    A --> E[1050_yearly_employers.do<br/>with MATLAB connectivity]
     E --> H[cba_rais_firm_2009_2016_flows_1.dta]
     H --> W[011c_worker_panel.py]
     W --> X[011d/011e worker bins]
@@ -125,7 +125,7 @@ flowchart LR
     I --> J
     Z --> J
     J --> G
-    A --> G[121_get_wage_pctiles_df2.do]
+    A --> G[2030_get_wage_pctiles_df2.do]
     G --> K[lagos_sample_sep24_pct_unionexp_ext_df2.dta]
 ```
 
@@ -137,12 +137,12 @@ flowchart LR
    firm-level file is still not identified in this map. The observed replacement
    output is `Data/CBA_RAIS_firm_level_currentconn_overlay/lagos_sample_sep24_pct_unionexp_ext_df2.dta`.
 
-2. `Programs/041_merge_cba_rais.do` appears to have a legacy typo in the
+2. `Programs/1040_merge_cba_rais.do` appears to have a legacy typo in the
    zero-CBA treatment block: it saves `zero_cba_treat` to
    `Data/RAIS_aux/1_cba_treat.dta` before exporting `0_cba_treat.csv`.
 
 3. The connectivity stage currently depends on MATLAB scripts run from
-   `Programs/05_yearly_employers.do`. Any canonical option 1 runner must call
+   `Programs/1050_yearly_employers.do`. Any canonical option 1 runner must call
    this stage or a verified replacement that reproduces:
    `totaltreat_pw_n`, `totaltreat_pf_n`, and `avg_ftreat_pf_n`.
 
@@ -156,8 +156,8 @@ flowchart LR
    `cba_rais_firm_2009_2016_flows_1.dta`, followed by
    `Programs/011d_worker_panel_bins.py` and
    `Programs/011e_worker_panel_bins2.py`. Older alternatives exist
-   (`Programs/012_rais_worker_panel.do`, `_run_012_worker_panel.do`,
-   `10_merge_lagos_worker.do`, `merge_lagos_worker_all.do`,
+   (`Programs/1060_rais_worker_panel.do`, `_run_012_worker_panel.do`,
+   `2010_merge_lagos_worker.do`, `merge_lagos_worker_all.do`,
    `Programs/Python/create_lagos_workers.py`), but they produce broad
    worker-establishment panels or Lagos-worker merges rather than the cleaner
    analysis-sample worker panel.

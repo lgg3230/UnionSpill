@@ -1,4 +1,4 @@
-* Wrapper: set globals then run Main_Results_mincer.do
+* Wrapper: set globals then run 4112_mincer.do
 set more off
 set varabbrev off
 
@@ -10,4 +10,4 @@ global graphs    "$main/UnionSpill/Graphs"
 global logs      "$main/UnionSpill/Logs"
 global programs  "$main/UnionSpill/Programs"
 
-do "$programs/residuals/Main_Results_mincer.do"
+do "$programs/residuals/4112_mincer.do"

@@ -10,7 +10,7 @@
 * The centroide column contains coordinates in format: POINT(-61.88 -11.47)
 * First number is longitude, second is latitude (separated by space)
 *
-* NOTE: Run 00_master.do first to define global paths, or define manually:
+* NOTE: Run 0000_master.do first to define global paths, or define manually:
 *       global ibge "/kellogg/proj/lgg3230/UnionSpill/Data/IBGE"
 
 ********************************************************************************

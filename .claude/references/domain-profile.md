@@ -64,7 +64,7 @@ Lines marked [CONFIRM] are Claude's inference, not established fact — correct 
 - No log(zero) and no zero-fill. Leave missing as missing; keep only observations present in the outcomes data.
 - Proximity measures are **negative absolute differences** (higher = more similar); geographic proximity is `-ln(distance + 0.1)`.
 - Stata emits CSV only. **LaTeX tables are always written by Python**, never by Stata.
-- Reuse existing variable definitions verbatim (e.g. `pre_treat_cba` from `Main_Results_pct_tfpw_07_11.do`). Do not reinvent them.
+- Reuse existing variable definitions verbatim (e.g. `pre_treat_cba` from `4012_pct_tfpw.do`). Do not reinvent them.
 - `cap drop` takes **one variable per line**. `cap drop x y z` silently drops only `x`.
 - Significant logic change means a new file (`06b_*`), not an edit in place.
 

@@ -1,7 +1,7 @@
 ********************************************************************************
 * clause_types_log.do
-* LOG VERSION of clause_types.do (+ the numb_clauses event-study graphs that
-* Main_Results_pct_tfpw_07_11.do produces). Direct and spillover effects for
+* LOG VERSION of 4032_clause_types.do (+ the numb_clauses event-study graphs that
+* 4012_pct_tfpw.do produces). Direct and spillover effects for
 * grouped clause-COUNT outcomes, transformed as log(1 + count) so that
 * zero-clause observations are RETAINED (not dropped).
 *
@@ -14,9 +14,9 @@
 *   l1p_numb_clauses   l1p_wage_clauses   l1p_emp_clauses   l1p_other_clauses
 *
 * Clause-type SHARE outcomes (wage/emp/other_clause_prop) are NOT logged here
-* (already bounded 0-1); see clause_types.do for those.
+* (already bounded 0-1); see 4032_clause_types.do for those.
 *
-* Specification is identical to clause_types.do EXCEPT the dependent variable is
+* Specification is identical to 4032_clause_types.do EXCEPT the dependent variable is
 * log1p(count). Pre-treatment quartile-bin controls reuse the RAW count bins
 * (<count>_pre4), so only the dependent variable changes.
 *
@@ -112,7 +112,7 @@ foreach c in numb_clauses wage_clauses emp_clauses other_clauses {
 
 ********************************************************************************
 * SECTION 3: VARIABLE CREATION
-* Mirrors the clause-count specification in clause_types.do
+* Mirrors the clause-count specification in 4032_clause_types.do
 ********************************************************************************
 
 cap drop placebo_year

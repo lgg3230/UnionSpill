@@ -168,7 +168,7 @@ PARQUET_DEST_YEARS = {2009, 2010, 2011}
 # IPCA deflators to December 2015 prices (2015 == 1). Must cover every year that
 # appears in the outcomes panel (2009-2016), not just the transition year-pairs:
 # ipca_case_sql() emits `ELSE NULL`, so a missing year silently NULLs the deflated
-# wage for that year. Series copied from Programs/011_rais_to_firm.do:13, the same
+# wage for that year. Series copied from Programs/1010_rais_to_firm.do:13, the same
 # one used to build the monthly lr_remdezr in 011c_worker_panel.py.
 IPCA = {
     2007: 0.607949398754109, 2008: 0.643834976197206,

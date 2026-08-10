@@ -14,8 +14,8 @@
 * Table 2 (final section, direct effects only): clause-type counts
 *   numb_clauses | wage_clauses | emp_clauses | other_clauses | l_numb_clauses
 *
-* Specs are copied verbatim from Main_Results_pct_tfpw_07_11.do (year + CBA
-* structures, samples A/B/C, spillover) and clause_types.do (clause-type
+* Specs are copied verbatim from 4012_pct_tfpw.do (year + CBA
+* structures, samples A/B/C, spillover) and 4032_clause_types.do (clause-type
 * construction), so the shared columns reproduce the existing headline tables.
 * l_numb_clauses uses the SAME controls as numb_clauses (numb_clauses_pre4 bins).
 *
@@ -39,7 +39,7 @@ di "Started: `c(current_date)' `c(current_time)'"
 cap mkdir "$tables/logclauses"
 
 ********************************************************************************
-* SECTION 1: LOAD AND MERGE   (verbatim from Main_Results_pct_tfpw_07_11.do)
+* SECTION 1: LOAD AND MERGE   (verbatim from 4012_pct_tfpw.do)
 ********************************************************************************
 
 use "$rais_firm/lagos_sample_sep24_pct_unionexp_ext_df2.dta", clear
@@ -69,7 +69,7 @@ keep if lagos_sample_avg == 1
 di as result "Sample size after restrictions: " _N
 
 ********************************************************************************
-* SECTION 2: CLAUSE-TYPE COUNTS   (verbatim from clause_types.do Section 2)
+* SECTION 2: CLAUSE-TYPE COUNTS   (verbatim from 4032_clause_types.do Section 2)
 ********************************************************************************
 
 cap drop wage_clauses

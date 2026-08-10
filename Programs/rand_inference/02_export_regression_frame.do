@@ -2,7 +2,7 @@
 * PROJECT: UNION SPILLOVERS — Randomization inference (Task 5)
 * PROGRAM: 02_export_regression_frame.do
 * PURPOSE: Reproduce the EXACT pre-treatment construction + FE bins used by the
-*          spillover spec (Main_Results_pct_tfpw_07_11.do), export a clean
+*          spillover spec (4012_pct_tfpw.do), export a clean
 *          regression frame (all Lagos balanced firms) for the Python permutation
 *          engine, and record the published baseline spillover coefficients as
 *          the validation target.

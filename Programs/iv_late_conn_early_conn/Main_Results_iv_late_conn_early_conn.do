@@ -10,7 +10,7 @@
 *          (06_bilateral_data_prep.py: early_pre = avg(ratio_0708, ratio_0809),
 *                                      late_pre  = avg(ratio_0910, ratio_1011)).
 *
-* FE spec: Same as Main_Results_pct_tfpw_07_11.do (firm, industry×year,
+* FE spec: Same as 4012_pct_tfpw.do (firm, industry×year,
 *           month×year, microregion×year, outcome_pre4×year, emp_pre4×year,
 *           totalflows_pw_pre_07_11 bins×year)
 * IV ref:  Main_Results_IV.do lines 1867–2229
@@ -282,7 +282,7 @@ file close `fh'
 * SECTION 4: FE SPEC AND SAMPLE MACROS
 ********************************************************************************
 
-* FE spec from Main_Results_pct_tfpw_07_11.do
+* FE spec from 4012_pct_tfpw.do
 local base_fe    "identificad i.industry1#i.year i.mode_base_month#i.year i.microregion#i.year"
 local extra_year "ib0.totalflows_pw_pre_07_114#i.year"
 

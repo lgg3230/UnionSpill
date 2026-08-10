@@ -31,7 +31,7 @@
 *
 ********************************************************************************
 
-// DIRECTORIES — must match 00_master.do globals
+// DIRECTORIES — must match 0000_master.do globals
 // (source this file from master, or set globals here before running standalone)
 
 global main    "/kellogg/proj/lgg3230"

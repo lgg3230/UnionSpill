@@ -20,8 +20,8 @@ Raw yield: 13 findings + 6 judgment calls. After dedup and verification against 
 ## Confirmed — fix in the paper
 
 **1. Industry fixed effects are three-digit, six table notes say two-digit.**
-`Main_Results_pct_tfpw_07_11.do:319` absorbs `i.industry1#i.year`, and
-`041_merge_cba_rais.do:169-172` builds `industry1` from `substr(clascnae20,1,3)`. `big_industry`
+`4012_pct_tfpw.do:319` absorbs `i.industry1#i.year`, and
+`1040_merge_cba_rais.do:169-172` builds `industry1` from `substr(clascnae20,1,3)`. `big_industry`
 (two-digit, `:218`) never enters the FE. Notes at Draft.tex lines 379, 456, 590, 658, 892, 938.
 → Change six table notes to three-digit. The appendix is already correct.
 
@@ -35,7 +35,7 @@ undefined, yet the column reports 112,620 obs against 113,112.
 
 **3. The main text's clause window does not match the estimation.**
 Text (line 298): "restrict post-treatment observations to CBAs filed after September 25, 2012."
-Code (`Main_Results_pct_tfpw_07_11.do:120-126`): `cba_period` 3–6 is assigned only to filings in
+Code (`4012_pct_tfpw.do:120-126`): `cba_period` 3–6 is assigned only to filings in
 calendar 2013–2016, so **every 2012 filing is dropped**. An agreement filed 1 October 2012 is in
 by the text and out in fact.
 → The appendix is right. Fix the main text.
@@ -47,7 +47,7 @@ Notes say "average effect for 2012--2016, with 2011 as the reference year" and a
 → Add one sentence to the clause columns giving the period indexing and the period-1-vs-2 placebo.
 
 **5. Equation (2) divides by four; the estimator divides by the number of observed pairs.**
-`05_yearly_employers.do` builds `totaltreat_pw_n` by summing non-missing pairs and dividing by
+`1050_yearly_employers.do` builds `totaltreat_pw_n` by summing non-missing pairs and dividing by
 the count of non-missing pairs. Affects the few hundred establishments absent from a pair
 (724 / 103 / 27 / 35 across the four pairs).
 → Either put the count of non-missing pairs in the equation's denominator, or state the
@@ -73,7 +73,7 @@ establishment-level sum of weekly hours. Same RAIS field, different scaling and 
 **9. "In force at the end of 2012" overstates the sample condition.**
 The appendix says the third condition requires "at least one agreement filed on or after 1
 January 2012 that was in force at the end of 2012." The code
-(`041_merge_cba_rais.do:114`) requires only `file_date >= 1jan2012 & end_date >= 31dec2012`. It
+(`1040_merge_cba_rais.do:114`) requires only `file_date >= 1jan2012 & end_date >= 31dec2012`. It
 never checks that the agreement had started by end-2012, so a 2014 filing running into 2015
 satisfies it. As written the appendix describes a stricter rule than the one imposed.
 → Reword to: an agreement filed on or after 1 January 2012 whose term runs at least to the end

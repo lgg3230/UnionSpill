@@ -453,7 +453,7 @@ The redone measure is a near-exact reproduction: correlation **0.9990**, p90 **0
 - **Firm-level columns:** headline spillover 0.00506 → 0.00499 (t 2.247 → 2.219, still
   significant). Printed: **0.0051 → 0.0050**.
 
-**Trap:** `Programs/main_results/build_currentconn_overlay_panel.do` swaps `totaltreat_pw_n` for
+**Trap:** `Programs/main_results/3020_build_currentconn_overlay_panel.do` swaps `totaltreat_pw_n` for
 the current measure and keeps the legacy as `totaltreat_pw_n_frozen`, but **never regenerates
 `totaltreat_pw_norm`**. Verified: in the overlay, p90(`totaltreat_pw_n`) = 0.02925788 while the
 divisor implied by `totaltreat_pw_norm` is still 0.02932389. The within-firm wrapper reads the
@@ -562,7 +562,7 @@ of A8 equality p-values.
 5. Fix `02_make_tables_hw.py`: wage number format, note text, duplicate labels (§8).
 6. Regenerate stale `tabA*.tex`; git-track `07_within_firm/`.
 7. If the redone connectivity becomes standard, rebuild `totaltreat_pw_norm` in
-   `build_currentconn_overlay_panel.do`; expect the headline to print 0.0050 (§7).
+   `3020_build_currentconn_overlay_panel.do`; expect the headline to print 0.0050 (§7).
 
 ---
 

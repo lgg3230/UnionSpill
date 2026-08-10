@@ -2,7 +2,7 @@
 * UNION SPILLOVERS — CONNECTIVITY THRESHOLD DUMMIES
 * Purpose: Replace continuous connectivity with above-median / above-p65 /
 *          above-p75 / above-p90 dummies and run spillover regressions.
-*          Same fixed-effect spec as Main_Results_pct_tfpw_07_11.do.
+*          Same fixed-effect spec as 4012_pct_tfpw.do.
 * Output:  Tables/conn_margins/results_thresholds.csv
 * Auto-runs: Programs/conn_margins/generate_thresholds_latex.py
 ********************************************************************************

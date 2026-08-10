@@ -1,6 +1,6 @@
 ********************************************************************************
 * STANDALONE: SPILLOVER EFFECTS FOR BASE OUTCOMES ONLY
-* Replicates Part D of Main_Results_pct_tfpw_07_11.do for:
+* Replicates Part D of 4012_pct_tfpw.do for:
 *   lr_remdezr_w, lr_remdezr_h_w, l_firm_emp
 * (Skips percentiles, ratios, numb_clauses, and all graph exports)
 ********************************************************************************

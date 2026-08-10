@@ -5,7 +5,7 @@ PUBLISHED 6-level cba_period DiD (reproduces the 0.0180 spillover slope).
 
 A first difference is a 2-period object and can only reproduce the 2-level
 pre/post DiD (0.0145), not the published spec, which uses 6 cba_period fixed
-effects (Main_Results_pct_tfpw_07_11.do PART D). To test linearity against the
+effects (4012_pct_tfpw.do PART D). To test linearity against the
 published coefficient we use Frisch-Waugh residualization:
 
     y_res = numb_clauses  residualized on the full published FE set

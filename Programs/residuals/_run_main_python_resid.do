@@ -1,4 +1,4 @@
-* Run Main_Results_mincer.do using PYTHON residuals
+* Run 4112_mincer.do using PYTHON residuals
 * Python residuals: mincer_residuals_firm_year_python.csv
 set more off
 set varabbrev off
@@ -16,4 +16,4 @@ global programs  "$main/UnionSpill/Programs"
 global resid_csv_name "mincer_residuals_firm_year_python.csv"
 global results_suffix "_python"
 
-do "$programs/residuals/Main_Results_mincer.do"
+do "$programs/residuals/4112_mincer.do"

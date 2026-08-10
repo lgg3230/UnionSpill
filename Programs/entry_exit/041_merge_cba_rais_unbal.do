@@ -5,7 +5,7 @@
 *
 * Rather than re-merging from raw files, this derives the unbalanced panel
 * directly from $rais_firm/cba_rais_firm_2007_2016.dta, which was produced
-* by the original 041_merge_cba_rais.do and already contains all CBA
+* by the original 1040_merge_cba_rais.do and already contains all CBA
 * indicators and RAIS outcomes.
 *
 * KEY DIFFERENCE vs original 041:

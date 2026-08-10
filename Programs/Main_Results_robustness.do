@@ -81,7 +81,7 @@ merge m:1 identificad using `totalflows_wide', keep(master match) nogen
 
 * Construct pre-treatment flow averages (missing-friendly).
 * Average across year pairs with non-missing data; denominator = number
-* of non-missing pairs. Follows the pattern in 05_yearly_employers.do.
+* of non-missing pairs. Follows the pattern in 1050_yearly_employers.do.
 
 * --- totalflows_pre_07_11: average of 4 year pairs ---
 gen double totalflows_pre_07_11 = 0

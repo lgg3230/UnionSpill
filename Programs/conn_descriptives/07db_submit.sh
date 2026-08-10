@@ -20,7 +20,7 @@
 #   squeue -u $USER -n 07db_pretreat_mv
 #
 # After completion, re-plot:
-#   ~/.conda/envs/venv_python312/bin/python Programs/conn_descriptives/06_bilateral_coefplot_combined.py
+#   ~/.conda/envs/venv_python312/bin/python Programs/conn_descriptives/5110_figure_bilateral_coefplot.py
 
 echo "============================================"
 echo "SLURM Job ID: $SLURM_JOB_ID"

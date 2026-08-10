@@ -168,7 +168,7 @@ story += [
     p("This file contains firm-level total worker flows for each of the four pre-treatment "
       "year pairs. A \"flow\" between years t and t+1 counts any worker who was employed at "
       "the focal firm in December of year t <i>or</i> December of year t+1 (outflows + inflows). "
-      "The file is constructed in <tt>05_yearly_employers.do</tt> and used in "
+      "The file is constructed in <tt>1050_yearly_employers.do</tt> and used in "
       "<tt>07_layer_spillover.do</tt> for the firm-level restricted specification.", "body"),
     sp(10),
 ]

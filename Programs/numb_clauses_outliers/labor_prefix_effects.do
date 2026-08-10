@@ -1,7 +1,7 @@
 ********************************************************************************
 * labor_prefix_effects.do
 * Direct and spillover effects for year-based labor outcomes using the
-* specification in Main_Results_pct_tfpw_07_11.do, excluding firms whose
+* specification in 4012_pct_tfpw.do, excluding firms whose
 * identificad starts with 10877926.
 ********************************************************************************
 
@@ -52,7 +52,7 @@ keep if year >= 2009
 keep if lagos_sample_avg == 1
 
 ********************************************************************************
-* SECTION 2: YEAR-BASED VARIABLES FROM Main_Results_pct_tfpw_07_11.do
+* SECTION 2: YEAR-BASED VARIABLES FROM 4012_pct_tfpw.do
 ********************************************************************************
 
 cap drop placebo_year

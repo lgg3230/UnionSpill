@@ -1,4 +1,4 @@
-* Run Main_Results_mincer.do using STATA residuals
+* Run 4112_mincer.do using STATA residuals
 * Stata residuals: mincer_residuals_firm_year.csv (already in rais_firm)
 set more off
 set varabbrev off
@@ -17,4 +17,4 @@ global programs  "$main/UnionSpill/Programs"
 global resid_csv_name "mincer_residuals_firm_year.csv"
 global results_suffix ""
 
-do "$programs/residuals/Main_Results_mincer.do"
+do "$programs/residuals/4112_mincer.do"

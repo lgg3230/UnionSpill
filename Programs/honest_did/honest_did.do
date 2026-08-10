@@ -7,7 +7,7 @@
 *   - direct   : i.treat_ultra ## ib2011.year  (wages/emp) ; ib(2).cba_period (clauses)
 *   - spillover : c.totaltreat_pw_norm ## ib2011.year (wages/emp) ; ib(2).cba_period (clauses)
 * Estimation (sample, FE, clustering), data loading, and variable definitions
-*   are copied verbatim from Programs/Main_Results_pct_tfpw_07_11.do
+*   are copied verbatim from Programs/4012_pct_tfpw.do
 * so coefficients reproduce the headline specs.
 *
 * Restrictions:
@@ -42,7 +42,7 @@ cap mkdir "$tables/honest_did"
 cap mkdir "$graphs/honest_did"
 
 ********************************************************************************
-* SECTION 1: LOAD AND MERGE   (verbatim from Main_Results_pct_tfpw_07_11.do)
+* SECTION 1: LOAD AND MERGE   (verbatim from 4012_pct_tfpw.do)
 ********************************************************************************
 
 use "$rais_firm/lagos_sample_sep24_pct_unionexp_ext_df2.dta", clear
@@ -108,7 +108,7 @@ keep if lagos_sample_avg == 1
 di as result "Sample size after restrictions: " _N
 
 ********************************************************************************
-* SECTION 2: VARIABLE CREATION   (verbatim from Main_Results_pct_tfpw_07_11.do)
+* SECTION 2: VARIABLE CREATION   (verbatim from 4012_pct_tfpw.do)
 ********************************************************************************
 
 di _newline(1)

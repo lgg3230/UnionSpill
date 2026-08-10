@@ -22,7 +22,7 @@ clear all
 macro drop _all
 version 17.0
 
-* Define globals (same as 00_master.do)
+* Define globals (same as 0000_master.do)
 global klc "/kellogg/proj/lgg3230"
 global main "$klc"
 

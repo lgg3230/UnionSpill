@@ -20,7 +20,7 @@
 *   treated balanced-panel sample at year=2009.
 *
 *   Source: connectivity_control_2007_2011_agg.dta (MATLAB output, processed
-*   by 05_yearly_employers.do — see connectivity_control_lagos.m for the
+*   by 1050_yearly_employers.do — see 1053_connectivity_control_lagos.m for the
 *   per-worker normalization).
 *
 * Outputs:

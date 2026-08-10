@@ -39,7 +39,7 @@ di "Stata version: `c(stata_version)'"
 
 capture cls
 
-* ── PATHS (uncomment if running standalone without 00_master.do) ─────────────
+* ── PATHS (uncomment if running standalone without 0000_master.do) ─────────────
 // global main      "PATHNAME TO Replication-Mar-2"
 // global rais_firm "$main/UnionSpill/Data/CBA_RAIS_firm_level"
 // global tables    "$main/UnionSpill/Tables"

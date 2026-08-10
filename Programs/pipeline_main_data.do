@@ -95,23 +95,23 @@ if `run_wage_percentiles' == 1 & `allow_overwrite_protected' == 0 {
 
 if `run_rais_firm' == 1 {
     di as result "Stage 1: RAIS firm-year construction"
-    do "$programs/011_rais_to_firm.do"
+    do "$programs/1010_rais_to_firm.do"
 }
 
 if `run_cba_clean' == 1 {
     di as result "Stage 2: CBA cleaning and establishment matching"
-    do "$programs/031_clean_cba.do"
+    do "$programs/1030_clean_cba.do"
 }
 
 if `run_merge_cba_rais' == 1 {
     di as result "Stage 3: Merge RAIS and CBA, define treatment samples"
-    do "$programs/041_merge_cba_rais.do"
+    do "$programs/1040_merge_cba_rais.do"
 }
 
 if `run_connectivity' == 1 {
     di as result "Stage 4: Worker-flow and connectivity construction"
     di as text "Warning: this stage is not yet confirmed to reproduce the protected connectivity measure exactly."
-    do "$programs/05_yearly_employers.do"
+    do "$programs/1050_yearly_employers.do"
 }
 
 if `run_union_exposure' == 1 {
@@ -121,7 +121,7 @@ if `run_union_exposure' == 1 {
 
 if `run_wage_percentiles' == 1 {
     di as result "Stage 6: Worker wage percentiles merged to firm-year data"
-    do "$programs/121_get_wage_pctiles_df2.do"
+    do "$programs/2030_get_wage_pctiles_df2.do"
 }
 
 di as result "Pipeline runner finished."

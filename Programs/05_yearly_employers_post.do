@@ -6,7 +6,7 @@
 * OUTPUT: YEARLY EMPLOYER FILES AND TRANSITION MATRICES FOR 2011-2016
 ********************************************************************************
 
-* This script extends 05_yearly_employers.do to cover post-treatment years
+* This script extends 1050_yearly_employers.do to cover post-treatment years
 * It uses the same selection algorithm as the pre-treatment period
 
 ********************************************************************************

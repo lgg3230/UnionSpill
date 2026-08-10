@@ -2,7 +2,7 @@
 * cba_similarity.do
 * Regresses CBA content similarity (untreated firm vs. flow-weighted average
 * of connected treated firms) on connectivity, using the same panel spec as
-* clause_types.do.
+* 4032_clause_types.do.
 *
 * For each (untreated firm i, cba_period t):
 *   sim_{it} = sim(x_{it}, Σ_j w_{ij}*x_{jt} / Σ_j w_{ij})
@@ -12,7 +12,7 @@
 * One column per measure in the output table.
 *
 * Pipeline:
-*   1. Load + setup variables (mirrors clause_types.do)
+*   1. Load + setup variables (mirrors 4032_clause_types.do)
 *   2. Export intermediate clause data for Python
 *   3. Python computes reference vectors + similarities (cba_similarity_prep.py)
 *   4. Load Python output, merge, run panel regressions
@@ -35,7 +35,7 @@ di "Stata version: `c(stata_version)'"
 cap mkdir "$tables/cba_similarity"
 
 ********************************************************************************
-* SECTION 1: LOAD DATA + MERGE TOTALFLOWS (same as clause_types.do)
+* SECTION 1: LOAD DATA + MERGE TOTALFLOWS (same as 4032_clause_types.do)
 ********************************************************************************
 
 use "$rais_firm/lagos_sample_sep24_pct_unionexp_ext_df2.dta", clear
@@ -66,7 +66,7 @@ keep if lagos_sample_avg == 1
 di as result "Sample size after restrictions: " _N
 
 ********************************************************************************
-* SECTION 2: VARIABLE CREATION (mirrors clause_types.do)
+* SECTION 2: VARIABLE CREATION (mirrors 4032_clause_types.do)
 ********************************************************************************
 
 cap drop cba_period
@@ -253,7 +253,7 @@ foreach v of local ln_sim_outcomes {
 }
 
 ********************************************************************************
-* SECTION 7: SPECIFICATION MACROS (identical to clause_types.do)
+* SECTION 7: SPECIFICATION MACROS (identical to 4032_clause_types.do)
 ********************************************************************************
 
 local spec             "cba_similarity_tfpw_07_11"

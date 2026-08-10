@@ -106,7 +106,7 @@ paper.** `Programs/rand_inference/06_fill_section.py` was evidently built to pop
 section; that section does not exist in Draft.tex.
 
 Also: the paper's $\mu_i$ uses `mu_C_ind_month` (industry × negotiation-month, per
-`16_recentered_eventstudy.do:11`), matching **none** of the four RI schemes. State and justify.
+`5152_recentered_eventstudy.do:11`), matching **none** of the four RI schemes. State and justify.
 
 **Fix (must):** report the full RI suite with the positive-control power calibration; state which
 scheme models assignment and why.

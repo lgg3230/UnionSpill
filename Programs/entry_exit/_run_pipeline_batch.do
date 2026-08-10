@@ -7,7 +7,7 @@ version 17.0
 set more off
 clear all
 
-* --- Globals (mirror 00_master.do for cluster) ---
+* --- Globals (mirror 0000_master.do for cluster) ---
 global klc       "/kellogg/proj/lgg3230"
 global main      "$klc"
 global rais_raw_dir "$main/RAIS/output/data/full"

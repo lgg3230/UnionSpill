@@ -1,7 +1,7 @@
 ********************************************************************************
 * labor_top1_effects.do
 * Spillover effects for year-based labor outcomes using the specification in
-* Main_Results_pct_tfpw_07_11.do. Compares the baseline spillover sample to a
+* 4012_pct_tfpw.do. Compares the baseline spillover sample to a
 * sample excluding firms in the top 1% of numb_clauses in cba_period == 1.
 ********************************************************************************
 

@@ -5,7 +5,7 @@
 * INPUT: connectivity_treat_2005_2011.csv (from MATLAB extended script)
 * OUTPUT: connectivity_treat_2005_2011_6yr.dta
 *
-* NOTE: Adapts lines 130-386 of 05_yearly_employers.do for 6 year-pairs.
+* NOTE: Adapts lines 130-386 of 1050_yearly_employers.do for 6 year-pairs.
 *       The CSV contains both totaltreat and totalflows columns.
 ********************************************************************************
 

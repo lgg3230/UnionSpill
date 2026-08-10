@@ -10,7 +10,7 @@
 ********************************************************************************
 
 * ===============================================================================
-* EXTPRE VARIANT of Main_Results_pct_tfpw_07_11.do
+* EXTPRE VARIANT of 4012_pct_tfpw.do
 * Pre-period extended back to 2007 (2007-2008 firm-year outcomes rebuilt from raw
 * RAIS parquet, validated vs live 2009 to machine precision; see extpre_build.do).
 * Design: the static (2x2) post & pre estimates and numb_clauses are GUARDED to
@@ -46,7 +46,7 @@ di "Stata version: `c(stata_version)'"
 capture cls
 
 * ===============================
-* SET PATHNAMES (uncomment and edit if running standalone without 00_master.do)
+* SET PATHNAMES (uncomment and edit if running standalone without 0000_master.do)
 * ===============================
 // global main      "PATHNAME TO Replication-Mar-2"
 // global rais_firm "$main/UnionSpill/Data/CBA_RAIS_firm_level"

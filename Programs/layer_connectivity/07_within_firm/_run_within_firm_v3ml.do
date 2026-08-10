@@ -31,7 +31,7 @@ capture log close
 log using "$logs/within_firm_hlogic_ml_v2.log", replace text
 di as result "== Within-firm exhibits (A6/A7/A8): current connectivity, v2 spec =="
 di as result "Started: `c(current_date)' `c(current_time)'"
-do "$programs/01c_within_firm_estimates.do"
+do "$programs/4122_within_firm.do"
 di as result "Finished: `c(current_date)' `c(current_time)'"
 shell source /gpfs/kellogg/proj/lgg3230/UnionSpill/Programs/notify.sh && notify "within_firm_v2" "Monthly v2 within-firm Stata job finished"
 log close

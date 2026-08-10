@@ -6,7 +6,7 @@
 *           treated firm sets. Y-variables are 2011 values (not 2009-2011 means).
 * Sample matching: the CONTROL (spillover) set is restricted to the e(sample) of
 *           the headline spillover log-wage event study from
-*           Main_Results_pct_tfpw_07_11.do (so it matches the ~4,085-firm
+*           4012_pct_tfpw.do (so it matches the ~4,085-firm
 *           estimation sample, not a looser balance-panel count). The TREATED set
 *           is treated firms in the balanced Lagos panel with non-missing wages.
 * Characteristics: lr_remdezr_w (log wages), l_firm_emp (log emp),

@@ -2,7 +2,7 @@
 """
 Script 03: NaN-aware average across year pairs → final firm × layer dataset.
 
-Replicates the _n logic from 05_yearly_employers.do for each of:
+Replicates the _n logic from 1050_yearly_employers.do for each of:
   - ratio_total  → layer_treat_pw_n
   - ratio_same   → sametreat_pw_n
   - ratio_cross  → crosstreat_pw_n

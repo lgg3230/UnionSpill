@@ -1,7 +1,7 @@
 ********************************************************************************
 * spill_trim_robustness.do
 * Runs the main spillover regression for lr_remdezr_w (from
-* Main_Results_pct_tfpw_07_11.do) on both the full untreated sample and
+* 4012_pct_tfpw.do) on both the full untreated sample and
 * after dropping the top-1% connectivity firms, then exports a comparison CSV.
 *
 * Spec: reghdfe lr_remdezr_w c.totaltreat_pw_norm##i.treat_year if s_spill,
@@ -35,7 +35,7 @@ global programs  "$main/UnionSpill/Programs"
 cap mkdir "$tables/conn_margins"
 
 ********************************************************************************
-* SECTION 1: LOAD AND MERGE (identical to Main_Results_pct_tfpw_07_11.do)
+* SECTION 1: LOAD AND MERGE (identical to 4012_pct_tfpw.do)
 ********************************************************************************
 
 use "$rais_firm/lagos_sample_sep24_pct_unionexp_ext_df2.dta", clear

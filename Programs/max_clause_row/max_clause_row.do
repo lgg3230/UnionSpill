@@ -21,8 +21,8 @@
 *
 * Data prep is copied verbatim from the three source scripts:
 *   Programs/main_results/panelC_and_spill_numb_clauses.do
-*   Programs/clause_types/clause_types.do
-*   Programs/cba_value/Main_Results_cba_value.do
+*   Programs/clause_types/4032_clause_types.do
+*   Programs/cba_value/4042_cba_value.do
 * which all load the same panel and use the same cba_period FE structure.
 *
 * Output: Tables/max_clause_row/max_clause_comparison.csv  (CSV only; the
@@ -61,7 +61,7 @@ di "Started: `c(current_date)' `c(current_time)'"
 
 use "$rais_firm/lagos_sample_sep24_pct_unionexp_ext_df2.dta", clear
 
-* CBA value score (from Main_Results_cba_value.do)
+* CBA value score (from 4042_cba_value.do)
 preserve
 	import delimited "$rais_firm/cba_value_firm_year.csv", clear
 	tostring identificad, replace format(%014.0f) force
@@ -95,7 +95,7 @@ keep if year >= 2009
 keep if lagos_sample_avg == 1
 
 ********************************************************************************
-* SECTION 1b: CLAUSE-TYPE VARIABLES (verbatim from clause_types.do SECTION 2)
+* SECTION 1b: CLAUSE-TYPE VARIABLES (verbatim from 4032_clause_types.do SECTION 2)
 ********************************************************************************
 
 cap drop wage_clauses

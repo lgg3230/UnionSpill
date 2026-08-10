@@ -144,12 +144,12 @@ the basis for this report's verdict.**
   `Programs/final_withinfirm_replication_extracted/…/run_all.R:27,30` (`setwd`). **None are in the
   scripts generating this Draft's figures.**
 - **INV-16:** absolute paths are pervasive in Stata via `$klc`-style globals (e.g.
-  `Programs/rand_inference/16_recentered_eventstudy.do:16-18`). This is an **explicitly documented
+  `Programs/rand_inference/5152_recentered_eventstudy.do:16-18`). This is an **explicitly documented
   project convention in CLAUDE.md** and conflicts with INV-16 by design. Escalate as a policy
   question; do not silently "fix".
 - **INV-14:** `np.random.seed(42)` appears twice in `Programs/conn_margins/linearity_fig3_spline.py`
   (lines 62, 97) — INV-14 requires exactly once at top. That script does not feed this Draft.
-- **INV-15:** `Programs/conn_descriptives/hist_connectivity.py` — imports correctly at top (line 20+,
+- **INV-15:** `Programs/conn_descriptives/5140_figure_conn_hist.py` — imports correctly at top (line 20+,
   after the module docstring). Compliant.
 
 ---
