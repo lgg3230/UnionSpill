@@ -74,8 +74,8 @@ Both were written 2026-08-09 to close H1 of `sample_provenance.md` — "no scrip
 `Programs/` writes the overlay panel", the hazard that made every published exhibit rest
 on a binary of unrecorded provenance. The recipe was not lost, only inlined inside two
 estimators rather than factored into a build step:
-`layer_connectivity_standalone/scripts/05a_within_firm_estimates.do:190-199` and its R port
-`within_firm_final/R/02_build.R:29-41`, both of which apply it in memory and never persist it.
+`archive/layer_connectivity_standalone/scripts/05a_within_firm_estimates.do:190-199` and its R port
+`archive/Programs/within_firm_final/R/02_build.R:29-41`, both of which apply it in memory and never persist it.
 
 **Verification.** Each stage was built to a scratch directory and compared with `cf _all`
 against the published artifact. Both are silent — value-identical on every variable and
@@ -246,7 +246,7 @@ inside `Main_Results_turnover_scale`).
 
 Not rewritten, because each holds its own copies and rewriting would corrupt their
 self-references: `Old/`, `Programs_2025.05.03/`, `main_data_pipeline{,_duckdb}/`,
-`layer_connectivity_standalone/`.
+`archive/layer_connectivity_standalone/`.
 
 ### Rename map — original name to current name
 

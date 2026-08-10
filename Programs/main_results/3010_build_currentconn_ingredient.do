@@ -5,7 +5,7 @@
 * Tier-C sub-stage. Produces the ingredient consumed by
 * 3020_build_currentconn_overlay_panel.do, which until now existed only as a 3.4 MB
 * binary of unrecorded provenance sitting in two in-tree copies
-* (Programs/within_firm_final/data/ and layer_connectivity_standalone/data/,
+* (archive/Programs/within_firm_final/data/ and archive/layer_connectivity_standalone/data/,
 * byte-identical, md5 25b12592be9874082f51b1eecfe6e876).
 *
 * It is not an unrecorded input at all: its totaltreat_pw_n is the firm-level

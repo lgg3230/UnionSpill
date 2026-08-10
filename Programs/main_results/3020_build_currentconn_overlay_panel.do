@@ -5,8 +5,8 @@
 * Closes hazard H1 of quality_reports/sample_provenance.md: every published
 * exhibit loads the overlay panel, and until now no script in Programs/ built
 * it. The recipe existed only inlined inside two estimators --
-* layer_connectivity_standalone/scripts/05a_within_firm_estimates.do:190-199
-* (Stata) and Programs/within_firm_final/R/02_build.R:29-41 (R port) -- both of
+* archive/layer_connectivity_standalone/scripts/05a_within_firm_estimates.do:190-199
+* (Stata) and archive/Programs/within_firm_final/R/02_build.R:29-41 (R port) -- both of
 * which apply it in memory at estimation time and never persist the result.
 * This script factors that block out into the build step it always should have
 * been.
@@ -49,14 +49,16 @@ if "$rais_firm" == "" global rais_firm "$main/UnionSpill/Data/CBA_RAIS_firm_leve
 if "$rais_firm_overlay" == "" ///
     global rais_firm_overlay "$main/UnionSpill/Data/CBA_RAIS_firm_level_currentconn_overlay"
 
-* The ingredient is not yet under Data/. Both known copies are byte-identical
-* (md5 25b12592be9874082f51b1eecfe6e876); prefer an explicit override, then the
-* Data/ location once it is promoted there, then the two in-tree copies.
+* The canonical ingredient now lives under Data/RAIS_aux/, built by
+* 3010_build_currentconn_ingredient.do and verified value-identical to the two
+* historical in-tree copies (cf _all silent). Those copies moved to archive/
+* when the tree was cleaned, so they are kept here only as provenance
+* fallbacks -- the chain no longer depends on them.
 if "$cc_ingredient" == "" {
     foreach cand in ///
         "$main/UnionSpill/Data/RAIS_aux/currentconn_overlay_totaltreat.dta" ///
-        "$main/UnionSpill/Programs/within_firm_final/data/currentconn_overlay_totaltreat.dta" ///
-        "$main/UnionSpill/layer_connectivity_standalone/data/currentconn_overlay_totaltreat.dta" {
+        "$main/UnionSpill/archive/Programs/within_firm_final/data/currentconn_overlay_totaltreat.dta" ///
+        "$main/UnionSpill/archive/layer_connectivity_standalone/data/currentconn_overlay_totaltreat.dta" {
         if "$cc_ingredient" == "" {
             capture confirm file "`cand'"
             if _rc == 0 global cc_ingredient "`cand'"
