@@ -4,7 +4,7 @@
 *          (wage percentiles and inequality ratios) using per-worker pairwise
 *          flows (2007-2011) as the extra pre-treatment control.
 * Output:  4 CSV files with regression results (panelA, panelB, panelC, spill)
-* Auto-runs: Programs/generate_pct_latex.py
+* Auto-runs: Programs/5160_table_pct_latex.py
 * Panels:  A (zero-connectivity controls), B (<=1% connectivity controls),
 *          C (all untreated controls), D (spillover effects)
 ********************************************************************************

@@ -26,7 +26,7 @@ off by default.
 |---|---|---|---|---|
 | A1 | `1010_rais_to_firm.do` | `$rais_raw_dir/RAIS_{year}.dta` | firm-year files | RUNNABLE |
 | A2 | `1020_clean_emp_assoc.do` | `$emp_assoc` | cleaned assoc. | RUNNABLE |
-| A3 | `1030_clean_cba.do` + `explode_cba_coverage_*.py` | `$cba_dir` | cleaned CBAs | RUNNABLE |
+| A3 | `1030_clean_cba.do` + `1031`/`1032_explode_cba_coverage_*.py` | `$cba_dir` | cleaned CBAs | RUNNABLE |
 | A4 | `1040_merge_cba_rais.do` | A1 + A3 | `cba_rais_firm_2007_2016.dta` (37 GB) | RUNNABLE |
 | A5 | `1050_yearly_employers.do` | A4 + raw RAIS | `yearly_employers_*`, `employers_*_*.csv`, then shells five MATLAB scripts (`1051`…`1055_connectivity_*.m`) → `connectivity_*_2007_2011_agg.dta`, `cba_rais_firm_2009_2016_flows_1.dta` (56 GB), `lagos_sample_sep24_test.dta` | RUNNABLE |
 | A6 | `1060_rais_worker_panel.do` | raw RAIS | `worker_estab_{year}.dta`, `worker_estab_all_years.dta` (63 GB) | RUNNABLE |
@@ -134,7 +134,7 @@ normalization — stop and diagnose.
 ### The turnover CSV stub
 
 `Data/RAIS_aux/corrected_turnover_sample.csv` is a **47-byte header-only stub**. The real
-27 MB / 131,776-row file that `turnover/011b_corrected_turnover.py` writes lives under
+27 MB / 131,776-row file that `turnover/1070_corrected_turnover.py` writes lives under
 `$rais_firm`. Two canonical estimators read the stub and so merged nothing:
 `4012_pct_tfpw.do:47` and `robustness/4052_robustness_bins.do:36`.
 

@@ -27,7 +27,7 @@ Raw yield: 13 findings + 6 judgment calls. After dedup and verification against 
 
 **2. The retention rate note is stated backwards.**
 Note: "the share of December-employed workers who were already at the establishment at the start
-of year $t$." Code (`turnover/011b_corrected_turnover.py:438-441`): numerator is workers present
+of year $t$." Code (`turnover/1070_corrected_turnover.py:438-441`): numerator is workers present
 in both January and December, denominator is **January** employment. Agent C added independent
 proof from the document alone: under the note's own definition the rate could never be
 undefined, yet the column reports 112,620 obs against 113,112.

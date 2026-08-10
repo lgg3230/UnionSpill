@@ -1,5 +1,5 @@
 """
-make_table_descriptives.py
+5220_table_descriptives.py
 --------------------------
 Reads descriptive_stats_2011.csv and descriptive_stats_pretreat.csv from
 Tables/descriptives/ and produces two LaTeX tables:

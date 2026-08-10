@@ -8,7 +8,7 @@ exhibits in UnionSpill-paper/Replication/Replication_Wages vs Hourly.tex:
     t_union.tex     log monthly wages   (10 columns)
     t_union_hw.tex  log hourly wages    (10 columns)
 
-Why a new script rather than an edit to generate_union_controls_latex.py:
+Why a new script rather than an edit to 5180_table_union_controls_latex.py:
 that script builds a SIX-column table from the legacy Tables/robustness/ path
 for tab:spill_union_controls in the main draft, and 4072_union_controls.do
 still calls it. Its numbers (0.0051, 0.0044) are the legacy-panel run and do not

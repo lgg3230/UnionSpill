@@ -42,7 +42,7 @@ outcome,coef,se,pval,pre_coef,pre_se,pre_pval,mean_pre,n_obs,n_estab
 
 An older **long** schema also exists (`spec;section;outcome;row_type;value` with
 `row_type` in {main, main_se, pre, pre_se, pre_pval, mean_pre, n_obs, n_estab}); see
-`generate_turnover_latex.py` for its parser. Use wide for new work.
+`5210_table_turnover_latex.py` for its parser. Use wide for new work.
 
 ## Layout
 
@@ -100,7 +100,7 @@ ill-defined denominator.
 
 ## Reference implementations
 
-- `Programs/turnover/generate_turnover_latex.py` — long schema, direct + spillover, panels.
+- `Programs/turnover/5210_table_turnover_latex.py` — long schema, direct + spillover, panels.
 - `Programs/turnover/generate_flows_latex.py` — wide schema, multi-panel; copy this for new work.
 
 Both share the helpers `hdr()`, `table_preamble()`, `table_postamble()`, and value

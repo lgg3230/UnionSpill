@@ -76,10 +76,10 @@ only place where an existing printed value moves.
 
 ### Python generators
 
-Update (8): `generate_cba_value_latex.py`, `5060_table_rob_logwages.py` (flip
-`INCLUDE_MEAN` default to on), `generate_turnover_latex.py`,
-`generate_composition_latex.py`, `generate_mincer_latex.py`,
-`5070_table_resid.py`, `generate_union_controls_latex.py`,
+Update (8): `5200_table_cba_value_latex.py`, `5060_table_rob_logwages.py` (flip
+`INCLUDE_MEAN` default to on), `5210_table_turnover_latex.py`,
+`generate_composition_latex.py`, `5190_table_mincer_latex.py`,
+`5070_table_resid.py`, `5180_table_union_controls_latex.py`,
 `07_within_firm/5090_table_within_firm.py`.
 
 Write (4), closing the missing-generator gap:
@@ -89,7 +89,7 @@ Write (4), closing the missing-generator gap:
 - `Programs/robustness/5050_table_union.py` → `t_union{,_hw}.tex`
 
 **Union correction (found 2026-08-01, during step 1).** The existing
-`generate_union_controls_latex.py` is a **6-column** generator reading the legacy
+`5180_table_union_controls_latex.py` is a **6-column** generator reading the legacy
 `Tables/robustness/` path, and its numbers (0.0051, 0.0044) do not match the
 document (0.0050, 0.0043). It is left untouched — `4072_union_controls.do`
 still calls it. The document's **10-column** table is backed by

@@ -52,7 +52,7 @@ is therefore reconstructed from coefficient signatures, not from a build step.
 | `tab:resid_raw_base` | `Tables/residuals/t_resid_hw_currentconn_age_fullrais_rb.tex` | `residuals/5070_table_resid.py` | `residuals/4112_mincer.do` with `$results_suffix = _currentconn_age_fullrais_rb` | MED |
 | `tab:group_specs` | `t_groupspecs*.tex` — 4 variants match equally | `layer_connectivity/07_within_firm/5090_table_within_firm.py` | see §D2 | MED |
 | `tab:horse_race` | no fragment matched; only the assembled doc | `layer_connectivity/07_within_firm/5090_table_within_firm.py` | see §D2 | MED |
-| `tab:descriptive_stats` | `Tables/descriptives/table_descriptives_pretreat.tex` **or** `..._2011.tex` | `descriptives/make_table_descriptives.py` | `descriptives/4102_sample_descriptives.do` | MED — which suffix is published is unresolved |
+| `tab:descriptive_stats` | `Tables/descriptives/table_descriptives_pretreat.tex` **or** `..._2011.tex` | `descriptives/5220_table_descriptives.py` | `descriptives/4102_sample_descriptives.do` | MED — which suffix is published is unresolved |
 
 **`tab:rob_logwages` and `tab:spill_union_4tfpe_4out` display the _hw (hourly)
 variant.** The other paper tables carry both wage columns. Anything that treats
@@ -129,7 +129,7 @@ but the artifacts do not record which produced them. Affects
 
 **D3 — `t_desc` has no located generator.** It is inlined twice in the replication
 doc and is absent from `SOURCES` in `5100_inline_into_replication.py`. Closest
-candidate is `descriptives/make_table_descriptives.py`, which writes
+candidate is `descriptives/5220_table_descriptives.py`, which writes
 `ftable_descriptives_{suffix}.tex` — no file of that name exists in `Tables/`.
 
 **D4 — the replication figures are a different vintage from `Graphs/`.**

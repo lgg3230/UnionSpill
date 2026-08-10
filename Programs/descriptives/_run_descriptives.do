@@ -1,6 +1,6 @@
 ********************************************************************************
 * WRAPPER: descriptives pipeline
-* Runs 4102_sample_descriptives.do then make_table_descriptives.py
+* Runs 4102_sample_descriptives.do then 5220_table_descriptives.py
 ********************************************************************************
 
 * ── Set globals if running standalone ───────────────────────────────────────
@@ -21,4 +21,4 @@ do "$programs/descriptives/4102_sample_descriptives.do"
 
 * ── Step 2: Python LaTeX table ───────────────────────────────────────────────
 shell ~/.conda/envs/venv_python312/bin/python ///
-    "$programs/descriptives/make_table_descriptives.py"
+    "$programs/descriptives/5220_table_descriptives.py"

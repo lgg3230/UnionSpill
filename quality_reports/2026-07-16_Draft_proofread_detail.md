@@ -32,7 +32,7 @@ the mechanism is now pinned:
 **13 of 14 cells are correct. Exactly one is wrong:** Panel A Log Hours should be **6.1516**; the
 printed 7.2869 is Panel B's (spillover) value. Error magnitude: 1.14 log points ≈ 3.1× in levels.
 
-**Root cause:** `generate_turnover_latex.py` emits Panel A/B/C as three *direct* specifications
+**Root cause:** `5210_table_turnover_latex.py` emits Panel A/B/C as three *direct* specifications
 (zero-conn / ≤1% conn / all untreated — lines 287–301). The draft's `tab:turnover` instead pairs
 **Panel A = direct** with **Panel B = spillover**, a layout the generator does not produce. The table
 was therefore hand-assembled from `results_direct_panelA_turnover.csv` + `results_spill_turnover.csv`,

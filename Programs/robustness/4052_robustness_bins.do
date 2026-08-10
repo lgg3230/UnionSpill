@@ -698,7 +698,7 @@ di as result "Finished: `c(current_date)' `c(current_time)'"
 log close
 
 * ── Auto-generate LaTeX tables ──────────────────────────────────────────────
-shell ~/.conda/envs/venv_python312/bin/python "$programs/robustness/generate_robustness_latex.py"
+shell ~/.conda/envs/venv_python312/bin/python "$programs/robustness/5170_table_robustness_latex.py"
 di as result "LaTeX tables written to Tables/robustness/robustness_bins_tables.tex"
 
 shell source /gpfs/kellogg/proj/lgg3230/UnionSpill/Programs/notify.sh && notify "Stata done" "4052_robustness_bins.do complete"

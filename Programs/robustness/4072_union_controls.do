@@ -583,7 +583,7 @@ di as result "Finished: `c(current_date)' `c(current_time)'"
 
 log close
 
-shell ~/.conda/envs/venv_python312/bin/python "$programs/robustness/generate_union_controls_latex.py"
+shell ~/.conda/envs/venv_python312/bin/python "$programs/robustness/5180_table_union_controls_latex.py"
 di as result "LaTeX table written to Tables/robustness/union_controls_table.tex"
 
 shell source /gpfs/kellogg/proj/lgg3230/UnionSpill/Programs/notify.sh && notify "Stata done" "4072_union_controls.do complete"

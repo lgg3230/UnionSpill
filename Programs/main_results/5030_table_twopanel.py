@@ -10,7 +10,7 @@ UnionSpill-paper/Replication/Replication_Wages vs Hourly.tex:
 
 Both are Panel A (direct, from the panelA CSV) over Panel B (spillover), with a
 shared summary block. They had no generator: the committed
-generate_turnover_latex.py and generate_composition_latex.py build a different
+5210_table_turnover_latex.py and generate_composition_latex.py build a different
 layout (two separate captioned tables) for the main draft, and are left alone.
 Both fragments are inlined twice, once per half of the document.
 

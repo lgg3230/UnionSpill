@@ -5,7 +5,7 @@
 *          quit rate, layoff rate) using per-worker pairwise flows (2007-2011)
 *          as the extra pre-treatment control.
 * Output:  4 CSV files with regression results (panelA, panelB, panelC, spill)
-* Auto-runs: Programs/generate_turnover_latex.py
+* Auto-runs: Programs/5210_table_turnover_latex.py
 * Panels:  A (zero-connectivity controls), B (<=1% connectivity controls),
 *          C (all untreated controls), D (spillover effects)
 ********************************************************************************
@@ -559,7 +559,7 @@ log close
 di as result "Finished: `c(current_date)' `c(current_time)'"
 
 * ── Auto-generate LaTeX tables ──────────────────────────────────────────────
-shell python3 "$programs/turnover/generate_turnover_latex.py"
+shell python3 "$programs/turnover/5210_table_turnover_latex.py"
 di as result "LaTeX tables written to Tables/turnover_tables.tex"
 
 ********************************************************************************

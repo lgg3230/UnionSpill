@@ -15,7 +15,7 @@ Total scripts: **830**
 
 Bucket E is a fifth bucket, not in the approved four. Classifying every file by rule alone would be false precision: E holds scripts that sit in directories which also contain chain scripts but never call the chain themselves. `INVENTORY.md §F` warns that "no traced exhibit" is not proof of death, and a wrong archive here stays invisible until someone re-estimates. E is split by reachability: **E1** is named by some live script and needs a look; **E2** is referenced by nothing live and is the safest bulk-archive candidate.
 
-**Bucket A grew from 60 to 73 while building this file.** Reachability analysis found twelve scripts invoked directly by chain scripts that the schema never included -- the `explode_cba_coverage_*.py` coverage exploders, `011b_corrected_turnover.py`, the six `generate_*_latex.py` table writers, `make_table_descriptives.py`, and `notify.sh`. Archiving on the previous classification would have broken the chain in a dozen places. They still carry their original names and should be renumbered before anything moves.
+**Bucket A grew from 60 to 73 while building this file.** Reachability analysis found twelve scripts invoked directly by chain scripts that the schema never included -- the `explode_cba_coverage_*.py` coverage exploders, `1070_corrected_turnover.py`, the six `generate_*_latex.py` table writers, `5220_table_descriptives.py`, and `notify.sh`. Archiving on the previous classification would have broken the chain in a dozen places. They still carry their original names and should be renumbered before anything moves.
 
 ## By directory
 

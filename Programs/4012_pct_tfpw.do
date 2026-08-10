@@ -4,7 +4,7 @@
 *          (wage percentiles and inequality ratios) using per-worker pairwise
 *          flows (2007-2011) as the extra pre-treatment control.
 * Output:  4 CSV files with regression results (panelA, panelB, panelC, spill)
-* Auto-runs: Programs/generate_pct_latex.py
+* Auto-runs: Programs/5160_table_pct_latex.py
 * Panels:  A (zero-connectivity controls), B (<=1% connectivity controls),
 *          C (all untreated controls), D (spillover effects)
 ********************************************************************************
@@ -45,7 +45,7 @@ di as result "Merging turnover data..."
 
 preserve
 	* $rais_aux/corrected_turnover_sample.csv is a 47-byte HEADER-ONLY stub; the
-	* real 27 MB / 131,776-row file that 011b_corrected_turnover.py writes lives
+	* real 27 MB / 131,776-row file that 1070_corrected_turnover.py writes lives
 	* under $rais_firm. Reading the stub made this merge a silent no-op, leaving
 	* churn_u and churn_rate_u entirely missing. Neither is used anywhere below,
 	* so no published number was affected -- but the code was quietly broken.
@@ -847,7 +847,7 @@ di as result "Finished: `c(current_date)' `c(current_time)'"
 
 * ── Auto-generate LaTeX tables ──────────────────────────────────────────────
 local pydir = subinstr("$main", "\", "/", .)
-shell python3 "$programs/generate_pct_latex.py"
+shell python3 "$programs/5160_table_pct_latex.py"
 di as result "LaTeX tables written to Tables/pct_tables.tex"
 
 ********************************************************************************

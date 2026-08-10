@@ -106,9 +106,9 @@ save "$cba_dir/cba_coverage_clean_sector.dta", replace
 // this is done separately for sectoral and firm level cba's
 ********************************************************************************
 
-capture noisily shell "python3" "$programs/explode_cba_coverage_firm.py"
+capture noisily shell "python3" "$programs/1031_explode_cba_coverage_firm.py"
 
-// capture noisily shell "python3" "$programs/explode_cba_coverage_sector.py"
+// capture noisily shell "python3" "$programs/1032_explode_cba_coverage_sector.py"
 
 ********************************************************************************
 ********************************************************************************

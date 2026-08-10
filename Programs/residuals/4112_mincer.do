@@ -6,7 +6,7 @@
 *          Mincer-residualized counterparts (lr_remdezr_resid, lr_hourly_resid)
 *          across direct effect panels and the spillover panel.
 * Output:  4 CSV files with regression results (panelA, panelB, panelC, spill)
-* Auto-runs: Programs/generate_mincer_latex.py
+* Auto-runs: Programs/5190_table_mincer_latex.py
 * Panels:  A (zero-connectivity controls), B (<=1% connectivity controls),
 *          C (all untreated controls), Spill (spillover effects)
 ********************************************************************************
@@ -454,7 +454,7 @@ log close
 di as result "Finished: `c(current_date)' `c(current_time)'"
 
 * ── Auto-generate LaTeX tables ──────────────────────────────────────────────
-shell python3 "$programs/residuals/generate_mincer_latex.py"
+shell python3 "$programs/residuals/5190_table_mincer_latex.py"
 di as result "LaTeX tables written to Tables/mincer_tables.tex"
 
 ********************************************************************************

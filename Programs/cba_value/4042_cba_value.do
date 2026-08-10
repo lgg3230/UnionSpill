@@ -7,7 +7,7 @@
 *          Outcome 2: numb_clauses (unweighted clause count, for comparison)
 *          Both outcomes run at the CBA-period level (not calendar year).
 * Output:  4 CSV files + event-study PDFs
-* Auto-runs: Programs/cba_value/generate_cba_value_latex.py
+* Auto-runs: Programs/cba_value/5200_table_cba_value_latex.py
 ********************************************************************************
 
 capture log close
@@ -436,7 +436,7 @@ di as result "All regressions complete."
 log close
 di as result "Finished: `c(current_date)' `c(current_time)'"
 
-shell "$programs/cba_value/generate_cba_value_latex.py"
+shell "$programs/cba_value/5200_table_cba_value_latex.py"
 di as result "LaTeX tables written to Tables/cba_value/"
 
 shell source /gpfs/kellogg/proj/lgg3230/UnionSpill/Programs/notify.sh && notify "cba_value done" "4042_cba_value.do finished"
