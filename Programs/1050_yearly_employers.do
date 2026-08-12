@@ -582,6 +582,14 @@ display "`interaction_vars'"
 
 
 
+* `force` is REQUIRED and deliberate. reghdfe needs a numeric absorb variable,
+* so industry1 must end up int. 1040:172 builds it as "1" + industry precisely
+* so that the int conversion cannot eat leading zeros -- the prefix keeps
+* "0123" and "123" distinct as 10123 vs 1123. Three firms carry the
+* non-numeric code "1CLA"; force sends those to missing, which is the intended
+* trade. Without force, destring silently declines to convert at all and the
+* column stays str4, which reghdfe cannot absorb and which does NOT match the
+* published analysis panel (that panel carries industry1 as int).
 destring industry1, replace force
 
 

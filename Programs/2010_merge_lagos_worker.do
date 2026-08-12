@@ -6,7 +6,12 @@
 * OUTPUT: WORKER LEVEL PANEL WITH LAGOS VARIABLES
 ********************************************************************************
 
-use "$rais_firm/lagos_sample_sep24.dta", clear
+* Input is caller-overridable. The rebuild path (tier B from zero) sets this to
+* lagos_sample_sep24_test.dta -- 1050's reproducible output -- so nothing seeds
+* from the frozen panel. Default keeps the historical behaviour.
+if "$lagos_firm_panel" == "" global lagos_firm_panel "lagos_sample_sep24.dta"
+di as result "[2010] firm panel = $lagos_firm_panel"
+use "$rais_firm/$lagos_firm_panel", clear
 
 /* keep if in_balanced_panel==1 */
 

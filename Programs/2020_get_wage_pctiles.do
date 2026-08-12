@@ -338,12 +338,56 @@ collapse (firstnm) identificad year ///
 isid identificad year
 
 preserve
-mmerge identificad year using "$rais_firm/lagos_sample_sep24.dta", type(1:1)
+* Firm panel is caller-overridable; the tier-B rebuild sets this to
+* lagos_sample_sep24_test.dta, 1050's reproducible output.
+if "$lagos_firm_panel" == "" global lagos_firm_panel "lagos_sample_sep24.dta"
+* mmerge (community command, ~/ado/plus) aborts here with a glibc
+* "corrupted size vs. prev_size" heap corruption on this data. Native
+* merge 1:1 is equivalent for our purposes -- mmerge's default is
+* unmatched(both) and it creates _merge with the same 1/2/3 coding, and
+* _merge is carried into the published panel so it must survive.
+* Reproduce mmerge's _merge handling. Native merge raises r(110) here
+* because BOTH sides carry _merge: the master from 2010's merge, and
+* the using Lagos panel from its own build. Dropping the master's copy
+* is not enough. So: merge under a temporary flag name, drop the copy
+* the using side brings in as data, then rename the fresh flag to
+* _merge -- which is what mmerge left behind and what the published
+* panel carries.
+cap drop _merge
+cap drop _mg_tmp
+merge 1:1 identificad year using "$rais_firm/$lagos_firm_panel", generate(_mg_tmp)
+cap drop _merge
+rename _mg_tmp _merge
 
 save "$rais_firm/lagos_sample_sep24_pct.dta", replace
+
+* CIRCULARITY GUARD. Everything below needs lagos_sample_sep24_pct_unionexp.dta,
+* which 2040_build_pct_unionexp.do derives FROM the file just saved. On the
+* rebuild path the tail therefore cannot run yet: stop here, run 2040, then
+* continue. Default (empty) keeps the historical straight-through behaviour.
+if "$stop_after_pct" == "1" {
+    di as result "[2020] stopping after lagos_sample_sep24_pct.dta (rebuild path)"
+    exit 0
+}
 restore
 
-mmerge identificad year using "$rais_firm/lagos_sample_sep24_pct_unionexp.dta", type(1:1)
+* mmerge (community command, ~/ado/plus) aborts here with a glibc
+* "corrupted size vs. prev_size" heap corruption on this data. Native
+* merge 1:1 is equivalent for our purposes -- mmerge's default is
+* unmatched(both) and it creates _merge with the same 1/2/3 coding, and
+* _merge is carried into the published panel so it must survive.
+* Reproduce mmerge's _merge handling. Native merge raises r(110) here
+* because BOTH sides carry _merge: the master from 2010's merge, and
+* the using Lagos panel from its own build. Dropping the master's copy
+* is not enough. So: merge under a temporary flag name, drop the copy
+* the using side brings in as data, then rename the fresh flag to
+* _merge -- which is what mmerge left behind and what the published
+* panel carries.
+cap drop _merge
+cap drop _mg_tmp
+merge 1:1 identificad year using "$rais_firm/lagos_sample_sep24_pct_unionexp.dta", generate(_mg_tmp)
+cap drop _merge
+rename _mg_tmp _merge
 
 save "$rais_firm/lagos_sample_sep24_pct_unionexp_ext.dta", replace
 

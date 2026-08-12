@@ -42,9 +42,35 @@ count if missing(lr_remdezr_w)
 rename identificad_w identificad
 
 
-mmerge identificad year using "$rais_firm/lagos_sample_sep24_pct_unionexp.dta", type(1:1)
+* mmerge (community command, ~/ado/plus) aborts here with a glibc
+* "corrupted size vs. prev_size" heap corruption on this data. Native
+* merge 1:1 is equivalent for our purposes -- mmerge's default is
+* unmatched(both) and it creates _merge with the same 1/2/3 coding, and
+* _merge is carried into the published panel so it must survive.
+* Reproduce mmerge's _merge handling. Native merge raises r(110) here
+* because BOTH sides carry _merge: the master from 2010's merge, and
+* the using Lagos panel from its own build. Dropping the master's copy
+* is not enough. So: merge under a temporary flag name, drop the copy
+* the using side brings in as data, then rename the fresh flag to
+* _merge -- which is what mmerge left behind and what the published
+* panel carries.
+cap drop _merge
+cap drop _mg_tmp
+* keep(master match): the analysis panel is the firm-years that HAVE worker
+* data, i.e. 2009-2016. The using side additionally carries 2007-2008,
+* which the worker panel does not cover. Keeping them would give 174,110
+* rows against the published 140,773.
+merge 1:1 identificad year using "$rais_firm/lagos_sample_sep24_pct_unionexp.dta", keep(master match) generate(_mg_tmp)
+cap drop _merge
+rename _mg_tmp _merge
 
-save "$rais_firm/lagos_sample_sep24_pct_unionexp_ext_df2.dta", replace
+* Output is caller-overridable. The tier-B rebuild points this at a scratch
+* path so the frozen panel survives as the comparison baseline; it is the
+* only artifact that can tell us whether the rebuild reproduces the paper.
+if "$panel_out" == "" ///
+    global panel_out "$rais_firm/lagos_sample_sep24_pct_unionexp_ext_df2.dta"
+save "$panel_out", replace
+di as result "SAVED: $panel_out"
 
 
 
