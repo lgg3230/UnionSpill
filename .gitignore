@@ -265,3 +265,7 @@ layer_connectivity_standalone.zip
 
 # ----- Re-ignore macOS noise even inside force-included dirs (must come last) -----
 **/.DS_Store
+
+# Archived data baselines (frozen analysis panel, retired overlay directory).
+# Data, not code -- mirrors the Data/* rule above.
+archive/Data/

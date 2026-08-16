@@ -109,6 +109,30 @@ quietly {
 	replace totalflows_pw_pre_07_114 = 0 if missing(totalflows_pw_pre_07_114)
 }
 
+* ── CBA period ───────────────────────────────────────────────────────────────
+* This script used to CONSUME cba_period from the panel without ever creating
+* it -- the only one of the 13 estimators that did. That worked against the
+* frozen/overlay panel, which happens to carry a stored cba_period column, but
+* failed with r(111) against a panel rebuilt from 1050/1060, which does not.
+*
+* Every other estimator derives it (4012:126-133, 4032:156, 4042, 4052,
+* 4102), so deriving it here removes the panel dependency rather than adding a
+* column to satisfy one consumer. Verified 2026-08-16: this derivation
+* reproduces the overlay's stored column exactly -- 0 differing rows and 0
+* missingness mismatches across all 140,773 -- so published results are
+* unaffected.
+*
+* Copied verbatim from 4012_pct_tfpw.do:126-133.
+cap drop cba_period
+gen cba_period = .
+replace cba_period = 1 if avg_file_date == earliest2009_avg - 1 & !missing(avg_file_date)
+replace cba_period = 2 if avg_file_date == second_cba_avg & !missing(avg_file_date)
+replace cba_period = 3 if inrange(avg_file_date, mdy(1,1,2013), mdy(12,31,2013)) & cba_period == .
+replace cba_period = 4 if inrange(avg_file_date, mdy(1,1,2014), mdy(12,31,2014)) & cba_period == .
+replace cba_period = 5 if inrange(avg_file_date, mdy(1,1,2015), mdy(12,31,2015)) & cba_period == .
+replace cba_period = 6 if inrange(avg_file_date, mdy(1,1,2016), mdy(12,31,2016)) & cba_period == .
+label var cba_period "CBA negotiation period (1=earliest, 2=second, 3-6=post-treatment years)"
+
 * ── numb_clauses pre-treatment (CBA-period based) + CBA period indicators ─────
 capture confirm variable numb_clauses
 if _rc == 0 {

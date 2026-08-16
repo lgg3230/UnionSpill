@@ -11,7 +11,7 @@ set varabbrev off
 global klc      "/kellogg/proj/lgg3230"
 global main     "$klc"
 global rais_aux  "$main/UnionSpill/Data/RAIS_aux"
-global rais_firm "$main/UnionSpill/Data/CBA_RAIS_firm_level_currentconn_overlay"
+global rais_firm "$main/UnionSpill/Data/CBA_RAIS_firm_level"
 global tables    "$main/UnionSpill/Tables/currentconn_full"
 global graphs    "$main/UnionSpill/Graphs/currentconn_full"
 global logs      "$main/UnionSpill/Logs/currentconn_full"

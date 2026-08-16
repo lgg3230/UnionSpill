@@ -10,7 +10,7 @@ set more off
 set varabbrev off
 
 global main      "/kellogg/proj/lgg3230/UnionSpill"
-global rais_firm "$main/Data/CBA_RAIS_firm_level_currentconn_overlay"
+global rais_firm "$main/Data/CBA_RAIS_firm_level"
 global rais_aux  "$main/Data/RAIS_aux"
 global tables    "$main/Tables"
 global logs      "$main/Logs"

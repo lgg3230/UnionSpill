@@ -8,9 +8,8 @@
 * every stage is off by default; set its flag to 1 to run it.
 *
 *   TIER A  raw RAIS -> firm panel + connectivity          (Stata + MATLAB)
-*   TIER B  firm panel -> frozen analysis panel            FENCED, see below
-*   TIER C  frozen panel -> current-connectivity overlay   (Stata)
-*   TIER D  overlay -> estimates                           (13 estimators)
+*   TIER B  firm panel -> analysis panel                    (Stata)
+*   TIER D  analysis panel -> estimates                     (13 estimators)
 *   TIER E  estimates -> tables and figures                (Python + Stata)
 *   TIER F  exhibits -> UnionSpill-paper/Replication/Figures
 *
@@ -20,15 +19,22 @@
 *   Each estimator therefore gets a fresh stata-mp process via `shell`. Do not
 *   "simplify" these into plain `do` calls.
 *
-* WHY TIER B IS FENCED
-*   The frozen analysis panel lagos_sample_sep24_pct_unionexp_ext_df2.dta has
-*   no reproducible producer: 2030_get_wage_pctiles_df2.do needs two datasets
-*   that are absent from disk and written by no script in Programs/ --
-*   worker_year_pre_new_vs_nonnew_dec26.dta and
-*   lagos_sample_sep24_pct_unionexp.dta (sample_provenance.md H2). Until those
-*   are reconstructed the frozen panel is a PROTECTED INPUT, and tier B refuses
-*   to run without an explicit second opt-in. Tiers C-F are fully reproducible
-*   and are what the published exhibits actually rest on.
+* TIER B IS NO LONGER FENCED
+*   It used to be: 2030 needed two datasets absent from disk and written by no
+*   script (sample_provenance.md H2). Both turned out to be derivable rather
+*   than lost -- lagos_sample_sep24_pct_unionexp.dta is the percentile panel
+*   2020 writes itself joined to union_treat_exp_sep24.dta on mode_union (2040),
+*   and worker_year_pre_new_vs_nonnew_dec26.dta is a _w rename of the panel 2010
+*   builds (2050). The analysis panel is now built from 1050/1060 output.
+*
+* TIER C IS RETIRED
+*   3010/3020 built a current-connectivity overlay onto the frozen panel,
+*   because that panel shipped a stale totaltreat_pw_n. A panel rebuilt from
+*   1050 carries the current measure natively -- verified 0 differing rows of
+*   140,773 against the overlay -- so there is nothing left to overlay. Both
+*   scripts are in archive/Programs/main_results/, and the pre-existing frozen
+*   panel and overlay directory are preserved under archive/Data/ as comparison
+*   baselines.
 ********************************************************************************
 
 // PRELIMINAIRES
@@ -77,8 +83,6 @@ global logs "$main/UnionSpill/Logs"
 
 // Added for the full chain:
 
-global rais_firm_overlay "$main/UnionSpill/Data/CBA_RAIS_firm_level_currentconn_overlay"
-global cc_ingredient     "$rais_aux/currentconn_overlay_totaltreat.dta"
 global paper             "$main/UnionSpill/UnionSpill-paper"
 global paperfig          "$paper/Replication/Figures"
 global stata_exe         "/software/Stata/stata17/stata-mp"
@@ -95,18 +99,14 @@ local a_merge_cba_rais   = 0
 local a_flows            = 0      // 1050_yearly_employers.do, shells MATLAB
 local a_worker_panel     = 0      // 1060_rais_worker_panel.do -> worker_estab_*
 
-* --- TIER B: firm panel -> frozen analysis panel (FENCED) --------------------
+* --- TIER B: firm panel -> analysis panel ------------------------------------
 local b_lagos_workers    = 0      // 2010_merge_lagos_worker.do
-local b_wage_pctiles     = 0      // 2020_get_wage_pctiles.do
+local b_wage_pctiles     = 0      // 2020_get_wage_pctiles.do  (set stop_after_pct)
+local b_pct_unionexp     = 0      // 2040_build_pct_unionexp.do
+local b_worker_panel_w   = 0      // 2050_build_worker_panel_w.do
 local b_analysis_panel   = 0      // 2030_get_wage_pctiles_df2.do
-local allow_rebuild_frozen_panel = 0   // second opt-in, see header
 
-* --- TIER C: frozen panel -> current-connectivity overlay --------------------
-local c_cc_ingredient    = 0      // 3010_build_currentconn_ingredient.do
-local c_cc_overlay       = 0      // 3020_build_currentconn_overlay_panel.do
-local overlay_allow_overwrite = 0 // guard inside the overlay build script
-
-* --- TIER D: overlay -> estimates (one fresh Stata process each) -------------
+* --- TIER D: analysis panel -> estimates (one fresh Stata process each) -------------
 local d_pct_tfpw         = 0
 local d_direct_coef_test = 0
 local d_clause_types     = 0
@@ -150,47 +150,24 @@ if (`a_flows'           ==1) do "$programs/1050_yearly_employers.do"
 if (`a_worker_panel'    ==1) do "$programs/1060_rais_worker_panel.do"
 
 ********************************************************************************
-* TIER B -- frozen analysis panel (FENCED)
-********************************************************************************
-
-local b_any = `b_lagos_workers' + `b_wage_pctiles' + `b_analysis_panel'
-if (`b_any' > 0 & `allow_rebuild_frozen_panel' != 1) {
-    di as error "-------------------------------------------------------------"
-    di as error "TIER B IS FENCED and will not run."
-    di as error ""
-    di as error "The frozen analysis panel cannot currently be rebuilt: two of"
-    di as error "its inputs are absent from disk and produced by no script --"
-    di as error "  worker_year_pre_new_vs_nonnew_dec26.dta"
-    di as error "  lagos_sample_sep24_pct_unionexp.dta"
-    di as error "Running tier B partially would produce a panel that differs"
-    di as error "from the one every published number rests on, without saying so."
-    di as error ""
-    di as error "To proceed anyway, set allow_rebuild_frozen_panel = 1 and treat"
-    di as error "every downstream number as provisional until re-verified."
-    di as error "-------------------------------------------------------------"
-    exit 459
-}
-
-if (`b_lagos_workers'  ==1) do "$programs/2010_merge_lagos_worker.do"
-if (`b_wage_pctiles'   ==1) do "$programs/2020_get_wage_pctiles.do"
-if (`b_analysis_panel' ==1) do "$programs/2030_get_wage_pctiles_df2.do"
-
-********************************************************************************
-* TIER C -- current-connectivity overlay
+* TIER B -- analysis panel
 *
-* Verified 2026-08-07: both stages reproduce their published artifacts
-* value-identically (cf _all silent, 551 vars x 140,773 rows).
+* Order matters and is not the numeric order. 2020 must stop after writing
+* lagos_sample_sep24_pct.dta, because its tail needs pct_unionexp -- which 2040
+* derives from that very file. Hence stop_after_pct, then 2040, then 2030.
 ********************************************************************************
 
-if (`c_cc_ingredient' ==1) {
-    global cc_ingredient_out "$cc_ingredient"
-    do "$programs/main_results/3010_build_currentconn_ingredient.do"
+if (`b_lagos_workers' ==1) do "$programs/2010_merge_lagos_worker.do"
+
+if (`b_wage_pctiles' ==1) {
+    global stop_after_pct "1"
+    do "$programs/2020_get_wage_pctiles.do"
+    global stop_after_pct ""
 }
 
-if (`c_cc_overlay' ==1) {
-    global overlay_allow_overwrite = `overlay_allow_overwrite'
-    do "$programs/main_results/3020_build_currentconn_overlay_panel.do"
-}
+if (`b_pct_unionexp'   ==1) do "$programs/2040_build_pct_unionexp.do"
+if (`b_worker_panel_w' ==1) do "$programs/2050_build_worker_panel_w.do"
+if (`b_analysis_panel' ==1) do "$programs/2030_get_wage_pctiles_df2.do"
 
 ********************************************************************************
 * TIER D -- estimators, one fresh Stata process each (see header note)
