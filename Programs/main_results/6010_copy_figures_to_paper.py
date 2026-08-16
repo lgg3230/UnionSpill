@@ -2,7 +2,7 @@
 """
 Tier F: copy generated figures into UnionSpill-paper/Replication/Figures/.
 
-Replaces the undocumented hand-copy-with-renaming that INVENTORY.md section C
+Replaces the undocumented hand-copy-with-renaming that Docs/pipeline/INVENTORY.md section C
 describes ("populated by hand-copy with renaming; no script writes into it").
 Because the renaming was never recorded anywhere, a regenerated figure could
 never be traced back to the published name it was supposed to land under.

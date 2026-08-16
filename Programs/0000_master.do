@@ -248,7 +248,7 @@ if (`e_fig_recentered' ==1) {
 *
 * Replaces the undocumented hand-copy that populated
 * UnionSpill-paper/Replication/Figures/. Source -> published-name map comes
-* from INVENTORY.md section C.
+* from Docs/pipeline/INVENTORY.md section C.
 ********************************************************************************
 
 * Dry run by default: reports every file it would replace, with both md5s, and

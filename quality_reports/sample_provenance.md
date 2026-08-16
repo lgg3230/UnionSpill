@@ -2,7 +2,7 @@
 
 **Built 2026-08-06. Audit only — nothing was created, moved, or modified.**
 
-Companion to `Programs/INVENTORY.md`, which maps *exhibit → producing script*.
+Companion to `Docs/pipeline/INVENTORY.md`, which maps *exhibit → producing script*.
 This file maps *exhibit → analysis sample → definition site*, and records every
 place two scripts define the same sample differently.
 

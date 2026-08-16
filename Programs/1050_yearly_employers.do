@@ -358,6 +358,22 @@ use "$rais_aux/connectivity_2007_2011_agg.dta", clear
 
 merge 1:1 identificad using "$rais_aux/connectivity_treat_2007_2011_agg.dta"
 
+* ZERO RULE. A firm absent from the treat-connectivity aggregate has no flows to
+* treated firms. That is zero connectivity, not unknown connectivity, so it must
+* be 0 and not missing. Two firms are in this position: 09155391000279 and
+* 76639384002445.
+*
+* This matters because the direct-effect samples test the variable EXACTLY --
+* Sample A is treat_ultra==0 & totaltreat_pw_n==0, Sample B is <=0.01 -- and
+* missing fails both. Leaving it missing silently drops those firm-years and
+* moves the published direct coefficient (0.0262 -> 0.0263 when measured).
+*
+* 3010_build_currentconn_ingredient.do applies the same rule on the overlay
+* path; this keeps the two paths in agreement. Only totaltreat_pw_n is filled,
+* matching 3010 exactly -- the sibling treat measures are left alone because the
+* overlay does not touch them and no estimator filters on them.
+replace totaltreat_pw_n = 0 if _merge == 1 & mi(totaltreat_pw_n)
+
 drop _merge
 
 merge 1:1 identificad using "$rais_aux/connectivity_control_2007_2011_agg.dta"

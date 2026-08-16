@@ -69,6 +69,42 @@ rename _mg_tmp _merge
 * only artifact that can tell us whether the rebuild reproduces the paper.
 if "$panel_out" == "" ///
     global panel_out "$rais_firm/lagos_sample_sep24_pct_unionexp_ext_df2.dta"
+* ZERO RULE, enforced at panel build. 1050 now applies this at the connectivity
+* merge, but a panel built from an older 1050 output would still carry missing
+* connectivity for the two firms absent from the treat aggregate, and the
+* direct-effect samples test totaltreat_pw_n exactly. Idempotent once 1050 has
+* been re-run. See the note in 1050_yearly_employers.do.
+quietly count if mi(totaltreat_pw_n)
+if r(N) > 0 {
+    di as text "[zero rule] filling `r(N)' firm-years of missing totaltreat_pw_n"
+    replace totaltreat_pw_n = 0 if mi(totaltreat_pw_n)
+}
+quietly count if mi(totaltreat_pw_n)
+assert r(N) == 0
+
+* NORMALIZED CONNECTIVITY -- presence, not value.
+* The frozen analysis panel carries totaltreat_pw_n_p90 and totaltreat_pw_norm;
+* neither the Lagos firm panel nor this rebuild creates them, so the rebuilt
+* panel lacked both and 4122_within_firm died with r(111): its keep list at :213
+* names totaltreat_pw_norm, even though :255 drops and regenerates it.
+*
+* The stored VALUE is vestigial. Every estimator that uses the variable also
+* creates it -- 4012:148, 4032:156, 4042, 4052, 4062, 4072, 4082, 4092:118,
+* 4112:127, 4122:255, 4132 -- so nothing downstream reads what is written here.
+* Checked across all 13 estimators: none consumes it without first recomputing.
+* It is created so the panel is a drop-in for the overlay.
+cap drop totaltreat_pw_n_p90
+cap drop totaltreat_pw_norm
+preserve
+    quietly keep if lagos_sample_avg == 1 & treat_ultra == 0 ///
+        & in_balanced_panel == 1 & year == 2009 & !mi(totaltreat_pw_n)
+    quietly _pctile totaltreat_pw_n, p(90)
+    local p90_conn = r(r1)
+restore
+gen double totaltreat_pw_n_p90 = `p90_conn'
+gen double totaltreat_pw_norm  = totaltreat_pw_n / totaltreat_pw_n_p90
+di as text "[norm] totaltreat_pw_n_p90 = " %12.8f `p90_conn' "  (vestigial; consumers recompute)"
+
 save "$panel_out", replace
 di as result "SAVED: $panel_out"
 
