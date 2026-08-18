@@ -14,7 +14,7 @@ Status: protected reference target. Do not overwrite or delete.
 
 Known direct construction step:
 
-`Programs/2030_get_wage_pctiles_df2.do`
+`Programs/2050_build_analysis_panel.do`
 
 This script reads `worker_year_pre_new_vs_nonnew_dec26.dta`, computes firm-year
 worker wage percentiles, merges them into
@@ -74,7 +74,7 @@ stage output or a reproducible intermediate.
 
 Primary script:
 
-`Programs/1030_clean_cba.do`
+`Programs/1020_clean_cba.do`
 
 Main raw/current input:
 
@@ -92,7 +92,7 @@ Important generated outputs:
 Notes:
 
 - Sectoral CBA code is present but largely commented out in the current script.
-- The firm-level path is the active path used by `1040_merge_cba_rais.do`.
+- The firm-level path is the active path used by `1030_merge_cba_rais.do`.
 
 Cleanup status: large CBA exploded files are likely generated intermediates, but
 should not be deleted until the CBA stage can be rerun cleanly from raw inputs.
@@ -101,7 +101,7 @@ should not be deleted until the CBA stage can be rerun cleanly from raw inputs.
 
 Primary script:
 
-`Programs/1040_merge_cba_rais.do`
+`Programs/1030_merge_cba_rais.do`
 
 Inputs:
 
@@ -139,7 +139,7 @@ Primary script:
 Inputs:
 
 - Raw RAIS yearly files from `$rais_raw_dir/RAIS_*.dta`
-- Sample/treatment CSVs from `1040_merge_cba_rais.do`
+- Sample/treatment CSVs from `1030_merge_cba_rais.do`
 
 Intermediate outputs:
 
@@ -152,11 +152,11 @@ Intermediate outputs:
 
 MATLAB scripts called:
 
-- `Programs/1051_connectivity_full_lagos.m`
-- `Programs/1052_connectivity_treat_lagos.m`
-- `Programs/1053_connectivity_control_lagos.m`
-- `Programs/1054_connectivity_treat_onecba.m`
-- `Programs/1055_connectivity_treat_zerocba.m`
+- `Programs/1041_connectivity_full_lagos.m`
+- `Programs/1042_connectivity_treat_lagos.m`
+- `Programs/1043_connectivity_control_lagos.m`
+- `Programs/1044_connectivity_treat_onecba.m`
+- `Programs/1045_connectivity_treat_zerocba.m`
 
 MATLAB outputs:
 
@@ -194,13 +194,13 @@ Known scripts:
 
 - `Programs/union_treat_exp.do`
 - `Programs/2020_get_wage_pctiles.do`
-- `Programs/2030_get_wage_pctiles_df2.do`
+- `Programs/2050_build_analysis_panel.do`
 
 Known lineage:
 
 - `union_treat_exp.do` reads `cba_rais_firm_2007_2016.dta` and writes
   `Data/RAIS_aux/union_treat_exp_sep24.dta`.
-- `2030_get_wage_pctiles_df2.do` reads worker-level wage data and
+- `2050_build_analysis_panel.do` reads worker-level wage data and
   `lagos_sample_sep24_pct_unionexp.dta`, then writes the protected target.
 
 Missing link to document:
@@ -213,12 +213,12 @@ connectivity-enriched sample needs to be identified.
 
 Main analysis scripts currently read the protected target directly:
 
-- `Programs/4012_pct_tfpw.do`
+- `Programs/3012_pct_tfpw.do`
 - `Programs/UnionSpillovers_FinalResults_gtfpe_gout_alldir_0conn.do`
-- `Programs/composition/4092_composition.do`
+- `Programs/composition/3092_composition.do`
 - `Programs/composition/Main_Results_composition_log.do`
 - `Programs/composition/Main_Results_composition_scale.do`
-- `Programs/descriptives/4102_sample_descriptives.do`
+- `Programs/descriptives/3102_sample_descriptives.do`
 
 Common extra inputs:
 

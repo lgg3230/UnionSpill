@@ -21,10 +21,10 @@ flowchart TD
     D --> D1[Data/stata_emp_assoc/emp_assoc_*.dta]
     D --> D2[Data/RAIS_aux/unique_firms_*.dta]
 
-    E[Raw CBA coverage file<br/>Data/CBA/cnes_contracts_coverage_updated.dta] --> F[Programs/1030_clean_cba.do]
+    E[Raw CBA coverage file<br/>Data/CBA/cnes_contracts_coverage_updated.dta] --> F[Programs/1020_clean_cba.do]
     F --> F1[Data/CBA/cba_coverage_clean.dta]
     F --> F2[Data/CBA/cba_coverage_clean_firm.dta]
-    F2 --> G[Programs/1031_explode_cba_coverage_firm.py]
+    F2 --> G[Programs/1021_explode_cba_coverage_firm.py]
     G --> G1[Data/CBA/cba_firm_exploded.dta]
     G1 --> F
     F --> F3[Data/CBA/cba_estab_firm_*.dta]
@@ -32,7 +32,7 @@ flowchart TD
     F --> F5[Data/CBA/collapsed_cba_bunit_updated.dta]
     F --> F6[Data/CBA/collapsed_cba_firm_updated.dta]
 
-    B2 --> H[Programs/1040_merge_cba_rais.do]
+    B2 --> H[Programs/1030_merge_cba_rais.do]
     F6 --> H
     I[Data/IBGE/mun_microregion_ibge.dta] --> H
     D2 --> H
@@ -98,7 +98,7 @@ flowchart TD
 
     W4 --> P0[Derive worker wage-percentile input<br/>or update wage-percentile script to read parquet]
     P0 --> P[Current expected Stata input<br/>Data/CBA_RAIS_firm_level/worker_year_pre_new_vs_nonnew_dec26.dta]
-    P --> Q[Programs/2030_get_wage_pctiles_df2.do]
+    P --> Q[Programs/2050_build_analysis_panel.do]
     O1 --> Q
     Q --> R[Data/CBA_RAIS_firm_level/lagos_sample_sep24_pct_unionexp_ext_df2.dta]
 
@@ -111,8 +111,8 @@ flowchart TD
 ```mermaid
 flowchart LR
     A[Programs/pipeline_main_data.do] --> B[1010_rais_to_firm.do]
-    A --> C[1030_clean_cba.do]
-    A --> D[1040_merge_cba_rais.do]
+    A --> C[1020_clean_cba.do]
+    A --> D[1030_merge_cba_rais.do]
     A --> E[1050_yearly_employers.do<br/>with MATLAB connectivity]
     E --> H[cba_rais_firm_2009_2016_flows_1.dta]
     H --> W[011c_worker_panel.py]
@@ -125,7 +125,7 @@ flowchart LR
     I --> J
     Z --> J
     J --> G
-    A --> G[2030_get_wage_pctiles_df2.do]
+    A --> G[2050_build_analysis_panel.do]
     G --> K[lagos_sample_sep24_pct_unionexp_ext_df2.dta]
 ```
 
@@ -137,7 +137,7 @@ flowchart LR
    firm-level file is still not identified in this map. The observed replacement
    output is `Data/CBA_RAIS_firm_level_currentconn_overlay/lagos_sample_sep24_pct_unionexp_ext_df2.dta`.
 
-2. `Programs/1040_merge_cba_rais.do` appears to have a legacy typo in the
+2. `Programs/1030_merge_cba_rais.do` appears to have a legacy typo in the
    zero-CBA treatment block: it saves `zero_cba_treat` to
    `Data/RAIS_aux/1_cba_treat.dta` before exporting `0_cba_treat.csv`.
 

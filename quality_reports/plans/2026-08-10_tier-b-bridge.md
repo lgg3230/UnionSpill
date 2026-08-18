@@ -186,7 +186,7 @@ direct 0.0262 / 0.0285 and spillover 0.0050 / 0.0065.
 
 ## Code changes
 
-New: `2040_build_pct_unionexp.do`, `2050_build_worker_panel_w.do`.
+New: `2030_build_pct_unionexp.do`, `2040_build_worker_panel_w.do`.
 Overridable inputs (historical behaviour remains the default): `$lagos_firm_panel`
 in `2010`/`2020`, `$stop_after_pct` in `2020` (breaks a real circularity -- its
 tail needs a file `2040` derives from its own output), `$panel_out` in `2030`

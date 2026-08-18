@@ -32,7 +32,7 @@ the mechanism is now pinned:
 **13 of 14 cells are correct. Exactly one is wrong:** Panel A Log Hours should be **6.1516**; the
 printed 7.2869 is Panel B's (spillover) value. Error magnitude: 1.14 log points ≈ 3.1× in levels.
 
-**Root cause:** `5210_table_turnover_latex.py` emits Panel A/B/C as three *direct* specifications
+**Root cause:** `4210_table_turnover_latex.py` emits Panel A/B/C as three *direct* specifications
 (zero-conn / ≤1% conn / all untreated — lines 287–301). The draft's `tab:turnover` instead pairs
 **Panel A = direct** with **Panel B = spillover**, a layout the generator does not produce. The table
 was therefore hand-assembled from `results_direct_panelA_turnover.csv` + `results_spill_turnover.csv`,
@@ -48,8 +48,8 @@ so the table stops being hand-assembled.
 ### 1.0 Ground truth from the code
 **[VERIFIED — orchestrator confirmed the absorb string, 2026-07-16]**
 
-`4082_turnover.do:300-301,360`, `4092_composition.do:251-252,311`,
-`4112_mincer.do:239-240,304`:
+`3082_turnover.do:300-301,360`, `3092_composition.do:251-252,311`,
+`3112_mincer.do:239-240,304`:
 
 ```stata
 local base_fe    "identificad i.industry1#i.year i.mode_base_month#i.year i.microregion#i.year"
@@ -65,19 +65,19 @@ are present in *every* specification, including turnover and composition.
 
 - **V1 — lines 821 and 866 are WRONG; lines 364/441/567/899 are RIGHT.** [VERIFIED] Notes at 821/866
   say "quartile-bin controls for pre-treatment **per-worker flows and establishment size**", omitting
-  the outcome bins that `4082_turnover.do:360` and `4092_composition.do:311` both
+  the outcome bins that `3082_turnover.do:360` and `3092_composition.do:311` both
   include. Line 364 correctly says "quartile bins of pre-treatment firm size, per-worker flows,
   **and the outcome**". **Fix:** adopt T1/T2's exact sentence at 821 and 866 so all eight notes are
   byte-identical.
 - **V2 — `% VERIFY` at line 821: RESOLVED — YES.** Outcome bins are included, exactly as in eq. (3). Delete the comment.
 - **V3 — `% VERIFY` at line 866: RESOLVED — YES.** Same. Delete the comment.
 - **V4 — `% VERIFY` at line 1087 ("negotiation month: start date vs filing date"): RESOLVED — NEITHER.**
-  `Programs/1030_clean_cba.do:337` states: *"negotiation month (paper text) = base_month (lagos dataset)"*;
+  `Programs/1020_clean_cba.do:337` states: *"negotiation month (paper text) = base_month (lagos dataset)"*;
   lines 340–341 take `mode(base_month), minmode`. So negotiation month = **the establishment's modal
   `base_month` ("data-base" month) from the Lagos CBA registry, ties broken to the earliest month** —
   derived from neither filing date nor contract start date.
-  ⚠️ The repo holds three inconsistent constructions: `minmode` (`1030_clean_cba.do:341`, live path),
-  `maxmode` (`Programs_2025.05.03/03_clean_cba.do:289`), `egen max()` (`Programs_2025.05.03/1040_merge_cba_rais.do:128`).
+  ⚠️ The repo holds three inconsistent constructions: `minmode` (`1020_clean_cba.do:341`, live path),
+  `maxmode` (`Programs_2025.05.03/03_clean_cba.do:289`), `egen max()` (`Programs_2025.05.03/1030_merge_cba_rais.do:128`).
 - **V5 — line 988's control description is WRONG for the employment columns.**
   `layer_connectivity/07_within_firm/01_within_firm_estimates.do:297-298`: group **wage** bins enter
   only when the outcome is wages; columns (5)–(6) (Log Employment) have none.
@@ -99,7 +99,7 @@ are present in *every* specification, including turnover and composition.
 - **V14 — `tab:group_specs` col (1) N contradicts the table it cites.** Line 988 says cols (1)/(4) reproduce
   `tab:spillover`; line 952 reports 32,498 / 4,085 while `tab:spill_main_4tf_out` reports 32,495 / 4,084.
   The 32,498/4,085 figures are the *residualized* sample. Coefficient matches; N does not.
-- **V15 — Treatment definition stated slightly wrong in two places.** `1030_clean_cba.do:475`:
+- **V15 — Treatment definition stated slightly wrong in two places.** `1020_clean_cba.do:475`:
   `file_date_stata<=mdy(9,25,2012)`. Lines 190 and 364 say "filed **before** September 25, 2012" →
   should be "filed **on or before**".
 - **V16 — Row-label drift:** `Establishments` (T1–T9) vs `Firms` (T11:954, T12:1015).

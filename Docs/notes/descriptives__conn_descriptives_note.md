@@ -6,7 +6,7 @@ firms). Characteristics are pre-treatment (2009–2011) firm means.
 **Samples (separate sets, not overlaid).**
 - **Control (spillover) sample = the spillover estimation sample.** Restricted to the
   `e(sample)` of the headline spillover log-wage event study
-  (`4012_pct_tfpw.do`): **n = 4,084**, matching the ~4,085 firms the main
+  (`3012_pct_tfpw.do`): **n = 4,084**, matching the ~4,085 firms the main
   spillover estimates use. (Reproduced by re-running that exact regression in
   `firm_conn_scatter_prep.do` and tagging `e(sample)`; the one upstream control built
   from an external flows merge is omitted, costing ≤1 firm.)
@@ -77,7 +77,7 @@ in the treated network — structure absent in the control sample.
   `Graphs/descriptives/binscatter_conn_*.pdf` + `_combined.pdf` (control),
   `binscatter_conn_*_treated.pdf` + `_combined_treated.pdf` (treated)
 - raw scatters (reference): `Programs/descriptives/firm_conn_scatter.py` → `scatter_conn_*` (+ `_treated`)
-- histograms: `Programs/conn_descriptives/5140_figure_conn_hist.py` →
+- histograms: `Programs/conn_descriptives/4140_figure_conn_hist.py` →
   `hist_connectivity.pdf` (control), `hist_connectivity_treated.pdf` (treated)
 - slopes: `Tables/descriptives/firm_conn_slopes.csv` (β, HC1 SE, t, n per characteristic and set)
 

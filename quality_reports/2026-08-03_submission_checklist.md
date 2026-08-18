@@ -248,7 +248,7 @@ F3. [OPEN] Intra-company flow exclusion. 62.6% of network flows share an 8-digit
     CNPJ root.
 F4. [OPEN] Nonparametric dose-response. Tables/conn_margins/results_quartiles_vs_
     zero.csv is non-monotone with a null top quartile.
-F5. [OPEN] Missing-bin zero-fill at 4012_pct_tfpw.do:216.
+F5. [OPEN] Missing-bin zero-fill at 3012_pct_tfpw.do:216.
 F6. [OPEN] Tenure horse-race rescaling; origin-year group assignment for inflows.
 F7. [OPEN] December 2012 timing — 75% of the effect is realized three months
     post-ruling.

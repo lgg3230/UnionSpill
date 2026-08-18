@@ -57,16 +57,16 @@ Rules:
 
 | Table | do-file | Current state |
 |-------|---------|---------------|
-| 1, 2 Direct + Spillover | `4012_pct_tfpw.do` | no mean row — add |
-| 3 Clause counts/props | `clause_types/4032_clause_types.do` | no mean row — add |
-| 3 CBA value (col 7) | `cba_value/4042_cba_value.do` | has `mean_pre` — **redefine** to `e(sample)` |
-| 4 Union confounders | `robustness/4072_union_controls.do` | no mean row — add |
-| 5 cols 2–3 | `robustness/4052_robustness_bins.do` | no mean row — add |
+| 1, 2 Direct + Spillover | `3012_pct_tfpw.do` | no mean row — add |
+| 3 Clause counts/props | `clause_types/3032_clause_types.do` | no mean row — add |
+| 3 CBA value (col 7) | `cba_value/3042_cba_value.do` | has `mean_pre` — **redefine** to `e(sample)` |
+| 4 Union confounders | `robustness/3072_union_controls.do` | no mean row — add |
+| 5 cols 2–3 | `robustness/3052_robustness_bins.do` | no mean row — add |
 | 5 col 4 | `robustness/Main_Results_demo_controls.do` | no mean row — add |
-| 5 cols 5–8 | `robustness/4062_micro_ind_q.do` | has `mean_pre` — **redefine** |
-| 6 Turnover | `turnover/4082_turnover.do` | has `mean_pre`, **control-group only** — redefine |
-| 7 Composition | `composition/4092_composition.do` | has `mean_pre`, **control-group only** — redefine |
-| 8 Residualized | `residuals/4112_mincer.do` | has `mean_pre` — redefine |
+| 5 cols 5–8 | `robustness/3062_micro_ind_q.do` | has `mean_pre` — **redefine** |
+| 6 Turnover | `turnover/3082_turnover.do` | has `mean_pre`, **control-group only** — redefine |
+| 7 Composition | `composition/3092_composition.do` | has `mean_pre`, **control-group only** — redefine |
+| 8 Residualized | `residuals/3112_mincer.do` | has `mean_pre` — redefine |
 | 9, 10 Group-level | `layer_connectivity/07_within_firm/01_within_firm_estimates.do`, `01b_*`, `01_*_hw.do`, `01b_*_hw.do` | no mean row — add (4 files) |
 
 Tables 6 and 7 are the substantive fixes: their printed `Mean` row is currently
@@ -76,22 +76,22 @@ only place where an existing printed value moves.
 
 ### Python generators
 
-Update (8): `5200_table_cba_value_latex.py`, `5060_table_rob_logwages.py` (flip
-`INCLUDE_MEAN` default to on), `5210_table_turnover_latex.py`,
-`generate_composition_latex.py`, `5190_table_mincer_latex.py`,
-`5070_table_resid.py`, `5180_table_union_controls_latex.py`,
-`07_within_firm/5090_table_within_firm.py`.
+Update (8): `4200_table_cba_value_latex.py`, `4060_table_rob_logwages.py` (flip
+`INCLUDE_MEAN` default to on), `4210_table_turnover_latex.py`,
+`generate_composition_latex.py`, `4190_table_mincer_latex.py`,
+`4070_table_resid.py`, `4180_table_union_controls_latex.py`,
+`07_within_firm/4090_table_within_firm.py`.
 
 Write (4), closing the missing-generator gap:
-- `Programs/main_results/5010_table_direct.py` → `t_direct.tex`
-- `Programs/main_results/5020_table_spill.py` → `t_spill.tex`
-- `Programs/clause_types/5040_table_clause.py` → `t_clause.tex`
-- `Programs/robustness/5050_table_union.py` → `t_union{,_hw}.tex`
+- `Programs/main_results/4010_table_direct.py` → `t_direct.tex`
+- `Programs/main_results/4020_table_spill.py` → `t_spill.tex`
+- `Programs/clause_types/4040_table_clause.py` → `t_clause.tex`
+- `Programs/robustness/4050_table_union.py` → `t_union{,_hw}.tex`
 
 **Union correction (found 2026-08-01, during step 1).** The existing
-`5180_table_union_controls_latex.py` is a **6-column** generator reading the legacy
+`4180_table_union_controls_latex.py` is a **6-column** generator reading the legacy
 `Tables/robustness/` path, and its numbers (0.0051, 0.0044) do not match the
-document (0.0050, 0.0043). It is left untouched — `4072_union_controls.do`
+document (0.0050, 0.0043). It is left untouched — `3072_union_controls.do`
 still calls it. The document's **10-column** table is backed by
 `Tables/currentconn_full/robustness/results_spill_union_controls{,_hw}.csv`, whose
 `main` values match the document exactly across all ten columns, so a new generator
@@ -137,7 +137,7 @@ are inlined **twice** — once per half — from a single file carrying both mon
 hourly columns. Editing them once covers both halves; a mistake there also lands
 twice.
 
-Inlining: `07_within_firm/5100_inline_into_replication.py` currently handles only its
+Inlining: `07_within_firm/4100_inline_into_replication.py` currently handles only its
 own six stems. It will be extended to cover all fragments, keeping its
 marker-based, idempotent design. Two tables (`t_union`, `t_union_hw`) have **no
 markers** in the document and need them added first.
@@ -182,8 +182,8 @@ markers** in the document and need them added first.
 
 | Generator | Output | Verified against |
 |---|---|---|
-| `main_results/5020_table_spill.py` | `t_spill.tex` | committed fragment — identical |
-| `robustness/5050_table_union.py` | `t_union.tex`, `t_union_hw.tex` | document lines 251–292 and 809–850 — both identical |
+| `main_results/4020_table_spill.py` | `t_spill.tex` | committed fragment — identical |
+| `robustness/4050_table_union.py` | `t_union.tex`, `t_union_hw.tex` | document lines 251–292 and 809–850 — both identical |
 
 **Blocked, two new gaps:**
 
@@ -191,7 +191,7 @@ markers** in the document and need them added first.
    (document Panel A = CSV `direct_A`; document Panel B = CSV `direct_C`, not
    `direct_B`, which is unused). But the `$p$-value` row — [0.009] [0.013] [0.741]
    [0.386] — appears in no CSV. The only script computing it,
-   `conn_margins/4022_direct_sample_coef_test.do`, runs against the **legacy** panel and
+   `conn_margins/3022_direct_sample_coef_test.do`, runs against the **legacy** panel and
    its saved output covers only 2 of the 4 outcomes. Its monthly p-value (0.0088)
    rounds to the printed [0.009]; its hourly (0.0105) does not match the printed
    [0.013] — expected, since legacy and currentconn should differ, but it means the
@@ -206,8 +206,8 @@ both have a populated panel A and empty panelB / panelC / spill. Both runs died
 after the first panel. Both pipelines have `_cc.do` runners and must be re-run in
 full.
 
-Revised re-run list adds: `cba_value` (via `4041_cba_value.do`) and
-`conn_margins/4022_direct_sample_coef_test.do` (currentconn, 4 outcomes).
+Revised re-run list adds: `cba_value` (via `3041_cba_value.do`) and
+`conn_margins/3022_direct_sample_coef_test.do` (currentconn, 4 outcomes).
 
 ## 6c. Step-3 progress and a third gap (2026-08-01)
 
@@ -216,14 +216,14 @@ regression, before the placebo replaces it; written as a `mean_pre` row):
 
 | do-file | Blocks | Note |
 |---|---|---|
-| `4012_pct_tfpw.do` | 4 | direct continuous, direct clauses, spill continuous, spill clauses |
-| `composition/4092_composition.do` | 2 | replaced firm-average-at-2009 construction |
-| `turnover/4082_turnover.do` | 2 | replaced `s_use`-conditioned mean that ignored singleton drops |
-| `robustness/4072_union_controls.do` | 6 | patched programmatically; **only 6 of 10 columns exist in code** |
-| `robustness/4062_micro_ind_q.do` | 1 | replaced firm-average-at-2009 construction |
+| `3012_pct_tfpw.do` | 4 | direct continuous, direct clauses, spill continuous, spill clauses |
+| `composition/3092_composition.do` | 2 | replaced firm-average-at-2009 construction |
+| `turnover/3082_turnover.do` | 2 | replaced `s_use`-conditioned mean that ignored singleton drops |
+| `robustness/3072_union_controls.do` | 6 | patched programmatically; **only 6 of 10 columns exist in code** |
+| `robustness/3062_micro_ind_q.do` | 1 | replaced firm-average-at-2009 construction |
 
 **GAP 3 — union columns 7–10 have no source code.** The tracked
-`4072_union_controls.do` produces six columns (baseline, union x year FE,
+`3072_union_controls.do` produces six columns (baseline, union x year FE,
 two linear exposure controls, two quartile controls); its last commit `a2c5b74`
 added columns 5–6. The published table and the currentconn CSV both carry **ten**
 columns -- the decile and vingtile specifications (7–10) as well. No script in the
@@ -254,8 +254,8 @@ Columns 1–6 unchanged; all non-`mean_pre` rows byte-identical to baseline.
 either.** The do-file hardcoded `local outcome "lr_remdezr_w"`, so nothing could
 produce `results_spill_union_controls_hw.csv`. Outcome and CSV suffix are now
 parameterized through `$OUTVAR` / `$OUTSUF`, following the committed
-`4061_micro_ind_q.do` pattern, with defaults preserving the original monthly
-behaviour. Added `_run_union_controls_cc.do` and `4071_union_controls.do`;
+`3061_micro_ind_q.do` pattern, with defaults preserving the original monthly
+behaviour. Added `_run_union_controls_cc.do` and `3071_union_controls.do`;
 the legacy `_run_union_controls.do` is untouched and still feeds the six-column
 table in the main draft.
 
@@ -265,7 +265,7 @@ gap is the ~110 establishments that singleton-dropping removes. Col 2, which
 drops 3,781 observations, correctly reports a different mean (7.5479) from the
 other nine columns.
 
-**Unrelated observation, not acted on.** `turnover/4082_turnover.do` builds
+**Unrelated observation, not acted on.** `turnover/3082_turnover.do` builds
 `absorb` with `extra_year` (`totalflows_pw_pre_07_114#i.year`) for every outcome,
 including `$flow_outcomes` (`totalflows_pw`, `outflows_pw`, `inflows_pw`). The
 project rule requires excluding `extra_year` for exactly those outcomes or the
@@ -276,7 +276,7 @@ move estimates, which the freeze forbids.
 
 ## 6d. Status at end of session 2026-08-01
 
-**Do-files patched (10 of 14):** `4012_pct_tfpw.do` (4 blocks),
+**Do-files patched (10 of 14):** `3012_pct_tfpw.do` (4 blocks),
 `composition` (2), `turnover` (2), `union_controls` (10, incl. reconstruction),
 `micro_ind_q` (1), `clause_types` (2), `cba_value` (2, window switched from
 `cba_period 1-2` to calendar 2009-2011), `robustness_bins` (4),
@@ -368,12 +368,12 @@ identify the arm. Check `table_suffix` and the called do-file before running --
   first panel. Directories created; turnover and cba_value now produce full output.
 - **Union columns 7-10 reconstructed** and reproduce published values exactly.
 - **Six missing currentconn wrappers written**: `_run_union_controls_cc.do`,
-  `4071_union_controls.do`, `4051_robustness_bins.do`, `_run_demo_controls_cc.do`,
-  `4031_clause_types.do`, `_run_currentconn_mincer_full.do`,
-  `4021_direct_sample_coef_test.do`.
-- **Four new generators** for fragments that had none: `5010_table_direct.py`,
-  `5020_table_spill.py`, `5040_table_clause.py`,
-  `5050_table_union.py`, plus `5030_table_twopanel.py`
+  `3071_union_controls.do`, `3051_robustness_bins.do`, `_run_demo_controls_cc.do`,
+  `3031_clause_types.do`, `_run_currentconn_mincer_full.do`,
+  `3021_direct_sample_coef_test.do`.
+- **Four new generators** for fragments that had none: `4010_table_direct.py`,
+  `4020_table_spill.py`, `4040_table_clause.py`,
+  `4050_table_union.py`, plus `4030_table_twopanel.py`
   for turnover/composition.
 - **Union do-file parameterized** (`$OUTVAR`/`$OUTSUF`) so the hourly variant is
   reproducible; **equality test parameterized** (`$testsuf`) for the currentconn arm.
@@ -382,7 +382,7 @@ identify the arm. Check `table_suffix` and the called do-file before running --
 
 ### Bug caught on final audit (2026-08-02)
 
-`5100_inline_into_replication.py` substituted with `count=1`. That was correct for
+`4100_inline_into_replication.py` substituted with `count=1`. That was correct for
 the six within-firm stems it was written for, which appear once each, but five
 fragments (`t_direct`, `t_spill`, `t_clause`, `t_turnover`, `t_composition`)
 appear **twice** -- once per half of the document -- because each already carries
@@ -420,7 +420,7 @@ touch.
 2. At 2 decimals the mean row is constant across columns in single-outcome tables
    (union reads 7.55 ten times) even where samples genuinely differ. 3 decimals
    would separate them; CSVs hold 4, so this is a one-line change.
-3. `4082_turnover.do` includes `extra_year` in `absorb` for
+3. `3082_turnover.do` includes `extra_year` in `absorb` for
    `$flow_outcomes`, against the project rule. Those outcomes are not in the
    displayed columns, so the exhibit is unaffected; not changed, since changing it
    would move estimates.

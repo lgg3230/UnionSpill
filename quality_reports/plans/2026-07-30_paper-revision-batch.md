@@ -52,8 +52,8 @@ Regenerating a figure in `Graphs/` is only half the job — you must also refres
 | Thing | Location |
 |---|---|
 | Local-industry robustness estimates | `Programs/robustness/Main_Results_micro_ind.do` → `Tables/robustness/results_micro_ind_test.csv` → `Programs/robustness/generate_micro_ind_latex.py` (`tab:spill_micro_ind`). **Verify** this is what feeds cols 5–6 of the Robustness of Wage Effects table; it may be hand-assembled from several `Programs/robustness/*` runs. |
-| Pairwise-connectivity coefficients | consumed by `Programs/conn_descriptives/5110_figure_bilateral_coefplot.py` |
-| Distribution figure | `Programs/descriptives/5120_figure_distributions.py` |
+| Pairwise-connectivity coefficients | consumed by `Programs/conn_descriptives/4110_figure_bilateral_coefplot.py` |
+| Distribution figure | `Programs/descriptives/4120_figure_distributions.py` |
 | Current-connectivity outputs | `Tables/currentconn_full/{robustness,composition,turnover,residuals,clause_types,cba_value}` |
 
 ---
@@ -85,7 +85,7 @@ Regenerating a figure in `Graphs/` is only half the job — you must also refres
 - Never omit `i.mode_base_month#i.year` from absorb; use `tolerance(1e-2)` on event studies rather
   than dropping it.
 - Reuse existing variable definitions verbatim (e.g. `pre_treat_cba` from
-  `4012_pct_tfpw.do`); don't reinvent.
+  `3012_pct_tfpw.do`); don't reinvent.
 - Significant logic change → new file (`06b_*`), don't edit in place.
 - Append `notify` to every long-running Stata/Python job
   (`source Programs/notify.sh && notify "..." "..."`).
@@ -207,7 +207,7 @@ change, different estimates. `t_rob.tex` and `t_rob_hw.tex` must move together.
 
 Build a **new appendix table** from the **already-estimated** coefficients behind
 `bilateral_coefplot.pdf` (referenced at L57 and L615). Do not re-estimate. Locate the coefficient
-CSVs consumed by `Programs/conn_descriptives/5110_figure_bilateral_coefplot.py` and read them.
+CSVs consumed by `Programs/conn_descriptives/4110_figure_bilateral_coefplot.py` and read them.
 The figure is visually confusing; the table exists to put the numbers on the page clearly.
 
 **Structure (ambiguity now resolved — implement exactly this):**
@@ -235,11 +235,11 @@ classification intact.
 ## WORKSTREAM D — label rename + firm-level N correction
 *(original tasks 7 and 8 — grouped because both are small and touch disjoint files)*
 
-**Owns:** `Programs/descriptives/5120_figure_distributions.py`, `Graphs/distro_*`,
+**Owns:** `Programs/descriptives/4120_figure_distributions.py`, `Graphs/distro_*`,
 `UnionSpill-paper/Replication/Figures/distro_{region,industry,month}.pdf`, and the descriptives
 table fragment for D2.
 
-**D1 (was task 7).** In `Programs/descriptives/5120_figure_distributions.py`, `GROUP_LABELS` (L61) is
+**D1 (was task 7).** In `Programs/descriptives/4120_figure_distributions.py`, `GROUP_LABELS` (L61) is
 currently `["Treated", "All untreated", "Zero-conn. controls"]`. Rename the third label to
 **"Zero connectivity untreated"**. Also update the console string at L95 ("Zero controls:") and the
 module docstring (L3, L14) so the wording is consistent everywhere.

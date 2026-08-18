@@ -62,14 +62,14 @@ diagnostics reproduce exactly too: legacy 0.02932389, current 0.02925788.
 
 `INVENTORY.md` D1 calls this "the single most important open item" and states the table is
 "**not currently reproducible from `Programs/`**". That is stale. The exclusion note in
-`5100_inline_into_replication.py:54-61` was **updated on 2026-08-02**, after INVENTORY was
+`4100_inline_into_replication.py:54-61` was **updated on 2026-08-02**, after INVENTORY was
 built, and records that t_turnover was re-run and inlined by decision: the specification
 reproduced exactly (same absorb list, same n=113,112, same p90 divisor .0292579) with point
 estimates differing by ≤ 0.094 SE — convergence slack from demeaning `microregion#year`
 (3,560 categories) on top of 14,139 firm effects. One qualitative change was accepted: the
 Panel A churn pre-trend crossed into significance (−0.0498 → −0.0528*).
 
-Re-running `turnover/4081_turnover.do` in a **fresh Stata process** on 2026-08-09
+Re-running `turnover/3081_turnover.do` in a **fresh Stata process** on 2026-08-09
 produced all four CSVs **byte-identical** to the published
 `Tables/currentconn_full/turnover/`:
 
@@ -90,7 +90,7 @@ which is exactly what `0000_master.do` tier D now guarantees.
 ## Figures
 
 Assessed by md5 against the paper's `Replication/Figures/`, via
-`main_results/6010_copy_figures_to_paper.py` (dry run).
+`main_results/5010_copy_figures_to_paper.py` (dry run).
 
 | Published name | Verdict | Note |
 |---|---|---|
@@ -114,13 +114,13 @@ Assessed by md5 against the paper's `Replication/Figures/`, via
 
 **8 hash-exact, 7 drifted, 2 recovered.** The drift is the `INVENTORY.md` D4 pattern: the
 published figures came from runs whose output was never written back to `Graphs/`. Per the
-approved plan the chain regenerates these; `6010_copy_figures_to_paper.py` reports every
+approved plan the chain regenerates these; `5010_copy_figures_to_paper.py` reports every
 replacement with both md5s and writes nothing without `--apply`.
 
 ### The hourly recentered pair was unproducible
 
 Draft.tex cites `h_recentered_spill.pdf` and `h_recentered_cf.pdf` at lines 493 and 500.
-`rand_inference/5152_recentered_eventstudy.do` set `local out "lr_remdezr_w"` at line 30 but
+`rand_inference/4152_recentered_eventstudy.do` set `local out "lr_remdezr_w"` at line 30 but
 hardcoded the outcome into all four export filenames, so the local was inert and no
 invocation could produce the hourly figures. Parameterized 2026-08-09; verified by
 generating both PDFs for `lr_remdezr_h_w`, pooled main 0.0066 (0.0023) against the

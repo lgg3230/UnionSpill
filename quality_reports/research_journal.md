@@ -23,7 +23,7 @@
 **Phase:** Execution (standalone `/paper-review --proofread`)
 **Target:** UnionSpill-paper/Draft.tex
 **Score:** 74/100 (proofread-only: categories 4,5,6,8)
-**Verdict:** Found a confirmed DATA ERROR: tab:turnover Panel A "Log Hours" mean prints 7.2869 (the spillover panel's value); correct value is 6.1516 per results_direct_panelA_turnover.csv. 13/14 cells correct — table is hand-assembled because 5210_table_turnover_latex.py emits direct A/B/C, not direct+spillover. Also RESOLVED all three of the author's % VERIFY flags against the Stata code: (821) outcome bins ARE included — note is wrong; (866) same; (1087) negotiation month = modal base_month from Lagos registry, minmode — neither filing nor start date. Line 988 group-wage bins wrong for employment columns. 26 missing ~\ref ties; collectively-bargained (8x) violates CMOS 7.86.
+**Verdict:** Found a confirmed DATA ERROR: tab:turnover Panel A "Log Hours" mean prints 7.2869 (the spillover panel's value); correct value is 6.1516 per results_direct_panelA_turnover.csv. 13/14 cells correct — table is hand-assembled because 4210_table_turnover_latex.py emits direct A/B/C, not direct+spillover. Also RESOLVED all three of the author's % VERIFY flags against the Stata code: (821) outcome bins ARE included — note is wrong; (866) same; (1087) negotiation month = modal base_month from Lagos registry, minmode — neither filing nor start date. Line 988 group-wage bins wrong for employment columns. 26 missing ~\ref ties; collectively-bargained (8x) violates CMOS 7.86.
 **Report:** quality_reports/2026-07-16_Draft_proofread_detail.md
 
 ### 2026-07-16 — orchestrator (apply corrections)

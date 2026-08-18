@@ -20,14 +20,14 @@ Raw yield: 13 findings + 6 judgment calls. After dedup and verification against 
 ## Confirmed — fix in the paper
 
 **1. Industry fixed effects are three-digit, six table notes say two-digit.**
-`4012_pct_tfpw.do:319` absorbs `i.industry1#i.year`, and
-`1040_merge_cba_rais.do:169-172` builds `industry1` from `substr(clascnae20,1,3)`. `big_industry`
+`3012_pct_tfpw.do:319` absorbs `i.industry1#i.year`, and
+`1030_merge_cba_rais.do:169-172` builds `industry1` from `substr(clascnae20,1,3)`. `big_industry`
 (two-digit, `:218`) never enters the FE. Notes at Draft.tex lines 379, 456, 590, 658, 892, 938.
 → Change six table notes to three-digit. The appendix is already correct.
 
 **2. The retention rate note is stated backwards.**
 Note: "the share of December-employed workers who were already at the establishment at the start
-of year $t$." Code (`turnover/1070_corrected_turnover.py:438-441`): numerator is workers present
+of year $t$." Code (`turnover/1050_corrected_turnover.py:438-441`): numerator is workers present
 in both January and December, denominator is **January** employment. Agent C added independent
 proof from the document alone: under the note's own definition the rate could never be
 undefined, yet the column reports 112,620 obs against 113,112.
@@ -35,7 +35,7 @@ undefined, yet the column reports 112,620 obs against 113,112.
 
 **3. The main text's clause window does not match the estimation.**
 Text (line 298): "restrict post-treatment observations to CBAs filed after September 25, 2012."
-Code (`4012_pct_tfpw.do:120-126`): `cba_period` 3–6 is assigned only to filings in
+Code (`3012_pct_tfpw.do:120-126`): `cba_period` 3–6 is assigned only to filings in
 calendar 2013–2016, so **every 2012 filing is dropped**. An agreement filed 1 October 2012 is in
 by the text and out in fact.
 → The appendix is right. Fix the main text.
@@ -73,7 +73,7 @@ establishment-level sum of weekly hours. Same RAIS field, different scaling and 
 **9. "In force at the end of 2012" overstates the sample condition.**
 The appendix says the third condition requires "at least one agreement filed on or after 1
 January 2012 that was in force at the end of 2012." The code
-(`1040_merge_cba_rais.do:114`) requires only `file_date >= 1jan2012 & end_date >= 31dec2012`. It
+(`1030_merge_cba_rais.do:114`) requires only `file_date >= 1jan2012 & end_date >= 31dec2012`. It
 never checks that the agreement had started by end-2012, so a 2014 filing running into 2015
 satisfies it. As written the appendix describes a stricter rule than the one imposed.
 → Reword to: an agreement filed on or after 1 January 2012 whose term runs at least to the end

@@ -52,31 +52,31 @@ and then selects an estimation sample with one of five conditions:
 character-for-character, at:
 
 ```
-4012_pct_tfpw.do:138, :329
-clause_types/4032_clause_types.do:151
-cba_value/4042_cba_value.do:106, :186
-turnover/4082_turnover.do:146, :308
-composition/4092_composition.do:113, :259
-residuals/4112_mincer.do:122, :255
-robustness/4052_robustness_bins.do:124, :381
-robustness/4062_micro_ind_q.do:86
-robustness/4072_union_controls.do:85
+3012_pct_tfpw.do:138, :329
+clause_types/3032_clause_types.do:151
+cba_value/3042_cba_value.do:106, :186
+turnover/3082_turnover.do:146, :308
+composition/3092_composition.do:113, :259
+residuals/3112_mincer.do:122, :255
+robustness/3052_robustness_bins.do:124, :381
+robustness/3062_micro_ind_q.do:86
+robustness/3072_union_controls.do:85
 max_clause_row/max_clause_row.do:155
 ```
 
 `S2` — string
 `"(treat_ultra==0 & totaltreat_pw_n==0 | treat_ultra==1) & lagos_sample_avg==1 & in_balanced_panel==1"`
-at `4012_pct_tfpw.do:326` (`s_direct_A`),
-`conn_margins/4022_direct_sample_coef_test.do:139` (`$s_A`),
-`robustness/4062_micro_ind_q.do:88` (`s_direct`),
+at `3012_pct_tfpw.do:326` (`s_direct_A`),
+`conn_margins/3022_direct_sample_coef_test.do:139` (`$s_A`),
+`robustness/3062_micro_ind_q.do:88` (`s_direct`),
 `max_clause_row/max_clause_row.do:234`.
 
-`S3` at `4012_pct_tfpw.do:327` and `4022_direct_sample_coef_test.do:140`.
-`S4` at `4012_pct_tfpw.do:328`, `4022_direct_sample_coef_test.do:141`
+`S3` at `3012_pct_tfpw.do:327` and `3022_direct_sample_coef_test.do:140`.
+`S4` at `3012_pct_tfpw.do:328`, `3022_direct_sample_coef_test.do:141`
 (`$s_C`), `max_clause_row/max_clause_row.do:235`.
 
 **No conflicts found.** Only cosmetic reordering, in
-`descriptives/4102_sample_descriptives.do:102`
+`descriptives/3102_sample_descriptives.do:102`
 (`lagos_sample_avg==1 & in_balanced_panel==1 & treat_ultra==0`), which is S1 with
 the conjuncts permuted — logically identical.
 
@@ -84,9 +84,9 @@ the conjuncts permuted — logically identical.
 
 | Variable | Defined at | Definition |
 |---|---|---|
-| `treat_ultra` | `1040_merge_cba_rais.do:161` | `bys identificad: egen treat_ultra = max(treat_cba)` — treated in any year ⇒ treated in all |
-| `in_balanced_panel` | `1040_merge_cba_rais.do:198` | present in 2009 & 2010 & … (`cond(...)`) |
-| `lagos_sample_avg` | `1040_merge_cba_rais.do:117` | `(cba_pre2012_avg==1 & cba_post2012_avg==1 & pos_emp==1)`, via the `filedate` loop |
+| `treat_ultra` | `1030_merge_cba_rais.do:161` | `bys identificad: egen treat_ultra = max(treat_cba)` — treated in any year ⇒ treated in all |
+| `in_balanced_panel` | `1030_merge_cba_rais.do:198` | present in 2009 & 2010 & … (`cond(...)`) |
+| `lagos_sample_avg` | `1030_merge_cba_rais.do:117` | `(cba_pre2012_avg==1 & cba_post2012_avg==1 & pos_emp==1)`, via the `filedate` loop |
 
 All three are mirrored byte-identically in
 `main_data_pipeline/40_041_merge_cba_rais.do` — that folder holds copies, not
@@ -104,12 +104,12 @@ Data/CBA_RAIS_firm_level_currentconn_overlay/     ← every published exhibit
 Data/CBA_RAIS_firm_level/                         ← frozen; legacy runs only
 ```
 
-Verified for `4011_pct_tfpw.do`, `conn_margins/4021_direct_sample_coef_test.do`,
-`clause_types/4031_clause_types.do`, `cba_value/4041_cba_value.do`,
+Verified for `3011_pct_tfpw.do`, `conn_margins/3021_direct_sample_coef_test.do`,
+`clause_types/3031_clause_types.do`, `cba_value/3041_cba_value.do`,
 `robustness/_run_{robustness_cc,micro_ind_q_hw,union_controls_hw_cc}.do`,
-`turnover/4081_turnover.do`, `composition/4091_composition.do`,
-`descriptives/4101_sample_descriptives.do`,
-`main_results/4111_mincer.do`,
+`turnover/3081_turnover.do`, `composition/3091_composition.do`,
+`descriptives/3101_sample_descriptives.do`,
+`main_results/3111_mincer.do`,
 `layer_connectivity/07_within_firm/_run_within_firm{,_hw}_v3.do`.
 
 The overlay directory is a symlink farm. Every entry is a symlink back to
@@ -133,7 +133,7 @@ No script in `Programs/` writes
 `Data/CBA_RAIS_firm_level_currentconn_overlay/lagos_sample_sep24_pct_unionexp_ext_df2.dta`.
 Searched: every `.do` and `.py` for `save`/`export`/`to_stata` against that path
 or that filename. The only writer of the filename is
-`2030_get_wage_pctiles_df2.do:47`, which saves to `$rais_firm/` — so it *would*
+`2050_build_analysis_panel.do:47`, which saves to `$rais_firm/` — so it *would*
 write the overlay if invoked with `$rais_firm` set to the overlay dir, but no
 committed wrapper does that, and its own input is missing (H2).
 
@@ -147,7 +147,7 @@ this costs all of them.
 
 `main_data_pipeline/PIPELINE_STATUS.md` records that
 `Data/CBA_RAIS_firm_level/lagos_sample_sep24_pct_unionexp.dta` — the direct input
-to `2030_get_wage_pctiles_df2.do` — does not exist, along with
+to `2050_build_analysis_panel.do` — does not exist, along with
 `rais_firm_{2007,2008}.dta`. So even the *frozen* panel cannot be rebuilt today.
 The chain is broken at two independent points: raw → frozen (H2), frozen →
 overlay (H1).
@@ -163,8 +163,8 @@ regressor" is true for `S1` and false for `S2`/`S3`.
 This compounds the known `totaltreat_pw_norm` trap (memory:
 `project_currentconn_overlay_trap`): each estimator rebuilds
 `totaltreat_pw_norm = totaltreat_pw_n / p90(totaltreat_pw_n)` in-script
-(`4012_pct_tfpw.do:141–146`, and again at
-`4102_sample_descriptives.do:128–131`, `13_pctiles_specs.do:38–41`), so the
+(`3012_pct_tfpw.do:141–146`, and again at
+`3102_sample_descriptives.do:128–131`, `13_pctiles_specs.do:38–41`), so the
 regressor's *scale* is a function of which panel was loaded and which sample the
 p90 was taken over.
 
@@ -172,13 +172,13 @@ p90 was taken over.
 
 | Consumer | Base | Note |
 |---|---|---|
-| `rand_inference/5152_recentered_eventstudy.do:21` | `$randdir/spill_frame.dta` | a frozen derived sample, not S0–S4; its own build step is untraced here |
+| `rand_inference/4152_recentered_eventstudy.do:21` | `$randdir/spill_frame.dta` | a frozen derived sample, not S0–S4; its own build step is untraced here |
 | `honest_did/honest_did_rm_2x2.py:28` | `honest_did_results{,_fine}.csv` | consumes estimates, never a panel — inherits whatever sample produced the CSVs |
 | `layer_connectivity/07_within_firm/01c_*.do:211` | base panel, own restriction order | see H5 |
 
 ### H5 — The within-firm estimator builds its own panel.
 
-`4122_within_firm.do` opens the base panel at :211 but restricts with
+`3122_within_firm.do` opens the base panel at :211 but restricts with
 `keep if lagos_sample_avg == 1 & year >= 2009` (:214) after a `keep` of a fixed
 variable list, then layers on restrictions absent from S0–S4:
 `keep if !mi(microregion_num)` (:183), a crosswalk cut
@@ -210,7 +210,7 @@ a single line.
 | `tab:composition` | S1 | overlay |
 | `tab:turnover` | S1 | overlay — but see `INVENTORY.md D1`, not reproducible |
 | `tab:resid_raw_base` | S1 | overlay |
-| `tab:descriptive_stats` | S1 + group cuts on `totaltreat_pw_n` (`4102_sample_descriptives.do:213–228`) | overlay |
+| `tab:descriptive_stats` | S1 + group cuts on `totaltreat_pw_n` (`3102_sample_descriptives.do:213–228`) | overlay |
 | `tab:layer_desc_full`, `tab:group_specs`, `tab:horse_race` | H5 (own lattice) | overlay |
 | event-study figures `{m,h}_{dir,spill}_es.pdf` | S2 / S1 | overlay |
 | honest-DiD figures | inherited via CSV — H4 | — |

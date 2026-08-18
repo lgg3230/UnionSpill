@@ -38,7 +38,7 @@ should not; under reading 2 they should.
   never permuted and treatment assignment is never re-estimated;
 - the regression specification: outcome, fixed effects, clustering, weights,
   sample restrictions and event-time structure, identical to
-  `4012_pct_tfpw.do:320-384`;
+  `3012_pct_tfpw.do:320-384`;
 - the pool of candidate controls: the 4,196 actual untreated balanced firms.
 
 **Varies across draws:**
@@ -79,7 +79,7 @@ Inputs are all existing `rand_inference` objects: `spill_frame.dta`,
 stratification (`none`, `intermediate`, `fine_vingtile`, `control_match`), copied
 verbatim from `07_placebo_diag.py` — including the **correct** 2-digit CNAE
 division. (`04_permutation_engine.py` uses `industry1 // 100`, which is wrong:
-`industry1` carries an artificial leading "1", see `1040_merge_cba_rais.do:169-172`.)
+`industry1` carries an artificial leading "1", see `1030_merge_cba_rais.do:169-172`.)
 
 Estimation uses `pyfixest` with the exact main spec, which reproduces the
 published `reghdfe` baselines to the printed precision (Panel C 0.01785/0.00318,

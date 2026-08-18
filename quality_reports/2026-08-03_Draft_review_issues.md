@@ -90,11 +90,11 @@ The merged Data Appendix disagrees with the body in four places.
 |---|---|---|
 | D1 | **Clustering is at the wrong level.** SEs cluster on establishment, but the paper's own Appendix §C.1.2 says agreements are signed at the **8-digit company** level and headquarters negotiate for subsidiaries. Treatment is assigned at the agreement level. Spillover t = 2.83; a modest correction puts it at the 5% boundary | All tables |
 | D2 | **No multiple-testing control across ~25 outcomes.** Table A8's tenure equality test (p = 0.010) is the sole significant result among 6 tests and is elevated to an abstract claim. Bonferroni over that family is 0.0083 — it does not survive | Table A8, abstract |
-| D3 | **Missing per-worker-flow data silently pooled into the bottom quartile.** `4012_pct_tfpw.do:216`: `replace totalflows_pw_pre_07_114 = 0 if missing(...)`. Undisclosed in every table note, and contrary to the project's own no-zero-fill rule. The zero-connectivity controls are exactly the small, low-flow firms most likely to be missing **[V]** | Code |
+| D3 | **Missing per-worker-flow data silently pooled into the bottom quartile.** `3012_pct_tfpw.do:216`: `replace totalflows_pw_pre_07_114 = 0 if missing(...)`. Undisclosed in every table note, and contrary to the project's own no-zero-fill rule. The zero-connectivity controls are exactly the small, low-flow firms most likely to be missing **[V]** | Code |
 | D4 | **Nulls over-read.** Employment spillover 0.0009 (0.0081) → CI ≈ [−0.015, +0.017]; the upper bound is 2.6× the wage effect. Cannot say employment is "unaffected." Clause-count null has a pre-trend (0.3256) 14× the post estimate, yet carries the "no union mediation" claim | Abstract, L415, L627 |
 | D5 | **Quit-rate footnote uses the wrong benchmark.** Post −0.0027* vs pre-trend −0.0072** — same direction, 2.7× larger. The footnote compares the estimate to the pre-treatment *mean*, not the pre-trend, then uses the result substantively at L627 | L627 |
 | D6 | **Table 3 col (7) treats estimated Lagos weights as known**, with a pretest (insignificant subgroups zeroed). The reported SE understates uncertainty, so "rule out gains above 0.2%" is not supported at the stated precision | L555 |
-| D7 | **2012 coded as post** despite a 25 September ruling and December outcomes — roughly one quarter of exposure **[V]** | `4012_pct_tfpw.do:114` |
+| D7 | **2012 coded as post** despite a 25 September ruling and December outcomes — roughly one quarter of exposure **[V]** | `3012_pct_tfpw.do:114` |
 
 ---
 

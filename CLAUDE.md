@@ -98,13 +98,13 @@ stata-mp -b do Programs/011_rais_to_firm_parallel.do
 ### MATLAB Connectivity Scripts
 Worker flow connectivity matrices are computed in MATLAB. Run from Stata via:
 ```stata
-shell "/software/matlab/R2020b/bin/matlab" -nojvm < "/kellogg/proj/lgg3230/UnionSpill/Programs/1051_connectivity_full_lagos.m"
+shell "/software/matlab/R2020b/bin/matlab" -nojvm < "/kellogg/proj/lgg3230/UnionSpill/Programs/1041_connectivity_full_lagos.m"
 ```
 
 Key MATLAB scripts:
-- `1051_connectivity_full_lagos.m`: Full sample connectivity
-- `1052_connectivity_treat_lagos.m`: Flows to treated firms
-- `1053_connectivity_control_lagos.m`: Flows to control firms
+- `1041_connectivity_full_lagos.m`: Full sample connectivity
+- `1042_connectivity_treat_lagos.m`: Flows to treated firms
+- `1043_connectivity_control_lagos.m`: Flows to control firms
 
 ## Pipeline Architecture
 
@@ -112,9 +112,9 @@ Key MATLAB scripts:
 
 2. **1020_clean_emp_assoc.do**: Cleans employer association data
 
-3. **1030_clean_cba.do**: Cleans CBA data, Python scripts (`explode_cba_coverage_*.py`) expand coverage to municipalities
+3. **1020_clean_cba.do**: Cleans CBA data, Python scripts (`explode_cba_coverage_*.py`) expand coverage to municipalities
 
-4. **1040_merge_cba_rais.do**: Merges CBA and RAIS at firm level, defines treatment status (`treat_ultra`)
+4. **1030_merge_cba_rais.do**: Merges CBA and RAIS at firm level, defines treatment status (`treat_ultra`)
 
 5. **1050_yearly_employers.do**: Constructs worker flow transition matrices between consecutive years (2007-2011), runs MATLAB connectivity scripts, computes connectivity measures (flows to treated/control/Lagos sample as proportion of total flows)
 

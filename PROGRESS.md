@@ -76,7 +76,7 @@ Flagged highest-value by Guilherme. **Needs a design discussion before coding (3
 
 ## Task 4 — Winsorization robustness (low priority, low cost)  ☐
 - Winsorize **worker-level** wages first, then aggregate to firm, compare to baseline. May reveal extreme wage obs driving unstable pretrends.
-- **Data:** worker panel → firm aggregation path: `Programs/worker_wages/01_prep_data.py` + `Programs/2030_get_wage_pctiles_df2.do`. Worker source `worker_year_pre_new_vs_nonnew_dec26.dta` (2009–2016, local).
+- **Data:** worker panel → firm aggregation path: `Programs/worker_wages/01_prep_data.py` + `Programs/2050_build_analysis_panel.do`. Worker source `worker_year_pre_new_vs_nonnew_dec26.dta` (2009–2016, local).
 - **Acceptance:** re-run Main_Results with winsorized wages; compare to baseline direct effects (≈0.021–0.030, all ***) and spillover. Report whether pretrends/effects shift.
 - **Conventions:** wage terminology; Sample A for direct, `s_spill` for spillover.
 
@@ -108,7 +108,7 @@ Flagged highest-value by Guilherme. **Needs a design discussion before coding (3
 - Build: `Programs/descriptives/balance_table_task2.do` → `Tables/descriptives/balance_table_task2.csv` (flag `outcome_ctrl_window` = 0910|full|none; the flows row drops its own-flows quartile control to avoid mechanical self-adjustment; ~8s local). `Programs/descriptives/generate_balance_table_task2_latex.py` → `Tables/descriptives/balance_table_task2.tex` (tenure & age in years).
 - Results (window 0910) — raw→controlled collapse toward zero IS the argument: log wages +0.254***→−0.013***; age 1.47***→−0.04 ns; tenure 1.92***→+0.05 ns; # clauses 7.28***→+0.73*; flows (own-control dropped) −0.0085**; connectivity slope on log wages +0.009 ns. N all/zero/spill = 16,444 / 14,187 / 4,183.
 - Paper integration (option A, `UnionSpill_paper`): replaced the univariate slopes table with `\input{Tables/balance_table_task2.tex}`; made the connectivity histogram spillover-sample only; removed the treated-firm figures + 4 orphan treated PDFs; killed the dangling `fig:conn_resid_treated` ref; anchored the two control binscatters. Local commit **27dac87**; PUSH PENDING approval.
-- Cleanup: guarded treated-graph generation in `firm_conn_binscatter.py`, `firm_conn_scatter.py`, `firm_conn_residualize_plots.py`, `conn_descriptives/5140_figure_conn_hist.py`, and the treated-frame block in `firm_conn_residualize.do` (`local do_treated 0`).
+- Cleanup: guarded treated-graph generation in `firm_conn_binscatter.py`, `firm_conn_scatter.py`, `firm_conn_residualize_plots.py`, `conn_descriptives/4140_figure_conn_hist.py`, and the treated-frame block in `firm_conn_residualize.do` (`local do_treated 0`).
 - TODO next: commit code-repo changes (do-file + generator + guards) to `lgg3230/UnionSpill`; then push the paper commit.
 
 ## Session log — 2026-06-26
@@ -120,7 +120,7 @@ Flagged highest-value by Guilherme. **Needs a design discussion before coding (3
 - CONTROLS to residualize on ("the usual controls" = main-spec FE, from `firm_conn_scatter_prep.do`): `identificad`, `i.industry1#i.year`, `i.mode_base_month#i.year`, `i.microregion#i.year`, `ib0.lr_remdezr_w_pre4#i.year`, `ib0.l_firm_emp_pre4#i.year` (cross-section ⇒ drop the ×year on the 2011 slice).
 Plan: extend the prep do-file to add educ/age/tenure/#clauses, then for each characteristic compare the RAW connectivity slope to the slope CONDITIONAL on the main-spec controls (FWL: `reghdfe X conn, absorb(controls)`); controls "work" if the conditional slope collapses toward 0. Base panel local (185M).
 
-**Task 4 (◐) — scoped, ready to build:** firm wage outcome = MEAN of worker-level log wages, built by `2030_get_wage_pctiles_df2.do` (collapse (mean) `lr_remdezr_w lr_remmedr_w lr_remdezr_h_w lr_remmedr_h_w` by cnpj_year) from `worker_year_pre_new_vs_nonnew_dec26.dta` (1.8G, local, 2009–2016). Plan: winsorize worker-level wage levels (default 1/99 two-sided, within year) BEFORE the collapse → write to a NEW panel filename (must NOT overwrite canonical `lagos_sample_sep24_pct_unionexp_ext_df2.dta`) → re-run Main_Results on it → compare to baseline (direct ≈0.021–0.030***; spillover ≈0.005**). Default winsorization params pending user confirmation.
+**Task 4 (◐) — scoped, ready to build:** firm wage outcome = MEAN of worker-level log wages, built by `2050_build_analysis_panel.do` (collapse (mean) `lr_remdezr_w lr_remmedr_w lr_remdezr_h_w lr_remmedr_h_w` by cnpj_year) from `worker_year_pre_new_vs_nonnew_dec26.dta` (1.8G, local, 2009–2016). Plan: winsorize worker-level wage levels (default 1/99 two-sided, within year) BEFORE the collapse → write to a NEW panel filename (must NOT overwrite canonical `lagos_sample_sep24_pct_unionexp_ext_df2.dta`) → re-run Main_Results on it → compare to baseline (direct ≈0.021–0.030***; spillover ≈0.005**). Default winsorization params pending user confirmation.
 
 **Deferred:** Task 3 (design talk), Task 1.3/1.4 (await funnel outcome).
 

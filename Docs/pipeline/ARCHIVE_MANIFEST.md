@@ -15,7 +15,7 @@ Total scripts: **830**
 
 Bucket E is a fifth bucket, not in the approved four. Classifying every file by rule alone would be false precision: E holds scripts that sit in directories which also contain chain scripts but never call the chain themselves. `INVENTORY.md §F` warns that "no traced exhibit" is not proof of death, and a wrong archive here stays invisible until someone re-estimates. E is split by reachability: **E1** is named by some live script and needs a look; **E2** is referenced by nothing live and is the safest bulk-archive candidate.
 
-**Bucket A grew from 60 to 73 while building this file.** Reachability analysis found twelve scripts invoked directly by chain scripts that the schema never included -- the `explode_cba_coverage_*.py` coverage exploders, `1070_corrected_turnover.py`, the six `generate_*_latex.py` table writers, `5220_table_descriptives.py`, and `notify.sh`. Archiving on the previous classification would have broken the chain in a dozen places. They still carry their original names and should be renumbered before anything moves.
+**Bucket A grew from 60 to 73 while building this file.** Reachability analysis found twelve scripts invoked directly by chain scripts that the schema never included -- the `explode_cba_coverage_*.py` coverage exploders, `1050_corrected_turnover.py`, the six `generate_*_latex.py` table writers, `4220_table_descriptives.py`, and `notify.sh`. Archiving on the previous classification would have broken the chain in a dozen places. They still carry their original names and should be renumbered before anything moves.
 
 ## By directory
 
@@ -69,67 +69,67 @@ Disposition: archive; still runs against chain payloads
 - `05b_yearly_employers_extended.do` — calls chain script 1050_yearly_employers.do
 - `05c_aggregate_extended_connectivity.do` — calls chain script 1050_yearly_employers.do
 - `062_process_municipality_centroids.do` — calls chain script 0000_master.do
-- `Main_Results_pct_tfpw_07_11_extpre.do` — calls chain script 4012_pct_tfpw.do
+- `Main_Results_pct_tfpw_07_11_extpre.do` — calls chain script 3012_pct_tfpw.do
 - `Main_Results_pct_tfpw_07_11_meanlog.do` — calls chain script 0000_master.do
 - `Main_Results_robustness.do` — calls chain script 1050_yearly_employers.do
 - `_run_012_worker_panel.do` — calls chain script 1060_rais_worker_panel.do
-- `_run_pct_tfpw_07_11.do` — calls chain script 4012_pct_tfpw.do
-- `_run_pct_tfpw_07_11_cc_meanlog.do` — calls chain script 4012_pct_tfpw.do
-- `_run_pct_tfpw_07_11_cluster.do` — calls chain script 4012_pct_tfpw.do
-- `_run_spill_base_only.do` — calls chain script 4012_pct_tfpw.do
-- `_spill_base_only.do` — calls chain script 4012_pct_tfpw.do
+- `_run_pct_tfpw_07_11.do` — calls chain script 3012_pct_tfpw.do
+- `_run_pct_tfpw_07_11_cc_meanlog.do` — calls chain script 3012_pct_tfpw.do
+- `_run_pct_tfpw_07_11_cluster.do` — calls chain script 3012_pct_tfpw.do
+- `_run_spill_base_only.do` — calls chain script 3012_pct_tfpw.do
+- `_spill_base_only.do` — calls chain script 3012_pct_tfpw.do
 - `cattaneo_test.do` — calls chain script 0000_master.do
 
 **`Programs/cba_value/`**
 
-- `Main_Results_cba_value_year.do` — calls chain script 4042_cba_value.do
-- `_run_cba_value.do` — calls chain script 4042_cba_value.do
+- `Main_Results_cba_value_year.do` — calls chain script 3042_cba_value.do
+- `_run_cba_value.do` — calls chain script 3042_cba_value.do
 
 **`Programs/clause_types/`**
 
-- `_run_clause_types.do` — calls chain script 4032_clause_types.do
-- `clause_types_log.do` — calls chain script 4032_clause_types.do
+- `_run_clause_types.do` — calls chain script 3032_clause_types.do
+- `clause_types_log.do` — calls chain script 3032_clause_types.do
 
 **`Programs/composition/`**
 
-- `Main_Results_composition_log.do` — calls chain script 4092_composition.do
-- `Main_Results_composition_scale.do` — calls chain script 4092_composition.do
-- `_run_composition.do` — calls chain script 4092_composition.do
+- `Main_Results_composition_log.do` — calls chain script 3092_composition.do
+- `Main_Results_composition_scale.do` — calls chain script 3092_composition.do
+- `_run_composition.do` — calls chain script 3092_composition.do
 
 **`Programs/conn_descriptives/`**
 
-- `07db_submit.sh` — calls chain script 5110_figure_bilateral_coefplot.py
-- `08_merge.py` — calls chain script 5110_figure_bilateral_coefplot.py
+- `07db_submit.sh` — calls chain script 4110_figure_bilateral_coefplot.py
+- `08_merge.py` — calls chain script 4110_figure_bilateral_coefplot.py
 
 **`Programs/conn_margins/`**
 
-- `_run_main_pct.do` — calls chain script 4012_pct_tfpw.do
+- `_run_main_pct.do` — calls chain script 3012_pct_tfpw.do
 - `conn_margins.do` — calls chain script 0000_master.do
-- `conn_margins_thresholds.do` — calls chain script 4012_pct_tfpw.do
-- `linearity_did_fd_cba_binstest.do` — calls chain script 4012_pct_tfpw.do
-- `linearity_did_fd_cba_match.do` — calls chain script 4012_pct_tfpw.do
-- `linearity_did_panel_cba.do` — calls chain script 4012_pct_tfpw.do
-- `linearity_did_resid_cba.do` — calls chain script 4012_pct_tfpw.do
-- `linearity_polytest.do` — calls chain script 4012_pct_tfpw.do
-- `spill_trim_robustness.do` — calls chain script 4012_pct_tfpw.do
+- `conn_margins_thresholds.do` — calls chain script 3012_pct_tfpw.do
+- `linearity_did_fd_cba_binstest.do` — calls chain script 3012_pct_tfpw.do
+- `linearity_did_fd_cba_match.do` — calls chain script 3012_pct_tfpw.do
+- `linearity_did_panel_cba.do` — calls chain script 3012_pct_tfpw.do
+- `linearity_did_resid_cba.do` — calls chain script 3012_pct_tfpw.do
+- `linearity_polytest.do` — calls chain script 3012_pct_tfpw.do
+- `spill_trim_robustness.do` — calls chain script 3012_pct_tfpw.do
 
 **`Programs/descriptives/`**
 
-- `_run_descriptives.do` — calls chain script 4102_sample_descriptives.do
-- `firm_conn_scatter_prep.do` — calls chain script 4012_pct_tfpw.do
+- `_run_descriptives.do` — calls chain script 3102_sample_descriptives.do
+- `firm_conn_scatter_prep.do` — calls chain script 3012_pct_tfpw.do
 
 **`Programs/(root)/`**
 
-- `extpre_build.do` — calls chain script 2030_get_wage_pctiles_df2.do
-- `extpre_eventstudy_export.do` — calls chain script 4012_pct_tfpw.do
+- `extpre_build.do` — calls chain script 2050_build_analysis_panel.do
+- `extpre_eventstudy_export.do` — calls chain script 3012_pct_tfpw.do
 
 **`Programs/layer_connectivity/`**
 
 - `03a_compute_n.py` — calls chain script 1050_yearly_employers.do
 - `01a_disentangle_edu.do` — calls chain script 0000_master.do
-- `04_build_pdf.py` — calls chain script 5090_table_within_firm.py
-- `_run_within_firm_hw_v3ml.do` — calls chain script 4132_within_firm_hourly.do
-- `_run_within_firm_v3ml.do` — calls chain script 4122_within_firm.do
+- `04_build_pdf.py` — calls chain script 4090_table_within_firm.py
+- `_run_within_firm_hw_v3ml.do` — calls chain script 3132_within_firm_hourly.do
+- `_run_within_firm_v3ml.do` — calls chain script 3122_within_firm.do
 - `07_layer_spillover.do` — calls chain script 0000_master.do
 - `07b_layer_spillover.do` — calls chain script 0000_master.do
 - `11_disentangling_layers.do` — calls chain script 0000_master.do
@@ -139,10 +139,10 @@ Disposition: archive; still runs against chain payloads
 
 **`Programs/main_results/`**
 
-- `_run_currentconn_mincer_full.do` — calls chain script 4112_mincer.do
-- `_run_currentconn_mincer_ten_fullrais.do` — calls chain script 4112_mincer.do
-- `main_logclauses.do` — calls chain script 4012_pct_tfpw.do
-- `pre_period_means.do` — calls chain script 4092_composition.do
+- `_run_currentconn_mincer_full.do` — calls chain script 3112_mincer.do
+- `_run_currentconn_mincer_ten_fullrais.do` — calls chain script 3112_mincer.do
+- `main_logclauses.do` — calls chain script 3012_pct_tfpw.do
+- `pre_period_means.do` — calls chain script 3092_composition.do
 
 **`Programs/(root)/`**
 
@@ -151,36 +151,36 @@ Disposition: archive; still runs against chain payloads
 
 **`Programs/rand_inference/`**
 
-- `02_export_regression_frame.do` — calls chain script 4012_pct_tfpw.do
-- `17_direct_cf_placebo.py` — calls chain script 4012_pct_tfpw.do
+- `02_export_regression_frame.do` — calls chain script 3012_pct_tfpw.do
+- `17_direct_cf_placebo.py` — calls chain script 3012_pct_tfpw.do
 
 **`Programs/residuals/`**
 
-- `011f_mincer_residuals.do` — calls chain script 4112_mincer.do
-- `_run_main_python_resid.do` — calls chain script 4112_mincer.do
-- `_run_main_stata_resid.do` — calls chain script 4112_mincer.do
-- `_run_mincer.do` — calls chain script 4112_mincer.do
-- `es_mincer.do` — calls chain script 4112_mincer.do
+- `011f_mincer_residuals.do` — calls chain script 3112_mincer.do
+- `_run_main_python_resid.do` — calls chain script 3112_mincer.do
+- `_run_main_stata_resid.do` — calls chain script 3112_mincer.do
+- `_run_mincer.do` — calls chain script 3112_mincer.do
+- `es_mincer.do` — calls chain script 3112_mincer.do
 
 **`Programs/robustness/`**
 
-- `Main_Results_demo_controls.do` — calls chain script 4072_union_controls.do
-- `Main_Results_micro_ind.do` — calls chain script 4012_pct_tfpw.do
-- `_run_micro_ind_q.do` — calls chain script 4062_micro_ind_q.do
-- `_run_robustness.do` — calls chain script 4052_robustness_bins.do
-- `_run_union_controls.do` — calls chain script 4072_union_controls.do
-- `_run_union_controls_cc.do` — calls chain script 4072_union_controls.do
+- `Main_Results_demo_controls.do` — calls chain script 3072_union_controls.do
+- `Main_Results_micro_ind.do` — calls chain script 3012_pct_tfpw.do
+- `_run_micro_ind_q.do` — calls chain script 3062_micro_ind_q.do
+- `_run_robustness.do` — calls chain script 3052_robustness_bins.do
+- `_run_union_controls.do` — calls chain script 3072_union_controls.do
+- `_run_union_controls_cc.do` — calls chain script 3072_union_controls.do
 
 **`Programs/turnover/`**
 
 - `Main_Results_turnover_firmscale.do` — calls chain script 0000_master.do
 - `Main_Results_turnover_firmscale_ll.do` — calls chain script 0000_master.do
-- `Main_Results_turnover_log.do` — calls chain script 4082_turnover.do
+- `Main_Results_turnover_log.do` — calls chain script 3082_turnover.do
 - `Main_Results_turnover_loglevel.do` — calls chain script 0000_master.do
-- `Main_Results_turnover_scale.do` — calls chain script 4082_turnover.do
-- `_run_turnover.do` — calls chain script 4082_turnover.do
-- `_run_turnover_cluster.do` — calls chain script 4082_turnover.do
-- `run_turnover.do` — calls chain script 4082_turnover.do
+- `Main_Results_turnover_scale.do` — calls chain script 3082_turnover.do
+- `_run_turnover.do` — calls chain script 3082_turnover.do
+- `_run_turnover_cluster.do` — calls chain script 3082_turnover.do
+- `run_turnover.do` — calls chain script 3082_turnover.do
 
 ## C — PHASE TWO — 286 files
 
@@ -1039,3 +1039,46 @@ Disposition: **undecided** — nothing live references it; likely dead
 - `generate_turnover_firmscale_ll_latex.py` — turnover/ — no live script references it
 - `generate_turnover_loglevel_latex.py` — turnover/ — no live script references it
 
+
+
+---
+
+## Restored to the chain, 2026-08-16
+
+Three sub-pipelines were archived by `cd49461` ("Programs/: code only") because they
+are not on the paper-exhibit critical path. That left tier-C estimators in the chain
+whose **inputs** were not, so the package could not be replicated from raw data.
+They are back under `Programs/sample_construction/`:
+
+| now at | was at | builds | consumed by |
+|---|---|---|---|
+| `sample_construction/layers/` (20 files) | `archive/Programs/layer_connectivity/00_pipeline/` + `layer_config.py` | `Data/layer_connectivity/` | `analysis/layer_connectivity/07_within_firm/3121`, `3131` |
+| `sample_construction/mincer_residuals/` (6 files) | `archive/Programs/residuals/fullrais/` and `archive/Programs/residuals/011f_*` | `mincer_residuals_firm_year*.csv` | `analysis/residuals/3112_mincer.do` |
+| `sample_construction/rand_inference/` (17 files) | `archive/Programs/rand_inference/` | permutation inputs | `analysis/rand_inference/4130`, `4151`, `4152` |
+
+Each carries a `README.md` giving run order, inputs, outputs and the consuming
+estimator.
+
+**Still open after the restore:** nothing in the repository builds
+`Data/CBA_RAIS_firm_level/fullrais_panel/worker_panel_fullrais_{year}.parquet`,
+which `02_residualize_fullrais.py` reads to produce the residuals the published
+mincer results use. The parquets exist on disk; their producer is absent from both
+`Programs/` and `archive/`. This is the same class of gap tier B had before its
+reconstruction.
+
+Note: three scripts left behind in `archive/Programs/layer_connectivity/`
+(`01_descriptives/01_compute.py`, `99_archive/06_prep_layer_outcomes.py`,
+`99_archive/06_prep_demog_outcomes.py`) import `layer_config`, which has moved. They
+are archived exploration, not chain code, but they will not run as-is.
+
+## Fixtures
+
+`Programs/conn_descriptives/figure_A2/` moved to `Docs/fixtures/figure_A2/`. Its four
+coefficient CSVs and the PDF are **committed inputs with no producer** in the repo,
+so they belong with the other reference fixtures rather than in `Programs/` or in
+`Tables/` — the latter would have untracked them, since `.gitignore` carries
+`Tables/**/*.csv` and these are the only copy.
+
+That move also fixed `4110_figure_bilateral_coefplot.py`, which had been reading the
+same four filenames from `Data/RAIS_aux/`, where they do not exist. It could not have
+run.

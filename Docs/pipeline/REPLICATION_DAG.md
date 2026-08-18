@@ -26,12 +26,12 @@ off by default.
 |---|---|---|---|---|
 | A1 | `1010_rais_to_firm.do` | `$rais_raw_dir/RAIS_{year}.dta` | firm-year files | RUNNABLE |
 | A2 | `1020_clean_emp_assoc.do` | `$emp_assoc` | cleaned assoc. | RUNNABLE |
-| A3 | `1030_clean_cba.do` + `1031`/`1032_explode_cba_coverage_*.py` | `$cba_dir` | cleaned CBAs | RUNNABLE |
-| A4 | `1040_merge_cba_rais.do` | A1 + A3 | `cba_rais_firm_2007_2016.dta` (37 GB) | RUNNABLE |
+| A3 | `1020_clean_cba.do` + `1031`/`1032_explode_cba_coverage_*.py` | `$cba_dir` | cleaned CBAs | RUNNABLE |
+| A4 | `1030_merge_cba_rais.do` | A1 + A3 | `cba_rais_firm_2007_2016.dta` (37 GB) | RUNNABLE |
 | A5 | `1050_yearly_employers.do` | A4 + raw RAIS | `yearly_employers_*`, `employers_*_*.csv`, then shells five MATLAB scripts (`1051`…`1055_connectivity_*.m`) → `connectivity_*_2007_2011_agg.dta`, `cba_rais_firm_2009_2016_flows_1.dta` (56 GB), `lagos_sample_sep24_test.dta` | RUNNABLE |
 | A6 | `1060_rais_worker_panel.do` | raw RAIS | `worker_estab_{year}.dta`, `worker_estab_all_years.dta` (63 GB) | RUNNABLE |
 
-`1040_merge_cba_rais.do` also defines the three sample variables every estimator filters on:
+`1030_merge_cba_rais.do` also defines the three sample variables every estimator filters on:
 `treat_ultra` (:161), `in_balanced_panel` (:198), `lagos_sample_avg` (:117).
 
 ---
@@ -42,7 +42,7 @@ off by default.
 |---|---|---|---|---|
 | B1 | `2010_merge_lagos_worker.do` | `lagos_sample_sep24.dta` + `worker_estab_all_years.dta` | `lagos_sample_workers.dta` | RUNNABLE (output currently absent) |
 | B2 | `2020_get_wage_pctiles.do` | `lagos_sample_workers.dta`, **`lagos_sample_sep24_pct_unionexp.dta`** | `lagos_sample_sep24_pct{,_unionexp_ext}.dta` | **BLOCKED** |
-| B3 | `2030_get_wage_pctiles_df2.do` | **`worker_year_pre_new_vs_nonnew_dec26.dta`**, `lagos_sample_sep24_pct_unionexp.dta` | `lagos_sample_sep24_pct_unionexp_ext_df2.dta` | **BLOCKED** |
+| B3 | `2050_build_analysis_panel.do` | **`worker_year_pre_new_vs_nonnew_dec26.dta`**, `lagos_sample_sep24_pct_unionexp.dta` | `lagos_sample_sep24_pct_unionexp_ext_df2.dta` | **BLOCKED** |
 
 Two datasets are absent from disk and written by no script in `Programs/`:
 
@@ -58,7 +58,7 @@ Tier B in `0000_master.do` refuses to run without the second opt-in flag
 `allow_rebuild_frozen_panel`, because a partial rebuild would produce a panel differing
 from the one every published number rests on, without announcing it.
 
-Separately fixed 2026-08-09: `2030_get_wage_pctiles_df2.do:9` read `use "...", clearf`,
+Separately fixed 2026-08-09: `2050_build_analysis_panel.do:9` read `use "...", clearf`,
 a syntax error that would have stopped the script on its first line regardless.
 
 ---
@@ -113,19 +113,19 @@ All thirteen wrappers point `$rais_firm` at the **overlay** directory, not the f
 
 | Flag | Wrapper | Estimator |
 |---|---|---|
-| `d_pct_tfpw` | `4011_pct_tfpw.do` | `4012_pct_tfpw.do` |
-| `d_direct_coef_test` | `conn_margins/4021_direct_sample_coef_test.do` | `4022_direct_sample_coef_test.do` |
-| `d_clause_types` | `clause_types/4031_clause_types.do` | `4032_clause_types.do` |
-| `d_cba_value` | `cba_value/4041_cba_value.do` | `4042_cba_value.do` |
-| `d_robustness` | `robustness/4051_robustness_bins.do` | `4052_robustness_bins.do` |
-| `d_micro_ind_q` | `robustness/4061_micro_ind_q.do` | `4062_micro_ind_q.do` |
-| `d_union_controls` | `robustness/4071_union_controls.do` | `4072_union_controls.do` |
-| `d_turnover` | `turnover/4081_turnover.do` | `4082_turnover.do` |
-| `d_composition` | `composition/4091_composition.do` | `4092_composition.do` |
-| `d_descriptives` | `descriptives/4101_sample_descriptives.do` | `4102_sample_descriptives.do` |
-| `d_mincer` | `main_results/4111_mincer.do` | `residuals/4112_mincer.do` |
-| `d_within_firm` | `layer_connectivity/07_within_firm/4121_within_firm.do` | `4122_within_firm.do` |
-| `d_within_firm_hw` | `layer_connectivity/07_within_firm/4131_within_firm_hourly.do` | `4132_within_firm_hourly.do` |
+| `d_pct_tfpw` | `3011_pct_tfpw.do` | `3012_pct_tfpw.do` |
+| `d_direct_coef_test` | `conn_margins/3021_direct_sample_coef_test.do` | `3022_direct_sample_coef_test.do` |
+| `d_clause_types` | `clause_types/3031_clause_types.do` | `3032_clause_types.do` |
+| `d_cba_value` | `cba_value/3041_cba_value.do` | `3042_cba_value.do` |
+| `d_robustness` | `robustness/3051_robustness_bins.do` | `3052_robustness_bins.do` |
+| `d_micro_ind_q` | `robustness/3061_micro_ind_q.do` | `3062_micro_ind_q.do` |
+| `d_union_controls` | `robustness/3071_union_controls.do` | `3072_union_controls.do` |
+| `d_turnover` | `turnover/3081_turnover.do` | `3082_turnover.do` |
+| `d_composition` | `composition/3091_composition.do` | `3092_composition.do` |
+| `d_descriptives` | `descriptives/3101_sample_descriptives.do` | `3102_sample_descriptives.do` |
+| `d_mincer` | `main_results/3111_mincer.do` | `residuals/3112_mincer.do` |
+| `d_within_firm` | `layer_connectivity/07_within_firm/3121_within_firm.do` | `3122_within_firm.do` |
+| `d_within_firm_hw` | `layer_connectivity/07_within_firm/3131_within_firm_hourly.do` | `3132_within_firm_hourly.do` |
 
 **Benchmarks.** Direct 0.0262 (monthly) / 0.0285 (hourly); spillover 0.0050 (monthly) /
 0.0065 (hourly). A baseline column that disagrees means the wrong panel or the wrong
@@ -134,35 +134,35 @@ normalization — stop and diagnose.
 ### The turnover CSV stub
 
 `Data/RAIS_aux/corrected_turnover_sample.csv` is a **47-byte header-only stub**. The real
-27 MB / 131,776-row file that `turnover/1070_corrected_turnover.py` writes lives under
+27 MB / 131,776-row file that `turnover/1050_corrected_turnover.py` writes lives under
 `$rais_firm`. Two canonical estimators read the stub and so merged nothing:
-`4012_pct_tfpw.do:47` and `robustness/4052_robustness_bins.do:36`.
+`3012_pct_tfpw.do:47` and `robustness/3052_robustness_bins.do:36`.
 
 In both, the merge feeds only `churn_u` and `churn_rate_u`, which are constructed and then
 **never used**. No published number was affected. Both paths were repointed at `$rais_firm`
-on 2026-08-09 so the code is not silently broken; `4082_turnover.do:48` already read
+on 2026-08-09 so the code is not silently broken; `3082_turnover.do:48` already read
 the real file.
 
 ---
 
 ## Tier E — tables and figures
 
-Nine table generators plus `5100_inline_into_replication.py`, then the figure scripts. See
+Nine table generators plus `4100_inline_into_replication.py`, then the figure scripts. See
 `0000_master.do` for the exact list.
 
-`rand_inference/5152_recentered_eventstudy.do` was parameterized on 2026-08-09. It previously
+`rand_inference/4152_recentered_eventstudy.do` was parameterized on 2026-08-09. It previously
 set `local out "lr_remdezr_w"` at line 30 but hardcoded the outcome into all four export
 filenames, so the local was inert and the **hourly pair that Draft.tex actually cites**
 (`h_recentered_spill.pdf`, `h_recentered_cf.pdf`, lines 493 and 500) could not be produced
 at all. Outcome, `$graphs` and `$paperfig` are now caller-overridable; run via
-`rand_inference/5151_recentered_eventstudy.do <outcome>`. Verified for `lr_remdezr_h_w`: both PDFs
+`rand_inference/4151_recentered_eventstudy.do <outcome>`. Verified for `lr_remdezr_h_w`: both PDFs
 generate, pooled main 0.0066 (0.0023).
 
 ---
 
 ## Tier F — exhibits into the paper
 
-`main_results/6010_copy_figures_to_paper.py` replaces the undocumented hand-copy-with-renaming
+`main_results/5010_copy_figures_to_paper.py` replaces the undocumented hand-copy-with-renaming
 that `INVENTORY.md §C` describes. **Dry run by default**: it reports every file it would
 replace with both md5s and writes nothing unless `--apply` is passed.
 
@@ -225,10 +225,10 @@ one-digit field would overflow at 9. The `K` digit also fixes parent ordering:
 0000_master.do
 1010_rais_to_firm.do            tier 1, stage 01
 1050_yearly_employers.do        tier 1, stage 05, parent
-1051_connectivity_full_lagos.m  tier 1, stage 05, step 1
-4011_pct_tfpw.do                tier 4, stage 01, wrapper
-4012_pct_tfpw.do                tier 4, stage 01, payload
-4131_within_firm_hourly.do      tier 4, stage 13, wrapper
+1041_connectivity_full_lagos.m  tier 1, stage 05, step 1
+3011_pct_tfpw.do                tier 4, stage 01, wrapper
+3012_pct_tfpw.do                tier 4, stage 01, payload
+3131_within_firm_hourly.do      tier 4, stage 13, wrapper
 ```
 
 Files keep their existing directory, so the pipeline-subfolder convention is intact;
@@ -255,60 +255,60 @@ self-references: `Old/`, `Programs_2025.05.03/`, `main_data_pipeline{,_duckdb}/`
 | `0000_master.do` | `Programs/` | `00_master.do` |
 | `1010_rais_to_firm.do` | `Programs/` | `011_rais_to_firm.do` |
 | `1020_clean_emp_assoc.do` | `Programs/` | `02_clean_emp_assoc.do` |
-| `1030_clean_cba.do` | `Programs/` | `031_clean_cba.do` |
-| `1040_merge_cba_rais.do` | `Programs/` | `041_merge_cba_rais.do` |
+| `1020_clean_cba.do` | `Programs/` | `031_clean_cba.do` |
+| `1030_merge_cba_rais.do` | `Programs/` | `041_merge_cba_rais.do` |
 | `1050_yearly_employers.do` | `Programs/` | `05_yearly_employers.do` |
-| `1051_connectivity_full_lagos.m` | `Programs/` | `connectivity_full_lagos.m` |
-| `1052_connectivity_treat_lagos.m` | `Programs/` | `connectivity_treat_lagos.m` |
-| `1053_connectivity_control_lagos.m` | `Programs/` | `connectivity_control_lagos.m` |
-| `1054_connectivity_treat_onecba.m` | `Programs/` | `connectivity_treat_onecba.m` |
-| `1055_connectivity_treat_zerocba.m` | `Programs/` | `connectivity_treat_zerocba.m` |
+| `1041_connectivity_full_lagos.m` | `Programs/` | `connectivity_full_lagos.m` |
+| `1042_connectivity_treat_lagos.m` | `Programs/` | `connectivity_treat_lagos.m` |
+| `1043_connectivity_control_lagos.m` | `Programs/` | `connectivity_control_lagos.m` |
+| `1044_connectivity_treat_onecba.m` | `Programs/` | `connectivity_treat_onecba.m` |
+| `1045_connectivity_treat_zerocba.m` | `Programs/` | `connectivity_treat_zerocba.m` |
 | `1060_rais_worker_panel.do` | `Programs/` | `012_rais_worker_panel.do` |
 | `2010_merge_lagos_worker.do` | `Programs/` | `10_merge_lagos_worker.do` |
 | `2020_get_wage_pctiles.do` | `Programs/` | `12_get_wage_pctiles.do` |
-| `2030_get_wage_pctiles_df2.do` | `Programs/` | `121_get_wage_pctiles_df2.do` |
+| `2050_build_analysis_panel.do` | `Programs/` | `121_get_wage_pctiles_df2.do` |
 | `3010_build_currentconn_ingredient.do` | `Programs/main_results/` | `build_currentconn_ingredient.do` |
 | `3020_build_currentconn_overlay_panel.do` | `Programs/main_results/` | `build_currentconn_overlay_panel.do` |
-| `4011_pct_tfpw.do` | `Programs/` | `_run_pct_tfpw_07_11_cc.do` |
-| `4012_pct_tfpw.do` | `Programs/` | `Main_Results_pct_tfpw_07_11.do` |
-| `4021_direct_sample_coef_test.do` | `Programs/conn_margins/` | `_run_direct_sample_coef_test_cc.do` |
-| `4022_direct_sample_coef_test.do` | `Programs/conn_margins/` | `direct_sample_coef_test.do` |
-| `4031_clause_types.do` | `Programs/clause_types/` | `_run_clause_types_cc.do` |
-| `4032_clause_types.do` | `Programs/clause_types/` | `clause_types.do` |
-| `4041_cba_value.do` | `Programs/cba_value/` | `_run_cba_value_cc.do` |
-| `4042_cba_value.do` | `Programs/cba_value/` | `Main_Results_cba_value.do` |
-| `4051_robustness_bins.do` | `Programs/robustness/` | `_run_robustness_cc.do` |
-| `4052_robustness_bins.do` | `Programs/robustness/` | `Main_Results_robustness_bins.do` |
-| `4061_micro_ind_q.do` | `Programs/robustness/` | `_run_micro_ind_q_hw.do` |
-| `4062_micro_ind_q.do` | `Programs/robustness/` | `Main_Results_micro_ind_q.do` |
-| `4071_union_controls.do` | `Programs/robustness/` | `_run_union_controls_hw_cc.do` |
-| `4072_union_controls.do` | `Programs/robustness/` | `Main_Results_union_controls.do` |
-| `4081_turnover.do` | `Programs/turnover/` | `_run_turnover_cc.do` |
-| `4082_turnover.do` | `Programs/turnover/` | `Main_Results_turnover.do` |
-| `4091_composition.do` | `Programs/composition/` | `_run_composition_cc.do` |
-| `4092_composition.do` | `Programs/composition/` | `Main_Results_composition.do` |
-| `4101_sample_descriptives.do` | `Programs/descriptives/` | `_run_descriptives_estsample.do` |
-| `4102_sample_descriptives.do` | `Programs/descriptives/` | `22_sample_descriptives.do` |
-| `4111_mincer.do` | `Programs/main_results/` | `_run_currentconn_mincer_age_fullrais.do` |
-| `4112_mincer.do` | `Programs/residuals/` | `Main_Results_mincer.do` |
-| `4121_within_firm.do` | `Programs/layer_connectivity/07_within_firm/` | `_run_within_firm_v3.do` |
-| `4122_within_firm.do` | `Programs/layer_connectivity/07_within_firm/` | `01c_within_firm_estimates.do` |
-| `4131_within_firm_hourly.do` | `Programs/layer_connectivity/07_within_firm/` | `_run_within_firm_hw_v3.do` |
-| `4132_within_firm_hourly.do` | `Programs/layer_connectivity/07_within_firm/` | `01c_within_firm_estimates_hw.do` |
-| `5010_table_direct.py` | `Programs/main_results/` | `generate_direct_replication_table.py` |
-| `5020_table_spill.py` | `Programs/main_results/` | `generate_spill_replication_table.py` |
-| `5030_table_twopanel.py` | `Programs/main_results/` | `generate_twopanel_replication_tables.py` |
-| `5040_table_clause.py` | `Programs/clause_types/` | `generate_clause_replication_table.py` |
-| `5050_table_union.py` | `Programs/robustness/` | `generate_union_replication_table.py` |
-| `5060_table_rob_logwages.py` | `Programs/robustness/` | `generate_rob_logwages_8col.py` |
-| `5070_table_resid.py` | `Programs/residuals/` | `generate_resid_replication_tables.py` |
-| `5080_table_pairwise_appendix.py` | `Programs/conn_descriptives/` | `generate_pairwise_appendix_table.py` |
-| `5090_table_within_firm.py` | `Programs/layer_connectivity/07_within_firm/` | `02b_make_tables_all.py` |
-| `5100_inline_into_replication.py` | `Programs/layer_connectivity/07_within_firm/` | `05_inline_into_replication.py` |
-| `5110_figure_bilateral_coefplot.py` | `Programs/conn_descriptives/` | `06_bilateral_coefplot_combined.py` |
-| `5120_figure_distributions.py` | `Programs/descriptives/` | `distribution_plots.py` |
-| `5130_figure_binscatter.py` | `Programs/rand_inference/` | `13_binscatter.py` |
-| `5140_figure_conn_hist.py` | `Programs/conn_descriptives/` | `hist_connectivity.py` |
-| `5151_recentered_eventstudy.do` | `Programs/rand_inference/` | `_run_recentered.do` |
-| `5152_recentered_eventstudy.do` | `Programs/rand_inference/` | `16_recentered_eventstudy.do` |
-| `6010_copy_figures_to_paper.py` | `Programs/main_results/` | `copy_figures_to_paper.py` |
+| `3011_pct_tfpw.do` | `Programs/` | `_run_pct_tfpw_07_11_cc.do` |
+| `3012_pct_tfpw.do` | `Programs/` | `Main_Results_pct_tfpw_07_11.do` |
+| `3021_direct_sample_coef_test.do` | `Programs/conn_margins/` | `_run_direct_sample_coef_test_cc.do` |
+| `3022_direct_sample_coef_test.do` | `Programs/conn_margins/` | `direct_sample_coef_test.do` |
+| `3031_clause_types.do` | `Programs/clause_types/` | `_run_clause_types_cc.do` |
+| `3032_clause_types.do` | `Programs/clause_types/` | `clause_types.do` |
+| `3041_cba_value.do` | `Programs/cba_value/` | `_run_cba_value_cc.do` |
+| `3042_cba_value.do` | `Programs/cba_value/` | `Main_Results_cba_value.do` |
+| `3051_robustness_bins.do` | `Programs/robustness/` | `_run_robustness_cc.do` |
+| `3052_robustness_bins.do` | `Programs/robustness/` | `Main_Results_robustness_bins.do` |
+| `3061_micro_ind_q.do` | `Programs/robustness/` | `_run_micro_ind_q_hw.do` |
+| `3062_micro_ind_q.do` | `Programs/robustness/` | `Main_Results_micro_ind_q.do` |
+| `3071_union_controls.do` | `Programs/robustness/` | `_run_union_controls_hw_cc.do` |
+| `3072_union_controls.do` | `Programs/robustness/` | `Main_Results_union_controls.do` |
+| `3081_turnover.do` | `Programs/turnover/` | `_run_turnover_cc.do` |
+| `3082_turnover.do` | `Programs/turnover/` | `Main_Results_turnover.do` |
+| `3091_composition.do` | `Programs/composition/` | `_run_composition_cc.do` |
+| `3092_composition.do` | `Programs/composition/` | `Main_Results_composition.do` |
+| `3101_sample_descriptives.do` | `Programs/descriptives/` | `_run_descriptives_estsample.do` |
+| `3102_sample_descriptives.do` | `Programs/descriptives/` | `22_sample_descriptives.do` |
+| `3111_mincer.do` | `Programs/main_results/` | `_run_currentconn_mincer_age_fullrais.do` |
+| `3112_mincer.do` | `Programs/residuals/` | `Main_Results_mincer.do` |
+| `3121_within_firm.do` | `Programs/layer_connectivity/07_within_firm/` | `_run_within_firm_v3.do` |
+| `3122_within_firm.do` | `Programs/layer_connectivity/07_within_firm/` | `01c_within_firm_estimates.do` |
+| `3131_within_firm_hourly.do` | `Programs/layer_connectivity/07_within_firm/` | `_run_within_firm_hw_v3.do` |
+| `3132_within_firm_hourly.do` | `Programs/layer_connectivity/07_within_firm/` | `01c_within_firm_estimates_hw.do` |
+| `4010_table_direct.py` | `Programs/main_results/` | `generate_direct_replication_table.py` |
+| `4020_table_spill.py` | `Programs/main_results/` | `generate_spill_replication_table.py` |
+| `4030_table_twopanel.py` | `Programs/main_results/` | `generate_twopanel_replication_tables.py` |
+| `4040_table_clause.py` | `Programs/clause_types/` | `generate_clause_replication_table.py` |
+| `4050_table_union.py` | `Programs/robustness/` | `generate_union_replication_table.py` |
+| `4060_table_rob_logwages.py` | `Programs/robustness/` | `generate_rob_logwages_8col.py` |
+| `4070_table_resid.py` | `Programs/residuals/` | `generate_resid_replication_tables.py` |
+| `4080_table_pairwise_appendix.py` | `Programs/conn_descriptives/` | `generate_pairwise_appendix_table.py` |
+| `4090_table_within_firm.py` | `Programs/layer_connectivity/07_within_firm/` | `02b_make_tables_all.py` |
+| `4100_inline_into_replication.py` | `Programs/layer_connectivity/07_within_firm/` | `05_inline_into_replication.py` |
+| `4110_figure_bilateral_coefplot.py` | `Programs/conn_descriptives/` | `06_bilateral_coefplot_combined.py` |
+| `4120_figure_distributions.py` | `Programs/descriptives/` | `distribution_plots.py` |
+| `4130_figure_binscatter.py` | `Programs/rand_inference/` | `13_binscatter.py` |
+| `4140_figure_conn_hist.py` | `Programs/conn_descriptives/` | `hist_connectivity.py` |
+| `4151_recentered_eventstudy.do` | `Programs/rand_inference/` | `_run_recentered.do` |
+| `4152_recentered_eventstudy.do` | `Programs/rand_inference/` | `16_recentered_eventstudy.do` |
+| `5010_copy_figures_to_paper.py` | `Programs/main_results/` | `copy_figures_to_paper.py` |

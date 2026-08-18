@@ -269,3 +269,8 @@ layer_connectivity_standalone.zip
 # Archived data baselines (frozen analysis panel, retired overlay directory).
 # Data, not code -- mirrors the Data/* rule above.
 archive/Data/
+
+# Programs/ is code only. stata -b writes <dofile>.log into the CWD, so a stray
+# batch run from inside Programs/ would drop logs there; belt-and-braces guard.
+Programs/**/*.log
+Programs/*.log

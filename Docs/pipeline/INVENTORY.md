@@ -41,18 +41,18 @@ is therefore reconstructed from coefficient signatures, not from a build step.
 
 | Label | Matching output | Generator | Upstream estimator | Conf. |
 |---|---|---|---|---|
-| `tab:direct_connectivity_robust` | `Tables/main_results/t_direct.tex` | `main_results/5010_table_direct.py` | `4012_pct_tfpw.do` + `conn_margins/4022_direct_sample_coef_test.do` | HIGH |
-| `tab:spill_main_4tf_out` | `Tables/main_results/t_spill.tex` | `main_results/5020_table_spill.py` | `4012_pct_tfpw.do` | HIGH |
-| `tab:spill_clause_decomp` | `Tables/clause_types/t_clause.tex` | `clause_types/5040_table_clause.py` | `clause_types/4032_clause_types.do` + `cba_value/4042_cba_value.do` | HIGH |
-| `tab:rob_logwages` | `frag/t_rob_hw.tex` | `robustness/5060_table_rob_logwages.py` | `robustness/4062_micro_ind_q.do` | HIGH |
-| `tab:spill_union_4tfpe_4out` | `Tables/robustness/t_union_hw.tex` | `robustness/5050_table_union.py` | `robustness/4072_union_controls.do` | HIGH |
-| `tab:composition` | `Tables/composition/t_composition.tex` | `main_results/5030_table_twopanel.py` | `composition/4092_composition.do` | HIGH |
-| `tab:layer_desc_full` | `Tables/layer_connectivity/07_within_firm/t_layerdesc{,_hw}.tex` | `layer_connectivity/07_within_firm/5090_table_within_firm.py` | see §D2 | HIGH gen / MED source |
-| `tab:turnover` | `frag/t_turnover.tex` | `main_results/5030_table_twopanel.py` | `turnover/4082_turnover.do` | MED — see §D1 |
-| `tab:resid_raw_base` | `Tables/residuals/t_resid_hw_currentconn_age_fullrais_rb.tex` | `residuals/5070_table_resid.py` | `residuals/4112_mincer.do` with `$results_suffix = _currentconn_age_fullrais_rb` | MED |
-| `tab:group_specs` | `t_groupspecs*.tex` — 4 variants match equally | `layer_connectivity/07_within_firm/5090_table_within_firm.py` | see §D2 | MED |
-| `tab:horse_race` | no fragment matched; only the assembled doc | `layer_connectivity/07_within_firm/5090_table_within_firm.py` | see §D2 | MED |
-| `tab:descriptive_stats` | `Tables/descriptives/table_descriptives_pretreat.tex` **or** `..._2011.tex` | `descriptives/5220_table_descriptives.py` | `descriptives/4102_sample_descriptives.do` | MED — which suffix is published is unresolved |
+| `tab:direct_connectivity_robust` | `Tables/main_results/t_direct.tex` | `main_results/4010_table_direct.py` | `3012_pct_tfpw.do` + `conn_margins/3022_direct_sample_coef_test.do` | HIGH |
+| `tab:spill_main_4tf_out` | `Tables/main_results/t_spill.tex` | `main_results/4020_table_spill.py` | `3012_pct_tfpw.do` | HIGH |
+| `tab:spill_clause_decomp` | `Tables/clause_types/t_clause.tex` | `clause_types/4040_table_clause.py` | `clause_types/3032_clause_types.do` + `cba_value/3042_cba_value.do` | HIGH |
+| `tab:rob_logwages` | `frag/t_rob_hw.tex` | `robustness/4060_table_rob_logwages.py` | `robustness/3062_micro_ind_q.do` | HIGH |
+| `tab:spill_union_4tfpe_4out` | `Tables/robustness/t_union_hw.tex` | `robustness/4050_table_union.py` | `robustness/3072_union_controls.do` | HIGH |
+| `tab:composition` | `Tables/composition/t_composition.tex` | `main_results/4030_table_twopanel.py` | `composition/3092_composition.do` | HIGH |
+| `tab:layer_desc_full` | `Tables/layer_connectivity/07_within_firm/t_layerdesc{,_hw}.tex` | `layer_connectivity/07_within_firm/4090_table_within_firm.py` | see §D2 | HIGH gen / MED source |
+| `tab:turnover` | `frag/t_turnover.tex` | `main_results/4030_table_twopanel.py` | `turnover/3082_turnover.do` | MED — see §D1 |
+| `tab:resid_raw_base` | `Tables/residuals/t_resid_hw_currentconn_age_fullrais_rb.tex` | `residuals/4070_table_resid.py` | `residuals/3112_mincer.do` with `$results_suffix = _currentconn_age_fullrais_rb` | MED |
+| `tab:group_specs` | `t_groupspecs*.tex` — 4 variants match equally | `layer_connectivity/07_within_firm/4090_table_within_firm.py` | see §D2 | MED |
+| `tab:horse_race` | no fragment matched; only the assembled doc | `layer_connectivity/07_within_firm/4090_table_within_firm.py` | see §D2 | MED |
+| `tab:descriptive_stats` | `Tables/descriptives/table_descriptives_pretreat.tex` **or** `..._2011.tex` | `descriptives/4220_table_descriptives.py` | `descriptives/3102_sample_descriptives.do` | MED — which suffix is published is unresolved |
 
 **`tab:rob_logwages` and `tab:spill_union_4tfpe_4out` display the _hw (hourly)
 variant.** The other paper tables carry both wage columns. Anything that treats
@@ -61,19 +61,19 @@ variant.** The other paper tables carry both wage columns. Anything that treats
 ## B. Replication-doc tables
 
 The replication doc carries `% BEGIN inlined <stem>.tex` markers, and
-`layer_connectivity/07_within_firm/5100_inline_into_replication.py` holds the
+`layer_connectivity/07_within_firm/4100_inline_into_replication.py` holds the
 authoritative stem → source-directory map. **All HIGH by construction.**
 
 | Fragment stem | Source dir | Generator |
 |---|---|---|
 | `t_direct`, `t_spill` | `Tables/main_results/` | `main_results/generate_{direct,spill}_replication_table.py` |
-| `t_clause` | `Tables/clause_types/` | `clause_types/5040_table_clause.py` |
-| `t_union`, `t_union_hw` | `Tables/robustness/` | `robustness/5050_table_union.py` |
-| `t_composition` | `Tables/composition/` | `main_results/5030_table_twopanel.py` |
-| `t_rob`, `t_rob_hw` | `quality_reports/replication/hourly_variant_currentconn/frag/` | `robustness/5060_table_rob_logwages.py` |
-| `t_layerdesc{,_hw}`, `t_groupspecs{,_hw}`, `t_horserace{,_hw}` | `Tables/layer_connectivity/07_within_firm/` | `layer_connectivity/07_within_firm/5090_table_within_firm.py` |
-| `t_resid`, `t_resid_hw` | written into the doc directly | `residuals/5070_table_resid.py` |
-| `t_pairwise_appendix` | `.../frag/` | `conn_descriptives/5080_table_pairwise_appendix.py` |
+| `t_clause` | `Tables/clause_types/` | `clause_types/4040_table_clause.py` |
+| `t_union`, `t_union_hw` | `Tables/robustness/` | `robustness/4050_table_union.py` |
+| `t_composition` | `Tables/composition/` | `main_results/4030_table_twopanel.py` |
+| `t_rob`, `t_rob_hw` | `quality_reports/replication/hourly_variant_currentconn/frag/` | `robustness/4060_table_rob_logwages.py` |
+| `t_layerdesc{,_hw}`, `t_groupspecs{,_hw}`, `t_horserace{,_hw}` | `Tables/layer_connectivity/07_within_firm/` | `layer_connectivity/07_within_firm/4090_table_within_firm.py` |
+| `t_resid`, `t_resid_hw` | written into the doc directly | `residuals/4070_table_resid.py` |
+| `t_pairwise_appendix` | `.../frag/` | `conn_descriptives/4080_table_pairwise_appendix.py` |
 | `t_turnover` | **not in the map** | see §D1 |
 | `t_desc` | **producer not found** | see §D3 |
 
@@ -86,11 +86,11 @@ Hash-exact (byte-identical source found in repo) — **HIGH**:
 
 | Figure | Source | Producer |
 |---|---|---|
-| `bilateral_coefplot.pdf` | `Graphs/connectivity/coefplot_bilateral_combined.pdf` | `conn_descriptives/5110_figure_bilateral_coefplot.py` |
-| `distro_region.pdf` | `Graphs/descriptives/distro_region.pdf` | `descriptives/5120_figure_distributions.py` |
-| `distro_industry.pdf` | `Graphs/descriptives/distro_broad_industry.pdf` | `descriptives/5120_figure_distributions.py` |
-| `distro_month.pdf` | `Graphs/descriptives/distro_mode_base_month.pdf` | `descriptives/5120_figure_distributions.py` |
-| `m_dir_es.pdf` | `Graphs/pct_tfpw_cc/es_lr_remdezr_w_directA__1_Aug_2026.pdf` | `4011_pct_tfpw.do` → `4012_pct_tfpw.do` |
+| `bilateral_coefplot.pdf` | `Graphs/connectivity/coefplot_bilateral_combined.pdf` | `conn_descriptives/4110_figure_bilateral_coefplot.py` |
+| `distro_region.pdf` | `Graphs/descriptives/distro_region.pdf` | `descriptives/4120_figure_distributions.py` |
+| `distro_industry.pdf` | `Graphs/descriptives/distro_broad_industry.pdf` | `descriptives/4120_figure_distributions.py` |
+| `distro_month.pdf` | `Graphs/descriptives/distro_mode_base_month.pdf` | `descriptives/4120_figure_distributions.py` |
+| `m_dir_es.pdf` | `Graphs/pct_tfpw_cc/es_lr_remdezr_w_directA__1_Aug_2026.pdf` | `3011_pct_tfpw.do` → `3012_pct_tfpw.do` |
 | `m_spill_es.pdf` | `Graphs/pct_tfpw_cc/es_lr_remdezr_w_spill__1_Aug_2026.pdf` | same |
 | `h_dir_es.pdf` | `Graphs/pct_tfpw_cc/es_lr_remdezr_h_w_directA__1_Aug_2026.pdf` | same |
 | `h_spill_es.pdf` | `Graphs/pct_tfpw_cc/es_lr_remdezr_h_w_spill__1_Aug_2026.pdf` | same |
@@ -103,18 +103,18 @@ No hash match — matched on plot text and geometry — **MEDIUM**, and see §D4
 | `m_honest_spill.pdf` | `..._rm_spillover_lr_remdezr_w.pdf` | same |
 | `h_honest_direct.pdf` | `..._rm_direct_lr_remdezr_h_w.pdf` | same |
 | `h_honest_spill.pdf` | `..._rm_spillover_lr_remdezr_h_w.pdf` | same |
-| `m_recentered_spill.pdf` | `Graphs/rand_inference/es_spill_lr_remdezr_w.pdf` | `rand_inference/5152_recentered_eventstudy.do` |
+| `m_recentered_spill.pdf` | `Graphs/rand_inference/es_spill_lr_remdezr_w.pdf` | `rand_inference/4152_recentered_eventstudy.do` |
 | `m_recentered_cf.pdf` | `Graphs/rand_inference/es_counterfactual_lr_remdezr_w.pdf` | same |
-| `h_recentered_spill.pdf`, `h_recentered_cf.pdf` | none | `5152_recentered_eventstudy.do` hardcodes `lr_remdezr_w`; the hourly pair cannot be reproduced by the committed script as written |
-| `binscatter_{wage,hwage,emp,clauses}.pdf` | `Graphs/rand_inference/binscatter_*_raw.pdf` | `rand_inference/5130_figure_binscatter.py` — same axis label, different figsize |
-| `conn_hist.pdf` | `Graphs/conn_descriptives/hist_connectivity.pdf` | `conn_descriptives/5140_figure_conn_hist.py` — different axis label and page size; may be a different vintage or a different script |
+| `h_recentered_spill.pdf`, `h_recentered_cf.pdf` | none | `4152_recentered_eventstudy.do` hardcodes `lr_remdezr_w`; the hourly pair cannot be reproduced by the committed script as written |
+| `binscatter_{wage,hwage,emp,clauses}.pdf` | `Graphs/rand_inference/binscatter_*_raw.pdf` | `rand_inference/4130_figure_binscatter.py` — same axis label, different figsize |
+| `conn_hist.pdf` | `Graphs/conn_descriptives/hist_connectivity.pdf` | `conn_descriptives/4140_figure_conn_hist.py` — different axis label and page size; may be a different vintage or a different script |
 
 ---
 
 ## D. Hazards found while building this map
 
 **D1 — `t_turnover` is deliberately excluded from the inline map.**
-`5100_inline_into_replication.py:54` says re-running the turnover generator does not
+`4100_inline_into_replication.py:54` says re-running the turnover generator does not
 reproduce the published coefficients, so inlining it would silently change
 published numbers. `tab:turnover` in the paper is therefore **not currently
 reproducible from `Programs/`**. This is the single most important open item here.
@@ -128,8 +128,8 @@ but the artifacts do not record which produced them. Affects
 `tab:layer_desc_full`, `tab:group_specs`, `tab:horse_race`.
 
 **D3 — `t_desc` has no located generator.** It is inlined twice in the replication
-doc and is absent from `SOURCES` in `5100_inline_into_replication.py`. Closest
-candidate is `descriptives/5220_table_descriptives.py`, which writes
+doc and is absent from `SOURCES` in `4100_inline_into_replication.py`. Closest
+candidate is `descriptives/4220_table_descriptives.py`, which writes
 `ftable_descriptives_{suffix}.tex` — no file of that name exists in `Tables/`.
 
 **D4 — the replication figures are a different vintage from `Graphs/`.**
@@ -164,8 +164,8 @@ producing a live exhibit. It does **not** mean every script in it is live.
 | `rand_inference/` | 19 | traced (figures) |
 | `honest_did/` | 14 | traced (figures) |
 | `cba_value/` | 10 | traced (feeds `t_clause`) |
-| `conn_margins/` | 52 | traced (`4022_direct_sample_coef_test.do` only) |
-| *(Programs root)* | 111 | traced (`4012_pct_tfpw.do`, `4011_pct_tfpw.do`) |
+| `conn_margins/` | 52 | traced (`3022_direct_sample_coef_test.do` only) |
+| *(Programs root)* | 111 | traced (`3012_pct_tfpw.do`, `3011_pct_tfpw.do`) |
 | `cba_similarity/` | 124 | **no traced exhibit** |
 | `Gui_coding/` | 42 | **no traced exhibit** |
 | `max_clause_row/` | 17 | **no traced exhibit** |
@@ -199,42 +199,42 @@ producing a live exhibit. It does **not** mean every script in it is live.
 
 ### Estimation
 
-Programs/4011_pct_tfpw.do                      -> Programs/4012_pct_tfpw.do
-Programs/conn_margins/4021_direct_sample_coef_test.do-> Programs/conn_margins/4022_direct_sample_coef_test.do
-Programs/clause_types/4031_clause_types.do           -> Programs/clause_types/4032_clause_types.do
-Programs/cba_value/4041_cba_value.do                 -> Programs/cba_value/4042_cba_value.do
-Programs/robustness/4051_robustness_bins.do               -> Programs/robustness/4052_robustness_bins.do
-Programs/robustness/4061_micro_ind_q.do              -> Programs/robustness/4062_micro_ind_q.do
-Programs/robustness/4071_union_controls.do        -> Programs/robustness/4072_union_controls.do
-Programs/turnover/4081_turnover.do                   -> Programs/turnover/4082_turnover.do
-Programs/composition/4091_composition.do             -> Programs/composition/4092_composition.do
-Programs/descriptives/4101_sample_descriptives.do    -> Programs/descriptives/4102_sample_descriptives.do
-Programs/main_results/4111_mincer.do -> Programs/residuals/4112_mincer.do
-Programs/layer_connectivity/07_within_firm/4121_within_firm.do    -> 4122_within_firm.do
-Programs/layer_connectivity/07_within_firm/4131_within_firm_hourly.do -> 4132_within_firm_hourly.do
+Programs/3011_pct_tfpw.do                      -> Programs/3012_pct_tfpw.do
+Programs/conn_margins/3021_direct_sample_coef_test.do-> Programs/conn_margins/3022_direct_sample_coef_test.do
+Programs/clause_types/3031_clause_types.do           -> Programs/clause_types/3032_clause_types.do
+Programs/cba_value/3041_cba_value.do                 -> Programs/cba_value/3042_cba_value.do
+Programs/robustness/3051_robustness_bins.do               -> Programs/robustness/3052_robustness_bins.do
+Programs/robustness/3061_micro_ind_q.do              -> Programs/robustness/3062_micro_ind_q.do
+Programs/robustness/3071_union_controls.do        -> Programs/robustness/3072_union_controls.do
+Programs/turnover/3081_turnover.do                   -> Programs/turnover/3082_turnover.do
+Programs/composition/3091_composition.do             -> Programs/composition/3092_composition.do
+Programs/descriptives/3101_sample_descriptives.do    -> Programs/descriptives/3102_sample_descriptives.do
+Programs/main_results/3111_mincer.do -> Programs/residuals/3112_mincer.do
+Programs/layer_connectivity/07_within_firm/3121_within_firm.do    -> 3122_within_firm.do
+Programs/layer_connectivity/07_within_firm/3131_within_firm_hourly.do -> 3132_within_firm_hourly.do
 
 ### Table Generators
 
-Programs/main_results/5010_table_direct.py      -> t_direct
-Programs/main_results/5020_table_spill.py       -> t_spill
-Programs/main_results/5030_table_twopanel.py   -> t_turnover, t_composition
-Programs/clause_types/5040_table_clause.py      -> t_clause
-Programs/robustness/5050_table_union.py         -> t_union, t_union_hw
-Programs/robustness/5060_table_rob_logwages.py               -> t_rob, t_rob_hw
-Programs/residuals/5070_table_resid.py         -> t_resid, t_resid_hw
-Programs/conn_descriptives/5080_table_pairwise_appendix.py  -> t_pairwise_appendix
-Programs/layer_connectivity/07_within_firm/5090_table_within_firm.py -> t_layerdesc/groupspecs/horserace {,_hw}
-Programs/layer_connectivity/07_within_firm/5100_inline_into_replication.py  (inlines into the doc)
+Programs/main_results/4010_table_direct.py      -> t_direct
+Programs/main_results/4020_table_spill.py       -> t_spill
+Programs/main_results/4030_table_twopanel.py   -> t_turnover, t_composition
+Programs/clause_types/4040_table_clause.py      -> t_clause
+Programs/robustness/4050_table_union.py         -> t_union, t_union_hw
+Programs/robustness/4060_table_rob_logwages.py               -> t_rob, t_rob_hw
+Programs/residuals/4070_table_resid.py         -> t_resid, t_resid_hw
+Programs/conn_descriptives/4080_table_pairwise_appendix.py  -> t_pairwise_appendix
+Programs/layer_connectivity/07_within_firm/4090_table_within_firm.py -> t_layerdesc/groupspecs/horserace {,_hw}
+Programs/layer_connectivity/07_within_firm/4100_inline_into_replication.py  (inlines into the doc)
 
 
 2. Deletion — confirm before I touch anything
 Do not delete yet. Your premise is inverted: the obsolete scripts are in git; the canonical ones are not.
 
 
-4122_within_firm.do        ** UNTRACKED **   <- canonical
-4132_within_firm_hourly.do     ** UNTRACKED **   <- canonical
-4121_within_firm.do              ** UNTRACKED **   <- canonical
-4131_within_firm_hourly.do           ** UNTRACKED **   <- canonical
+3122_within_firm.do        ** UNTRACKED **   <- canonical
+3132_within_firm_hourly.do     ** UNTRACKED **   <- canonical
+3121_within_firm.do              ** UNTRACKED **   <- canonical
+3131_within_firm_hourly.do           ** UNTRACKED **   <- canonical
 _run_within_firm_v3ml.do            ** UNTRACKED **
 _run_within_firm_hw_v3ml.do         ** UNTRACKED **
 01_within_firm_estimates{,_hw}.do   TRACKED           <- obsolete
@@ -254,4 +254,4 @@ Blocker: _run_tenure.do and _run_tenure_hw.do both call 01_within_firm_estimates
 
 Also flagging: _run_within_firm{,_hw}_v3ml.do are the mean-of-log arm of 01c. They didn't generate anything wrongly — they're a legitimate robustness variant of the canonical script. I'd keep them unless you want the size-control question closed permanently.
 
-Separate fix worth doing: v3 writes _hlogic-suffixed files, but 5090_table_within_firm.py reads unsuffixed names, so publishing currently depends on a manual copy that no script records. That copy is what misled me. Giving v3 an empty table_suffix would remove the trap entirely.
+Separate fix worth doing: v3 writes _hlogic-suffixed files, but 4090_table_within_firm.py reads unsuffixed names, so publishing currently depends on a manual copy that no script records. That copy is what misled me. Giving v3 an empty table_suffix would remove the trap entirely.
