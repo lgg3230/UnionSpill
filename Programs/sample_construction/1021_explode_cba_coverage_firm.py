@@ -63,7 +63,21 @@ def clean_text(text):
         return text.replace('\u2013', '-').replace('\u2014', '--').replace('\u2018', "'").replace('\u2019', "'").replace('\u201c', '"').replace('\u201d', '"')
     return text
 
-cba_firm = pd.read_stata(os.path.join(main, 'UnionSpill/Data/CBA/cba_coverage_clean_firm.dta'))
+
+# ---- A14 fix, 2026-09-06 -----------------------------------------------------
+# This script hardcoded the production CBA directory for both its input and its
+# output. A verification run pointed at a shadow tree therefore read production
+# inputs and WROTE INTO PRODUCTION Data/CBA/, silently replacing
+# cba_firm_exploded.dta. Same defect class as A9 (hardcoded absolute paths in the
+# MATLAB stage), and an INV-16 violation.
+#
+# The directory now comes from the environment, falling back to the production
+# path when unset, so a normal run is unchanged. 1020_clean_cba.do passes
+# UNIONSPILL_CBA="$cba_dir" on the shell line.
+cba_dir = os.environ.get('UNIONSPILL_CBA') or os.path.join(main, 'UnionSpill/Data/CBA')
+print(f"1021: cba_dir = {cba_dir}")
+
+cba_firm = pd.read_stata(os.path.join(cba_dir, 'cba_coverage_clean_firm.dta'))
 
 # Split the 'codigo_municipio' column by comma and explode the resulting lists into separate rows
 cba_firm['codigo_municipio'] = cba_firm['codigo_municipio'].str.split(',')
@@ -73,4 +87,4 @@ cba_firm_exp = cba_firm.explode('codigo_municipio').reset_index(drop=True)
 for col in cba_firm_exp.select_dtypes(include=['object']).columns:
     cba_firm_exp[col] = cba_firm_exp[col].apply(clean_text)
 
-cba_firm_exp.to_stata(os.path.join(main,'UnionSpill/Data/CBA/cba_firm_exploded.dta'), write_index=False)
+cba_firm_exp.to_stata(os.path.join(cba_dir, 'cba_firm_exploded.dta'), write_index=False)

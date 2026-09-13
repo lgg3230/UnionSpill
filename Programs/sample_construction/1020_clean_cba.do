@@ -106,7 +106,29 @@ save "$cba_dir/cba_coverage_clean_sector.dta", replace
 // this is done separately for sectoral and firm level cba's
 ********************************************************************************
 
-capture noisily shell "python3" "$programs/1021_explode_cba_coverage_firm.py"
+* ---- A11 fix, 2026-09-06 ------------------------------------------------------
+* This call used to read:
+*     capture noisily shell "python3" "$programs/1021_explode_cba_coverage_firm.py"
+* Three faults in one line. The script lives in sample_construction/, so the path
+* was wrong; it hardcoded `python3` instead of the master's $python_exe; and
+* `capture` swallowed the resulting failure. A from-scratch run therefore skipped
+* the explode step in silence and reused whatever cba_firm_exploded.dta was
+* already on disk -- in this repo, a file dated Sep 2025.
+*
+* `shell` does not return a usable return code in batch Stata, and the stale
+* output file would satisfy a bare `confirm file`. So the target is erased first:
+* if 1021 fails, the confirm below stops the chain instead of letting a stale
+* file through. The pre-existing file is frozen at
+* archive/Data/baseline_2026-09-06/legacy_cba/ before this runs.
+
+if "$python_exe" == "" global python_exe "/home/lgg3230/.conda/envs/venv_python312/bin/python"
+if "$programs"   == "" global programs   "/kellogg/proj/lgg3230/UnionSpill/Programs"
+
+capture erase "$cba_dir/cba_firm_exploded.dta"
+
+shell UNIONSPILL_CBA="$cba_dir" "$python_exe" "$programs/sample_construction/1021_explode_cba_coverage_firm.py"
+
+confirm file "$cba_dir/cba_firm_exploded.dta"
 
 // capture noisily shell "python3" "$programs/1022_explode_cba_coverage_sector.py"
 

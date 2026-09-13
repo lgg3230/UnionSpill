@@ -8,6 +8,7 @@
 * every stage is off by default; set its flag to 1 to run it.
 *
 *   TIER A  1010-1050  raw RAIS -> firm panel + connectivity  (Stata + MATLAB)
+*           1011 restored 2026-09-06: it writes unique_firms_*, which 1020 needs.
 *   TIER B  2010-2050  firm panel -> analysis panel          (Stata)
 *   TIER C  3011-3132  analysis panel -> estimates           (13 estimators)
 *   TIER D  4010-4220  estimates -> tables and figures       (Python + Stata)
@@ -87,7 +88,16 @@ global logs "$main/UnionSpill/Logs"
 * Batch logs. `stata-mp -b do X.do` writes X.log into the CURRENT directory, not
 * next to the do-file, so every shelled call below runs from $logs. Programs/ is
 * code only and must never accumulate logs. Enforced belt-and-braces by the
-* Programs/**/*.log rule in .gitignore.
+* log-file rule for Programs in .gitignore.
+*
+* DO NOT write that rule's glob literally in this file. The pattern contains the
+* two characters that open a Stata block comment, and Stata honours them even
+* inside a `*' comment line. Until 2026-09-06 line 91 read
+*   `Programs' + slash + star-star + slash + star + `.log rule in .gitignore.'
+* which opened a comment that nothing closed, so EVERY line below it -- all the
+* tier flags and all the `do' calls -- was swallowed. The master parsed, printed
+* "0000_master.do finished." and ran nothing. Introduced by 074cb45; found
+* 2026-09-06 on the first attempt to run the full chain from this file (A15).
 
 // Added for the full chain:
 
@@ -100,7 +110,8 @@ global python_exe        "/home/lgg3230/.conda/envs/venv_python312/bin/python"
 // CONTROL WHICH PROGRAMS RUN
 
 * --- TIER A: raw RAIS -> firm panel + connectivity ---------------------------
-local a_rais_clean       = 0      // 1010_rais_clean.do   -> rais_firm_*, worker_estab_*
+local a_rais_clean       = 0      // 1010_rais_clean.do   -> rais_firm_*, worker_estab_*, unique_estab_*
+local a_emp_assoc        = 0      // 1011_clean_emp_assoc.do -> unique_firms_*  (restored 2026-09-06)
 local a_clean_cba        = 0      // 1020_clean_cba.do    (+1021/1022 exploders)
 local a_merge_cba_rais   = 0      // 1030_merge_cba_rais.do
 local a_flows            = 0      // 1040_yearly_employers.do, shells 1041-1045
@@ -159,6 +170,7 @@ local e_copy_apply       = 0      // 0 = dry run (report diffs only), 1 = write
 // Clean rais dataset, merge with employer association and collapse to firm level:
 
 if (`a_rais_clean'      ==1) do "$programs/sample_construction/1010_rais_clean.do"
+if (`a_emp_assoc'       ==1) do "$programs/sample_construction/1011_clean_emp_assoc.do"
 if (`a_clean_cba'       ==1) do "$programs/sample_construction/1020_clean_cba.do"
 if (`a_merge_cba_rais'  ==1) do "$programs/sample_construction/1030_merge_cba_rais.do"
 if (`a_flows'           ==1) do "$programs/sample_construction/1040_yearly_employers.do"
@@ -192,9 +204,11 @@ if (`a_rand_inference' ==1) {
 * Numeric order IS execution order after the 2026-08-16 renumbering. 2020 runs
 * with stop_after_pct: its tail would need pct_unionexp, which 2030 derives from
 * 2020's own output, and that tail's product
-* (lagos_sample_sep24_pct_unionexp_ext.dta) is read by nothing in Programs/.
-* Stopping after the percentiles keeps the chain acyclic and loses no artifact.
+
 ********************************************************************************
+
+
+global lagos_firm_panel "lagos_sample_sep24.dta"
 
 if (`b_lagos_workers' ==1) do "$programs/sample_construction/2010_merge_lagos_worker.do"
 
@@ -217,6 +231,8 @@ if (`b_worker_pnl_lagos' ==1) {
     shell cd "$logs" && $python_exe "$programs/sample_construction/2052_worker_panel_bins.py"
     shell cd "$logs" && $python_exe "$programs/sample_construction/2053_worker_panel_bins2.py"
 }
+
+global lagos_firm_panel ""
 
 ********************************************************************************
 * TIER C -- estimators, one fresh Stata process each (see header note)
@@ -241,11 +257,16 @@ if (`c_within_firm_hw'   ==1) shell cd "$logs" && $stata_exe -b do "$programs/an
 ********************************************************************************
 
 if (`d_tables' ==1) {
-    shell cd "$logs" && $python_exe "$programs/analysis/main_results/4010_table_direct.py"
-    shell cd "$logs" && $python_exe "$programs/analysis/main_results/4020_table_spill.py"
-    shell cd "$logs" && $python_exe "$programs/analysis/main_results/4030_table_twopanel.py"
-    shell cd "$logs" && $python_exe "$programs/analysis/clause_types/4040_table_clause.py"
-    shell cd "$logs" && $python_exe "$programs/analysis/robustness/4050_table_union.py"
+    * --with-mean, added 2026-09-09. The five generators that support it emit the
+    * "Pre-treatment mean" row only when asked; the estimators already write the
+    * mean_pre rows the flag consumes. Without it the rebuilt tables silently drop
+    * a row the published ones carry, which reads as a table-structure difference
+    * rather than the invocation difference it is.
+    shell cd "$logs" && $python_exe "$programs/analysis/main_results/4010_table_direct.py" --with-mean
+    shell cd "$logs" && $python_exe "$programs/analysis/main_results/4020_table_spill.py" --with-mean
+    shell cd "$logs" && $python_exe "$programs/analysis/main_results/4030_table_twopanel.py" --with-mean
+    shell cd "$logs" && $python_exe "$programs/analysis/clause_types/4040_table_clause.py" --with-mean
+    shell cd "$logs" && $python_exe "$programs/analysis/robustness/4050_table_union.py" --with-mean
     shell cd "$logs" && $python_exe "$programs/analysis/robustness/4060_table_rob_logwages.py"
     shell cd "$logs" && $python_exe "$programs/analysis/residuals/4070_table_resid.py"
     shell cd "$logs" && $python_exe "$programs/analysis/conn_descriptives/4080_table_pairwise_appendix.py"

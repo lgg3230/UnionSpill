@@ -274,3 +274,10 @@ archive/Data/
 # batch run from inside Programs/ would drop logs there; belt-and-braces guard.
 Programs/**/*.log
 Programs/*.log
+
+# Doc bundles generated for download; regenerable from Docs/
+/UnionSpill_Docs_*.zip
+
+# Verification shadow trees (large, regenerable from Programs/verification/)
+/Data_sampletest/
+/Data_may2025/

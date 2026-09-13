@@ -666,38 +666,41 @@ gen cnpj_year = identificad + year_str
 compress
 save "$rais_aux/worker_estab_all_years.dta", replace
 
-/* collapse (firstnm) modemun modeind, by(identificad) // collapse to the estab level, to serve as a dictionary for 
+// ---- BRANCH 3: unique establishment dictionary for the CBA merge -------------
+// Builds unique_estab_{y}.dta, the establishment -> municipality key that 1011
+// turns into unique_firms_{y}.dta and 1020_clean_cba.do:158 joins against.
+// Restored 2026-09-06 (TIER_A_DEFECTS A12): the block had been left inside a
+// block comment, so the artifact had no producer.
+//
+// Municipality is the MODAL value across 2009-2016, per the Lagos (2021)
+// technique. Support is 2009-2016 because rais_mode_mun_ind is collapsed from
+// worker_estab_all_years.dta, which spans those years; 1020 consumes the same
+// range. rais_firm_{y}.dta is deliberately NOT re-saved here (A4).
+//
 
-tostring modemun, replace
+
+collapse (firstnm) modemun modeind, by(identificad) // estab-level dictionary
+
+tostring modemun, replace // rais_firm_{y} carries municipio as a string
 
 save "$rais_aux/rais_mode_mun_ind.dta", replace
 
-//incoporate the modal municipality and industry values into the collapsed firm level full datasets
+forvalues i=2009/2016{
 
-forvalues i=2007/2016{
 	use "$rais_aux/rais_mode_mun_ind.dta",clear
-	merge 1:1 identificad using "$rais_firm/rais_firm_`i'.dta" // merge with firm level collapsed full dataset 
-	keep if _merge==3 // keep only observations that are matched. there should not be a decrease in the number of obs
+	merge 1:1 identificad using "$rais_firm/rais_firm_`i'.dta"
+	keep if _merge==3
 	drop _merge
-	replace municipio=modemun // replace municipio with mode municipality
-	drop modemun // drop 
-	replace clascnae20=modeind // replace industry id with mode industry id
-	drop modeind
-	
-	** industry groups
-	gen industry =  substr(clascnae20,1,3) // generates specific industry groups using the 1st three digits of the cnae classification
-	
-	
-	save "$rais_firm/rais_firm_`i'.dta", replace
-	
-	// this code generates the unique establishments id databese to perform the merge with the cba dataset. I cannot merge the whole rais because the database would get too big, i add the other variables later (041 do file)
-keep identificad identificad_8 municipio firm_emp 
-gen state = substr(municipio,1,2) // generates state identifier used for matching with the cba dataset
 
-// keep if firm_emp>0 // restrict to firms with postive employment in december
+	replace municipio=modemun // modal municipality, Lagos (2021) technique
 
-save "$rais_aux/unique_estab_`i'.dta", replace
+	// NOTE: rais_firm_`i'.dta is deliberately NOT re-saved here. See above.
 
-} */
+	keep identificad identificad_8 municipio firm_emp
+	gen state = substr(municipio,1,2) // state id for matching with the cba dataset
+
+	save "$rais_aux/unique_estab_`i'.dta", replace
+
+}
 
 
