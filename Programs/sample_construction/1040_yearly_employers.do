@@ -7,36 +7,75 @@
 ********************************************************************************
 
 
+// SPELL SELECTION FOR THE TRANSITION MATRICES -- read from raw RAIS.
+// This is the selection 05_yearly_employers.do used (a89a762), restored
+// verbatim. Reading 1010's worker_estab_{i} instead (074cb45) is NOT equivalent:
+// 1010 takes max(horascontr) over all spells before requiring December activity,
+// lets non-December rows enter the wage max, ranks on the deflated wage, and
+// sorts rows differently before the seeded tie-break. Together these changed
+// 21,861 workers' presence and 10,226 workers' establishment in 2009 alone.
+//
+// MUST RUN 2007 -> 2011 IN SEQUENCE, STARTING FROM A FRESH SORT STATE. Ties in
+// 'sort' are broken using Stata's internal sort state, which advances with every
+// sort and is not reset by 'set seed'. The published files were produced from a
+// fresh session's state; 'set sortseed 1001' (Stata's default) restores exactly
+// that state, so the result no longer depends on what the master ran before.
+// Run this way, the block reproduces the published yearly_employers_2007..2011
+// row for row; running 2009 on its own changes ~9,000 worker assignments.
+if "$rais_raw_dir" == "" global rais_raw_dir "/kellogg/proj/lgg3230/RAIS/output/data/full"
+set sortseed 1001
+
 forvalues  i=2007/2011{
 
-// PARALLEL PIPELINE: read the worker panel that 1010p already produced instead of
-// opening raw RAIS a third time (REDUNDANCY_AUDIT R1, R4). worker_estab_{i} is
-// already restricted to one spell per worker-firm by exactly this rule -- same
-// empdec_lagos definition, same three-step rank, same seed -- so the block that
-// used to re-derive it here is gone. The ranking wage differed only by the
-// deflator, a within-year constant, which cannot change a max.
-use PIS identificad tempempr horascontr remdezr using "$rais_aux/worker_estab_`i'.dta", clear
+use "$rais_raw_dir/RAIS_`i'.dta",clear
+
+// first we will keep only the variables we need to make this lighter.
+
+ keep PIS identificad empem3112 tempempr horascontr remdezr
+
+// genreate firm identifier:
 
 gen identificad8 = substr(identificad, 1,8)
 
-// wage variable retained for the worker-level (stage 2) ranking below
+// select only spells within each firm that are active throughtout december of each year
+
+gen empdec_lagos = empem3112*(tempempr>1)
+keep if empdec_lagos ==1
+
+// generate necessary wage variable for ranking
+
 gen remdezr_h = remdezr/(horascontr*4.348)
 gen l_remdezr_h = ln(remdezr_h)
 
-// firm employment: count of selected spells per establishment
-bysort identificad: egen firm_emp = total(1)
+// now select only one spell per worker per firm:
+// Step 1: Rank by contracted hours (higher = better)
+bysort identificad PIS: egen max_hours = max(horascontr * empdec_lagos) // orders by estab_id and then PIS, within each estab-PIS group, takes the max of the contract hours, given that this spell is active in dec
+gen rank1 = (horascontr == max_hours & empdec_lagos==1) // generates an indicator for the spells active throughout dec and whose contracted hours match the max 
+
+* Step 2: Among those with max hours, rank by hourly wage (higher = better)
+bysort identificad PIS: egen max_wage = max(l_remdezr_h * rank1) // orderd by estab id and PIS, within each group computes the max of the log hourly dec wages within the max contracted hours that are active in dec
+gen rank2 = (l_remdezr_h == max_wage & rank1==1) // marks spells w/in estab-pis active in dec that have max hourly log dec wages among those that have max contracted hours
+
+* Step 3: For any remaining ties, assign a random number
+set seed 12345
+gen random = runiform() if rank2==1 // gen random number w/in spells that fulfill conditions of rank2
+
+* Create a final rank combining all criteria
+bysort identificad PIS: egen max_random = max(random * rank2) // w/in estab-PIS-max hourly log dec wage-max contracted hours computes the maximum random number
+gen final_rank = (random == max_random & rank2==1) // marks spells that fulfill rank2 and have max random number
+
+drop rank1 rank2 random max_random
+
+* count the number of selected spells within each establishment:
+bysort identificad: egen firm_emp = total(final_rank==1) // w/in estab counts spells that fulfill conditions of final_rank. 
+
+
+keep if final_rank==1
 
 // Now, among selected spells, select only one per worker, according to the longest tenure
 
 recast float tempempr, force
-
-* ---- DETERMINISM: canonical row order, stage 2 (one firm per worker) ---------
-* Stage 2 groups by PIS alone, so stage 1's `identificad PIS ...` order is not a
-* valid prefix here and a fresh sort is required. Stage 1 leaves exactly one row
-* per (identificad, PIS), so appending identificad makes this key unique and the
-* seeded draw below fully determined by the data.
-sort PIS tempempr l_remdezr_h identificad
-
+ 
 bys PIS: egen max_ten = max(tempempr)
 gen rank1 = (tempempr==max_ten)
 
@@ -73,6 +112,13 @@ save "$rais_aux/yearly_employers_`i'.dta", replace
 }
 
 
+
+// Reset the sort state again before the transitions. Content is unaffected
+// either way, but the physical row order of the firm panel written below
+// depends on it, and tier B's firm-year means are summed in that order: a
+// different start state moves lr_remdezr_h_w in the last bit (~1e-14). The
+// validated reproduction ran this part from a fresh state.
+set sortseed 1001
 
 forvalues i=2007/2010{
 	local j = `i'+1

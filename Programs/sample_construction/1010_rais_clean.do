@@ -16,9 +16,10 @@
 *   outcome block runs once. Then the data branches:
 *     - worker panel  worker_estab_{y}.dta        (ALL years 2007-2016)
 *     - firm panel    rais_firm_{y}.dta           (all years)
-*   worker_estab is now written for 2007-2008 as well, which 1050p consumes in
-*   place of the raw files. The modal-industry / modal-municipality append stays
-*   on 2009-2016 exactly as before, so worker_estab_all_years.dta is unchanged.
+*   worker_estab is written for 2007-2008 as well; nothing downstream reads those
+*   two years (1040 selects its own spells from raw RAIS). The modal-industry /
+*   modal-municipality append stays on 2009-2016, so worker_estab_all_years.dta
+*   is unchanged.
 *
 * WHAT DOES NOT CHANGE
 *   Every computation, in the same order, under the same canonical sort. The only
@@ -605,7 +606,7 @@ keep if final_rank==1	// considers only main spells of employees active througho
 
 // ---- BRANCH 1: worker-level panel -------------------------------------------
 // Written for every year. 2009-2016 feed worker_estab_all_years.dta exactly as
-// before; 2007-2008 exist so 1050p can read them instead of re-opening raw RAIS.
+// before; 2007-2008 are written but not read downstream (1040 reads raw RAIS).
 preserve
 keep PIS identificad municipio clascnae20 year genero idade dtnascimento_stata dtadmissao_stata ocup2002 raca_cor causadesli mesdesli ///
     grinstrucao nacionalidad portdefic tpdefic tipoadm tempempr tiposal salcontr ultrem horascontr ///
@@ -641,15 +642,15 @@ save "$rais_firm/rais_firm_`i'.dta", replace
 
 // ---- Modal municipality and industry, Lagos (2021) technique -----------------
 // Support is 2009-2016, unchanged: the 2007-2008 worker files written above are
-// for 1050p and are deliberately NOT appended here.
+// deliberately NOT appended here.
 use "$rais_aux/worker_estab_2009.dta", clear
 
 forvalues k=2010/2016 {
 	append using "$rais_aux/worker_estab_`k'.dta"
 }
 
-// Disk management. The original erased 2010-2016 here. 1050p consumes 2007-2011,
-// so only 2012-2016 can go; on full data each file is ~5.7 GB.
+// Disk management. The original erased 2010-2016 here. 2012-2016 go; 2009-2011
+// are kept (1040 no longer reads them -- it selects spells from raw RAIS).
 forvalues k=2012/2016 {
 	erase "$rais_aux/worker_estab_`k'.dta"
 }
@@ -668,39 +669,81 @@ save "$rais_aux/worker_estab_all_years.dta", replace
 
 // ---- BRANCH 3: unique establishment dictionary for the CBA merge -------------
 // Builds unique_estab_{y}.dta, the establishment -> municipality key that 1011
-// turns into unique_firms_{y}.dta and 1020_clean_cba.do:158 joins against.
-// Restored 2026-09-06 (TIER_A_DEFECTS A12): the block had been left inside a
-// block comment, so the artifact had no producer.
+// turns into unique_firms_{y}.dta and 1020_clean_cba.do:158 joins against, and
+// re-saves rais_firm_{2009..2016}.dta with the modal municipality and industry.
 //
-// Municipality is the MODAL value across 2009-2016, per the Lagos (2021)
-// technique. Support is 2009-2016 because rais_mode_mun_ind is collapsed from
-// worker_estab_all_years.dta, which spans those years; 1020 consumes the same
-// range. rais_firm_{y}.dta is deliberately NOT re-saved here (A4).
+// Modal municipio and modal clascnae20 are each the value with the largest total
+// firm_emp summed over rais_firm_2007..2016, ties broken to the smallest code;
+// industry is the 3-digit prefix of the modal clascnae20. This rule reproduces
+// the published firm panel exactly: municipio, industry1 and microregion on
+// 17,836/17,836 firms, and the firm set, treated set and balanced panel.
 //
+// rais_firm_{2009..2016}.dta ARE re-saved with the modal values: 1030 merges
+// microregion on the municipio it reads there and builds industry1 from its
+// clascnae20. Because of the re-save this block must run on the rais_firm files
+// BRANCH 2 has just written; re-running it on already re-saved files changes the
+// weights and is not idempotent.
+//
+// The spell-level modes above feed worker_estab_all_years.dta only and are
+// deliberately left as they are.
 
+tempfile acc
+local first = 1
+forvalues y = 2007/2016 {
+    use identificad clascnae20 municipio firm_emp using "$rais_firm/rais_firm_`y'.dta", clear
+    if `first' == 1 {
+        qui save `acc', replace
+        local first = 0
+    }
+    else {
+        qui append using `acc'
+        qui save `acc', replace
+    }
+}
+use `acc', clear
+di as result "stacked firm-years 2007-2016: " _N
 
-collapse (firstnm) modemun modeind, by(identificad) // estab-level dictionary
+* ---- employment-weighted modal clascnae20 -----------------------------------
+preserve
+    collapse (sum) w = firm_emp, by(identificad clascnae20)
+    gsort identificad -w clascnae20
+    gen byte pick = (identificad != identificad[_n-1])
+    keep if pick
+    keep identificad clascnae20
+    rename clascnae20 modeind
+    tempfile IND
+    qui save `IND'
+restore
 
-tostring modemun, replace // rais_firm_{y} carries municipio as a string
-
+* ---- employment-weighted modal municipio -----------------------------------
+collapse (sum) w = firm_emp, by(identificad municipio)
+gsort identificad -w municipio
+gen byte pick = (identificad != identificad[_n-1])
+keep if pick
+keep identificad municipio
+rename municipio modemun
+qui merge 1:1 identificad using `IND', nogen
+di as result "establishment dictionary: " _N
 save "$rais_aux/rais_mode_mun_ind.dta", replace
 
-forvalues i=2009/2016{
-
-	use "$rais_aux/rais_mode_mun_ind.dta",clear
-	merge 1:1 identificad using "$rais_firm/rais_firm_`i'.dta"
-	keep if _merge==3
-	drop _merge
-
-	replace municipio=modemun // modal municipality, Lagos (2021) technique
-
-	// NOTE: rais_firm_`i'.dta is deliberately NOT re-saved here. See above.
-
-	keep identificad identificad_8 municipio firm_emp
-	gen state = substr(municipio,1,2) // state id for matching with the cba dataset
-
-	save "$rais_aux/unique_estab_`i'.dta", replace
-
+* ---- propagate into rais_firm 2009-2016, re-save, then unique_estab --------
+forvalues i = 2009/2016 {
+    use "$rais_aux/rais_mode_mun_ind.dta", clear
+    merge 1:1 identificad using "$rais_firm/rais_firm_`i'.dta"
+    keep if _merge == 3
+    drop _merge
+    replace municipio  = modemun
+    drop modemun
+    replace clascnae20 = modeind
+    drop modeind
+    cap drop industry
+    gen industry = substr(clascnae20, 1, 3)
+    save "$rais_firm/rais_firm_`i'.dta", replace
+    keep identificad identificad_8 municipio firm_emp
+    gen state = substr(municipio, 1, 2)
+    save "$rais_aux/unique_estab_`i'.dta", replace
+    di as result "  `i': re-saved rais_firm + unique_estab (" _N " estabs)"
 }
+
 
 

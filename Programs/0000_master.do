@@ -34,11 +34,12 @@
 *   and worker_year_pre_new_vs_nonnew_dec26.dta is a _w rename of the panel 2010
 *   builds (2050). The analysis panel is now built from 1050/1060 output.
 *
-* TIER A IS NOW ONE PASS OVER RAW RAIS
+* TIER A READS RAW RAIS TWICE (1010 all years, 1040 2007-2011)
 *   1010 replaces the old 1010 + 1060: it cleans, selects one spell per
 *   worker-firm and then branches, writing both the firm panel and the worker
-*   panel. 1040 reads that worker panel instead of opening the raw files a third
-*   time. Raw RAIS is therefore read once rather than three times.
+*   panel. 1040 reads raw RAIS 2007-2011 itself for the transition matrices: its
+*   spell selection is not the same as 1010's, and only its own reproduces the
+*   published connectivity.
 ********************************************************************************
 
 // PRELIMINAIRES
@@ -208,7 +209,10 @@ if (`a_rand_inference' ==1) {
 ********************************************************************************
 
 
-global lagos_firm_panel "lagos_sample_sep24.dta"
+* Tier B builds from the firm panel 1040 rebuilds from raw RAIS. It reproduces
+* the published lagos_sample_sep24.dta (same 17,836 firms, 13,202 treated,
+* 16,472 in the balanced panel), which is kept on disk for validation only.
+global lagos_firm_panel "lagos_sample_sep24_test.dta"
 
 if (`b_lagos_workers' ==1) do "$programs/sample_construction/2010_merge_lagos_worker.do"
 
