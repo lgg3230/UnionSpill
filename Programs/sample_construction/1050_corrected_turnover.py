@@ -43,6 +43,14 @@ OUTPUT_FILE = os.path.join(PROJECT, "Data/CBA_RAIS_firm_level/corrected_turnover
 YEARS = range(2008, 2017)
 
 # Columns needed from RAIS
+# Tie-break seed. Spells tied on hours and hourly wage are ordered by a seeded
+# hash of fields that differ between them (reason, month and date of separation,
+# admission date, tenure). The earlier hash used only identificad, PIS, hours and
+# wage, which are identical for tied spells, so DuckDB's parallel ROW_NUMBER picked
+# arbitrarily and the layoff/quit/other split changed between runs. Rows still tied
+# after this share the separation reason, so the output is deterministic.
+TB_SEED = "12345"
+
 COLS = [
     "identificad", "PIS", "horascontr", "remdezr", "causadesli",
     "empem3112", "tempempr", "dtadmissao", "mesdesli",
@@ -127,8 +135,11 @@ for year in YEARS:
                     THEN 0.0
                     ELSE remdezr / (horascontr * 4.348)
                 END AS remdezr_h,
-                hash(identificad || '|' || PIS || '|' || CAST(horascontr AS VARCHAR)
-                     || '|' || CAST(remdezr AS VARCHAR) || '|12345') / 1e19 AS random_tb
+                hash(concat_ws('|', identificad, PIS,
+                     coalesce(CAST(horascontr AS VARCHAR),'.'), coalesce(CAST(remdezr AS VARCHAR),'.'),
+                     coalesce(CAST(causadesli AS VARCHAR),'.'), coalesce(CAST(mesdesli AS VARCHAR),'.'),
+                     coalesce(CAST(dtadmissao AS VARCHAR),'.'), coalesce(CAST(tempempr AS VARCHAR),'.'),
+                     '""" + TB_SEED + """')) / 1e19 AS random_tb
             FROM rais
         ),
         dec_ranked AS (
@@ -181,8 +192,11 @@ for year in YEARS:
                     THEN 0.0
                     ELSE remdezr / (horascontr * 4.348)
                 END AS remdezr_h,
-                hash(identificad || '|' || PIS || '|' || CAST(horascontr AS VARCHAR)
-                     || '|' || CAST(remdezr AS VARCHAR) || '|12345') / 1e19 AS random_tb
+                hash(concat_ws('|', identificad, PIS,
+                     coalesce(CAST(horascontr AS VARCHAR),'.'), coalesce(CAST(remdezr AS VARCHAR),'.'),
+                     coalesce(CAST(causadesli AS VARCHAR),'.'), coalesce(CAST(mesdesli AS VARCHAR),'.'),
+                     coalesce(CAST(dtadmissao AS VARCHAR),'.'), coalesce(CAST(tempempr AS VARCHAR),'.'),
+                     '{TB_SEED}')) / 1e19 AS random_tb
             FROM rais
         ),
         dec_ranked AS (
@@ -243,8 +257,11 @@ for year in YEARS:
                     THEN 0.0
                     ELSE remdezr / (horascontr * 4.348)
                 END AS remdezr_h,
-                hash(identificad || '|' || PIS || '|' || CAST(horascontr AS VARCHAR)
-                     || '|' || CAST(remdezr AS VARCHAR) || '|12345') / 1e19 AS random_tb
+                hash(concat_ws('|', identificad, PIS,
+                     coalesce(CAST(horascontr AS VARCHAR),'.'), coalesce(CAST(remdezr AS VARCHAR),'.'),
+                     coalesce(CAST(causadesli AS VARCHAR),'.'), coalesce(CAST(mesdesli AS VARCHAR),'.'),
+                     coalesce(CAST(dtadmissao AS VARCHAR),'.'), coalesce(CAST(tempempr AS VARCHAR),'.'),
+                     '{TB_SEED}')) / 1e19 AS random_tb
             FROM rais
         ),
 
