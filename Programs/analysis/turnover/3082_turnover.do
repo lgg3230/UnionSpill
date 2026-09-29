@@ -68,25 +68,35 @@ label var l_total_hours "Log total contracted hours (Dec. employment)"
 di as result "Turnover data merged."
 
 * ── MERGE FLOW OUTCOMES PANEL (2009-2016) ───────────────────────────────────
-preserve
-	import delimited "$rais_aux/totalflows_panel_2009_2016.csv", clear
-	tostring identificad, replace format(%014.0f) force
-	keep identificad year totalflows_pw outflows_pw inflows_pw
-	tempfile flows_panel
-	save `flows_panel'
-restore
+* totalflows_panel_2009_2016.csv supplies the three flow OUTCOMES (per-worker
+* total, out- and inflows). It is built from post-period connectivity that the
+* chain does not yet produce, and none of these results is reported in the
+* paper. If the file is absent the flow outcomes are skipped; every other
+* outcome is estimated exactly as before.
+capture confirm file "$rais_aux/totalflows_panel_2009_2016.csv"
+local have_flows = (_rc == 0)
+if `have_flows' {
+	preserve
+		import delimited "$rais_aux/totalflows_panel_2009_2016.csv", clear
+		tostring identificad, replace format(%014.0f) force
+		keep identificad year totalflows_pw outflows_pw inflows_pw
+		tempfile flows_panel
+		save `flows_panel'
+	restore
 
-* Drop old static connectivity variables to avoid merge conflict
-cap drop totalflows_pw
-cap drop outflows_pw
-cap drop inflows_pw
+	* Drop old static connectivity variables to avoid merge conflict
+	cap drop totalflows_pw
+	cap drop outflows_pw
+	cap drop inflows_pw
 
-merge 1:1 identificad year using `flows_panel', keep(master match) nogen
-label var totalflows_pw "Total bilateral flows per worker"
-label var outflows_pw   "Total outflows per worker"
-label var inflows_pw    "Total inflows per worker"
+	merge 1:1 identificad year using `flows_panel', keep(master match) nogen
+	label var totalflows_pw "Total bilateral flows per worker"
+	label var outflows_pw   "Total outflows per worker"
+	label var inflows_pw    "Total inflows per worker"
 
-di as result "Flow outcomes panel merged."
+	di as result "Flow outcomes panel merged."
+}
+else di as error "totalflows_panel_2009_2016.csv not found -- flow outcomes skipped."
 
 * ===============================
 * MERGE TOTALFLOWS DATA (per-worker, 2007-2011 only)
@@ -238,6 +248,7 @@ di as result "Creating turnover pre-treatment bins..."
 global turnover_outcomes "retention_u retention_yoy_u hiring_rate_u turnover_u quit_rate_u layoff_rate_u churn_rate_u l_total_hours l_firm_emp"
 * Flow outcomes (3): total bilateral flows, outflows, inflows (all firms)
 global flow_outcomes     "totalflows_pw outflows_pw inflows_pw"
+if !`have_flows' global flow_outcomes ""
 
 foreach v of global turnover_outcomes {
 
