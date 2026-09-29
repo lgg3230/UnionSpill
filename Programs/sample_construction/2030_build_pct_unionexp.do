@@ -16,8 +16,8 @@
 *
 * union_treat_exp_sep24.dta is 4,324 rows, uniquely keyed on mode_union, and
 * carries treat_union_exp_all and union_emp_exp -- both in the column contract
-* the estimators read. It is built by archive/Programs/union_treat_exp.do (now archived) from
-* cba_rais_firm_2007_2016.dta, a 1040 output, so the whole chain is reproducible.
+* the estimators read. It is built by 1031_union_treat_exp.do from
+* cba_rais_firm_2007_2016.dta, a 1030 output, so the whole chain is reproducible.
 ********************************************************************************
 
 version 17.0

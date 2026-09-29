@@ -9,12 +9,17 @@ Output columns: identificad,
   totalflows_08_09, totalflows_pw_08_09,
   totalflows_09_10, totalflows_pw_09_10,
   totalflows_10_11, totalflows_pw_10_11
+
+Input : $rais_firm/labor_analysis_sample.dta, $rais_aux/connectivity_2007_2011_yearly.dta  (1040)
+Output: $rais_aux/totalflows_wide_2007_2011.csv   (read by the tier-C estimators)
+Paths come from UNIONSPILL_FIRM / UNIONSPILL_AUX, set by 0000_master.do.
 """
 
+import os
 import pandas as pd
 
-rais_firm = "/kellogg/proj/lgg3230/UnionSpill/Data/CBA_RAIS_firm_level"
-rais_aux  = "/kellogg/proj/lgg3230/UnionSpill/Data/RAIS_aux"
+rais_firm = os.environ.get("UNIONSPILL_FIRM", "/kellogg/proj/lgg3230/UnionSpill/Data/CBA_RAIS_firm_level")
+rais_aux  = os.environ.get("UNIONSPILL_AUX", "/kellogg/proj/lgg3230/UnionSpill/Data/RAIS_aux")
 
 # ── 1. Get the 16,472 sample firm IDs ─────────────────────────────────────────
 print("Loading sample firms...")

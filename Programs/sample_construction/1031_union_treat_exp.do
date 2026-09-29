@@ -1,9 +1,17 @@
 ********************************************************************************
 * PROJECT: UNION SPILLOVERS
 * AUTHOR:  LUIS GOMES
-* PROGRAM: Construct measure of mode union exposition to treatment
-* INPUT:   MERGED CBA RAIS, from sep 24
-* OUTPUT:  mode-union x year level dataset with exposition measures	 
+* PROGRAM: 1031_union_treat_exp.do -- union exposure to the reform
+* INPUT:   $rais_firm/cba_rais_firm_2007_2016.dta   (1030)
+* OUTPUT:  $rais_aux/union_treat_exp_sep24.dta      (read by 2030)
+*          one row per mode_union: treat_union_exp_all (share of the union's
+*          firm-years, 2009-2011, that are treated) and union_emp_exp (treated
+*          share of the union's pre-period employment).
+*
+* Members are ALL CBA-matched firms in the union (mode_base_month nonmissing),
+* not only the Lagos sample. Rebuilt from the current chain this differs from
+* the 2025 file in 15 of 4,324 unions (non-Lagos membership); no number in the
+* paper moves (checked against tab:spill_union_4tfpe_4out).
 ********************************************************************************
 
 use "$rais_firm/cba_rais_firm_2007_2016.dta", clear

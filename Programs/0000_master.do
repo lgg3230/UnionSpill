@@ -115,8 +115,10 @@ local a_rais_clean       = 0      // 1010_rais_clean.do   -> rais_firm_*, worker
 local a_emp_assoc        = 0      // 1011_clean_emp_assoc.do -> unique_firms_*  (restored 2026-09-06)
 local a_clean_cba        = 0      // 1020_clean_cba.do    (+1021/1022 exploders)
 local a_merge_cba_rais   = 0      // 1030_merge_cba_rais.do
+local a_union_exp        = 0      // 1031_union_treat_exp.do -> union_treat_exp_sep24.dta (read by 2030)
 local a_flows            = 0      // 1040_yearly_employers.do, shells 1041-1045
-local a_corr_turnover    = 0      // 1050_corrected_turnover.py
+local a_totalflows_wide  = 0      // 1046_totalflows_wide.py -> totalflows_wide_2007_2011.csv (tier C)
+local a_corr_turnover    = 0      // 1050_corrected_turnover.py -> corrected_turnover_sample.csv (tier C)
 
 * --- TIER A SIDE-BRANCHES: inputs for specific tier-C estimators ---------------
 * Restored from archive/ 2026-08-16. Each builds a Data/ artifact that a tier-C
@@ -174,8 +176,12 @@ if (`a_rais_clean'      ==1) do "$programs/sample_construction/1010_rais_clean.d
 if (`a_emp_assoc'       ==1) do "$programs/sample_construction/1011_clean_emp_assoc.do"
 if (`a_clean_cba'       ==1) do "$programs/sample_construction/1020_clean_cba.do"
 if (`a_merge_cba_rais'  ==1) do "$programs/sample_construction/1030_merge_cba_rais.do"
+if (`a_union_exp'       ==1) do "$programs/sample_construction/1031_union_treat_exp.do"
 if (`a_flows'           ==1) do "$programs/sample_construction/1040_yearly_employers.do"
-if (`a_corr_turnover'   ==1) shell cd "$logs" && $python_exe "$programs/analysis/turnover/1050_corrected_turnover.py"
+* The Python steps take their paths from these environment variables, so the
+* globals above govern what they read and write.
+if (`a_totalflows_wide' ==1) shell cd "$logs" && UNIONSPILL_FIRM="$rais_firm" UNIONSPILL_AUX="$rais_aux" $python_exe "$programs/sample_construction/1046_totalflows_wide.py"
+if (`a_corr_turnover'   ==1) shell cd "$logs" && UNIONSPILL_FIRM="$rais_firm" UNIONSPILL_RAW="$rais_raw_dir" $python_exe "$programs/sample_construction/1050_corrected_turnover.py"
 
 ********************************************************************************
 * TIER A SIDE-BRANCHES

@@ -36,9 +36,10 @@ import os
 # Paths
 # ---------------------------------------------------------------------------
 PROJECT = "/kellogg/proj/lgg3230/UnionSpill"
-RAIS_DIR = "/kellogg/proj/lgg3230/RAIS/output/data/full"
-SAMPLE_FILE = os.path.join(PROJECT, "Data/CBA_RAIS_firm_level/cba_rais_firm_2009_2016_flows_1.dta")
-OUTPUT_FILE = os.path.join(PROJECT, "Data/CBA_RAIS_firm_level/corrected_turnover_sample.csv")
+RAIS_DIR = os.environ.get("UNIONSPILL_RAW", "/kellogg/proj/lgg3230/RAIS/output/data/full")
+RAIS_FIRM = os.environ.get("UNIONSPILL_FIRM", os.path.join(PROJECT, "Data/CBA_RAIS_firm_level"))
+SAMPLE_FILE = os.path.join(RAIS_FIRM, "cba_rais_firm_2009_2016_flows_1.dta")
+OUTPUT_FILE = os.path.join(RAIS_FIRM, "corrected_turnover_sample.csv")
 
 YEARS = range(2008, 2017)
 
