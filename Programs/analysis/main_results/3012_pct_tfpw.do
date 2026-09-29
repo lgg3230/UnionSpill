@@ -4,7 +4,7 @@
 *          (wage percentiles and inequality ratios) using per-worker pairwise
 *          flows (2007-2011) as the extra pre-treatment control.
 * Output:  4 CSV files with regression results (panelA, panelB, panelC, spill)
-* Auto-runs: Programs/4160_table_pct_latex.py
+* Auto-runs: Programs/analysis/main_results/4160_table_pct_latex.py
 * Panels:  A (zero-connectivity controls), B (<=1% connectivity controls),
 *          C (all untreated controls), D (spillover effects)
 ********************************************************************************
@@ -846,9 +846,11 @@ log close
 di as result "Finished: `c(current_date)' `c(current_time)'"
 
 * ── Auto-generate LaTeX tables ──────────────────────────────────────────────
-local pydir = subinstr("$main", "\", "/", .)
-shell python3 "$programs/4160_table_pct_latex.py"
-di as result "LaTeX tables written to Tables/pct_tables.tex"
+* The system python3 is 3.6; use the conda interpreter, and pass $tables so
+* the LaTeX is built from the CSVs this run just wrote.
+if "$python_exe" == "" global python_exe "/home/lgg3230/.conda/envs/venv_python312/bin/python"
+shell $python_exe "$programs/analysis/main_results/4160_table_pct_latex.py" "$tables"
+di as result "LaTeX tables written to $tables/pct_tables.tex"
 
 ********************************************************************************
 * END OF DO-FILE

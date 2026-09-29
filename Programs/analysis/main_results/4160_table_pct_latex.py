@@ -11,6 +11,7 @@ Output: UnionSpill/Tables/pct_tables.tex
 """
 
 import re
+import sys
 from pathlib import Path
 
 SPEC = "tfpw_07_11_pct"
@@ -440,8 +441,13 @@ def make_spill_table(group):
 # ── Main ─────────────────────────────────────────────────────────────────────
 
 def main():
+    # Optional argument: the directory 3012 wrote its CSVs to. Without it, the
+    # top-level Tables/ is used, as before.
     script_dir  = Path(__file__).resolve().parent
-    tables_dir  = script_dir.parent.parent.parent / "Tables"
+    if len(sys.argv) > 1:
+        tables_dir = Path(sys.argv[1])
+    else:
+        tables_dir = script_dir.parent.parent.parent / "Tables"
     output_file = tables_dir / "pct_tables.tex"
 
     pa_file = tables_dir / f"results_direct_panelA_{SPEC}.csv"
