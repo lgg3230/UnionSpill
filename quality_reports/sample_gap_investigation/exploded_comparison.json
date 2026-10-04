@@ -1,0 +1,17 @@
+{
+  "columns": [
+    "clean_asso_cnpj",
+    "codigo_municipio",
+    "contract_id",
+    "file_year",
+    "identificad_8",
+    "pair_id",
+    "start_year"
+  ],
+  "legacy_rows": 144449,
+  "rebuilt_rows": 144449,
+  "legacy_unique_records": 128380,
+  "rebuilt_unique_records": 128380,
+  "legacy_only": 0,
+  "rebuilt_only": 0
+}

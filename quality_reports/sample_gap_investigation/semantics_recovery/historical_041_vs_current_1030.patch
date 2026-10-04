@@ -1,0 +1,36 @@
+--- historical_041
+
++++ current_1030
+
+@@ -292,10 +292,10 @@
+
+ drop identificad 
+ rename identificad1 identificad
+ 
+-save "$rais_aux/1_cba_treat.dta", replace
+-
+-
+-export delimited "$rais_aux/1_cba_treat.csv", replace
++save "$rais_aux/one_cba_treat.dta", replace
++
++
++export delimited "$rais_aux/one_cba_treat.csv", replace
+ restore
+ 
+ preserve
+@@ -304,10 +304,10 @@
+
+ drop identificad 
+ rename identificad1 identificad
+ 
+-save "$rais_aux/1_cba_treat.dta", replace
+-
+-
+-export delimited "$rais_aux/0_cba_treat.csv", replace
++save "$rais_aux/zero_cba_treat.dta", replace
++
++
++export delimited "$rais_aux/zero_cba_treat.csv", replace
+ restore
+ 
+ 

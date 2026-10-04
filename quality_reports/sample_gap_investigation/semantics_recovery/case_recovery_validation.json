@@ -1,0 +1,13 @@
+{
+  "case_count": 48,
+  "case_years_with_nonmissing_avg_filing_and_missing_end_date": 0,
+  "restored_missing": 29,
+  "removed_additional": 19,
+  "additional_exclusion_reasons": {
+    "cba_pre2012_avg;cba_post2012_avg": 12,
+    "cba_pre2012_avg": 6,
+    "cba_post2012_avg": 1
+  },
+  "all_48_change_municipality": true,
+  "all_48_robust_modes": true
+}

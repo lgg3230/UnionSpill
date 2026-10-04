@@ -1,0 +1,11 @@
+--- 
++++ 
+@@ -847,7 +847,7 @@
+ 
+ * ── Auto-generate LaTeX tables ──────────────────────────────────────────────
+ local pydir = subinstr("$main", "\", "/", .)
+-shell python3 "$programs/4160_table_pct_latex.py"
++* Obsolete absent table-rendering call omitted; numerical estimator unchanged.
+ di as result "LaTeX tables written to Tables/pct_tables.tex"
+ 
+ ********************************************************************************

@@ -1,0 +1,18 @@
+{
+  "pooled_establishments": 6366774,
+  "published_baseline_establishments": 16472,
+  "independent_published_municipality_agreement": 16472,
+  "published_municipality_differences": 0,
+  "uncertain_modes": 10,
+  "uncertain_balanced_modes": 2,
+  "discrepancy_robust_modes": 48,
+  "actual_2009_root_spell_semantics": {
+    "missing_tenure_included": 0,
+    "missing_wage_rank2": 1948,
+    "missing_hours_rank2": 0,
+    "active_but_no_rank1": 1,
+    "rank1_but_no_rank2": 1,
+    "ambiguous": 0
+  },
+  "actual_2009_reversed_sort_municipality_changes": 0
+}

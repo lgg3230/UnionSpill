@@ -1,0 +1,14 @@
+ M .gitignore
+ D Docs/pipeline/ARCHIVE_MANIFEST.md
+ D Docs/pipeline/ARCHIVE_RESTORE.md
+ D Docs/pipeline/DIFF_TRACE_2026-08-16.md
+ D Docs/pipeline/HANDOFF_2026-08-16.md
+ D Docs/pipeline/INVENTORY.md
+ D Docs/pipeline/REDUNDANCY_AUDIT.md
+ D Docs/pipeline/RENUMBERING_2026-08-16.md
+ D Docs/pipeline/REPLICATION_DAG.md
+ D Docs/pipeline/REPLICATION_STATUS.md
+ D Docs/pipeline/TIER_A_DEFECTS.md
+?? Logs/full_rerun_2026-09-06/
+?? "Submission_AER_ Aug26/"
+?? quality_reports/sample_gap_investigation/

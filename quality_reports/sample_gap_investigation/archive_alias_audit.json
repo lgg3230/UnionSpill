@@ -1,0 +1,74 @@
+[
+  {
+    "path": "archive/Data/CBA_RAIS_firm_level_currentconn_overlay/cba_rais_firm_2007_2016.dta",
+    "symlink": true,
+    "resolved": "/gpfs/kellogg/proj/lgg3230/UnionSpill/archive/Data/CBA_RAIS_firm_level/cba_rais_firm_2007_2016.dta",
+    "exists": false
+  },
+  {
+    "path": "archive/Data/CBA_RAIS_firm_level_currentconn_overlay/cba_rais_firm_2009_2016_flows_1.dta",
+    "symlink": true,
+    "resolved": "/gpfs/kellogg/proj/lgg3230/UnionSpill/archive/Data/CBA_RAIS_firm_level/cba_rais_firm_2009_2016_flows_1.dta",
+    "exists": false
+  },
+  {
+    "path": "archive/Data/CBA_RAIS_firm_level_currentconn_overlay/cba_rais_firm_2007_1.dta",
+    "symlink": true,
+    "resolved": "/gpfs/kellogg/proj/lgg3230/UnionSpill/archive/Data/CBA_RAIS_firm_level/cba_rais_firm_2007_1.dta",
+    "exists": false
+  },
+  {
+    "path": "archive/Data/CBA_RAIS_firm_level_currentconn_overlay/lagos_sample_sep24_str.dta",
+    "symlink": true,
+    "resolved": "/gpfs/kellogg/proj/lgg3230/UnionSpill/archive/Data/CBA_RAIS_firm_level/lagos_sample_sep24_str.dta",
+    "exists": false
+  },
+  {
+    "path": "archive/Data/CBA_RAIS_firm_level_currentconn_overlay/lagos_sample_sep24_pct_unionexp_ext_df2.dta",
+    "symlink": false,
+    "resolved": "/gpfs/kellogg/proj/lgg3230/UnionSpill/archive/Data/CBA_RAIS_firm_level_currentconn_overlay/lagos_sample_sep24_pct_unionexp_ext_df2.dta",
+    "exists": true
+  },
+  {
+    "path": "archive/Data/CBA_RAIS_firm_level_currentconn_overlay/cba_rais_firm_unbal_2009_2016.parquet",
+    "symlink": true,
+    "resolved": "/gpfs/kellogg/proj/lgg3230/UnionSpill/archive/Data/CBA_RAIS_firm_level/cba_rais_firm_unbal_2009_2016.parquet",
+    "exists": false
+  },
+  {
+    "path": "archive/Data/CBA_RAIS_firm_level_currentconn_overlay/cba_rais_firm_unbal_flows.parquet",
+    "symlink": true,
+    "resolved": "/gpfs/kellogg/proj/lgg3230/UnionSpill/archive/Data/CBA_RAIS_firm_level/cba_rais_firm_unbal_flows.parquet",
+    "exists": false
+  },
+  {
+    "path": "archive/Data/CBA_RAIS_firm_level_currentconn_overlay/cba_rais_firm_2009_2016_flows_1cba.dta",
+    "symlink": true,
+    "resolved": "/gpfs/kellogg/proj/lgg3230/UnionSpill/archive/Data/CBA_RAIS_firm_level/cba_rais_firm_2009_2016_flows_1cba.dta",
+    "exists": false
+  },
+  {
+    "path": "archive/Data/CBA_RAIS_firm_level_currentconn_overlay/cba_rais_firm_unbal_flows.dta",
+    "symlink": true,
+    "resolved": "/gpfs/kellogg/proj/lgg3230/UnionSpill/archive/Data/CBA_RAIS_firm_level/cba_rais_firm_unbal_flows.dta",
+    "exists": false
+  },
+  {
+    "path": "archive/Data/CBA_RAIS_firm_level_currentconn_overlay/lagos_sample_sep24_test.dta",
+    "symlink": true,
+    "resolved": "/gpfs/kellogg/proj/lgg3230/UnionSpill/archive/Data/CBA_RAIS_firm_level/lagos_sample_sep24_test.dta",
+    "exists": false
+  },
+  {
+    "path": "archive/Data/CBA_RAIS_firm_level_currentconn_overlay/lagos_sample_sep24.dta",
+    "symlink": true,
+    "resolved": "/gpfs/kellogg/proj/lgg3230/UnionSpill/archive/Data/CBA_RAIS_firm_level/lagos_sample_sep24.dta",
+    "exists": false
+  },
+  {
+    "path": "archive/Data/CBA_RAIS_firm_level_currentconn_overlay/worker_estab_lagos_sample_sep24.parquet",
+    "symlink": true,
+    "resolved": "/gpfs/kellogg/proj/lgg3230/UnionSpill/archive/Data/CBA_RAIS_firm_level/worker_estab_lagos_sample_sep24.parquet",
+    "exists": false
+  }
+]

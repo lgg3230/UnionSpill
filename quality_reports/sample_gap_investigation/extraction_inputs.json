@@ -1,0 +1,219 @@
+[
+  {
+    "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/RAIS_aux/rais_mode_mun_ind.dta",
+    "size": 146700541,
+    "mtime": "2026-09-07T01:58:43.966534",
+    "stata_timestamp": "2026-09-07 01:58:00",
+    "rows": 5867911
+  },
+  {
+    "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/archive/Data/baseline_2026-09-06/rais_firm_rawmuni_backup/rais_firm_2007.dta",
+    "size": 684198698,
+    "mtime": "2026-09-06T21:13:42.522707",
+    "stata_timestamp": "2026-09-06 21:13:00",
+    "rows": 2552829
+  },
+  {
+    "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/archive/Data/baseline_2026-09-06/rais_firm_rawmuni_backup/rais_firm_2008.dta",
+    "size": 722772746,
+    "mtime": "2026-09-06T21:36:54.275099",
+    "stata_timestamp": "2026-09-06 21:36:00",
+    "rows": 2676786
+  },
+  {
+    "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/archive/Data/baseline_2026-09-06/rais_firm_rawmuni_backup/rais_firm_2009.dta",
+    "size": 734953261,
+    "mtime": "2026-09-06T22:00:10.952109",
+    "stata_timestamp": "2026-09-06 22:00:00",
+    "rows": 2794345
+  },
+  {
+    "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/RAIS_aux/unique_firms_2009.dta",
+    "size": 151848702,
+    "mtime": "2026-09-11T15:25:41.166695",
+    "stata_timestamp": "2026-09-11 15:25:00",
+    "rows": 3163417
+  },
+  {
+    "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data_may2025/rais_aux_sep24/unique_firms_2009.dta",
+    "size": 57977502,
+    "mtime": "2026-09-13T19:53:48.187153",
+    "stata_timestamp": "2025-09-18 13:42:00",
+    "rows": 1207767
+  },
+  {
+    "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/archive/Data/baseline_2026-09-06/rais_firm_rawmuni_backup/rais_firm_2010.dta",
+    "size": 776228481,
+    "mtime": "2026-09-06T22:25:31.334936",
+    "stata_timestamp": "2026-09-06 22:25:00",
+    "rows": 2951285
+  },
+  {
+    "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/RAIS_aux/unique_firms_2010.dta",
+    "size": 157856430,
+    "mtime": "2026-09-11T15:25:42.152894",
+    "stata_timestamp": "2026-09-11 15:25:00",
+    "rows": 3288578
+  },
+  {
+    "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data_may2025/rais_aux_sep24/unique_firms_2010.dta",
+    "size": 58470990,
+    "mtime": "2026-09-13T19:53:59.996634",
+    "stata_timestamp": "2025-09-18 13:42:00",
+    "rows": 1218048
+  },
+  {
+    "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/archive/Data/baseline_2026-09-06/rais_firm_rawmuni_backup/rais_firm_2011.dta",
+    "size": 815475971,
+    "mtime": "2026-09-06T22:52:59.111508",
+    "stata_timestamp": "2026-09-06 22:52:00",
+    "rows": 3100515
+  },
+  {
+    "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/RAIS_aux/unique_firms_2011.dta",
+    "size": 165738462,
+    "mtime": "2026-09-11T15:25:43.196597",
+    "stata_timestamp": "2026-09-11 15:25:00",
+    "rows": 3452787
+  },
+  {
+    "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data_may2025/rais_aux_sep24/unique_firms_2011.dta",
+    "size": 60723390,
+    "mtime": "2026-09-13T19:54:12.047262",
+    "stata_timestamp": "2025-09-18 13:42:00",
+    "rows": 1264973
+  },
+  {
+    "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/archive/Data/baseline_2026-09-06/rais_firm_rawmuni_backup/rais_firm_2012.dta",
+    "size": 846705117,
+    "mtime": "2026-09-06T23:21:28.822643",
+    "stata_timestamp": "2026-09-06 23:21:00",
+    "rows": 3219257
+  },
+  {
+    "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/RAIS_aux/unique_firms_2012.dta",
+    "size": 166556478,
+    "mtime": "2026-09-11T15:25:44.118882",
+    "stata_timestamp": "2026-09-11 15:25:00",
+    "rows": 3469829
+  },
+  {
+    "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data_may2025/rais_aux_sep24/unique_firms_2012.dta",
+    "size": 49625358,
+    "mtime": "2026-09-13T19:54:21.716862",
+    "stata_timestamp": "2025-09-18 13:42:00",
+    "rows": 1033764
+  },
+  {
+    "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/archive/Data/baseline_2026-09-06/rais_firm_rawmuni_backup/rais_firm_2013.dta",
+    "size": 879108821,
+    "mtime": "2026-09-06T23:53:22.762551",
+    "stata_timestamp": "2026-09-06 23:53:00",
+    "rows": 3342465
+  },
+  {
+    "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/RAIS_aux/unique_firms_2013.dta",
+    "size": 172805262,
+    "mtime": "2026-09-11T15:25:45.084742",
+    "stata_timestamp": "2026-09-11 15:25:00",
+    "rows": 3600012
+  },
+  {
+    "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data_may2025/rais_aux_sep24/unique_firms_2013.dta",
+    "size": 50908638,
+    "mtime": "2026-09-13T19:54:31.597115",
+    "stata_timestamp": "2025-09-18 13:42:00",
+    "rows": 1060499
+  },
+  {
+    "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/archive/Data/baseline_2026-09-06/rais_firm_rawmuni_backup/rais_firm_2014.dta",
+    "size": 905024841,
+    "mtime": "2026-09-07T00:24:57.568653",
+    "stata_timestamp": "2026-09-07 00:24:00",
+    "rows": 3441005
+  },
+  {
+    "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/RAIS_aux/unique_firms_2014.dta",
+    "size": 178680462,
+    "mtime": "2026-09-11T15:25:46.067769",
+    "stata_timestamp": "2026-09-11 15:25:00",
+    "rows": 3722412
+  },
+  {
+    "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data_may2025/rais_aux_sep24/unique_firms_2014.dta",
+    "size": 51168366,
+    "mtime": "2026-09-13T19:54:41.340490",
+    "stata_timestamp": "2025-09-18 13:42:00",
+    "rows": 1065910
+  },
+  {
+    "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/archive/Data/baseline_2026-09-06/rais_firm_rawmuni_backup/rais_firm_2015.dta",
+    "size": 911008091,
+    "mtime": "2026-09-07T00:55:53.277188",
+    "stata_timestamp": "2026-09-07 00:55:00",
+    "rows": 3463755
+  },
+  {
+    "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/RAIS_aux/unique_firms_2015.dta",
+    "size": 179420862,
+    "mtime": "2026-09-11T15:25:47.032869",
+    "stata_timestamp": "2026-09-11 15:25:00",
+    "rows": 3737837
+  },
+  {
+    "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data_may2025/rais_aux_sep24/unique_firms_2015.dta",
+    "size": 50335566,
+    "mtime": "2026-09-13T19:54:51.237111",
+    "stata_timestamp": "2025-09-18 13:42:00",
+    "rows": 1048560
+  },
+  {
+    "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/archive/Data/baseline_2026-09-06/rais_firm_rawmuni_backup/rais_firm_2016.dta",
+    "size": 899517358,
+    "mtime": "2026-09-07T01:23:33.387449",
+    "stata_timestamp": "2026-09-07 01:23:00",
+    "rows": 3420064
+  },
+  {
+    "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/RAIS_aux/unique_firms_2016.dta",
+    "size": 177020814,
+    "mtime": "2026-09-11T15:25:47.991917",
+    "stata_timestamp": "2026-09-11 15:25:00",
+    "rows": 3687836
+  },
+  {
+    "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data_may2025/rais_aux_sep24/unique_firms_2016.dta",
+    "size": 49015326,
+    "mtime": "2026-09-13T19:55:00.503291",
+    "stata_timestamp": "2025-09-18 13:42:00",
+    "rows": 1021055
+  },
+  {
+    "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/archive/Data/baseline_2026-09-06/lagos_sample_sep24_LEGACY_Oct2025.dta",
+    "size": 334592327,
+    "mtime": "2025-10-06T06:53:47.523820",
+    "stata_timestamp": "2025-10-06 06:53:00",
+    "rows": 174110
+  },
+  {
+    "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/CBA_RAIS_firm_level/lagos_sample_sep24_test.dta",
+    "size": 340037798,
+    "mtime": "2026-09-11T18:04:27.661369",
+    "stata_timestamp": "2026-09-11 18:04:00",
+    "rows": 174221
+  },
+  {
+    "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/CBA/cba_firm_exploded.dta",
+    "size": 469471469,
+    "mtime": "2026-09-11T15:26:33.214500",
+    "stata_timestamp": "2026-09-11 15:26:00",
+    "rows": 5523176
+  },
+  {
+    "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/archive/Data/baseline_2026-09-06/legacy_cba/cba_firm_exploded.dta",
+    "size": 469471469,
+    "mtime": "2025-09-24T23:26:06.889667",
+    "stata_timestamp": "2025-09-24 23:25:00",
+    "rows": 5523176
+  }
+]

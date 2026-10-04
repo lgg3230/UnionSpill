@@ -1,0 +1,37 @@
+{
+  "baseline": 16472,
+  "modal": 16462,
+  "missing": 29,
+  "additional": 19,
+  "common": 16443,
+  "live": 16476,
+  "live_missing": 84,
+  "live_additional": 88,
+  "worker_rows_unique_keys": 131776,
+  "worker_keys_by_year": {
+    "2009": 16472,
+    "2010": 16472,
+    "2011": 16472,
+    "2012": 16472,
+    "2013": 16472,
+    "2014": 16472,
+    "2015": 16472,
+    "2016": 16472
+  },
+  "baseline_vs_legacy_eligible_id_difference": 0,
+  "legacy_common_modal_rows": 162472,
+  "legacy_common_modal_by_year": {
+    "2007.0": 15106,
+    "2008.0": 15822,
+    "2009.0": 16443,
+    "2010.0": 16443,
+    "2011.0": 16443,
+    "2012.0": 16443,
+    "2013.0": 16443,
+    "2014.0": 16443,
+    "2015.0": 16443,
+    "2016.0": 16443
+  },
+  "legacy_duplicate_keys": 0,
+  "live_duplicate_keys": 0
+}

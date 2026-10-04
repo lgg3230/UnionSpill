@@ -1,0 +1,50 @@
+[
+  {
+    "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/RAIS_aux/lagos_sample_merge_worker.dta",
+    "bytes": 322703,
+    "md5": "f094f1ba82ef271337c5dd52f7fbc64f",
+    "pre_rerun_manifest_md5": "f094f1ba82ef271337c5dd52f7fbc64f",
+    "matches_pre_rerun_manifest": true,
+    "embedded_timestamp": "2025-08-15 11:26:00"
+  },
+  {
+    "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/RAIS_aux/balpan_file.dta",
+    "bytes": 53255423,
+    "md5": "d64c24cda3dda2b72a46143b03662a69",
+    "pre_rerun_manifest_md5": "d64c24cda3dda2b72a46143b03662a69",
+    "matches_pre_rerun_manifest": true,
+    "embedded_timestamp": "2025-05-06 19:04:00"
+  },
+  {
+    "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/RAIS_aux/balpan_no.dta",
+    "bytes": 53255423,
+    "md5": "8e120b422dac96c78bfed71b0f78b54a",
+    "pre_rerun_manifest_md5": "8e120b422dac96c78bfed71b0f78b54a",
+    "matches_pre_rerun_manifest": true,
+    "embedded_timestamp": "2025-05-06 19:03:00"
+  },
+  {
+    "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/RAIS_aux/balpan_start.dta",
+    "bytes": 53255423,
+    "md5": "858f4ab55955266d4be4df8ea1f7c6a9",
+    "pre_rerun_manifest_md5": "858f4ab55955266d4be4df8ea1f7c6a9",
+    "matches_pre_rerun_manifest": true,
+    "embedded_timestamp": "2025-05-06 19:03:00"
+  },
+  {
+    "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/CBA/collapsed_cba_firm.dta",
+    "bytes": 375521477,
+    "md5": "a5c5057e47679c7ac0afacecf670ca8a",
+    "pre_rerun_manifest_md5": "a5c5057e47679c7ac0afacecf670ca8a",
+    "matches_pre_rerun_manifest": true,
+    "embedded_timestamp": "2025-04-23 01:57:00"
+  },
+  {
+    "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/RAIS_aux/bal_pan.dta",
+    "bytes": 114603767,
+    "md5": "e20d4eb351b4535ea6b658639d0c0fd2",
+    "pre_rerun_manifest_md5": "325e795f79f340e1fee5fdf3e42a4377",
+    "matches_pre_rerun_manifest": false,
+    "embedded_timestamp": "2026-09-11 15:47:00"
+  }
+]

@@ -1,0 +1,152 @@
+{
+  "matched_rows": 131776,
+  "matched_establishments": 16472,
+  "common_variables": 297,
+  "variables_with_differences": 42,
+  "focus": [
+    {
+      "variable": "firm_emp",
+      "rows": 131776,
+      "exact_differences": 0,
+      "missingness_differences": 0,
+      "max_abs_difference": 0.0,
+      "differences_over_1e_6": 0.0
+    },
+    {
+      "variable": "hiring",
+      "rows": 131776,
+      "exact_differences": 0,
+      "missingness_differences": 0,
+      "max_abs_difference": 0.0,
+      "differences_over_1e_6": 0.0
+    },
+    {
+      "variable": "industry1",
+      "rows": 131776,
+      "exact_differences": 1432,
+      "missingness_differences": 0,
+      "max_abs_difference": NaN,
+      "differences_over_1e_6": NaN
+    },
+    {
+      "variable": "l_firm_emp",
+      "rows": 131776,
+      "exact_differences": 0,
+      "missingness_differences": 0,
+      "max_abs_difference": 0.0,
+      "differences_over_1e_6": 0.0
+    },
+    {
+      "variable": "layoffs",
+      "rows": 131776,
+      "exact_differences": 4201,
+      "missingness_differences": 0,
+      "max_abs_difference": 10.0,
+      "differences_over_1e_6": 4201.0
+    },
+    {
+      "variable": "leaves",
+      "rows": 131776,
+      "exact_differences": 0,
+      "missingness_differences": 0,
+      "max_abs_difference": 0.0,
+      "differences_over_1e_6": 0.0
+    },
+    {
+      "variable": "lr_remdezr",
+      "rows": 131776,
+      "exact_differences": 0,
+      "missingness_differences": 0,
+      "max_abs_difference": 0.0,
+      "differences_over_1e_6": 0.0
+    },
+    {
+      "variable": "lr_remdezr_h",
+      "rows": 131776,
+      "exact_differences": 0,
+      "missingness_differences": 0,
+      "max_abs_difference": 0.0,
+      "differences_over_1e_6": 0.0
+    },
+    {
+      "variable": "lr_remmedr",
+      "rows": 131776,
+      "exact_differences": 139,
+      "missingness_differences": 0,
+      "max_abs_difference": 0.07551288604736328,
+      "differences_over_1e_6": 136.0
+    },
+    {
+      "variable": "microregion",
+      "rows": 131776,
+      "exact_differences": 828,
+      "missingness_differences": 0,
+      "max_abs_difference": 41994.0,
+      "differences_over_1e_6": 828.0
+    },
+    {
+      "variable": "mode_base_month",
+      "rows": 131776,
+      "exact_differences": 0,
+      "missingness_differences": 0,
+      "max_abs_difference": 0.0,
+      "differences_over_1e_6": 0.0
+    },
+    {
+      "variable": "mode_union",
+      "rows": 131776,
+      "exact_differences": 0,
+      "missingness_differences": 0,
+      "max_abs_difference": 0.0,
+      "differences_over_1e_6": 0.0
+    },
+    {
+      "variable": "municipio",
+      "rows": 131776,
+      "exact_differences": 1373,
+      "missingness_differences": 0,
+      "max_abs_difference": NaN,
+      "differences_over_1e_6": NaN
+    },
+    {
+      "variable": "numb_clauses",
+      "rows": 131776,
+      "exact_differences": 0,
+      "missingness_differences": 0,
+      "max_abs_difference": 0.0,
+      "differences_over_1e_6": 0.0
+    },
+    {
+      "variable": "quits",
+      "rows": 131776,
+      "exact_differences": 3840,
+      "missingness_differences": 0,
+      "max_abs_difference": 1.666666567325592,
+      "differences_over_1e_6": 3840.0
+    },
+    {
+      "variable": "retention",
+      "rows": 131776,
+      "exact_differences": 1150,
+      "missingness_differences": 0,
+      "max_abs_difference": 1.0,
+      "differences_over_1e_6": 1150.0
+    },
+    {
+      "variable": "separations",
+      "rows": 131776,
+      "exact_differences": 9789,
+      "missingness_differences": 0,
+      "max_abs_difference": 4390.0,
+      "differences_over_1e_6": 9789.0
+    },
+    {
+      "variable": "turnover",
+      "rows": 131776,
+      "exact_differences": 9789,
+      "missingness_differences": 0,
+      "max_abs_difference": 94.1111068725586,
+      "differences_over_1e_6": 9789.0
+    }
+  ]
+}

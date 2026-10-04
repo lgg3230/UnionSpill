@@ -1,0 +1,55 @@
+{
+  "case_count": 48,
+  "unique_ids": 48,
+  "missing": 29,
+  "additional": 19,
+  "D1_matches_preserved_modal_case_membership": true,
+  "D2_changed_membership": 33,
+  "D3_restores_missing": 29,
+  "D3_peer_comparison": {
+    "compared_published_establishments": 278,
+    "compared_establishment_years": 2717,
+    "differences_by_field": {
+      "union_id": 0,
+      "avg_file_date": 0,
+      "min_file_date": 0,
+      "max_file_date": 0,
+      "start_date_stata": 0,
+      "end_date_stata": 0,
+      "cba2009_avg": 0,
+      "cba_pre2012_avg": 0,
+      "cba_post2012_avg": 0,
+      "lagos_sample_avg": 0,
+      "in_balanced_panel": 0,
+      "treat_ultra": 0
+    },
+    "any_difference_rows": 0,
+    "note": "D3 uses observed published output municipality as a diagnostic key, not a recovered historical intermediate; nulls compare equal; numeric dates compared exactly"
+  },
+  "older_sample_full_score": {
+    "august_sample_ids_before_balance": 17826,
+    "balanced_using_live_rais_presence": 16462,
+    "missing_baseline": 29,
+    "additional_baseline": 19,
+    "symmetric_difference_vs_preserved_modal": 0,
+    "restriction_caveat": "August sample combined with September 2026 balance flags, not an observed historical balanced export"
+  },
+  "stata_runs": {
+    "modal": {
+      "normal_completion": true,
+      "stata_errors": []
+    },
+    "raw": {
+      "normal_completion": true,
+      "stata_errors": []
+    },
+    "published": {
+      "normal_completion": true,
+      "stata_errors": []
+    }
+  },
+  "legacy_date_flag_disagreements": [],
+  "modal_date_flag_disagreements": [],
+  "raw_control_date_flag_disagreements": [],
+  "published_municipio_date_flag_disagreements": []
+}

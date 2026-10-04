@@ -1,0 +1,202 @@
+[
+  {
+    "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/RAIS_aux/spill_samples.dta",
+    "rows": 2794485,
+    "embedded_timestamp": "2025-07-09 01:18:00",
+    "columns": [
+      "identificad",
+      "sample_1",
+      "sample_2",
+      "sample_3"
+    ]
+  },
+  {
+    "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/RAIS_aux/lagos_sample_merge_worker.dta",
+    "rows": 17826,
+    "embedded_timestamp": "2025-08-15 11:26:00",
+    "columns": [
+      "lagos_sample_avg",
+      "identificad"
+    ]
+  },
+  {
+    "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/RAIS_aux/balpan_file.dta",
+    "rows": 1401326,
+    "embedded_timestamp": "2025-05-06 19:04:00",
+    "columns": [
+      "identificad",
+      "file_date_stata_f",
+      "year_f",
+      "cba2009_f",
+      "lagos_sample_f",
+      "treat_ultra_f",
+      "n_negs_f"
+    ]
+  },
+  {
+    "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/RAIS_aux/balpan_no.dta",
+    "rows": 1401326,
+    "embedded_timestamp": "2025-05-06 19:03:00",
+    "columns": [
+      "identificad",
+      "file_date_stata_n",
+      "year_n",
+      "cba2009_n",
+      "lagos_sample_n",
+      "treat_ultra_n",
+      "n_negs_n"
+    ]
+  },
+  {
+    "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/RAIS_aux/balpan_start.dta",
+    "rows": 1401326,
+    "embedded_timestamp": "2025-05-06 19:03:00",
+    "columns": [
+      "identificad",
+      "file_date_stata_s",
+      "year_s",
+      "cba2009_s",
+      "lagos_sample_s",
+      "treat_ultra_s",
+      "n_negs_s"
+    ]
+  },
+  {
+    "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/CBA/collapsed_cba_firm.dta",
+    "rows": 531757,
+    "embedded_timestamp": "2025-04-23 01:57:00",
+    "note": "older schema and m:m producer; not proven published input"
+  },
+  {
+    "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/CBA_RAIS_firm_level/fullrais_panel/worker_panel_fullrais_2009.parquet",
+    "columns": [
+      "identificad",
+      "year",
+      "lr_remdezr",
+      "lr_hourly",
+      "age",
+      "race_group",
+      "genero",
+      "grinstrucao",
+      "tempempr"
+    ],
+    "rows": 39598401
+  },
+  {
+    "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/CBA_RAIS_firm_level/fullrais_panel/worker_panel_fullrais_2010.parquet",
+    "columns": [
+      "identificad",
+      "year",
+      "lr_remdezr",
+      "lr_hourly",
+      "age",
+      "race_group",
+      "genero",
+      "grinstrucao",
+      "tempempr"
+    ],
+    "rows": 42237285
+  },
+  {
+    "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/CBA_RAIS_firm_level/fullrais_panel/worker_panel_fullrais_2011.parquet",
+    "columns": [
+      "identificad",
+      "year",
+      "lr_remdezr",
+      "lr_hourly",
+      "age",
+      "race_group",
+      "genero",
+      "grinstrucao",
+      "tempempr"
+    ],
+    "rows": 44382822
+  },
+  {
+    "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/CBA_RAIS_firm_level/fullrais_panel/worker_panel_fullrais_2012.parquet",
+    "columns": [
+      "identificad",
+      "year",
+      "lr_remdezr",
+      "lr_hourly",
+      "age",
+      "race_group",
+      "genero",
+      "grinstrucao",
+      "tempempr"
+    ],
+    "rows": 45621759
+  },
+  {
+    "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/CBA_RAIS_firm_level/fullrais_panel/worker_panel_fullrais_2013.parquet",
+    "columns": [
+      "identificad",
+      "year",
+      "lr_remdezr",
+      "lr_hourly",
+      "age",
+      "race_group",
+      "genero",
+      "grinstrucao",
+      "tempempr"
+    ],
+    "rows": 47127988
+  },
+  {
+    "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/CBA_RAIS_firm_level/fullrais_panel/worker_panel_fullrais_2014.parquet",
+    "columns": [
+      "identificad",
+      "year",
+      "lr_remdezr",
+      "lr_hourly",
+      "age",
+      "race_group",
+      "genero",
+      "grinstrucao",
+      "tempempr"
+    ],
+    "rows": 47832921
+  },
+  {
+    "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/CBA_RAIS_firm_level/fullrais_panel/worker_panel_fullrais_2015.parquet",
+    "columns": [
+      "identificad",
+      "year",
+      "lr_remdezr",
+      "lr_hourly",
+      "age",
+      "race_group",
+      "genero",
+      "grinstrucao",
+      "tempempr"
+    ],
+    "rows": 46599453
+  },
+  {
+    "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/CBA_RAIS_firm_level/fullrais_panel/worker_panel_fullrais_2016.parquet",
+    "columns": [
+      "identificad",
+      "year",
+      "lr_remdezr",
+      "lr_hourly",
+      "age",
+      "race_group",
+      "genero",
+      "grinstrucao",
+      "tempempr"
+    ],
+    "rows": 44655800
+  },
+  {
+    "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/RAIS_aux/worker_estab_all_years.parquet",
+    "range": [
+      [
+        "00000000000070",
+        "00005275000118",
+        2009,
+        2016,
+        1000000
+      ]
+    ]
+  }
+]

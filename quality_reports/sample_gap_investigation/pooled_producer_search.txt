@@ -1,0 +1,9 @@
+.gitignore:176:Data/RAIS_aux/rais_unique_estab_09_16.dta
+archive/Programs/Old/032_clean_cba.do:163: joinby identificad_8 municipio  using "$rais_aux/rais_unique_estab_09_16.dta" // joinby performs all the interactions between datasets that have the same municipality and firm id
+archive/Programs/Old/032_clean_cba.do:167: joinby identificad_8 state  using "$rais_aux/rais_unique_estab_09_16.dta"
+archive/Programs/Old/032_clean_cba.do:171: joinby identificad_8 using "$rais_aux/rais_unique_estab_09_16.dta"
+archive/Programs/Old/033_clean_cba.do:156: joinby identificad_8 municipio  using "$rais_aux/rais_unique_estab_09_16.dta" // joinby performs all the interactions between datasets that have the same municipality and firm id
+archive/Programs/Old/033_clean_cba.do:160: joinby identificad_8 state  using "$rais_aux/rais_unique_estab_09_16.dta"
+archive/Programs/Old/033_clean_cba.do:164: joinby identificad_8 using "$rais_aux/rais_unique_estab_09_16.dta"
+quality_reports/DELETED_2026-09-06.md:56:| 0.16 | 2025-05-03 | 2 | `Data/RAIS_aux/rais_unique_estab_09_16.dta` |
+quality_reports/RECLAIM_MANIFEST_2026-09-06.md:114:| 0.16 | 2025-05-03 | `Data/RAIS_aux/rais_unique_estab_09_16.dta` | 2 | 0 |

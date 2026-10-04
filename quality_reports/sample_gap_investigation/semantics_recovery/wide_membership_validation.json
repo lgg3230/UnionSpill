@@ -1,0 +1,27 @@
+{
+  "baseline": 16472,
+  "candidate": 16472,
+  "common": 16472,
+  "missing": 0,
+  "additional": 0,
+  "candidate_id_year_rows": 131776,
+  "compared_published_id_year_rows": 131776,
+  "differences_by_field": {
+    "union_id": 0,
+    "avg_file_date": 0,
+    "min_file_date": 0,
+    "max_file_date": 0,
+    "start_date_stata": 0,
+    "end_date_stata": 0,
+    "cba2009_avg": 0,
+    "cba_pre2012_avg": 0,
+    "cba_post2012_avg": 0,
+    "lagos_sample_avg": 0,
+    "in_balanced_panel": 0,
+    "treat_ultra": 0
+  },
+  "any_difference_rows": 0,
+  "original_discrepancies_resolved": 48,
+  "candidate_inputs_use_published_ids_or_municipalities": false,
+  "production_pin_changed": false
+}

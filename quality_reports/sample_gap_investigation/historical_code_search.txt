@@ -1,0 +1,6 @@
+f613ea6 Repair the chain so it runs end to end from 0000_master.do
+074cb45 Make the chain runnable from raw RAIS: tier-A repair, determinism, renumbering
+80bca4c Add main data pipeline, exit tables, layer_connectivity standalone scripts; update gitignore
+552604f created scripts to transform datasets into parquet, created code to separate new hires from incumbents, created do file to merge worker level dataset to firm level dataset to dataset with firm level cba measures.
+1b709bf created dofile to generate union exposition, removed in_balenced_panel from worker selection and created worker selection do file
+0e863ea A lot of changes

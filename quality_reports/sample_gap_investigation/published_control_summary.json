@@ -1,0 +1,20 @@
+{
+  "compared_published_establishments": 278,
+  "compared_establishment_years": 2717,
+  "differences_by_field": {
+    "union_id": 0,
+    "avg_file_date": 0,
+    "min_file_date": 0,
+    "max_file_date": 0,
+    "start_date_stata": 0,
+    "end_date_stata": 0,
+    "cba2009_avg": 0,
+    "cba_pre2012_avg": 0,
+    "cba_post2012_avg": 0,
+    "lagos_sample_avg": 0,
+    "in_balanced_panel": 0,
+    "treat_ultra": 0
+  },
+  "any_difference_rows": 0,
+  "note": "D3 uses observed published output municipality as a diagnostic key, not a recovered historical intermediate; nulls compare equal; numeric dates compared exactly"
+}

@@ -1,0 +1,553 @@
+{
+  "git_head": "f613ea6084a57d91236cfa98cc778e8d6c1f771c",
+  "historical_before_commit": "786d43c01a99a076141a27c8ef400146a1a580d3",
+  "historical_window_change_commit": "ecf87cdedea266f2aaefba7e323b4f1d4f5648cd",
+  "protected_hashes_verified": [
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/CBA_RAIS_firm_level/lagos_sample_sep24.dta",
+      "resolved_path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/CBA_RAIS_firm_level/lagos_sample_sep24.dta",
+      "bytes": 334592327,
+      "mtime": "2025-10-06T06:53:47.523820",
+      "rows": 174110,
+      "stata_timestamp": "2025-10-06 06:53:00",
+      "md5": "232e8af202087211d276af84bb22cd6c"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/archive/Data/baseline_2026-09-06/lagos_sample_sep24_LEGACY_Oct2025.dta",
+      "resolved_path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/archive/Data/baseline_2026-09-06/lagos_sample_sep24_LEGACY_Oct2025.dta",
+      "bytes": 334592327,
+      "mtime": "2025-10-06T06:53:47.523820",
+      "rows": 174110,
+      "stata_timestamp": "2025-10-06 06:53:00",
+      "md5": "232e8af202087211d276af84bb22cd6c"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/archive/Data/baseline_2026-09-06/worker_panel_lagos_BASELINE.parquet",
+      "resolved_path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/archive/Data/baseline_2026-09-06/worker_panel_lagos_BASELINE.parquet",
+      "bytes": 1236372731,
+      "mtime": "2026-02-22T04:36:04.261057",
+      "md5": "8b324dc4e6866c69b2b22c3b6109954b"
+    }
+  ],
+  "upstream_inputs": [
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/archive/Data/baseline_2026-09-06/rais_firm_rawmuni_backup/rais_firm_2007.dta",
+      "resolved_path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/archive/Data/baseline_2026-09-06/rais_firm_rawmuni_backup/rais_firm_2007.dta",
+      "bytes": 684198698,
+      "mtime": "2026-09-06T21:13:42.522707",
+      "rows": 2552829,
+      "stata_timestamp": "2026-09-06 21:13:00"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/RAIS_aux/worker_estab_2007.dta",
+      "resolved_path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/RAIS_aux/worker_estab_2007.dta",
+      "bytes": 5528985455,
+      "mtime": "2026-09-06T21:12:49.898354",
+      "rows": 36136941,
+      "stata_timestamp": "2026-09-06 21:12:00"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/archive/Data/baseline_2026-09-06/rais_firm_rawmuni_backup/rais_firm_2008.dta",
+      "resolved_path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/archive/Data/baseline_2026-09-06/rais_firm_rawmuni_backup/rais_firm_2008.dta",
+      "bytes": 722772746,
+      "mtime": "2026-09-06T21:36:54.275099",
+      "rows": 2676786,
+      "stata_timestamp": "2026-09-06 21:36:00"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/RAIS_aux/worker_estab_2008.dta",
+      "resolved_path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/RAIS_aux/worker_estab_2008.dta",
+      "bytes": 5781028691,
+      "mtime": "2026-09-06T21:36:03.399693",
+      "rows": 38032863,
+      "stata_timestamp": "2026-09-06 21:36:00"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/archive/Data/baseline_2026-09-06/rais_firm_rawmuni_backup/rais_firm_2009.dta",
+      "resolved_path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/archive/Data/baseline_2026-09-06/rais_firm_rawmuni_backup/rais_firm_2009.dta",
+      "bytes": 734953261,
+      "mtime": "2026-09-06T22:00:10.952109",
+      "rows": 2794345,
+      "stata_timestamp": "2026-09-06 22:00:00"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/RAIS_aux/worker_estab_2009.dta",
+      "resolved_path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/RAIS_aux/worker_estab_2009.dta",
+      "bytes": 5737611305,
+      "mtime": "2026-09-06T21:59:18.854803",
+      "rows": 39569502,
+      "stata_timestamp": "2026-09-06 21:59:00"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/archive/Data/baseline_2026-09-06/rais_firm_rawmuni_backup/rais_firm_2010.dta",
+      "resolved_path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/archive/Data/baseline_2026-09-06/rais_firm_rawmuni_backup/rais_firm_2010.dta",
+      "bytes": 776228481,
+      "mtime": "2026-09-06T22:25:31.334936",
+      "rows": 2951285,
+      "stata_timestamp": "2026-09-06 22:25:00"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/RAIS_aux/worker_estab_2010.dta",
+      "resolved_path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/RAIS_aux/worker_estab_2010.dta",
+      "bytes": 6119369945,
+      "mtime": "2026-09-06T22:24:35.415941",
+      "rows": 42202320,
+      "stata_timestamp": "2026-09-06 22:24:00"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/archive/Data/baseline_2026-09-06/rais_firm_rawmuni_backup/rais_firm_2011.dta",
+      "resolved_path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/archive/Data/baseline_2026-09-06/rais_firm_rawmuni_backup/rais_firm_2011.dta",
+      "bytes": 815475971,
+      "mtime": "2026-09-06T22:52:59.111508",
+      "rows": 3100515,
+      "stata_timestamp": "2026-09-06 22:52:00"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/RAIS_aux/worker_estab_2011.dta",
+      "resolved_path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/RAIS_aux/worker_estab_2011.dta",
+      "bytes": 6120072920,
+      "mtime": "2026-09-06T22:51:58.862010",
+      "rows": 44348105,
+      "stata_timestamp": "2026-09-06 22:51:00"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/archive/Data/baseline_2026-09-06/rais_firm_rawmuni_backup/rais_firm_2012.dta",
+      "resolved_path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/archive/Data/baseline_2026-09-06/rais_firm_rawmuni_backup/rais_firm_2012.dta",
+      "bytes": 846705117,
+      "mtime": "2026-09-06T23:21:28.822643",
+      "rows": 3219257,
+      "stata_timestamp": "2026-09-06 23:21:00"
+    },
+    {
+      "path": "/kellogg/proj/lgg3230/RAIS/output/data/full/RAIS_2012.dta",
+      "resolved_path": "/gpfs/kellogg/proj/lgg3230/RAIS/output/data/full/RAIS_2012.dta",
+      "bytes": 18185029503,
+      "mtime": "2024-02-23T15:06:35.155330",
+      "rows": 73326485,
+      "stata_timestamp": "2020-05-26 01:17:00"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/archive/Data/baseline_2026-09-06/rais_firm_rawmuni_backup/rais_firm_2013.dta",
+      "resolved_path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/archive/Data/baseline_2026-09-06/rais_firm_rawmuni_backup/rais_firm_2013.dta",
+      "bytes": 879108821,
+      "mtime": "2026-09-06T23:53:22.762551",
+      "rows": 3342465,
+      "stata_timestamp": "2026-09-06 23:53:00"
+    },
+    {
+      "path": "/kellogg/proj/lgg3230/RAIS/output/data/full/RAIS_2013.dta",
+      "resolved_path": "/gpfs/kellogg/proj/lgg3230/RAIS/output/data/full/RAIS_2013.dta",
+      "bytes": 18699387703,
+      "mtime": "2024-02-23T15:08:06.855304",
+      "rows": 75400510,
+      "stata_timestamp": "2020-05-26 01:27:00"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/archive/Data/baseline_2026-09-06/rais_firm_rawmuni_backup/rais_firm_2014.dta",
+      "resolved_path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/archive/Data/baseline_2026-09-06/rais_firm_rawmuni_backup/rais_firm_2014.dta",
+      "bytes": 905024841,
+      "mtime": "2026-09-07T00:24:57.568653",
+      "rows": 3441005,
+      "stata_timestamp": "2026-09-07 00:24:00"
+    },
+    {
+      "path": "/kellogg/proj/lgg3230/RAIS/output/data/full/RAIS_2014.dta",
+      "resolved_path": "/gpfs/kellogg/proj/lgg3230/RAIS/output/data/full/RAIS_2014.dta",
+      "bytes": 19255202802,
+      "mtime": "2024-02-23T15:09:20.008915",
+      "rows": 76107279,
+      "stata_timestamp": "2020-05-26 01:41:00"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/archive/Data/baseline_2026-09-06/rais_firm_rawmuni_backup/rais_firm_2015.dta",
+      "resolved_path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/archive/Data/baseline_2026-09-06/rais_firm_rawmuni_backup/rais_firm_2015.dta",
+      "bytes": 911008091,
+      "mtime": "2026-09-07T00:55:53.277188",
+      "rows": 3463755,
+      "stata_timestamp": "2026-09-07 00:55:00"
+    },
+    {
+      "path": "/kellogg/proj/lgg3230/RAIS/output/data/full/RAIS_2015.dta",
+      "resolved_path": "/gpfs/kellogg/proj/lgg3230/RAIS/output/data/full/RAIS_2015.dta",
+      "bytes": 29808395992,
+      "mtime": "2024-02-23T15:08:23.944610",
+      "rows": 72175102,
+      "stata_timestamp": "2020-05-26 03:22:00"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/archive/Data/baseline_2026-09-06/rais_firm_rawmuni_backup/rais_firm_2016.dta",
+      "resolved_path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/archive/Data/baseline_2026-09-06/rais_firm_rawmuni_backup/rais_firm_2016.dta",
+      "bytes": 899517358,
+      "mtime": "2026-09-07T01:23:33.387449",
+      "rows": 3420064,
+      "stata_timestamp": "2026-09-07 01:23:00"
+    },
+    {
+      "path": "/kellogg/proj/lgg3230/RAIS/output/data/full/RAIS_2016.dta",
+      "resolved_path": "/gpfs/kellogg/proj/lgg3230/RAIS/output/data/full/RAIS_2016.dta",
+      "bytes": 27529365891,
+      "mtime": "2024-02-23T15:10:06.438964",
+      "rows": 67144598,
+      "stata_timestamp": "2020-05-26 03:03:00"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/CBA/cba_firm_exploded.dta",
+      "resolved_path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/CBA/cba_firm_exploded.dta",
+      "bytes": 469471469,
+      "mtime": "2026-09-11T15:26:33.214500",
+      "rows": 5523176,
+      "stata_timestamp": "2026-09-11 15:26:00",
+      "md5": "c7d5232a91f15aff73518f69964ad773"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/CBA/cba_coverage_clean.dta",
+      "resolved_path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/CBA/cba_coverage_clean.dta",
+      "bytes": 610078378,
+      "mtime": "2026-09-11T15:25:54.220006",
+      "rows": 597706,
+      "stata_timestamp": "2026-09-11 15:25:00",
+      "md5": "671ab867a65d7768297ba79d8969972d"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/IBGE/mun_microregion_ibge.dta",
+      "resolved_path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/IBGE/mun_microregion_ibge.dta",
+      "bytes": 63105,
+      "mtime": "2025-05-02T16:30:05.175101",
+      "rows": 5570,
+      "stata_timestamp": "2025-05-02 16:26:00",
+      "md5": "879a526a042a16fb627487f080fc26f3"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/archive/Data/baseline_2026-09-06/legacy_cba/cba_firm_exploded.dta",
+      "resolved_path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/archive/Data/baseline_2026-09-06/legacy_cba/cba_firm_exploded.dta",
+      "bytes": 469471469,
+      "mtime": "2025-09-24T23:26:06.889667",
+      "rows": 5523176,
+      "stata_timestamp": "2025-09-24 23:25:00",
+      "md5": "516331346f0873180b4fe87b608a0317"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/RAIS_aux/rais_mode_mun_ind.dta",
+      "resolved_path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/RAIS_aux/rais_mode_mun_ind.dta",
+      "bytes": 146700541,
+      "mtime": "2026-09-07T01:58:43.966534",
+      "rows": 5867911,
+      "stata_timestamp": "2026-09-07 01:58:00",
+      "md5": "669877365309d7abc4bd2619016fc394"
+    }
+  ],
+  "code": [
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/quality_reports/sample_gap_investigation/semantics_recovery/audit_wide_dictionary.py",
+      "resolved_path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/quality_reports/sample_gap_investigation/semantics_recovery/audit_wide_dictionary.py",
+      "bytes": 2824,
+      "mtime": "2026-09-22T18:23:11.109522",
+      "md5": "00b399b6fe0e0d34e0d41235bf55d22c"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/quality_reports/sample_gap_investigation/semantics_recovery/build_full_worker_counts.do",
+      "resolved_path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/quality_reports/sample_gap_investigation/semantics_recovery/build_full_worker_counts.do",
+      "bytes": 2203,
+      "mtime": "2026-09-22T17:05:12.568559",
+      "md5": "c9c03bc9a59fa3c42d33929250667a19"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/quality_reports/sample_gap_investigation/semantics_recovery/build_wide_dictionary.do",
+      "resolved_path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/quality_reports/sample_gap_investigation/semantics_recovery/build_wide_dictionary.do",
+      "bytes": 2574,
+      "mtime": "2026-09-22T18:23:29.768992",
+      "md5": "15095d9ec9f878286a4a1e656b540ff0"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/quality_reports/sample_gap_investigation/semantics_recovery/check_early_modes.py",
+      "resolved_path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/quality_reports/sample_gap_investigation/semantics_recovery/check_early_modes.py",
+      "bytes": 1645,
+      "mtime": "2026-09-22T16:51:47.982325",
+      "md5": "0d5a94113e6946054267974457ef88f0"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/quality_reports/sample_gap_investigation/semantics_recovery/check_wider_window.py",
+      "resolved_path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/quality_reports/sample_gap_investigation/semantics_recovery/check_wider_window.py",
+      "bytes": 2301,
+      "mtime": "2026-09-22T16:53:35.497625",
+      "md5": "195e5648b86815286cd5f5118f1ff6a3"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/quality_reports/sample_gap_investigation/semantics_recovery/compare_cba_builds.do",
+      "resolved_path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/quality_reports/sample_gap_investigation/semantics_recovery/compare_cba_builds.do",
+      "bytes": 548,
+      "mtime": "2026-09-22T18:37:52.171999",
+      "md5": "91893f86b8600876dd1d9dcbb5623dee"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/quality_reports/sample_gap_investigation/semantics_recovery/compare_full_historical_cba.do",
+      "resolved_path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/quality_reports/sample_gap_investigation/semantics_recovery/compare_full_historical_cba.do",
+      "bytes": 525,
+      "mtime": "2026-09-22T18:34:14.732890",
+      "md5": "3934326ef3a2a9ac985424c479f8d489"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/quality_reports/sample_gap_investigation/semantics_recovery/enrich_wide_cases.py",
+      "resolved_path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/quality_reports/sample_gap_investigation/semantics_recovery/enrich_wide_cases.py",
+      "bytes": 4307,
+      "mtime": "2026-09-22T18:48:35.351681",
+      "md5": "e8d1b31bbc22f46cc1d1af9544dca90a"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/quality_reports/sample_gap_investigation/semantics_recovery/extract_raw_2009.do",
+      "resolved_path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/quality_reports/sample_gap_investigation/semantics_recovery/extract_raw_2009.do",
+      "bytes": 1071,
+      "mtime": "2026-09-22T16:52:23.205211",
+      "md5": "a90b40eb3193f0ae72f33f38c30400aa"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/quality_reports/sample_gap_investigation/semantics_recovery/extract_wide_case_panels.do",
+      "resolved_path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/quality_reports/sample_gap_investigation/semantics_recovery/extract_wide_case_panels.do",
+      "bytes": 1107,
+      "mtime": "2026-09-22T18:40:33.945955",
+      "md5": "67ed8d773699b220acab3b9e5a256d6d"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/quality_reports/sample_gap_investigation/semantics_recovery/finalize_recovery.py",
+      "resolved_path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/quality_reports/sample_gap_investigation/semantics_recovery/finalize_recovery.py",
+      "bytes": 5119,
+      "mtime": "2026-09-22T19:00:00.816838",
+      "md5": "ffe97ec481ee2e17cb6c265644f0a7dc"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/quality_reports/sample_gap_investigation/semantics_recovery/historical_011_before_ecf87cd.do",
+      "resolved_path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/quality_reports/sample_gap_investigation/semantics_recovery/historical_011_before_ecf87cd.do",
+      "bytes": 29503,
+      "mtime": "2026-09-22T17:21:21.366112",
+      "md5": "34dcbd7b9d2b1e7ddac72869bc1e52b6"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/quality_reports/sample_gap_investigation/semantics_recovery/historical_031_before_ecf87cd.do",
+      "resolved_path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/quality_reports/sample_gap_investigation/semantics_recovery/historical_031_before_ecf87cd.do",
+      "bytes": 27938,
+      "mtime": "2026-09-22T18:33:13.237001",
+      "md5": "faa65a5ec77d8615be500fd9194a01e3"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/quality_reports/sample_gap_investigation/semantics_recovery/historical_031_vs_current_1020_suffix.patch",
+      "resolved_path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/quality_reports/sample_gap_investigation/semantics_recovery/historical_031_vs_current_1020_suffix.patch",
+      "bytes": 1,
+      "mtime": "2026-09-22T18:33:24.597806",
+      "md5": "68b329da9893e34099c7d8ad5cb9c940"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/quality_reports/sample_gap_investigation/semantics_recovery/historical_041_before_ecf87cd.do",
+      "resolved_path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/quality_reports/sample_gap_investigation/semantics_recovery/historical_041_before_ecf87cd.do",
+      "bytes": 11505,
+      "mtime": "2026-09-22T18:33:13.230825",
+      "md5": "e1ba8cab946d888cf6cb75292cc7e801"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/quality_reports/sample_gap_investigation/semantics_recovery/historical_041_vs_current_1030.patch",
+      "resolved_path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/quality_reports/sample_gap_investigation/semantics_recovery/historical_041_vs_current_1030.patch",
+      "bytes": 644,
+      "mtime": "2026-09-22T18:33:13.290452",
+      "md5": "d085e13eb574e59de7edea8054e0c755"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/quality_reports/sample_gap_investigation/semantics_recovery/historical_window_change.patch",
+      "resolved_path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/quality_reports/sample_gap_investigation/semantics_recovery/historical_window_change.patch",
+      "bytes": 1432,
+      "mtime": "2026-09-22T17:21:21.372257",
+      "md5": "abd315ca6cfc1a5b44dd58dd013b5337"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/quality_reports/sample_gap_investigation/semantics_recovery/independent_eligibility_check.do",
+      "resolved_path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/quality_reports/sample_gap_investigation/semantics_recovery/independent_eligibility_check.do",
+      "bytes": 3647,
+      "mtime": "2026-09-22T18:51:26.615605",
+      "md5": "3ed38c5179eb09a74959c2eeaef0b6e5"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/quality_reports/sample_gap_investigation/semantics_recovery/prepare_full_annual.do",
+      "resolved_path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/quality_reports/sample_gap_investigation/semantics_recovery/prepare_full_annual.do",
+      "bytes": 419,
+      "mtime": "2026-09-22T17:05:47.164262",
+      "md5": "8b555fd1c747c149b6dc9951684390f6"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/quality_reports/sample_gap_investigation/semantics_recovery/profile_actual_spells.do",
+      "resolved_path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/quality_reports/sample_gap_investigation/semantics_recovery/profile_actual_spells.do",
+      "bytes": 2553,
+      "mtime": "2026-09-22T17:06:34.494926",
+      "md5": "9457b8bca160699d69662610f185aacb"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/quality_reports/sample_gap_investigation/semantics_recovery/run_wide_full.do",
+      "resolved_path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/quality_reports/sample_gap_investigation/semantics_recovery/run_wide_full.do",
+      "bytes": 1017,
+      "mtime": "2026-09-22T18:24:53.427229",
+      "md5": "5584eb0660219ad48ba25e7ccc217df1"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/quality_reports/sample_gap_investigation/semantics_recovery/score_wide_candidate.py",
+      "resolved_path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/quality_reports/sample_gap_investigation/semantics_recovery/score_wide_candidate.py",
+      "bytes": 3341,
+      "mtime": "2026-09-22T18:53:11.521779",
+      "md5": "adf78f35e5a80d78065bc32e6af273f3"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/quality_reports/sample_gap_investigation/semantics_recovery/setup_candidate.py",
+      "resolved_path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/quality_reports/sample_gap_investigation/semantics_recovery/setup_candidate.py",
+      "bytes": 719,
+      "mtime": "2026-09-22T18:42:03.971472",
+      "md5": "8721b608068032460fbc21d1d9515ed3"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/quality_reports/sample_gap_investigation/semantics_recovery/stata_semantics.do",
+      "resolved_path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/quality_reports/sample_gap_investigation/semantics_recovery/stata_semantics.do",
+      "bytes": 2256,
+      "mtime": "2026-09-22T16:50:46.744689",
+      "md5": "f68924074a6061024f39c23b0534b447"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/quality_reports/sample_gap_investigation/semantics_recovery/supplemental_semantics.do",
+      "resolved_path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/quality_reports/sample_gap_investigation/semantics_recovery/supplemental_semantics.do",
+      "bytes": 649,
+      "mtime": "2026-09-22T18:27:30.404202",
+      "md5": "edd88ace13f1586cf73b655598de5757"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/quality_reports/sample_gap_investigation/semantics_recovery/uncertain_mode_eligibility.do",
+      "resolved_path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/quality_reports/sample_gap_investigation/semantics_recovery/uncertain_mode_eligibility.do",
+      "bytes": 1271,
+      "mtime": "2026-09-22T18:28:43.979062",
+      "md5": "7a18c681e7600bee5721563d98ed9dc3"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/quality_reports/sample_gap_investigation/semantics_recovery/validate_cba_keys.do",
+      "resolved_path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/quality_reports/sample_gap_investigation/semantics_recovery/validate_cba_keys.do",
+      "bytes": 240,
+      "mtime": "2026-09-22T18:43:06.209151",
+      "md5": "0273c77eb913a901283e5ba53cf74731"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/quality_reports/sample_gap_investigation/semantics_recovery/validate_current_mode.do",
+      "resolved_path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/quality_reports/sample_gap_investigation/semantics_recovery/validate_current_mode.do",
+      "bytes": 1333,
+      "mtime": "2026-09-22T18:25:59.361513",
+      "md5": "8d2994a9e73012e8d0c3c98605bf49fe"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/quality_reports/sample_gap_investigation/semantics_recovery/verify_cba_build.do",
+      "resolved_path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/quality_reports/sample_gap_investigation/semantics_recovery/verify_cba_build.do",
+      "bytes": 584,
+      "mtime": "2026-09-22T18:37:03.102930",
+      "md5": "17ea546331cf1233dcfdf57378f2919d"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/quality_reports/sample_gap_investigation/semantics_recovery/verify_full_merge.do",
+      "resolved_path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/quality_reports/sample_gap_investigation/semantics_recovery/verify_full_merge.do",
+      "bytes": 1452,
+      "mtime": "2026-09-22T18:37:52.169216",
+      "md5": "ba656083a8cae973bd4ee5f0797aee99"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/quality_reports/sample_gap_investigation/semantics_recovery/worker_early_modes.do",
+      "resolved_path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/quality_reports/sample_gap_investigation/semantics_recovery/worker_early_modes.do",
+      "bytes": 828,
+      "mtime": "2026-09-22T16:50:46.746891",
+      "md5": "8a0f89fbd765ae1e933efb5e490623f2"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/quality_reports/sample_gap_investigation/1020_suffix.do",
+      "resolved_path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/quality_reports/sample_gap_investigation/1020_suffix.do",
+      "bytes": 22912,
+      "mtime": "2026-09-22T15:59:51.623427",
+      "md5": "69f407e3bedd51b053bc3c96ba88c683"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Programs/sample_construction/1010_rais_clean.do",
+      "resolved_path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Programs/sample_construction/1010_rais_clean.do",
+      "bytes": 33130,
+      "mtime": "2026-09-13T16:50:36.332759",
+      "md5": "9d8d16f32a70c7e3c46238dce60c06fb"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Programs/sample_construction/1030_merge_cba_rais.do",
+      "resolved_path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Programs/sample_construction/1030_merge_cba_rais.do",
+      "bytes": 11515,
+      "mtime": "2026-08-16T16:27:49.481687",
+      "md5": "8fa45b43ca1a93e836991046a57039e6"
+    }
+  ],
+  "key_outputs": [
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/sample_gap_investigation/wide_2007_2016/rais_aux/rais_mode_mun_ind.dta",
+      "resolved_path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/sample_gap_investigation/wide_2007_2016/rais_aux/rais_mode_mun_ind.dta",
+      "bytes": 127338382,
+      "mtime": "2026-09-22T18:24:45.218625",
+      "rows": 6366774,
+      "stata_timestamp": "2026-09-22 18:24:00",
+      "md5": "d00149d9a03e5764e99e30408982e7e8"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/sample_gap_investigation/wide_2007_2016/rais_firm/eligible_panel.dta",
+      "resolved_path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/sample_gap_investigation/wide_2007_2016/rais_firm/eligible_panel.dta",
+      "bytes": 11870926,
+      "mtime": "2026-09-22T18:56:42.569329",
+      "rows": 131776,
+      "stata_timestamp": "2026-09-22 18:56:00",
+      "md5": "ffdd21f7a4e55a09bf783cb80ebb1054"
+    }
+  ],
+  "large_raw_inputs_fingerprint_limit": "Raw RAIS and annual worker/firm files are recorded by path, bytes, filesystem time, Stata timestamp and row count; no claim of byte identity with missing October 2025 raw-input snapshots.",
+  "membership_validation": {
+    "baseline": 16472,
+    "candidate": 16472,
+    "common": 16472,
+    "missing": 0,
+    "additional": 0,
+    "candidate_id_year_rows": 131776,
+    "compared_published_id_year_rows": 131776,
+    "differences_by_field": {
+      "union_id": 0,
+      "avg_file_date": 0,
+      "min_file_date": 0,
+      "max_file_date": 0,
+      "start_date_stata": 0,
+      "end_date_stata": 0,
+      "cba2009_avg": 0,
+      "cba_pre2012_avg": 0,
+      "cba_post2012_avg": 0,
+      "lagos_sample_avg": 0,
+      "in_balanced_panel": 0,
+      "treat_ultra": 0
+    },
+    "any_difference_rows": 0,
+    "original_discrepancies_resolved": 48,
+    "candidate_inputs_use_published_ids_or_municipalities": false,
+    "production_pin_changed": false
+  },
+  "dictionary_validation": {
+    "pooled_establishments": 6366774,
+    "published_baseline_establishments": 16472,
+    "independent_published_municipality_agreement": 16472,
+    "published_municipality_differences": 0,
+    "uncertain_modes": 10,
+    "uncertain_balanced_modes": 2,
+    "discrepancy_robust_modes": 48,
+    "actual_2009_root_spell_semantics": {
+      "missing_tenure_included": 0,
+      "missing_wage_rank2": 1948,
+      "missing_hours_rank2": 0,
+      "active_but_no_rank1": 1,
+      "rank1_but_no_rank2": 1,
+      "ambiguous": 0
+    },
+    "actual_2009_reversed_sort_municipality_changes": 0
+  },
+  "uncertain_modes_without_any_firm_CBA_root_match": 10,
+  "historical_exploded_cba_full_record_match": {
+    "rows": 5523176,
+    "variables": 7
+  },
+  "independent_temp_isolated_CBA_builds_agree_on_all_membership_inputs": true,
+  "full_population_RAIS_CBA_merge_consistency_checked": true,
+  "historical_provenance_limit": "The preserved source directly records the 2007 pool and its later change to 2009, but is a work-in-progress snapshot with a commented dictionary-writing block; no October 6 execution log or original geographic dictionary was found."
+}

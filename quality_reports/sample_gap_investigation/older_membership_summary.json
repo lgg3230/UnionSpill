@@ -1,0 +1,8 @@
+{
+  "august_sample_ids_before_balance": 17826,
+  "balanced_using_live_rais_presence": 16462,
+  "missing_baseline": 29,
+  "additional_baseline": 19,
+  "symmetric_difference_vs_preserved_modal": 0,
+  "restriction_caveat": "August sample combined with September 2026 balance flags, not an observed historical balanced export"
+}

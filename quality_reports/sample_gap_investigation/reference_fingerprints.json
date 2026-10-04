@@ -1,0 +1,26 @@
+[
+  {
+    "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/archive/Data/baseline_2026-09-06/lagos_sample_sep24_LEGACY_Oct2025.dta",
+    "size": 334592327,
+    "mtime": "2025-10-06T06:53:47.523820",
+    "md5": "232e8af202087211d276af84bb22cd6c"
+  },
+  {
+    "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/CBA_RAIS_firm_level/lagos_sample_sep24.dta",
+    "size": 334592327,
+    "mtime": "2025-10-06T06:53:47.523820",
+    "md5": "232e8af202087211d276af84bb22cd6c"
+  },
+  {
+    "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/CBA_RAIS_firm_level/lagos_sample_sep24_test.dta",
+    "size": 340037798,
+    "mtime": "2026-09-11T18:04:27.661369",
+    "md5": "fd9eaa2ff37dec7d5cc7ed2457bde9a4"
+  },
+  {
+    "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/archive/Data/baseline_2026-09-06/final_modal_firms.csv",
+    "size": 246942,
+    "mtime": "2026-09-08T11:13:15.789064",
+    "md5": "81b36e542f84b4bab8c06d38a5413360"
+  }
+]

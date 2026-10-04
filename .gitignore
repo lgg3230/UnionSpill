@@ -281,3 +281,13 @@ Programs/*.log
 # Verification shadow trees (large, regenerable from Programs/verification/)
 /Data_sampletest/
 /Data_may2025/
+Docs/pipeline/ARCHIVE_MANIFEST.md
+Docs/pipeline/ARCHIVE_RESTORE.md
+Docs/pipeline/DIFF_TRACE_2026-08-16.md
+Docs/pipeline/HANDOFF_2026-08-16.md
+Docs/pipeline/INVENTORY.md
+Docs/pipeline/REDUNDANCY_AUDIT.md
+Docs/pipeline/RENUMBERING_2026-08-16.md
+Docs/pipeline/REPLICATION_DAG.md
+Docs/pipeline/REPLICATION_STATUS.md
+Docs/pipeline/TIER_A_DEFECTS.md

@@ -1,0 +1,7 @@
+{
+  "source": "/gpfs/kellogg/proj/lgg3230/UnionSpill/archive/Data/baseline_2026-09-06/worker_estab_all_years.dta",
+  "scanned": 357751634,
+  "selected": 20303610,
+  "establishments": 17836,
+  "published_worker_panel_used_as_input": false
+}

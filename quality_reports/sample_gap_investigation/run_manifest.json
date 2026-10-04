@@ -1,0 +1,372 @@
+{
+  "date": "2026-09-22 16:34:10.714955-05:00",
+  "status": "completed isolated diagnostics; historical producer unresolved",
+  "root": "/gpfs/kellogg/proj/lgg3230/UnionSpill",
+  "git_revision": "f613ea6084a57d91236cfa98cc778e8d6c1f771c",
+  "relevant_working_tree_diff": "relevant_code_diff.patch (empty)",
+  "preexisting_changes": "working_tree_status.txt",
+  "python": "3.12.12 | packaged by conda-forge | (main, Oct 22 2025, 23:25:55) [GCC 14.3.0]",
+  "python_executable": "/home/lgg3230/.conda/envs/venv_python312/bin/python",
+  "packages": {
+    "pandas": "2.3.3",
+    "pyreadstat": "1.3.4",
+    "duckdb": "1.4.1",
+    "pyarrow": "22.0.0"
+  },
+  "stata": "Stata/MP 17; /software/Stata/stata17/stata-mp",
+  "commands_document": "README.md",
+  "output_tree": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/sample_gap_investigation",
+  "keys": {
+    "membership": "identificad",
+    "panel": [
+      "identificad",
+      "year"
+    ],
+    "CBA_source": [
+      "pair_id",
+      "contract_id"
+    ],
+    "geographic_joins": "root+municipality / root+state / root, selected by start_year"
+  },
+  "sample": "lagos_sample_avg==1 & in_balanced_panel==1; year in 2009..2016; both treatment arms",
+  "baseline_worker_extraction": "all rows in existing 2009..2016 artifact; distinct establishment IDs",
+  "diagnostic_years": "2007..2016 RAIS; 2009..2016 joins",
+  "diagnostic_roots": 42,
+  "full_candidate_reconstruction_run": false,
+  "references_and_code": [
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/archive/Data/baseline_2026-09-06/worker_panel_lagos_BASELINE.parquet",
+      "md5": "8b324dc4e6866c69b2b22c3b6109954b",
+      "bytes": 1236372731
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/archive/Data/baseline_2026-09-06/legacy_cba/cba_firm_exploded.dta",
+      "md5": "516331346f0873180b4fe87b608a0317",
+      "bytes": 469471469
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/CBA/cba_firm_exploded.dta",
+      "md5": "c7d5232a91f15aff73518f69964ad773",
+      "bytes": 469471469
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/CBA/cba_coverage_clean.dta",
+      "md5": "671ab867a65d7768297ba79d8969972d",
+      "bytes": 610078378
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/RAIS_aux/rais_mode_mun_ind.dta",
+      "md5": "669877365309d7abc4bd2619016fc394",
+      "bytes": 146700541
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Programs/sample_construction/1020_clean_cba.do",
+      "md5": "d35fc9241397f81871f399eab8270376",
+      "bytes": 29181
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Programs/sample_construction/1010_rais_clean.do",
+      "md5": "9d8d16f32a70c7e3c46238dce60c06fb",
+      "bytes": 33130
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Programs/sample_construction/1022_explode_cba_coverage_sector.py",
+      "md5": "8c6b014fec9345d4397958bd82fd0fdb",
+      "bytes": 2745
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Programs/sample_construction/1011_clean_emp_assoc.do",
+      "md5": "39ce08077d8f8a399e7c246cb0033ebb",
+      "bytes": 7063
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Programs/sample_construction/1021_explode_cba_coverage_firm.py",
+      "md5": "af70c82553b5509baca27c46dacdca28",
+      "bytes": 3449
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Programs/sample_construction/1030_merge_cba_rais.do",
+      "md5": "8fa45b43ca1a93e836991046a57039e6",
+      "bytes": 11515
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Programs/0000_master.do",
+      "md5": "03952739e7bc15adfe61cd2de7173451",
+      "bytes": 16812
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/archive/Data/baseline_2026-09-06/lagos_sample_sep24_LEGACY_Oct2025.dta",
+      "size": 334592327,
+      "mtime": "2025-10-06T06:53:47.523820",
+      "md5": "232e8af202087211d276af84bb22cd6c"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/CBA_RAIS_firm_level/lagos_sample_sep24.dta",
+      "size": 334592327,
+      "mtime": "2025-10-06T06:53:47.523820",
+      "md5": "232e8af202087211d276af84bb22cd6c"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/CBA_RAIS_firm_level/lagos_sample_sep24_test.dta",
+      "size": 340037798,
+      "mtime": "2026-09-11T18:04:27.661369",
+      "md5": "fd9eaa2ff37dec7d5cc7ed2457bde9a4"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/archive/Data/baseline_2026-09-06/final_modal_firms.csv",
+      "size": 246942,
+      "mtime": "2026-09-08T11:13:15.789064",
+      "md5": "81b36e542f84b4bab8c06d38a5413360"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/RAIS_aux/lagos_sample_merge_worker.dta",
+      "bytes": 322703,
+      "md5": "f094f1ba82ef271337c5dd52f7fbc64f",
+      "pre_rerun_manifest_md5": "f094f1ba82ef271337c5dd52f7fbc64f",
+      "matches_pre_rerun_manifest": true,
+      "embedded_timestamp": "2025-08-15 11:26:00"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/RAIS_aux/balpan_file.dta",
+      "bytes": 53255423,
+      "md5": "d64c24cda3dda2b72a46143b03662a69",
+      "pre_rerun_manifest_md5": "d64c24cda3dda2b72a46143b03662a69",
+      "matches_pre_rerun_manifest": true,
+      "embedded_timestamp": "2025-05-06 19:04:00"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/RAIS_aux/balpan_no.dta",
+      "bytes": 53255423,
+      "md5": "8e120b422dac96c78bfed71b0f78b54a",
+      "pre_rerun_manifest_md5": "8e120b422dac96c78bfed71b0f78b54a",
+      "matches_pre_rerun_manifest": true,
+      "embedded_timestamp": "2025-05-06 19:03:00"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/RAIS_aux/balpan_start.dta",
+      "bytes": 53255423,
+      "md5": "858f4ab55955266d4be4df8ea1f7c6a9",
+      "pre_rerun_manifest_md5": "858f4ab55955266d4be4df8ea1f7c6a9",
+      "matches_pre_rerun_manifest": true,
+      "embedded_timestamp": "2025-05-06 19:03:00"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/CBA/collapsed_cba_firm.dta",
+      "bytes": 375521477,
+      "md5": "a5c5057e47679c7ac0afacecf670ca8a",
+      "pre_rerun_manifest_md5": "a5c5057e47679c7ac0afacecf670ca8a",
+      "matches_pre_rerun_manifest": true,
+      "embedded_timestamp": "2025-04-23 01:57:00"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/RAIS_aux/bal_pan.dta",
+      "bytes": 114603767,
+      "md5": "e20d4eb351b4535ea6b658639d0c0fd2",
+      "pre_rerun_manifest_md5": "325e795f79f340e1fee5fdf3e42a4377",
+      "matches_pre_rerun_manifest": false,
+      "embedded_timestamp": "2026-09-11 15:47:00"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/quality_reports/sample_gap_investigation/extract.py",
+      "md5": "0084545865f9fb33f50626206d03ebfd"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/quality_reports/sample_gap_investigation/compare.py",
+      "md5": "874e6a977a01392bb7886280808d3c29"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/quality_reports/sample_gap_investigation/1020_suffix.do",
+      "md5": "69f407e3bedd51b053bc3c96ba88c683"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/quality_reports/sample_gap_investigation/run_modal_cases.do",
+      "md5": "141173595f426f5fa6e037054aeff021"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/quality_reports/sample_gap_investigation/prepare_raw_control.py",
+      "md5": "3b834cbee39318698bc210a3e1f15e2a"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/quality_reports/sample_gap_investigation/run_raw_cases.do",
+      "md5": "5b3855f01086f1307dd98b18103acdb8"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/quality_reports/sample_gap_investigation/reconcile.py",
+      "md5": "00084ecf2aa9aa39ae2155b311a571e1"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/quality_reports/sample_gap_investigation/control_results.py",
+      "md5": "2caf449db535cce8eda8837bd401ddff"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/quality_reports/sample_gap_investigation/join_details.py",
+      "md5": "a9eb24e3febc245c2cbf06c7195cd970"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/quality_reports/sample_gap_investigation/enrich_cases.py",
+      "md5": "b0619c6c28f68730aee307ea9079823f"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/quality_reports/sample_gap_investigation/prepare_published_control.py",
+      "md5": "0f5635948a6f49c2354050c958db8234"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/quality_reports/sample_gap_investigation/run_published_cases.do",
+      "md5": "1fbb7a1036dbc76999661c8865a5f278"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/quality_reports/sample_gap_investigation/published_control_results.py",
+      "md5": "064c271b36a3a034d68c2e559cd1be32"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/quality_reports/sample_gap_investigation/older_membership.py",
+      "md5": "c3f89a921aa87f6b4b6e6217a65451be"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/quality_reports/sample_gap_investigation/older_artifacts.py",
+      "md5": "c7a84c41e20954d1dbd9eeb1f6fdaeab"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/quality_reports/sample_gap_investigation/finalize.py",
+      "md5": "cf5d25563f7da1047eeec8c3b8d6c2b8"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/sample_gap_investigation/modal/rais_aux/unique_firms_2009.dta",
+      "md5": "b8e6d440f7ec448616ff40b55fb59058"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/sample_gap_investigation/modal/rais_aux/unique_firms_2010.dta",
+      "md5": "af704ecddcbf696c76cfc8773e8cf3e4"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/sample_gap_investigation/modal/rais_aux/unique_firms_2011.dta",
+      "md5": "eb709c24a0bc3ac96b03448b292a7bc4"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/sample_gap_investigation/modal/rais_aux/unique_firms_2012.dta",
+      "md5": "5fba5c37f37535f89812942474fac5e0"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/sample_gap_investigation/modal/rais_aux/unique_firms_2013.dta",
+      "md5": "03347a513fd07d8f17185fa43f75b132"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/sample_gap_investigation/modal/rais_aux/unique_firms_2014.dta",
+      "md5": "b379506893e22b26785fa348ffc7bf56"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/sample_gap_investigation/modal/rais_aux/unique_firms_2015.dta",
+      "md5": "d03fcd6b9d3865d93140ed521382b2a1"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/sample_gap_investigation/modal/rais_aux/unique_firms_2016.dta",
+      "md5": "b24c388ae2307db0df0726b33d30714f"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/sample_gap_investigation/raw/rais_aux/unique_firms_2009.dta",
+      "md5": "f9d549586568c7ee3820945fe63addae"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/sample_gap_investigation/raw/rais_aux/unique_firms_2010.dta",
+      "md5": "568e1e2fb19a260e17d7fab4f08fb6dd"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/sample_gap_investigation/raw/rais_aux/unique_firms_2011.dta",
+      "md5": "55a0b14b817a06a3b43dc4467182fb1a"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/sample_gap_investigation/raw/rais_aux/unique_firms_2012.dta",
+      "md5": "85a57f8f16af6d5338f97911b153782a"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/sample_gap_investigation/raw/rais_aux/unique_firms_2013.dta",
+      "md5": "face04ff636425612786cbb46b1b4f4d"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/sample_gap_investigation/raw/rais_aux/unique_firms_2014.dta",
+      "md5": "cfd882062a3c02715b17015b2969947f"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/sample_gap_investigation/raw/rais_aux/unique_firms_2015.dta",
+      "md5": "212b8c3691fda40e899c9b56fb47aa39"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/sample_gap_investigation/raw/rais_aux/unique_firms_2016.dta",
+      "md5": "0c1929fc2e0c724656d7b911398cf23b"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/sample_gap_investigation/published_municipio/rais_aux/unique_firms_2009.dta",
+      "md5": "1cfa349cf36518866e33d7e6fc6f7ec9"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/sample_gap_investigation/published_municipio/rais_aux/unique_firms_2010.dta",
+      "md5": "71d4452006fb87b55df27101cedefd5c"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/sample_gap_investigation/published_municipio/rais_aux/unique_firms_2011.dta",
+      "md5": "1201a9fe4f4a493eb53d806d30105210"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/sample_gap_investigation/published_municipio/rais_aux/unique_firms_2012.dta",
+      "md5": "e76b48937f0edb14eb2333355f4f09e4"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/sample_gap_investigation/published_municipio/rais_aux/unique_firms_2013.dta",
+      "md5": "d7e39810bb1933ded198f1e30c5c418a"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/sample_gap_investigation/published_municipio/rais_aux/unique_firms_2014.dta",
+      "md5": "f8a1f78b892389e4452ff171f423f35f"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/sample_gap_investigation/published_municipio/rais_aux/unique_firms_2015.dta",
+      "md5": "ea38d511bb50f09069cc7114aac10a7a"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/sample_gap_investigation/published_municipio/rais_aux/unique_firms_2016.dta",
+      "md5": "fa12b02e148bf71a0cea9c1e18fecf64"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/sample_gap_investigation/modal/rais_firm/rais_firm_2007.dta",
+      "md5": "63634974ff710fdf5e7b773747575db0"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/sample_gap_investigation/modal/rais_firm/rais_firm_2008.dta",
+      "md5": "b4bdc5e2a342f7ecf2835838721ec990"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/sample_gap_investigation/modal/rais_firm/rais_firm_2009.dta",
+      "md5": "e27303bcebffe8e5f137d3a81bb81678"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/sample_gap_investigation/modal/rais_firm/rais_firm_2010.dta",
+      "md5": "0e0fe4594c4ca94faec595e4f071eab5"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/sample_gap_investigation/modal/rais_firm/rais_firm_2011.dta",
+      "md5": "3fdf5818c60113f0eb38213e891a2dd2"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/sample_gap_investigation/modal/rais_firm/rais_firm_2012.dta",
+      "md5": "b05493bfcd90b863072eebcef4989548"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/sample_gap_investigation/modal/rais_firm/rais_firm_2013.dta",
+      "md5": "9e642870f97e694e9cf50faed0c7cc95"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/sample_gap_investigation/modal/rais_firm/rais_firm_2014.dta",
+      "md5": "0aae7b3f08a2c9421c0f36bd2667b5a0"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/sample_gap_investigation/modal/rais_firm/rais_firm_2015.dta",
+      "md5": "1c42f4bbbb58addf5bfc5cc4abdd7d1a"
+    },
+    {
+      "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/sample_gap_investigation/modal/rais_firm/rais_firm_2016.dta",
+      "md5": "233ad84486985e69fcda69f24632af5d"
+    }
+  ],
+  "extracted_input_metadata": "extraction_inputs.json",
+  "validation": "validation.json"
+}

@@ -1,0 +1,205 @@
+[
+  {
+    "path": "Data/RAIS_aux/sample_establishments.dta",
+    "timestamp": "2026-01-20 13:41:00",
+    "rows": 16472,
+    "columns": [
+      "identificad",
+      "municipio",
+      "microregion",
+      "lagos_sample_avg",
+      "industry1",
+      "in_balanced_panel",
+      "big_industry",
+      "mode_union"
+    ]
+  },
+  {
+    "path": "Data/RAIS_aux/connectivity_treat_2005_2011_6yr_sample.dta",
+    "timestamp": "2026-02-13 11:48:00",
+    "rows": 16471,
+    "columns": [
+      "identificad",
+      "flowtreat_pf_05_06_n",
+      "flowtreat_pf_06_07_n",
+      "flowtreat_pf_07_08_n",
+      "flowtreat_pf_08_09_n",
+      "flowtreat_pf_09_10_n",
+      "flowtreat_pf_10_11_n",
+      "avg_ftreat_pf_n_6yr",
+      "totalflows_n_6yr",
+      "totaltreat_n_6yr",
+      "totalflows_pw_n_6yr",
+      "totaltreat_pw_n_6yr",
+      "totaltreat_pf_n_6yr"
+    ]
+  },
+  {
+    "path": "Data/RAIS_aux/lagos_sample.dta",
+    "timestamp": "2026-09-11 15:54:00",
+    "rows": 6366774,
+    "columns": [
+      "lagos_sample_avg",
+      "identificad"
+    ]
+  },
+  {
+    "path": "Data/RAIS_aux/spill_samples.dta",
+    "timestamp": "2025-07-09 01:18:00",
+    "rows": 2794485,
+    "columns": [
+      "identificad",
+      "sample_1",
+      "sample_2",
+      "sample_3"
+    ]
+  },
+  {
+    "path": "Data/RAIS_aux/sample_flags_j.dta",
+    "timestamp": "2026-01-20 13:41:00",
+    "rows": 16472,
+    "columns": [
+      "identificad_j",
+      "municipio_j",
+      "microregion_j",
+      "lagos_sample_j",
+      "industry1_j",
+      "balanced_panel_j",
+      "big_industry_j",
+      "mode_union_j",
+      "_crossjoin"
+    ]
+  },
+  {
+    "path": "Data/RAIS_aux/lagos_sample_file_y.dta",
+    "timestamp": "2025-05-06 14:42:00",
+    "rows": 18094,
+    "columns": [
+      "identificad",
+      "file_date_f",
+      "treat_ultra_f"
+    ]
+  },
+  {
+    "path": "Data/RAIS_aux/sample_estabs_pw_flows.dta",
+    "timestamp": "2026-02-13 16:25:00",
+    "rows": 16470,
+    "columns": [
+      "identificad",
+      "totalout_pw",
+      "totalout_pw_n",
+      "totalin_pw",
+      "totalin_pw_n",
+      "totalflows_pw",
+      "totalflows_pw_n",
+      "lagos_sample_avg",
+      "in_balanced_panel"
+    ]
+  },
+  {
+    "path": "Data/RAIS_aux/lagos_sample_year.dta",
+    "timestamp": "2025-11-06 20:56:00",
+    "rows": 140773,
+    "columns": [
+      "identificad",
+      "year_str",
+      "cnpj_year"
+    ]
+  },
+  {
+    "path": "Data/RAIS_aux/luis_sample.dta",
+    "timestamp": "2025-05-15 14:51:00",
+    "rows": 5868009,
+    "columns": [
+      "luis_sample",
+      "identificad"
+    ]
+  },
+  {
+    "path": "Data/RAIS_aux/lagos_sample_no_y.dta",
+    "timestamp": "2025-05-06 14:41:00",
+    "rows": 17930,
+    "columns": [
+      "identificad",
+      "file_date_n",
+      "treat_ultra_n"
+    ]
+  },
+  {
+    "path": "Data/RAIS_aux/sample_flags_i.dta",
+    "timestamp": "2026-01-20 13:41:00",
+    "rows": 16472,
+    "columns": [
+      "identificad_i",
+      "municipio_i",
+      "microregion_i",
+      "lagos_sample_i",
+      "industry1_i",
+      "balanced_panel_i",
+      "big_industry_i",
+      "mode_union_i",
+      "_crossjoin"
+    ]
+  },
+  {
+    "path": "Data/RAIS_aux/lagos_sample_start_y.dta",
+    "timestamp": "2025-05-06 14:41:00",
+    "rows": 16366,
+    "columns": [
+      "identificad",
+      "file_date_s",
+      "treat_ultra_s"
+    ]
+  },
+  {
+    "path": "Data/RAIS_aux/lagos_sample_merge_worker.dta",
+    "timestamp": "2025-08-15 11:26:00",
+    "rows": 17826,
+    "columns": [
+      "lagos_sample_avg",
+      "identificad"
+    ]
+  },
+  {
+    "path": "Data/RAIS_aux/balpan_start.dta",
+    "timestamp": "2025-05-06 19:03:00",
+    "rows": 1401326,
+    "columns": [
+      "identificad",
+      "file_date_stata_s",
+      "year_s",
+      "cba2009_s",
+      "lagos_sample_s",
+      "treat_ultra_s",
+      "n_negs_s"
+    ]
+  },
+  {
+    "path": "Data/RAIS_aux/balpan_file.dta",
+    "timestamp": "2025-05-06 19:04:00",
+    "rows": 1401326,
+    "columns": [
+      "identificad",
+      "file_date_stata_f",
+      "year_f",
+      "cba2009_f",
+      "lagos_sample_f",
+      "treat_ultra_f",
+      "n_negs_f"
+    ]
+  },
+  {
+    "path": "Data/RAIS_aux/balpan_no.dta",
+    "timestamp": "2025-05-06 19:03:00",
+    "rows": 1401326,
+    "columns": [
+      "identificad",
+      "file_date_stata_n",
+      "year_n",
+      "cba2009_n",
+      "lagos_sample_n",
+      "treat_ultra_n",
+      "n_negs_n"
+    ]
+  }
+]

@@ -1,0 +1,62 @@
+[
+  {
+    "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/archive/Data/baseline_2026-09-06/worker_panel_lagos_BASELINE.parquet",
+    "md5": "8b324dc4e6866c69b2b22c3b6109954b",
+    "bytes": 1236372731
+  },
+  {
+    "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/archive/Data/baseline_2026-09-06/legacy_cba/cba_firm_exploded.dta",
+    "md5": "516331346f0873180b4fe87b608a0317",
+    "bytes": 469471469
+  },
+  {
+    "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/CBA/cba_firm_exploded.dta",
+    "md5": "c7d5232a91f15aff73518f69964ad773",
+    "bytes": 469471469
+  },
+  {
+    "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/CBA/cba_coverage_clean.dta",
+    "md5": "671ab867a65d7768297ba79d8969972d",
+    "bytes": 610078378
+  },
+  {
+    "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Data/RAIS_aux/rais_mode_mun_ind.dta",
+    "md5": "669877365309d7abc4bd2619016fc394",
+    "bytes": 146700541
+  },
+  {
+    "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Programs/sample_construction/1020_clean_cba.do",
+    "md5": "d35fc9241397f81871f399eab8270376",
+    "bytes": 29181
+  },
+  {
+    "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Programs/sample_construction/1010_rais_clean.do",
+    "md5": "9d8d16f32a70c7e3c46238dce60c06fb",
+    "bytes": 33130
+  },
+  {
+    "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Programs/sample_construction/1022_explode_cba_coverage_sector.py",
+    "md5": "8c6b014fec9345d4397958bd82fd0fdb",
+    "bytes": 2745
+  },
+  {
+    "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Programs/sample_construction/1011_clean_emp_assoc.do",
+    "md5": "39ce08077d8f8a399e7c246cb0033ebb",
+    "bytes": 7063
+  },
+  {
+    "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Programs/sample_construction/1021_explode_cba_coverage_firm.py",
+    "md5": "af70c82553b5509baca27c46dacdca28",
+    "bytes": 3449
+  },
+  {
+    "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Programs/sample_construction/1030_merge_cba_rais.do",
+    "md5": "8fa45b43ca1a93e836991046a57039e6",
+    "bytes": 11515
+  },
+  {
+    "path": "/gpfs/kellogg/proj/lgg3230/UnionSpill/Programs/0000_master.do",
+    "md5": "03952739e7bc15adfe61cd2de7173451",
+    "bytes": 16812
+  }
+]
