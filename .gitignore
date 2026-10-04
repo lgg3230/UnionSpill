@@ -291,3 +291,8 @@ Docs/pipeline/RENUMBERING_2026-08-16.md
 Docs/pipeline/REPLICATION_DAG.md
 Docs/pipeline/REPLICATION_STATUS.md
 Docs/pipeline/TIER_A_DEFECTS.md
+
+# Local-only: run logs, referee material, third-party paper text
+/Logs/full_rerun_2026-09-06/
+/Submission_AER_ Aug26/
+/Docs/reference_papers/
