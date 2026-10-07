@@ -20,8 +20,16 @@ one-row-per-firm CROSS-SECTION: binsreg/binstest can adjust for the remaining
 controls INTERNALLY via w (Cattaneo eq. 3, no pre-residualization), with only
 ~510 covariates instead of ~8,000 firm dummies.
 
+SAMPLE (2026-10-05): before each test the pooled spillover DiD of 3012 PART D
+(reghdfe Y c.conn##i.treat_year, full FE set; c.conn##post_treat_cba with
+CBA-period FE for numb_clauses) is estimated, and binstest runs on the firms
+with at least one firm-year in its e(sample). The test's establishment count
+therefore matches the spillover table (reghdfe singleton drops excluded).
+
 Outputs (Tables/conn_margins/):
-  linearity_did_fd_test.csv            binstest results (per outcome)
+  linearity_did_fd_test.csv            binstest results (per outcome), plus the
+                                       pooled DiD: beta_did, se_did, n_obs_did,
+                                       n_estab_did
   linearity_did_fd_<outcome>.csv       firm-level cross-section for the figure
 ================================================================================
 */
@@ -33,7 +41,12 @@ set varabbrev off
 * ── Paths ─────────────────────────────────────────────────────────────────────
 
 global main      "/kellogg/proj/lgg3230/UnionSpill"
-global rais_firm "$main/Data/CBA_RAIS_firm_level"
+* Panel vintage: the published spillover table (Draft.tex: 0.0050 / 0.0065 /
+* 0.0009 / 0.0227) was built on the July 2026 current-connectivity overlay, not
+* on the Sep-14 panel rebuilt from raw RAIS ("$main/Data/CBA_RAIS_firm_level").
+* totaltreat_pw_norm is rebuilt below from this panel's own p90, which avoids
+* the overlay's stale legacy-divisor column.
+global rais_firm "$main/archive/Data/CBA_RAIS_firm_level_currentconn_overlay"
 global rais_aux  "$main/Data/RAIS_aux"
 global tables    "$main/Tables"
 global logs      "$main/Logs"
@@ -96,6 +109,11 @@ replace cba_period = 4 if inrange(avg_file_date, mdy(1,1,2014), mdy(12,31,2014))
 replace cba_period = 5 if inrange(avg_file_date, mdy(1,1,2015), mdy(12,31,2015)) & cba_period == .
 replace cba_period = 6 if inrange(avg_file_date, mdy(1,1,2016), mdy(12,31,2016)) & cba_period == .
 gen byte post_treat_cba = cond(cba_period >= 3, 1, 0) if !missing(cba_period)
+
+
+* destring industry1:
+
+destring industry1, replace force
 
 * Connectivity scaling (p90 among spillover sample in 2009)
 cap drop totaltreat_pw_n_p90
@@ -217,7 +235,7 @@ if _rc == 0 {
 
 tempname fh
 file open `fh' using "$tables/conn_margins/linearity_did_fd_test.csv", write replace
-file write `fh' "outcome,sample,n,nbins,stat_supt,pval,nsims,simsgrid" _n
+file write `fh' "outcome,sample,n,nbins,stat_supt,pval,nsims,simsgrid,beta_did,se_did,n_obs_did,n_estab_did" _n
 file close `fh'
 
 * ── binstest on the firm-level cross-section (one row per firm) ───────────────
@@ -229,10 +247,27 @@ foreach outcome in lr_remdezr_w lr_remdezr_h_w l_firm_emp {
 	di "FD linearity test: `outcome'"
 	di "============================================================"
 
+	* ── Pooled DiD (3012 PART D) and its estimation sample ─────────────────
+	* The test runs on the firms in this regression's e(sample), so its
+	* establishment count matches the spillover table. A firm is in if any of
+	* its firm-years is in e(sample) (reghdfe drops singleton observations).
+	local absorb "identificad i.industry1#i.year i.mode_base_month#i.year i.microregion#i.year ib0.`outcome'_pre4#i.year ib0.l_firm_emp_pre4#i.year ib0.totalflows_pw_pre_07_114#i.year"
+	reghdfe `outcome' c.`conn'##i.treat_year if `s_spill', ///
+		absorb(`absorb') vce(cluster identificad)
+	local b_did  = _b[1.treat_year#c.`conn']
+	local se_did = _se[1.treat_year#c.`conn']
+	local n_did  = e(N)
+	local g_did  = e(N_clust)
+	cap drop did_obs
+	cap drop did_firm
+	gen byte did_obs = e(sample)
+	bys identificad: egen byte did_firm = max(did_obs)
+	di "  Pooled DiD: beta = " %9.6f `b_did' "  se = " %9.6f `se_did' "  N = `n_did'  establishments = `g_did'"
+
 	local W "i.industry1 i.mode_base_month i.microregion ib0.`outcome'_pre4 ib0.l_firm_emp_pre4 ib0.totalflows_pw_pre_07_114"
 
 	binstest `outcome'_fd `conn' `W' ///
-		if `s_spill' & year == 2009 & !missing(`outcome'_fd), ///
+		if did_firm == 1 & year == 2009 & !missing(`outcome'_fd), ///
 		testmodelpoly(1) nbins(50) masspoints(nolocalcheck) ///
 		nsims(2000) simsgrid(50) simsseed(12345) vce(robust)
 
@@ -244,12 +279,12 @@ foreach outcome in lr_remdezr_w lr_remdezr_h_w l_firm_emp {
 
 	tempname fh
 	file open `fh' using "$tables/conn_margins/linearity_did_fd_test.csv", write append
-	file write `fh' `"`outcome',s_spill,`n',`nbins',`stat',`pval',2000,50"' _n
+	file write `fh' `"`outcome',did_esample,`n',`nbins',`stat',`pval',2000,50,`b_did',`se_did',`n_did',`g_did'"' _n
 	file close `fh'
 
 	* Export firm-level cross-section for the figure
 	preserve
-		keep if `s_spill' & year == 2009 & !missing(`outcome'_fd)
+		keep if did_firm == 1 & year == 2009 & !missing(`outcome'_fd)
 		gen double outcome_fd = `outcome'_fd
 		keep identificad outcome_fd totaltreat_pw_norm ///
 		     industry1 mode_base_month microregion ///
@@ -267,10 +302,25 @@ if _rc == 0 {
 	di "FD linearity test: numb_clauses"
 	di "============================================================"
 
+	* ── Pooled DiD (3012 PART D, CBA periods) and its estimation sample ────
+	local absorb_cba "identificad i.industry1#i.cba_period i.mode_base_month#i.cba_period i.microregion#i.cba_period ib0.numb_clauses_pre4#i.cba_period ib0.l_firm_emp_pre4#i.cba_period ib0.totalflows_pw_pre_07_114#i.cba_period"
+	reghdfe numb_clauses c.`conn'##post_treat_cba ///
+		if `s_spill' & !missing(cba_period), ///
+		absorb(`absorb_cba') vce(cluster identificad)
+	local b_did  = _b[1.post_treat_cba#c.`conn']
+	local se_did = _se[1.post_treat_cba#c.`conn']
+	local n_did  = e(N)
+	local g_did  = e(N_clust)
+	cap drop did_obs
+	cap drop did_firm
+	gen byte did_obs = e(sample)
+	bys identificad: egen byte did_firm = max(did_obs)
+	di "  Pooled DiD: beta = " %9.6f `b_did' "  se = " %9.6f `se_did' "  N = `n_did'  establishments = `g_did'"
+
 	local W "i.industry1 i.mode_base_month i.microregion ib0.numb_clauses_pre4 ib0.l_firm_emp_pre4 ib0.totalflows_pw_pre_07_114"
 
 	binstest numb_clauses_fd `conn' `W' ///
-		if `s_spill' & year == 2009 & !missing(numb_clauses_fd), ///
+		if did_firm == 1 & year == 2009 & !missing(numb_clauses_fd), ///
 		testmodelpoly(1) nbins(50) masspoints(nolocalcheck) ///
 		nsims(2000) simsgrid(50) simsseed(12345) vce(robust)
 
@@ -282,11 +332,11 @@ if _rc == 0 {
 
 	tempname fh
 	file open `fh' using "$tables/conn_margins/linearity_did_fd_test.csv", write append
-	file write `fh' `"numb_clauses,s_spill,`n',`nbins',`stat',`pval',2000,50"' _n
+	file write `fh' `"numb_clauses,did_esample,`n',`nbins',`stat',`pval',2000,50,`b_did',`se_did',`n_did',`g_did'"' _n
 	file close `fh'
 
 	preserve
-		keep if `s_spill' & year == 2009 & !missing(numb_clauses_fd)
+		keep if did_firm == 1 & year == 2009 & !missing(numb_clauses_fd)
 		gen double outcome_fd = numb_clauses_fd
 		keep identificad outcome_fd totaltreat_pw_norm ///
 		     industry1 mode_base_month microregion ///

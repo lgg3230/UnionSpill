@@ -73,6 +73,8 @@ keep if lagos_sample_avg == 1
 
 * ── Variable creation (mirrors conn_margins.do) ───────────────────────────────
 
+
+
 local s_spill "lagos_sample_avg==1 & treat_ultra==0 & in_balanced_panel==1"
 
 * Numeric firm ID for clustering in binstest (binstest does not handle string clusters)
@@ -182,6 +184,11 @@ quietly {
 	drop totalflows_pw_pre_07_114_o
 	replace totalflows_pw_pre_07_114 = 0 if missing(totalflows_pw_pre_07_114)
 }
+
+
+* destringify industry1
+
+destring industry1, replace force
 
 * ── FE macros (mirror conn_margins.do exactly) ───────────────────────────────
 

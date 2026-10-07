@@ -10,8 +10,8 @@
 *   TIER A  1010-1050  raw RAIS -> firm panel + connectivity  (Stata + MATLAB)
 *           1011 restored 2026-09-06: it writes unique_firms_*, which 1020 needs.
 *   TIER B  2010-2050  firm panel -> analysis panel          (Stata)
-*   TIER C  3011-3132  analysis panel -> estimates           (13 estimators)
-*   TIER D  4010-4220  estimates -> tables and figures       (Python + Stata)
+*   TIER C  3011-3172  analysis panel -> estimates           (17 estimators)
+*   TIER D  4010-4280  estimates -> tables and figures       (Python + Stata)
 *   TIER E  5010       exhibits -> UnionSpill-paper/Replication/Figures
 *
 * NUMBERING IS DEPENDENCY ORDER. No script reads a file written by a
@@ -150,6 +150,11 @@ local c_descriptives     = 0
 local c_mincer           = 0
 local c_within_firm      = 0
 local c_within_firm_hw   = 0
+local c_linearity        = 0      // 3141_linearity_twfe.do -> Tables/linearity/ (added 2026-10-05)
+local c_linearity_bins   = 0      // 3151_linearity_bins.do -> Tables/linearity/linearity_bins.csv
+local c_linearity_lt01   = 0      // 3153_linearity_bins_lt01.do (baseline = connectivity < 0.01) -> *_lt01.csv
+local c_linearity_fd     = 0      // 3171_linearity_fd.do: FD vs TWFE test, same bins, vintage overlay panel
+local c_pure_ctrl_cut    = 0      // 3161_pure_control_cutoff.do -> Tables/pure_control_cutoff/ (also writes its table + figure; reads the archived overlay panel)
 
 * --- TIER D: estimates -> tables and figures ---------------------------------
 local d_tables           = 0      // the 9 table generators
@@ -159,6 +164,9 @@ local d_fig_distros      = 0
 local d_fig_binscatter   = 0
 local d_fig_conn_hist    = 0
 local d_fig_recentered   = 0      // both outcomes
+local d_tab_linearity    = 0      // 4240_table_linearity_latex.py (reads c_linearity_fd output, TWFE columns; --source rebuilt reads c_linearity)
+local d_linearity_bins   = 0      // 4250 table + 4260 figures (read c_linearity_bins output)
+local d_linearity_lt01   = 0      // 4250 --baseline lt01 (reads c_linearity_lt01 output)
 
 * --- TIER E: exhibits -> paper ------------------------------------------------
 local e_copy_figures     = 0
@@ -261,6 +269,11 @@ if (`c_descriptives'     ==1) shell cd "$logs" && $stata_exe -b do "$programs/an
 if (`c_mincer'           ==1) shell cd "$logs" && $stata_exe -b do "$programs/analysis/main_results/3111_mincer.do"
 if (`c_within_firm'      ==1) shell cd "$logs" && $stata_exe -b do "$programs/analysis/layer_connectivity/07_within_firm/3121_within_firm.do"
 if (`c_within_firm_hw'   ==1) shell cd "$logs" && $stata_exe -b do "$programs/analysis/layer_connectivity/07_within_firm/3131_within_firm_hourly.do"
+if (`c_linearity'        ==1) shell cd "$logs" && $stata_exe -b do "$programs/analysis/linearity/3141_linearity_twfe.do"
+if (`c_linearity_bins'   ==1) shell cd "$logs" && $stata_exe -b do "$programs/analysis/linearity/3151_linearity_bins.do"
+if (`c_linearity_lt01'   ==1) shell cd "$logs" && $stata_exe -b do "$programs/analysis/linearity/3153_linearity_bins_lt01.do"
+if (`c_linearity_fd'     ==1) shell cd "$logs" && $stata_exe -b do "$programs/analysis/linearity/3171_linearity_fd.do"
+if (`c_pure_ctrl_cut'    ==1) shell cd "$logs" && $stata_exe -b do "$programs/analysis/pure_control_cutoff/3161_pure_control_cutoff.do"
 
 ********************************************************************************
 * TIER D -- tables and figures
@@ -299,6 +312,13 @@ if (`d_fig_recentered' ==1) {
     shell cd "$logs" && $stata_exe -b do "$programs/analysis/rand_inference/4151_recentered_eventstudy.do" lr_remdezr_w
     shell cd "$logs" && $stata_exe -b do "$programs/analysis/rand_inference/4151_recentered_eventstudy.do" lr_remdezr_h_w
 }
+
+if (`d_tab_linearity'  ==1) shell cd "$logs" && $python_exe "$programs/analysis/linearity/4240_table_linearity_latex.py"
+if (`d_linearity_bins' ==1) {
+    shell cd "$logs" && $python_exe "$programs/analysis/linearity/4250_table_linearity_bins_latex.py"
+    shell cd "$logs" && $python_exe "$programs/analysis/linearity/4260_figure_linearity_bins.py"
+}
+if (`d_linearity_lt01' ==1) shell cd "$logs" && $python_exe "$programs/analysis/linearity/4250_table_linearity_bins_latex.py" --baseline lt01
 
 ********************************************************************************
 * TIER E -- copy exhibits into the paper
