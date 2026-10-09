@@ -19,9 +19,9 @@ Sources (estimator CSVs only; since 2026-10-09 no frozen .tex snapshot)
 -------
   col (1) Main        : Tables/pct_tfpw_cc/results_{direct_panelA,spill}_tfpw_07_11_pct.csv
                         (3011 -> 3012)
-  cols (2)-(3) Bins   : Tables/currentconn_full/robustness/results_{direct_panelA,spill}_robustness_bins.csv,
+  cols (2)-(3) Bins   : Tables/robustness/results_{direct_panelA,spill}_robustness_bins.csv,
                         specs tfpw_07_11_pct_bins10 / _bins20 (3051 -> 3052)
-  col (4) Workforce   : Tables/currentconn_full/robustness/results_demo_controls{suf}.csv,
+  col (4) Workforce   : Tables/robustness/results_demo_controls{suf}.csv,
                         col 2 = demographic quartile bins (3181 -> 3182)
   cols (5)-(8)        : results_micro_ind_q{suf}.csv (3061 -> 3062)
                         spillover  mif_lin miw_lin mif_q miw_q
@@ -46,7 +46,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent.parent.parent
 FRAG = ROOT / "quality_reports/replication/hourly_variant_currentconn/frag"
-CSVD = ROOT / "Tables/currentconn_full/robustness"
+CSVD = ROOT / "Tables/robustness"
 MAIN = ROOT / "Tables/pct_tfpw_cc"
 def fmt_mean(raw):
     """CSV keeps 4 decimals; the table shows 3 (decision 2026-08-02)."""

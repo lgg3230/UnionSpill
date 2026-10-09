@@ -1,22 +1,27 @@
 #!/usr/bin/env python3
 """
-Generate LaTeX table for union controls robustness (outcome: lr_remdezr_w).
+Generate LaTeX table for union controls robustness.
+
+Usage: 4180_table_union_controls_latex.py [suffix]   ("" monthly, "_hw" hourly;
+3072_union_controls.do passes its $OUTSUF).
 
 Structure matches the user-provided template:
   - Rows: Post × Connectivity, (SE), Pre × Connectivity, (SE), N obs, N estab
   - Columns (1)-(4): baseline, union FE, union exp firm, union emp exp
   - Footer panel: "Additional Controls" with X marks
 
-Output: Tables/robustness/union_controls_table.tex
+Input:  Tables/robustness/results_spill_union_controls{suffix}.csv
+Output: Tables/robustness/union_controls_table{suffix}.tex
 """
 
 import re
+import sys
 from pathlib import Path
 
 # ── CSV parsing ───────────────────────────────────────────────────────────────
 
 def load_csv(filepath):
-    """Returns {col: {row_type: value}} for outcome lr_remdezr_w."""
+    """Returns {col: {row_type: value}} (the CSV holds one outcome)."""
     data = {}
     if not filepath.exists():
         print(f"  WARNING: {filepath.name} not found.")
@@ -146,9 +151,12 @@ def make_table(data):
 def main():
     script_dir  = Path(__file__).resolve().parent
     rob_dir     = script_dir.parents[2] / "Tables" / "robustness"
-    output_file = rob_dir / "union_controls_table.tex"
+    suffix      = sys.argv[1] if len(sys.argv) > 1 else ""
+    output_file = rob_dir / f"union_controls_table{suffix}.tex"
 
-    data = load_csv(rob_dir / "results_spill_union_controls.csv")
+    data = load_csv(rob_dir / f"results_spill_union_controls{suffix}.csv")
+    if not data:
+        raise SystemExit(f"no results for suffix '{suffix}'; not overwriting {output_file.name}")
     table = make_table(data)
 
     with open(output_file, "w") as f:

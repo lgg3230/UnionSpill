@@ -297,16 +297,13 @@ def latex_document(tables):
 
 def main():
     # Optional results suffix (argv[1]); default "" reproduces prior behaviour.
-    # Suffixed runs (e.g. _currentconn_ten_fullrais) write their CSVs under
-    # Tables/currentconn_full/residuals/, so the input directory follows the
-    # suffix while the .tex stays in Tables/residuals/.
+    # All runs write their CSVs and the .tex under Tables/residuals/
+    # (Tables/currentconn_full/ retired 2026-10-09).
     suffix = sys.argv[1] if len(sys.argv) > 1 else ""
 
     tables_dir   = Path(__file__).resolve().parent.parent.parent.parent / "Tables"
     pipeline_dir = tables_dir / "residuals"
     input_dir    = pipeline_dir
-    if suffix.startswith("_currentconn"):
-        input_dir = tables_dir / "currentconn_full" / "residuals"
 
     output_file  = pipeline_dir / f"mincer_tables{suffix}.tex"
 

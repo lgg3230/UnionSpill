@@ -13,8 +13,8 @@ spillover effects in columns (3)-(4), each pairing the raw wage against its
 Mincer-residualized counterpart.
 
 Inputs (semicolon-delimited, written by 3112_mincer.do):
-    Tables/currentconn_full/residuals/results_direct_panelA_mincer{suffix}.csv
-    Tables/currentconn_full/residuals/results_spill_mincer{suffix}.csv
+    Tables/residuals/results_direct_panelA_mincer{suffix}.csv
+    Tables/residuals/results_spill_mincer{suffix}.csv
 
 Outputs:
     Tables/residuals/t_resid{suffix}.tex
@@ -227,16 +227,13 @@ def main():
     ap.add_argument("--mode", choices=["age", "agetenure"], default="age",
                     help="Residualization spec, used to word the table notes.")
     ap.add_argument("--results-dir", default=None,
-                    help="Defaults to Tables/currentconn_full/residuals for "
-                         "_currentconn* suffixes, else Tables/residuals.")
+                    help="Defaults to Tables/residuals.")
     ap.add_argument("--update-replication", action="store_true",
                     help="Splice the tables into the Replication .tex.")
     args = ap.parse_args()
 
     if args.results_dir:
         rdir = Path(args.results_dir)
-    elif args.suffix.startswith("_currentconn"):
-        rdir = TABLES / "currentconn_full" / "residuals"
     else:
         rdir = TABLES / "residuals"
 

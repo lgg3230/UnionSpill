@@ -21,7 +21,7 @@ regenerates it so the fragment and the document agree.
 
 Input (semicolon-delimited rows under a comma-delimited header, written by
 3072_union_controls.do run against the currentconn overlay):
-    Tables/currentconn_full/robustness/results_spill_union_controls{,_hw}.csv
+    Tables/robustness/results_spill_union_controls{,_hw}.csv
 
 Output:
     Tables/robustness/t_union{,_hw}.tex
@@ -39,7 +39,7 @@ import argparse
 from pathlib import Path
 
 PROJECT = Path(__file__).resolve().parents[3]
-CSV_DIR = PROJECT / "Tables" / "currentconn_full" / "robustness"
+CSV_DIR = PROJECT / "Tables" / "robustness"
 OUT_DIR = PROJECT / "Tables" / "robustness"
 
 COLS = list(range(1, 11))

@@ -39,9 +39,9 @@ if !fileexists(`"$root/Programs/0000_master.do"') {
 }
 global rais_aux  "$root/Data/RAIS_aux"
 global rais_firm "$root/Data/CBA_RAIS_firm_level"
-global tables    "$root/Tables/currentconn_full"
-global graphs    "$root/Graphs/currentconn_full"
-global logs      "$root/Logs/currentconn_full"
+global tables    "$root/Tables"
+global graphs    "$root/Graphs"
+global logs      "$root/Logs"
 global programs  "$root/Programs"
 
 do "$root/Programs/analysis/_setup.do"   // Python, output folders, root memory

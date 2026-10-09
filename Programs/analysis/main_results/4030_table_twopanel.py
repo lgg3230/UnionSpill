@@ -15,8 +15,8 @@ layout (two separate captioned tables) for the main draft, and are left alone.
 Both fragments are inlined twice, once per half of the document.
 
 Inputs (per table, semicolon-delimited under a comma-delimited header):
-    Tables/currentconn_full/<pipeline>/results_direct_panelA_<stem>.csv
-    Tables/currentconn_full/<pipeline>/results_spill_<stem>.csv
+    Tables/<pipeline>/results_direct_panelA_<stem>.csv
+    Tables/<pipeline>/results_spill_<stem>.csv
 
 Outputs:
     Tables/turnover/t_turnover.tex
@@ -33,7 +33,7 @@ import argparse
 from pathlib import Path
 
 PROJECT = Path(__file__).resolve().parents[3]
-CC = PROJECT / "Tables" / "currentconn_full"
+CC = PROJECT / "Tables"   # results live in Tables/<pipeline>/ (currentconn_full retired 2026-10-09)
 
 MEAN_NOTE = (
     r" Pre-treatment mean is the mean of the dependent variable over "

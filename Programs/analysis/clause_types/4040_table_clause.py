@@ -14,9 +14,9 @@ Like t_spill and t_direct, this fragment had no generator and is inlined twice,
 once per half of the document.
 
 Inputs:
-    Tables/currentconn_full/clause_types/results_spill_clause_counts_tfpw_07_11.csv
-    Tables/currentconn_full/clause_types/results_spill_clause_props_tfpw_07_11.csv
-    Tables/currentconn_full/cba_value/results_spill_cba_value.csv
+    Tables/clause_types/results_spill_clause_counts_tfpw_07_11.csv
+    Tables/clause_types/results_spill_clause_props_tfpw_07_11.csv
+    Tables/cba_value/results_spill_cba_value.csv
 
 Output:
     Tables/clause_types/t_clause.tex
@@ -31,8 +31,8 @@ import argparse
 from pathlib import Path
 
 PROJECT = Path(__file__).resolve().parents[3]
-CT_DIR = PROJECT / "Tables" / "currentconn_full" / "clause_types"
-CV_DIR = PROJECT / "Tables" / "currentconn_full" / "cba_value"
+CT_DIR = PROJECT / "Tables" / "clause_types"
+CV_DIR = PROJECT / "Tables" / "cba_value"
 OUT_DIR = PROJECT / "Tables" / "clause_types"
 OUT_TEX = OUT_DIR / "t_clause.tex"
 
