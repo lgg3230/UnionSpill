@@ -1,4 +1,4 @@
-#!/home/lgg3230/.conda/envs/venv_python312/bin/python
+#!/usr/bin/env python3
 """
 PROJECT: UNION SPILLOVERS
 AUTHOR: LUIS GOMES
@@ -33,7 +33,7 @@ mpl.rcParams['ps.fonttype'] = 42
 # PATHS
 # ==============================================================================
 
-BASE_DIR = Path("/kellogg/proj/lgg3230/UnionSpill")
+BASE_DIR = Path(__file__).resolve().parents[3]
 RAIS_AUX = BASE_DIR / "Data" / "RAIS_aux"
 GRAPHS = BASE_DIR / "Graphs" / "connectivity"
 

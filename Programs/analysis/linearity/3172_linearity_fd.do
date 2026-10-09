@@ -9,8 +9,9 @@ connectivity, masspoints(nolocalcheck)) gave p ~ 0.79. For a balanced panel the
 binned TWFE fit is a linear DiD on Post x [b(conn) - b(0)], so with identical
 bins both should estimate the same curve. This file removes the configuration
 differences and runs both tests on the vintage panel:
-  - panel: set by the wrapper 3171_linearity_fd.do (July 2026 currentconn
-    overlay, the panel behind the published spillover table)
+  - panel: set by the wrapper 3171_linearity_fd.do (Data/CBA_RAIS_firm_level,
+    which now holds the July 2026 currentconn overlay, the panel behind the
+    published spillover table)
   - bins: exactly 3142's rule. J from binsregselect on the TWFE equation
     (deriv(1) bins(1 1) binspos(es) randcut(1), DPI with ROT fallback); inner
     knots at quantiles of D = conn x Post among positive D in the reghdfe
@@ -380,5 +381,5 @@ type "`csv'"
 di "Finished: `c(current_date)' `c(current_time)'"
 capture log close
 
-shell source /gpfs/kellogg/proj/lgg3230/UnionSpill/Programs/notify.sh && ///
+if c(os) == "Unix" shell source "$root/Programs/notify.sh" && ///
 	notify "3172_linearity_fd done" "TWFE vs FD linearity tests complete"

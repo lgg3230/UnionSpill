@@ -52,39 +52,63 @@ version 17.0
 
 // DIRECTORIES
 
-// Main:
+// Project root: env UNIONSPILL_ROOT if set, else the nearest folder at or above
+// the working directory holding Programs/0000_master.do, else the root that
+// analysis/_setup.do remembered in ~/.unionspill_root on the last run. Start
+// Stata anywhere inside the project. (macro drop _all above clears global root.)
 
-global klc "/kellogg/proj/lgg3230"
-global luis "/Users/luisg/Library/CloudStorage/OneDrive-NorthwesternUniversity/4 - PhD/02_Research/Org_Econ BR/UnionSpillovers/Cluster/UnionSpill"
-
-if "`c(username)'"=="luisg"{
-	global main "$luis"
+global root : env UNIONSPILL_ROOT
+if `"$root"' == "" {
+	local _d = subinstr(`"`c(pwd)'"', "\", "/", .)
+	while `"`_d'"' != "" & !fileexists(`"`_d'/Programs/0000_master.do"') {
+		local _d = substr(`"`_d'"', 1, max(strrpos(`"`_d'"', "/") - 1, 0))
+	}
+	global root `"`_d'"'
+}
+if !fileexists(`"$root/Programs/0000_master.do"') {
+	local _h : env HOME
+	if `"`_h'"' == "" local _h : env USERPROFILE
+	tempname _rf
+	cap file open `_rf' using `"`_h'/.unionspill_root"', read text
+	if !_rc {
+		file read `_rf' _d
+		file close `_rf'
+		if fileexists(`"`_d'/Programs/0000_master.do"') global root `"`_d'"'
+	}
+}
+if !fileexists(`"$root/Programs/0000_master.do"') {
+	di as error "Project root not found. Once, start Stata inside the project folder"
+	di as error "(cd there), or set env UNIONSPILL_ROOT to the folder holding Programs/."
+	exit 601
 }
 
-if "`c(username)'"=="lgg3230"{
-	global main "$klc"
-}
+// $main is the folder that holds the project. Only tier A/B scripts still use
+// it: raw RAIS sits next to the project on the cluster ($main/RAIS), and a few
+// sample_construction scripts build "$main/UnionSpill/...". Point raw RAIS
+// elsewhere with env UNIONSPILL_RAIS.
+global main = substr(`"$root"', 1, strrpos(`"$root"', "/") - 1)
 
 // Subfolders:
 
+global rais_raw_dir : env UNIONSPILL_RAIS
+if `"$rais_raw_dir"' == "" global rais_raw_dir "$main/RAIS/output/data/full"
+global emp_assoc "$root/Data/stata_emp_assoc"
+global rais_emp_merge "$root/Data/RAIS_emp_merge"
+global cba_dir "$root/Data/CBA"
+global cba_rais_fir "$root/Data/CBA_RAIS/cba_rais_firm"
+global cba_rais_mun "$root/Data/CBA_RAIS/cba_rais_muni"
+global cba_rais_sta "$root/Data/CBA_RAIS/cba_rais_stat"
+global cba_rais_nac "$root/Data/CBA_RAIS/cba_rais_nati"
+global cba_rais_tot "$root/Data/CBA_RAIS/cba_rais_total"
+global rais_aux "$root/Data/RAIS_aux"
+global rais_firm "$root/Data/CBA_RAIS_firm_level"
+global ibge "$root/Data/IBGE"
 
-global rais_raw_dir "$main/RAIS/output/data/full"
-global emp_assoc "$main/UnionSpill/Data/stata_emp_assoc"
-global rais_emp_merge "$main/UnionSpill/Data/RAIS_emp_merge"
-global cba_dir "$main/UnionSpill/Data/CBA"
-global cba_rais_fir "$main/UnionSpill/Data/CBA_RAIS/cba_rais_firm"
-global cba_rais_mun "$main/UnionSpill/Data/CBA_RAIS/cba_rais_muni"
-global cba_rais_sta "$main/UnionSpill/Data/CBA_RAIS/cba_rais_stat"
-global cba_rais_nac "$main/UnionSpill/Data/CBA_RAIS/cba_rais_nati"
-global cba_rais_tot "$main/UnionSpill/Data/CBA_RAIS/cba_rais_total"
-global rais_aux "$main/UnionSpill/Data/RAIS_aux"
-global rais_firm "$main/UnionSpill/Data/CBA_RAIS_firm_level"
-global ibge "$main/UnionSpill/Data/IBGE"
-
-global programs "$main/UnionSpill/Programs"
-global tables "$main/UnionSpill/Tables"
-global graphs "$main/UnionSpill/Graphs"
-global logs "$main/UnionSpill/Logs"
+global programs "$root/Programs"
+global tables "$root/Tables"
+global graphs "$root/Graphs"
+global logs "$root/Logs"
+cap mkdir "$logs"
 
 * Batch logs. `stata-mp -b do X.do` writes X.log into the CURRENT directory, not
 * next to the do-file, so every shelled call below runs from $logs. Programs/ is
@@ -102,11 +126,35 @@ global logs "$main/UnionSpill/Logs"
 
 // Added for the full chain:
 
-global paper             "$main/UnionSpill/UnionSpill-paper"
+global paper             "$root/UnionSpill-paper"
 global paperfig          "$paper/Replication/Figures"
-global stata_exe         "/software/Stata/stata17/stata-mp"
-global matlab_exe        "/software/matlab/R2020b/bin/matlab"
-global python_exe        "/home/lgg3230/.conda/envs/venv_python312/bin/python"
+
+// Executables: env UNIONSPILL_STATA / _MATLAB if set, else the first install
+// found below, else the bare command name on the PATH. Python is found by
+// analysis/_setup.do (env UNIONSPILL_PYTHON overrides). The shelled
+// `stata -b do' calls use Unix syntax (cluster, macOS, Linux).
+global stata_exe : env UNIONSPILL_STATA
+if `"$stata_exe"' == "" {
+	global stata_exe "stata-mp"
+	foreach _s in "/software/Stata/stata17/stata-mp" ///
+	              "/Applications/StataNow/StataMP.app/Contents/MacOS/stata-mp" ///
+	              "/Applications/StataNow/StataSE.app/Contents/MacOS/stata-se" ///
+	              "/Applications/Stata/StataMP.app/Contents/MacOS/stata-mp" ///
+	              "/Applications/Stata/StataSE.app/Contents/MacOS/stata-se" ///
+	              "/Applications/Stata/StataBE.app/Contents/MacOS/stata-be" {
+		if fileexists("`_s'") {
+			global stata_exe "`_s'"
+			continue, break
+		}
+	}
+}
+global matlab_exe : env UNIONSPILL_MATLAB
+if `"$matlab_exe"' == "" {
+	global matlab_exe "matlab"
+	if fileexists("/software/matlab/R2020b/bin/matlab") global matlab_exe "/software/matlab/R2020b/bin/matlab"
+}
+do "$programs/analysis/_setup.do"   // Python, Tables/Graphs/Logs, root memory
+di as text "root:   $root" _n "stata:  $stata_exe" _n "python: $python_exe"
 
 // CONTROL WHICH PROGRAMS RUN
 
@@ -153,8 +201,9 @@ local c_within_firm_hw   = 0
 local c_linearity        = 0      // 3141_linearity_twfe.do -> Tables/linearity/ (added 2026-10-05)
 local c_linearity_bins   = 0      // 3151_linearity_bins.do -> Tables/linearity/linearity_bins.csv
 local c_linearity_lt01   = 0      // 3153_linearity_bins_lt01.do (baseline = connectivity < 0.01) -> *_lt01.csv
-local c_linearity_fd     = 0      // 3171_linearity_fd.do: FD vs TWFE test, same bins, vintage overlay panel
-local c_pure_ctrl_cut    = 0      // 3161_pure_control_cutoff.do -> Tables/pure_control_cutoff/ (also writes its table + figure; reads the archived overlay panel)
+local c_linearity_fd     = 0      // 3171_linearity_fd.do: FD vs TWFE test, same bins, main panel (now the vintage overlay)
+local c_pure_ctrl_cut    = 0      // 3161_pure_control_cutoff.do -> Tables/pure_control_cutoff/ (also writes its table + figure; reads the main panel, now the vintage overlay)
+local c_demo_controls    = 0      // 3181_demo_controls.do: workforce-composition controls, col (4) of tab:rob_logwages (added 2026-10-09)
 
 * --- TIER D: estimates -> tables and figures ---------------------------------
 local d_tables           = 0      // the 9 table generators
@@ -254,26 +303,31 @@ global lagos_firm_panel ""
 
 ********************************************************************************
 * TIER C -- estimators, one fresh Stata process each (see header note)
+*
+* The do-file path is RELATIVE to $logs ("../Programs/..."): batch Stata splits
+* its `do' argument at spaces, even when quoted, so an absolute path breaks as
+* soon as the project sits under a folder with a space in its name (OneDrive).
 ********************************************************************************
 
-if (`c_pct_tfpw'         ==1) shell cd "$logs" && $stata_exe -b do "$programs/analysis/main_results/3011_pct_tfpw.do"
-if (`c_direct_coef_test' ==1) shell cd "$logs" && $stata_exe -b do "$programs/analysis/conn_margins/3021_direct_sample_coef_test.do"
-if (`c_clause_types'     ==1) shell cd "$logs" && $stata_exe -b do "$programs/analysis/clause_types/3031_clause_types.do"
-if (`c_cba_value'        ==1) shell cd "$logs" && $stata_exe -b do "$programs/analysis/cba_value/3041_cba_value.do"
-if (`c_robustness'       ==1) shell cd "$logs" && $stata_exe -b do "$programs/analysis/robustness/3051_robustness_bins.do"
-if (`c_micro_ind_q'      ==1) shell cd "$logs" && $stata_exe -b do "$programs/analysis/robustness/3061_micro_ind_q.do"
-if (`c_union_controls'   ==1) shell cd "$logs" && $stata_exe -b do "$programs/analysis/robustness/3071_union_controls.do"
-if (`c_turnover'         ==1) shell cd "$logs" && $stata_exe -b do "$programs/analysis/turnover/3081_turnover.do"
-if (`c_composition'      ==1) shell cd "$logs" && $stata_exe -b do "$programs/analysis/composition/3091_composition.do"
-if (`c_descriptives'     ==1) shell cd "$logs" && $stata_exe -b do "$programs/analysis/descriptives/3101_sample_descriptives.do"
-if (`c_mincer'           ==1) shell cd "$logs" && $stata_exe -b do "$programs/analysis/main_results/3111_mincer.do"
-if (`c_within_firm'      ==1) shell cd "$logs" && $stata_exe -b do "$programs/analysis/layer_connectivity/07_within_firm/3121_within_firm.do"
-if (`c_within_firm_hw'   ==1) shell cd "$logs" && $stata_exe -b do "$programs/analysis/layer_connectivity/07_within_firm/3131_within_firm_hourly.do"
-if (`c_linearity'        ==1) shell cd "$logs" && $stata_exe -b do "$programs/analysis/linearity/3141_linearity_twfe.do"
-if (`c_linearity_bins'   ==1) shell cd "$logs" && $stata_exe -b do "$programs/analysis/linearity/3151_linearity_bins.do"
-if (`c_linearity_lt01'   ==1) shell cd "$logs" && $stata_exe -b do "$programs/analysis/linearity/3153_linearity_bins_lt01.do"
-if (`c_linearity_fd'     ==1) shell cd "$logs" && $stata_exe -b do "$programs/analysis/linearity/3171_linearity_fd.do"
-if (`c_pure_ctrl_cut'    ==1) shell cd "$logs" && $stata_exe -b do "$programs/analysis/pure_control_cutoff/3161_pure_control_cutoff.do"
+if (`c_pct_tfpw'         ==1) shell cd "$logs" && $stata_exe -b do "../Programs/analysis/main_results/3011_pct_tfpw.do"
+if (`c_direct_coef_test' ==1) shell cd "$logs" && $stata_exe -b do "../Programs/analysis/conn_margins/3021_direct_sample_coef_test.do"
+if (`c_clause_types'     ==1) shell cd "$logs" && $stata_exe -b do "../Programs/analysis/clause_types/3031_clause_types.do"
+if (`c_cba_value'        ==1) shell cd "$logs" && $stata_exe -b do "../Programs/analysis/cba_value/3041_cba_value.do"
+if (`c_robustness'       ==1) shell cd "$logs" && $stata_exe -b do "../Programs/analysis/robustness/3051_robustness_bins.do"
+if (`c_micro_ind_q'      ==1) shell cd "$logs" && $stata_exe -b do "../Programs/analysis/robustness/3061_micro_ind_q.do"
+if (`c_union_controls'   ==1) shell cd "$logs" && $stata_exe -b do "../Programs/analysis/robustness/3071_union_controls.do"
+if (`c_turnover'         ==1) shell cd "$logs" && $stata_exe -b do "../Programs/analysis/turnover/3081_turnover.do"
+if (`c_composition'      ==1) shell cd "$logs" && $stata_exe -b do "../Programs/analysis/composition/3091_composition.do"
+if (`c_descriptives'     ==1) shell cd "$logs" && $stata_exe -b do "../Programs/analysis/descriptives/3101_sample_descriptives.do"
+if (`c_mincer'           ==1) shell cd "$logs" && $stata_exe -b do "../Programs/analysis/main_results/3111_mincer.do"
+if (`c_within_firm'      ==1) shell cd "$logs" && $stata_exe -b do "../Programs/analysis/layer_connectivity/07_within_firm/3121_within_firm.do"
+if (`c_within_firm_hw'   ==1) shell cd "$logs" && $stata_exe -b do "../Programs/analysis/layer_connectivity/07_within_firm/3131_within_firm_hourly.do"
+if (`c_linearity'        ==1) shell cd "$logs" && $stata_exe -b do "../Programs/analysis/linearity/3141_linearity_twfe.do"
+if (`c_linearity_bins'   ==1) shell cd "$logs" && $stata_exe -b do "../Programs/analysis/linearity/3151_linearity_bins.do"
+if (`c_linearity_lt01'   ==1) shell cd "$logs" && $stata_exe -b do "../Programs/analysis/linearity/3153_linearity_bins_lt01.do"
+if (`c_linearity_fd'     ==1) shell cd "$logs" && $stata_exe -b do "../Programs/analysis/linearity/3171_linearity_fd.do"
+if (`c_pure_ctrl_cut'    ==1) shell cd "$logs" && $stata_exe -b do "../Programs/analysis/pure_control_cutoff/3161_pure_control_cutoff.do"
+if (`c_demo_controls'    ==1) shell cd "$logs" && $stata_exe -b do "../Programs/analysis/robustness/3181_demo_controls.do"
 
 ********************************************************************************
 * TIER D -- tables and figures
@@ -309,8 +363,8 @@ if (`d_fig_conn_hist'  ==1) shell cd "$logs" && $python_exe "$programs/analysis/
 * filenames in 4152_recentered_eventstudy.do were hardcoded to the monthly
 * outcome, so the hourly figures could not be produced at all.
 if (`d_fig_recentered' ==1) {
-    shell cd "$logs" && $stata_exe -b do "$programs/analysis/rand_inference/4151_recentered_eventstudy.do" lr_remdezr_w
-    shell cd "$logs" && $stata_exe -b do "$programs/analysis/rand_inference/4151_recentered_eventstudy.do" lr_remdezr_h_w
+    shell cd "$logs" && $stata_exe -b do "../Programs/analysis/rand_inference/4151_recentered_eventstudy.do" lr_remdezr_w
+    shell cd "$logs" && $stata_exe -b do "../Programs/analysis/rand_inference/4151_recentered_eventstudy.do" lr_remdezr_h_w
 }
 
 if (`d_tab_linearity'  ==1) shell cd "$logs" && $python_exe "$programs/analysis/linearity/4240_table_linearity_latex.py"

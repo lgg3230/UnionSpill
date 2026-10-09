@@ -377,7 +377,7 @@ foreach s of local samples {
 			di as error "Replication check FAILED: see $tables/verify_baseline.txt."
 			di as error "Quantile cutoffs not estimated."
 			log close
-			shell source /gpfs/kellogg/proj/lgg3230/UnionSpill/Programs/notify.sh && ///
+			if c(os) == "Unix" shell source "$root/Programs/notify.sh" && ///
 				notify "3162_pure_control_cutoff FAILED" "replication check failed; see verify_baseline.txt"
 			exit 9
 		}
@@ -398,5 +398,5 @@ shell $python_exe "$programs/analysis/pure_control_cutoff/4270_table_pure_contro
 shell $python_exe "$programs/analysis/pure_control_cutoff/4280_figure_pure_control_cutoff.py"
 shell $python_exe "$programs/analysis/pure_control_cutoff/4290_latex_figure_pure_control_cutoff.py" --preview
 
-shell source /gpfs/kellogg/proj/lgg3230/UnionSpill/Programs/notify.sh && ///
+if c(os) == "Unix" shell source "$root/Programs/notify.sh" && ///
 	notify "3162_pure_control_cutoff done" "direct effects by pure-control cutoff complete"

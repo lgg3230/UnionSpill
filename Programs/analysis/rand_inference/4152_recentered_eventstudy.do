@@ -17,9 +17,9 @@ version 17.0
 set more off
 * Paths are caller-overridable so the master (and any test harness) can send
 * output somewhere other than the tracked directories. Defaults are unchanged.
-if "$randdir"  == "" global randdir  "/kellogg/proj/lgg3230/UnionSpill/Data/rand_inference"
-if "$graphs"   == "" global graphs   "/kellogg/proj/lgg3230/UnionSpill/Graphs/rand_inference"
-if "$paperfig" == "" global paperfig "/kellogg/proj/lgg3230/UnionSpill/UnionSpill-paper/Figures/Main"
+if "$randdir"  == "" global randdir  "$root/Data/rand_inference"
+if "$graphs"   == "" global graphs   "$root/Graphs/rand_inference"
+if "$paperfig" == "" global paperfig "$root/UnionSpill-paper/Figures/Main"
 cap mkdir "$graphs"
 
 use "$randdir/spill_frame.dta", clear
@@ -115,4 +115,4 @@ cap graph export "$paperfig/es_counterfactual_`out'.pdf", as(pdf) replace
 di as result "=== es_spill + es_counterfactual PDFs written ==="
 di as result "pooled: main `b0s' (`se0s'); adjusted `b1s' (`se1s'); mu `bms' (`sems')"
 
-shell source /gpfs/kellogg/proj/lgg3230/UnionSpill/Programs/notify.sh && notify "ES adjusted done" "es_spill + es_counterfactual written"
+if c(os) == "Unix" shell source "$root/Programs/notify.sh" && notify "ES adjusted done" "es_spill + es_counterfactual written"

@@ -208,7 +208,7 @@ def make_table(data, caption, label, post_label, pre_label, notes):
 
 def main():
     script_dir = Path(__file__).resolve().parent
-    rob_dir    = script_dir.parent.parent / "Tables" / "robustness"
+    rob_dir    = script_dir.parents[2] / "Tables" / "robustness"
 
     spill_data = load_robustness_csv(rob_dir / "results_spill_robustness_bins.csv")
     pa_data    = load_robustness_csv(rob_dir / "results_direct_panelA_robustness_bins.csv")

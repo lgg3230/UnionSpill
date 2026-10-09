@@ -343,5 +343,5 @@ type "`csv'"
 di "Finished: `c(current_date)' `c(current_time)'"
 capture log close
 
-shell source /gpfs/kellogg/proj/lgg3230/UnionSpill/Programs/notify.sh && ///
+if c(os) == "Unix" shell source "$root/Programs/notify.sh" && ///
 	notify "3152_linearity_bins$out_suffix done" "binned-connectivity spillover DiD complete"

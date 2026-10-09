@@ -15,6 +15,8 @@
 capture log close
 local d = subinstr("`c(current_date)'"," ","_",.)
 local t = subinstr("`c(current_time)'",":","",.)
+cap mkdir "$logs/robustness"
+cap mkdir "$tables/robustness"
 log using "$logs/robustness/Main_Results_robustness_bins_`d'_`t'.log", replace text
 
 di "Started: `c(current_date)' `c(current_time)'"
@@ -698,10 +700,10 @@ di as result "Finished: `c(current_date)' `c(current_time)'"
 log close
 
 * ── Auto-generate LaTeX tables ──────────────────────────────────────────────
-shell ~/.conda/envs/venv_python312/bin/python "$programs/analysis/robustness/4170_table_robustness_latex.py"
+shell $python_exe "$programs/analysis/robustness/4170_table_robustness_latex.py"
 di as result "LaTeX tables written to Tables/robustness/robustness_bins_tables.tex"
 
-shell source /gpfs/kellogg/proj/lgg3230/UnionSpill/Programs/notify.sh && notify "Stata done" "3052_robustness_bins.do complete"
+if c(os) == "Unix" shell source "$root/Programs/notify.sh" && notify "Stata done" "3052_robustness_bins.do complete"
 
 ********************************************************************************
 * END OF DO-FILE

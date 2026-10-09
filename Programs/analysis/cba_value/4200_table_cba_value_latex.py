@@ -204,7 +204,7 @@ def make_table(pa_cv, pb_cv, pc_cv, sp_cv):
 
 def main():
     script_dir   = Path(__file__).resolve().parent
-    tables_dir   = script_dir.parent.parent / "Tables"
+    tables_dir   = script_dir.parents[2] / "Tables"
     pipeline_dir = tables_dir / "cba_value"
     output_file  = pipeline_dir / "cba_value_tables.tex"
 

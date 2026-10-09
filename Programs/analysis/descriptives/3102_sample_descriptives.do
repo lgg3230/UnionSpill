@@ -12,6 +12,8 @@
 capture log close
 local d = subinstr("`c(current_date)'"," ","_",.)
 local t = subinstr("`c(current_time)'",":","",.)
+cap mkdir "$logs/descriptives"
+cap mkdir "$tables/descriptives"
 log using "$logs/descriptives/descriptives_`d'_`t'.log", replace text
 
 di "Started: `c(current_date)' `c(current_time)'"
@@ -519,6 +521,6 @@ di as result "{hline 60}"
 di as result "All descriptive stats saved to Tables/descriptives/"
 di as result "{hline 60}"
 
-shell source /gpfs/kellogg/proj/lgg3230/UnionSpill/Programs/notify.sh && notify "Stata done" "3102_sample_descriptives.do complete"
+if c(os) == "Unix" shell source "$root/Programs/notify.sh" && notify "Stata done" "3102_sample_descriptives.do complete"
 
 capture log close

@@ -22,8 +22,9 @@ Output:
 import argparse
 from pathlib import Path
 
-RES = Path("/kellogg/proj/lgg3230/UnionSpill/Tables/residuals")
-OUT_DIR = Path("/kellogg/proj/lgg3230/UnionSpill/Tables/mincer_tenure_fullrais")
+ROOT = Path(__file__).resolve().parents[3]
+RES = ROOT / "Tables" / "residuals"
+OUT_DIR = ROOT / "Tables" / "mincer_tenure_fullrais"
 
 
 def load(fname):

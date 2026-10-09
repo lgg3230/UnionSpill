@@ -1,9 +1,10 @@
-* Wrapper: set globals then run 3152_linearity_bins.do with the baseline group
-* set to establishments with raw connectivity totaltreat_pw_n < 0.01 (the
-* "<= 1% connectivity" control cut used in 3012 Panel B, here strict). The
-* connectivity groups (median, terciles, quartiles) split the establishments
-* at or above 0.01. Outputs carry the suffix _lt01.
-
+* Wrapper: workforce-composition robustness, LOG HOURLY WAGES, CURRENT-CONNECTIVITY
+* panel. Produces column (4) "Workforce Characteristics" of tab:rob_logwages.
+*
+* Created 2026-10-09. Until then that column existed only as a frozen snapshot
+* (quality_reports/replication/hourly_variant_currentconn/frag/t_rob_hw.6col.orig.tex);
+* the scripts behind it were archived and monthly-only. 3182_demo_controls.do
+* reads $OUTVAR / $OUTSUF, following the 3071/3072 pattern.
 set more off
 set varabbrev off
 
@@ -38,14 +39,14 @@ if !fileexists(`"$root/Programs/0000_master.do"') {
 }
 global rais_aux  "$root/Data/RAIS_aux"
 global rais_firm "$root/Data/CBA_RAIS_firm_level"
-global tables    "$root/Tables/linearity"
-global graphs    "$root/Graphs/linearity"
-global logs      "$root/Logs/linearity"
+global tables    "$root/Tables/currentconn_full"
+global graphs    "$root/Graphs/currentconn_full"
+global logs      "$root/Logs/currentconn_full"
 global programs  "$root/Programs"
 
-global base_lt    "0.01"
-global out_suffix "_lt01"
+global OUTVAR "lr_remdezr_h_w"
+global OUTSUF "_hw"
 
 do "$root/Programs/analysis/_setup.do"   // Python, output folders, root memory
 
-do "$programs/analysis/linearity/3152_linearity_bins.do"
+do "$programs/analysis/robustness/3182_demo_controls.do"

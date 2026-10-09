@@ -18,14 +18,14 @@ import matplotlib.pyplot as plt
 import matplotlib.font_manager as fm
 from pyfixest.estimation.demean_ import demean
 
-ROOT = Path("/gpfs/kellogg/proj/lgg3230/UnionSpill")
+ROOT = Path(__file__).resolve().parents[3]
 OUT  = ROOT / "Data/rand_inference"
 GR   = ROOT / "Graphs/rand_inference"; GR.mkdir(exist_ok=True)
 PAPER = ROOT / "UnionSpill-paper/Figures/Main"
-for p in ["/kellogg/proj/lgg3230/UnionSpill/Programs/fonts/LibertinusSerif-Regular.otf",
-          "/kellogg/proj/lgg3230/UnionSpill/fonts/LibertinusSerif-Regular.otf"]:
+for p in [ROOT / "Programs/fonts/LibertinusSerif-Regular.otf",
+          ROOT / "fonts/LibertinusSerif-Regular.otf"]:
     if Path(p).exists():
-        fm.fontManager.addfont(p); plt.rcParams["font.family"] = "Libertinus Serif"; break
+        fm.fontManager.addfont(str(p)); plt.rcParams["font.family"] = "Libertinus Serif"; break
 plt.rcParams.update({"font.size": 12})
 BLUE, RED = "#2166AC", "#B2182B"
 

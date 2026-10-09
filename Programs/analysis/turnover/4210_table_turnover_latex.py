@@ -387,7 +387,7 @@ def make_spill_table(group):
 
 def main():
     script_dir   = Path(__file__).resolve().parent
-    tables_dir   = script_dir.parent.parent / "Tables"
+    tables_dir   = script_dir.parents[2] / "Tables"
     pipeline_dir = tables_dir / "turnover"
     output_file  = pipeline_dir / "turnover_tables.tex"
 

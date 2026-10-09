@@ -145,7 +145,7 @@ def make_table(data):
 
 def main():
     script_dir  = Path(__file__).resolve().parent
-    rob_dir     = script_dir.parent.parent / "Tables" / "robustness"
+    rob_dir     = script_dir.parents[2] / "Tables" / "robustness"
     output_file = rob_dir / "union_controls_table.tex"
 
     data = load_csv(rob_dir / "results_spill_union_controls.csv")

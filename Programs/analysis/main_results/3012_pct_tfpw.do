@@ -27,12 +27,12 @@ capture cls
 * SET PATHNAMES (uncomment and edit if running standalone without 0000_master.do)
 * ===============================
 // global main      "PATHNAME TO Replication-Mar-2"
-// global rais_firm "$main/UnionSpill/Data/CBA_RAIS_firm_level"
-// global tables    "$main/UnionSpill/Tables"
-// global graphs    "$main/UnionSpill/Graphs"
-// global rais_aux  "$main/UnionSpill/Data/RAIS_aux"
-// global logs      "$main/UnionSpill/Logs"
-// global programs  "$main/UnionSpill/Programs"
+// global rais_firm "$root/Data/CBA_RAIS_firm_level"
+// global tables    "$root/Tables"
+// global graphs    "$root/Graphs"
+// global rais_aux  "$root/Data/RAIS_aux"
+// global logs      "$root/Logs"
+// global programs  "$root/Programs"
 * ===============================
 
 use "$rais_firm/lagos_sample_sep24_pct_unionexp_ext_df2.dta", clear
@@ -848,7 +848,7 @@ di as result "Finished: `c(current_date)' `c(current_time)'"
 * ── Auto-generate LaTeX tables ──────────────────────────────────────────────
 * The system python3 is 3.6; use the conda interpreter, and pass $tables so
 * the LaTeX is built from the CSVs this run just wrote.
-if "$python_exe" == "" global python_exe "/home/lgg3230/.conda/envs/venv_python312/bin/python"
+if "$python_exe" == "" global python_exe "python3"
 shell $python_exe "$programs/analysis/main_results/4160_table_pct_latex.py" "$tables"
 di as result "LaTeX tables written to $tables/pct_tables.tex"
 

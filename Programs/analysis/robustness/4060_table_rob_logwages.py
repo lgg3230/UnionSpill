@@ -15,15 +15,20 @@ exposure control linear (as in the original paper table); columns (7)-(8) put
 the same control in quartile bins. The contrast is functional form only: both
 enter interacted with year fixed effects.
 
-Sources
+Sources (estimator CSVs only; since 2026-10-09 no frozen .tex snapshot)
 -------
-  cols (1)-(4), both panels : t_rob{suf}.6col.orig.tex   (pristine snapshot of
-                              the inlined tex block; never this script's own
-                              output, so the generator stays idempotent)
-  cols (5)-(8), both panels : results_micro_ind_q{suf}.csv
-                              spillover  mif_lin miw_lin mif_q miw_q
-                              direct     dir_mif_lin dir_miw_lin
-                                         dir_mif_q dir_miw_q
+  col (1) Main        : Tables/pct_tfpw_cc/results_{direct_panelA,spill}_tfpw_07_11_pct.csv
+                        (3011 -> 3012)
+  cols (2)-(3) Bins   : Tables/currentconn_full/robustness/results_{direct_panelA,spill}_robustness_bins.csv,
+                        specs tfpw_07_11_pct_bins10 / _bins20 (3051 -> 3052)
+  col (4) Workforce   : Tables/currentconn_full/robustness/results_demo_controls{suf}.csv,
+                        col 2 = demographic quartile bins (3181 -> 3182)
+  cols (5)-(8)        : results_micro_ind_q{suf}.csv (3061 -> 3062)
+                        spillover  mif_lin miw_lin mif_q miw_q
+                        direct     dir_mif_lin dir_miw_lin
+                                   dir_mif_q dir_miw_q
+  Panel A = direct_A (zero-connectivity controls); Panel B = spill.
+  A suffix ("" monthly, "_hw" hourly) is built only if all its CSVs exist.
 
 Normalization: mi_exp_f_n / mi_exp_w_n are scaled by the p90 among SPILLOVER
 firms in 2009 in both panels (decision 2026-07-31), so the direct and spillover
@@ -42,6 +47,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent.parent.parent
 FRAG = ROOT / "quality_reports/replication/hourly_variant_currentconn/frag"
 CSVD = ROOT / "Tables/currentconn_full/robustness"
+MAIN = ROOT / "Tables/pct_tfpw_cc"
 def fmt_mean(raw):
     """CSV keeps 4 decimals; the table shows 3 (decision 2026-08-02)."""
     val = float(str(raw).strip())
@@ -70,34 +76,55 @@ def load_q(suf):
     return out
 
 
-def cells(line):
-    return [c.strip() for c in re.sub(r"\\\\\s*$", "", line.rstrip()).split("&")]
+def read_rows(path):
+    """semicolon CSV -> list of field lists, quotes and padding stripped"""
+    rows = []
+    for line in path.read_text().splitlines()[1:]:
+        f = [x.strip().strip('"').strip() for x in line.split(";")]
+        if len(f) >= 4:
+            rows.append(f)
+    return rows
 
 
-def parse_orig(suf):
-    """columns 1-4 of every labelled row, per panel, from the pristine snapshot."""
-    src = (FRAG / f"t_rob{suf}.6col.orig.tex").read_text().splitlines()
-    LBL = ("Post $\\times$ Treatment", "Post $\\times$ Connectivity",
-           "Observations", "Establishments", "Pre-trend (placebo)")
-    keep, panel, prev = {}, None, None
-    for ln in src:
-        s = ln.strip()
-        if s.startswith(r"\multicolumn{7}{l}{\textbf{Panel A:}"):
-            panel, prev = "A", None; continue
-        if s.startswith(r"\multicolumn{7}{l}{\textbf{Panel B:}"):
-            panel, prev = "B", None; continue
-        if panel is None:
-            continue
-        if s.startswith("&") and prev:
-            keep[(panel, prev + "_se")] = cells(s)[1:5]
-            prev = None
-            continue
-        for lbl in LBL:
-            if s.startswith(lbl + " &"):
-                keep[(panel, lbl)] = cells(s)[1:5]
-                prev = lbl if "Post" in lbl or "Pre-trend" in lbl else None
-                break
-    return keep
+ROWS = ("main", "main_se", "pre", "pre_se", "n_obs", "n_estab", "mean_pre")
+
+
+def first4_sources(suf):
+    """paths for columns 1-4; None if any is missing"""
+    paths = [MAIN / "results_direct_panelA_tfpw_07_11_pct.csv",
+             MAIN / "results_spill_tfpw_07_11_pct.csv",
+             CSVD / "results_direct_panelA_robustness_bins.csv",
+             CSVD / "results_spill_robustness_bins.csv",
+             CSVD / f"results_demo_controls{suf}.csv",
+             CSVD / f"results_micro_ind_q{suf}.csv"]
+    return paths if all(p.exists() for p in paths) else None
+
+
+def load_first4(suf):
+    """{(panel, col): {row_type: value}} for columns 1-4, panel in A/B"""
+    y = "lr_remdezr_h_w" if suf == "_hw" else "lr_remdezr_w"
+    out = {}
+    for panel, sec, main_f, bins_f in (
+            ("A", "direct_A", "results_direct_panelA_tfpw_07_11_pct.csv",
+             "results_direct_panelA_robustness_bins.csv"),
+            ("B", "spill", "results_spill_tfpw_07_11_pct.csv",
+             "results_spill_robustness_bins.csv")):
+        for spec, _sec, outc, rt, val in read_rows(MAIN / main_f):
+            if spec == "tfpw_07_11_pct" and _sec == sec and outc == y:
+                out.setdefault((panel, 1), {})[rt] = val
+        for spec, _sec, outc, rt, val in read_rows(CSVD / bins_f):
+            for col, tag in ((2, "bins10"), (3, "bins20")):
+                if spec == f"tfpw_07_11_pct_{tag}" and _sec == sec and outc == y:
+                    out.setdefault((panel, col), {})[rt] = val
+        for _sec, outc, col, rt, val in read_rows(CSVD / f"results_demo_controls{suf}.csv"):
+            if _sec == sec and outc == y and col == "2":
+                out.setdefault((panel, 4), {})[rt] = val
+    for panel in "AB":
+        for col in (1, 2, 3, 4):
+            miss = [r for r in ROWS if r not in out.get((panel, col), {})]
+            if miss:
+                raise SystemExit(f"t_rob{suf}: panel {panel} col {col} missing {miss}")
+    return out
 
 
 def num(v):
@@ -106,18 +133,24 @@ def num(v):
 
 
 def build(suf):
+    if first4_sources(suf) is None:
+        print(f"skip t_rob{suf}.tex: estimator CSVs for this outcome not all present")
+        return
     q = load_q(suf)
-    orig = parse_orig(suf)
+    c4 = load_first4(suf)
 
     missing = [sp for pair in COLSPECS for sp in pair if sp not in q]
     if missing:
         raise SystemExit(f"missing specs in results_micro_ind_q{suf}.csv: {missing}")
 
-    def k(panel, lbl):
-        v = orig.get((panel, lbl))
-        if v is None:
-            raise SystemExit(f"cannot parse cols 1-4 for {panel}/{lbl}")
-        return v
+    def k(panel, rt, wrap=None):
+        """columns 1-4 of one row type, formatted like columns 5-8"""
+        vals = [c4[(panel, c)][rt] for c in (1, 2, 3, 4)]
+        if rt in ("n_obs", "n_estab"):
+            return [v.replace(",", "{,}") for v in vals]
+        if rt == "mean_pre":
+            return [fmt_mean(v) for v in vals]
+        return [f"({v})" for v in vals] if wrap else vals
 
     def thou(spec, rt):
         return q[spec][rt].replace(",", "{,}")
@@ -125,7 +158,7 @@ def build(suf):
     # ---- ratios: spillover / direct, per column ----------------------------
     ratios = []
     for i in range(4):                                    # cols 1-4
-        ratios.append(f"{num(k('B','Post $\\times$ Connectivity')[i]) / num(k('A','Post $\\times$ Treatment')[i]):.2f}")
+        ratios.append(f"{num(k('B', 'main')[i]) / num(k('A', 'main')[i]):.2f}")
     for sp, dr in COLSPECS:                               # cols 5-8
         ratios.append(f"{num(q[sp]['main']) / num(q[dr]['main']):.2f}")
 
@@ -165,42 +198,42 @@ def build(suf):
 
     # ---------------- Panel A -------------------------------------------------
     A(r"\multicolumn{9}{l}{\textbf{Panel A:} Direct Effects } \\")
-    row(r"Post $\times$ Treatment", k("A", "Post $\\times$ Treatment"),
+    row(r"Post $\times$ Treatment", k("A", "main"),
         [q[d]["main"] for _, d in COLSPECS])
-    row(" ", k("A", "Post $\\times$ Treatment_se"),
+    row(" ", k("A", "main_se", wrap=True),
         [f"({q[d]['main_se']})" for _, d in COLSPECS])
     A(r" &  &  &  &  &  &  &  & \\")
     if INCLUDE_MEAN:
-        row("Pre-treatment mean", [fmt_mean(q["dir_base"]["mean_pre"])] * 4,
+        row("Pre-treatment mean", k("A", "mean_pre"),
             [fmt_mean(q[d]["mean_pre"]) for _, d in COLSPECS])
-    row("Observations", k("A", "Observations"), [thou(d, "n_obs") for _, d in COLSPECS])
-    row("Establishments", k("A", "Establishments"), [thou(d, "n_estab") for _, d in COLSPECS])
+    row("Observations", k("A", "n_obs"), [thou(d, "n_obs") for _, d in COLSPECS])
+    row("Establishments", k("A", "n_estab"), [thou(d, "n_estab") for _, d in COLSPECS])
     A(r"\midrule")
-    row(r"Pre-trend (placebo)", k("A", "Pre-trend (placebo)"),
+    row(r"Pre-trend (placebo)", k("A", "pre"),
         [q[d]["pre"] for _, d in COLSPECS])
-    row(" ", k("A", "Pre-trend (placebo)_se"),
+    row(" ", k("A", "pre_se", wrap=True),
         [f"({q[d]['pre_se']})" for _, d in COLSPECS])
     A(r" &  &  &  &  &  &  &  & \\")
     A(r" \midrule")
 
     # ---------------- Panel B -------------------------------------------------
     A(r"\multicolumn{9}{l}{\textbf{Panel B:} Spillover Effects} \\")
-    row(r"Post $\times$ Connectivity", k("B", "Post $\\times$ Connectivity"),
+    row(r"Post $\times$ Connectivity", k("B", "main"),
         [q[s]["main"] for s, _ in COLSPECS])
-    row(" ", k("B", "Post $\\times$ Connectivity_se"),
+    row(" ", k("B", "main_se", wrap=True),
         [f"({q[s]['main_se']})" for s, _ in COLSPECS])
     A(r" &  &  &  &  &  &  &  & \\")
     A(r"Spillover / direct effect & " + " & ".join(ratios) + r"\\")
     A(r" &  &  &  &  &  &  &  & \\")
     if INCLUDE_MEAN:
-        row("Pre-treatment mean", [fmt_mean(q["mif_lin"]["mean_pre"])] * 4,
+        row("Pre-treatment mean", k("B", "mean_pre"),
             [fmt_mean(q[s]["mean_pre"]) for s, _ in COLSPECS])
-    row("Observations", k("B", "Observations"), [thou(s, "n_obs") for s, _ in COLSPECS])
-    row("Establishments", k("B", "Establishments"), [thou(s, "n_estab") for s, _ in COLSPECS])
+    row("Observations", k("B", "n_obs"), [thou(s, "n_obs") for s, _ in COLSPECS])
+    row("Establishments", k("B", "n_estab"), [thou(s, "n_estab") for s, _ in COLSPECS])
     A(r"\midrule")
-    row(r"Pre-trend (placebo)", k("B", "Pre-trend (placebo)"),
+    row(r"Pre-trend (placebo)", k("B", "pre"),
         [q[s]["pre"] for s, _ in COLSPECS])
-    row(" ", k("B", "Pre-trend (placebo)_se"),
+    row(" ", k("B", "pre_se", wrap=True),
         [f"({q[s]['pre_se']})" for s, _ in COLSPECS])
     A(r"\bottomrule\bottomrule")
     A(r"\end{tabular}")

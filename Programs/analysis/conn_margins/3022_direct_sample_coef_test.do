@@ -28,16 +28,17 @@ set varabbrev off
 * Globals are defaults only (2026-08-01), so a wrapper can point this at the
 * current-connectivity overlay without editing the script. Unset behaviour is
 * unchanged: the frozen panel and the legacy Tables/ root.
-if "$main"      == "" global main      "/kellogg/proj/lgg3230/UnionSpill"
-if "$rais_firm" == "" global rais_firm "$main/Data/CBA_RAIS_firm_level"
-if "$rais_aux"  == "" global rais_aux  "$main/Data/RAIS_aux"
-if "$tables"    == "" global tables    "$main/Tables"
-if "$logs"      == "" global logs      "$main/Logs"
+if "$rais_firm" == "" global rais_firm "$root/Data/CBA_RAIS_firm_level"
+if "$rais_aux"  == "" global rais_aux  "$root/Data/RAIS_aux"
+if "$tables"    == "" global tables    "$root/Tables"
+if "$logs"      == "" global logs      "$root/Logs"
 if "$testsuf"   == "" global testsuf   ""
 
 capture log close
 local d = subinstr("`c(current_date)'"," ","_",.)
 local t = subinstr("`c(current_time)'",":","",.)
+cap mkdir "$logs/conn_margins"
+cap mkdir "$tables/conn_margins"
 log using "$logs/conn_margins/direct_sample_coef_test_`d'_`t'.log", replace text
 
 * ── Load + prep (mirror Main_Results direct-effects spec) ─────────────────────
@@ -269,5 +270,5 @@ di _newline "======================================================="
 type "$tables/conn_margins/direct_sample_coef_test$testsuf.csv"
 
 capture log close
-shell source /gpfs/kellogg/proj/lgg3230/UnionSpill/Programs/notify.sh && ///
+if c(os) == "Unix" shell source "$root/Programs/notify.sh" && ///
 	notify "direct sample test done" "A-vs-C and B-vs-C wage coefficient tests complete"

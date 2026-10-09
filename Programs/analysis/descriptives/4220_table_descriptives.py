@@ -15,7 +15,7 @@ import csv
 
 # ── Paths ────────────────────────────────────────────────────────────────────
 SCRIPT_DIR   = Path(__file__).resolve().parent
-PROJECT_ROOT = SCRIPT_DIR.parent.parent
+PROJECT_ROOT = SCRIPT_DIR.parents[2]
 TABLES_DIR   = PROJECT_ROOT / "Tables" / "descriptives"
 
 # ── Helper: read CSV into an ordered dict keyed by statistic name ─────────────

@@ -14,6 +14,8 @@
 capture log close
 local d = subinstr("`c(current_date)'"," ","_",.)
 local t = subinstr("`c(current_time)'",":","",.)
+cap mkdir "$logs/residuals"
+cap mkdir "$tables/residuals"
 log using "$logs/residuals/FinalResults_mincer_`d'_`t'.log", replace text
 
 di "Started: `c(current_date)' `c(current_time)'"
@@ -34,12 +36,12 @@ capture cls
 * SET PATHNAMES (uncomment and edit if running standalone without 0000_master.do)
 * ===============================
 // global main      "PATHNAME TO Replication-Mar-2"
-// global rais_firm "$main/UnionSpill/Data/CBA_rais_firm_level"
-// global tables    "$main/UnionSpill/Tables"
-// global graphs    "$main/UnionSpill/Graphs"
-// global rais_aux  "$main/UnionSpill/Data/RAIS_aux"
-// global logs      "$main/UnionSpill/Logs"
-// global programs  "$main/UnionSpill/Programs"
+// global rais_firm "$root/Data/CBA_RAIS_firm_level"
+// global tables    "$root/Tables"
+// global graphs    "$root/Graphs"
+// global rais_aux  "$root/Data/RAIS_aux"
+// global logs      "$root/Logs"
+// global programs  "$root/Programs"
 * ===============================
 
 use "$rais_firm/lagos_sample_sep24_pct_unionexp_ext_df2.dta", clear
@@ -454,7 +456,7 @@ log close
 di as result "Finished: `c(current_date)' `c(current_time)'"
 
 * ── Auto-generate LaTeX tables ──────────────────────────────────────────────
-shell python3 "$programs/analysis/residuals/4190_table_mincer_latex.py"
+shell $python_exe "$programs/analysis/residuals/4190_table_mincer_latex.py"
 di as result "LaTeX tables written to Tables/mincer_tables.tex"
 
 ********************************************************************************

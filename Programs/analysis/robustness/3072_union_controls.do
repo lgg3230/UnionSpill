@@ -30,6 +30,8 @@ if "$OUTSUF" == "" global OUTSUF ""
 capture log close
 local d = subinstr("`c(current_date)'"," ","_",.)
 local t = subinstr("`c(current_time)'",":","",.)
+cap mkdir "$logs/robustness"
+cap mkdir "$tables/robustness"
 log using "$logs/robustness/Main_Results_union_controls${OUTSUF}_`d'_`t'.log", replace text
 
 di "Started: `c(current_date)' `c(current_time)'"
@@ -583,10 +585,10 @@ di as result "Finished: `c(current_date)' `c(current_time)'"
 
 log close
 
-shell ~/.conda/envs/venv_python312/bin/python "$programs/analysis/robustness/4180_table_union_controls_latex.py"
+shell $python_exe "$programs/analysis/robustness/4180_table_union_controls_latex.py"
 di as result "LaTeX table written to Tables/robustness/union_controls_table.tex"
 
-shell source /gpfs/kellogg/proj/lgg3230/UnionSpill/Programs/notify.sh && notify "Stata done" "3072_union_controls.do complete"
+if c(os) == "Unix" shell source "$root/Programs/notify.sh" && notify "Stata done" "3072_union_controls.do complete"
 
 ********************************************************************************
 * END OF DO-FILE

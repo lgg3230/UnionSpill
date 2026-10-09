@@ -42,6 +42,8 @@
 capture log close
 local d = subinstr("`c(current_date)'"," ","_",.)
 local t = subinstr("`c(current_time)'",":","",.)
+cap mkdir "$logs/robustness"
+cap mkdir "$tables/robustness"
 log using "$logs/robustness/Main_Results_micro_ind_q$OUTSUF`d'_`t'.log", replace text
 
 di "Started: `c(current_date)' `c(current_time)'"

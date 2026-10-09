@@ -13,6 +13,9 @@
 capture log close
 local d = subinstr("`c(current_date)'"," ","_",.)
 local t = subinstr("`c(current_time)'",":","",.)
+cap mkdir "$graphs/cba_value"
+cap mkdir "$logs/cba_value"
+cap mkdir "$tables/cba_value"
 log using "$logs/cba_value/FinalResults_cba_value_`d'_`t'.log", replace text
 
 di "Started: `c(current_date)' `c(current_time)'"
@@ -436,10 +439,10 @@ di as result "All regressions complete."
 log close
 di as result "Finished: `c(current_date)' `c(current_time)'"
 
-shell "$programs/analysis/cba_value/4200_table_cba_value_latex.py"
+shell $python_exe "$programs/analysis/cba_value/4200_table_cba_value_latex.py"
 di as result "LaTeX tables written to Tables/cba_value/"
 
-shell source /gpfs/kellogg/proj/lgg3230/UnionSpill/Programs/notify.sh && notify "cba_value done" "3042_cba_value.do finished"
+if c(os) == "Unix" shell source "$root/Programs/notify.sh" && notify "cba_value done" "3042_cba_value.do finished"
 
 ********************************************************************************
 * END OF DO-FILE
