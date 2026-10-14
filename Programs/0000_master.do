@@ -204,6 +204,8 @@ local c_linearity_lt01   = 0      // 3153_linearity_bins_lt01.do (baseline = con
 local c_linearity_fd     = 0      // 3171_linearity_fd.do: FD vs TWFE test, same bins, main panel (now the vintage overlay)
 local c_pure_ctrl_cut    = 0      // 3161_pure_control_cutoff.do -> Tables/pure_control_cutoff/ (also writes its table + figure; reads the main panel, now the vintage overlay)
 local c_demo_controls    = 0      // 3181_demo_controls.do: workforce-composition controls, col (4) of tab:rob_logwages (added 2026-10-09)
+local c_trim_firmsize    = 0      // 3221_trim_firmsize.do: main direct (Panel A) + spillover effects trimming 1/2.5/5/10/20% of pre-treatment size at each tail; event-study overlays + tables in one PDF -> Tables/trim_firmsize/, Graphs/trim_firmsize/ (added 2026-10-12)
+local c_trim_top_size    = 0      // 3231_trim_top_size.do: direct (Panel A) + spillover effects after trimming the largest firms within group (cap at the largest zero-connectivity firm; top 5/10/20%); gated baseline -> Tables/trim_top_size/, Graphs/trim_top_size/ (added 2026-10-12)
 
 * --- TIER D: estimates -> tables and figures ---------------------------------
 local d_tables           = 0      // the 9 table generators
@@ -328,6 +330,8 @@ if (`c_linearity_lt01'   ==1) shell cd "$logs" && $stata_exe -b do "../Programs/
 if (`c_linearity_fd'     ==1) shell cd "$logs" && $stata_exe -b do "../Programs/analysis/linearity/3171_linearity_fd.do"
 if (`c_pure_ctrl_cut'    ==1) shell cd "$logs" && $stata_exe -b do "../Programs/analysis/pure_control_cutoff/3161_pure_control_cutoff.do"
 if (`c_demo_controls'    ==1) shell cd "$logs" && $stata_exe -b do "../Programs/analysis/robustness/3181_demo_controls.do"
+if (`c_trim_firmsize'    ==1) shell cd "$logs" && $stata_exe -b do "../Programs/analysis/robustness/3221_trim_firmsize.do"
+if (`c_trim_top_size'    ==1) shell cd "$logs" && $stata_exe -b do "../Programs/analysis/robustness/3231_trim_top_size.do"
 
 ********************************************************************************
 * TIER D -- tables and figures
