@@ -50,6 +50,7 @@ global tables    "$root/Tables/pure_control_cutoff"
 global graphs    "$root/Graphs/pure_control_cutoff"
 global logs      "$root/Logs/pure_control_cutoff"
 global programs  "$root/Programs"
+global pcc_set   "coarse"   // terciles/quartiles/P80/P90; 3164 sets "fine"
 
 do "$root/Programs/analysis/_setup.do"   // Python, output folders, root memory
 

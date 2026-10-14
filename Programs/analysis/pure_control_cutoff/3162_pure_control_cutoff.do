@@ -49,6 +49,26 @@ Output ($tables = Tables/pure_control_cutoff/):
   -> table:  4270_table_pure_control_cutoff_latex.py
   -> figure: 4280_figure_pure_control_cutoff.py (one PDF per outcome)
              4290_latex_figure_pure_control_cutoff.py (2x2 subfigure wrapper)
+
+CUTOFF SETS ($pcc_set, set by the wrapper):
+  coarse  (3161) the quantile cutoffs listed above.
+  fine    (3164) vingtiles of positive connectivity, p05 p10 ... p95
+          (_pctile, nq(20)); the deciles are the even ones (p10 ... p90).
+          Same zero / fixed_001 / all columns and the same gate. A vingtile
+          whose raw cutoff equals the previous one selects the same sample:
+          it is estimated once, and the cutoffs CSV names the estimated
+          sample in its same_as column. After the cutoffs, event studies for
+          the two wage outcomes on zero, p05, p10, p20 and p50 (Section 5):
+            reghdfe Y i.treat_ultra##ib2011.year if s, absorb(as Post)
+              vce(cluster identificad); pre-trend F-test on 2009 and 2010
+          as in 3012's direct event studies.
+          Output ($tables = Tables/pure_control_cutoff_fine/): the two CSVs
+          above plus pure_control_cutoff_es.csv
+          (sample,outcome,year,b,se,pre_pval,n_obs,n_estab).
+          -> figures: 3165_figures_pure_control_cutoff_fine.do (Stata)
+          -> table:   4271_table_pure_control_cutoff_deciles_latex.py
+          -> LaTeX figure wrappers: 4281_figure_pure_control_cutoff_fine.py,
+                      4282_figure_es_pure_control_cutoff.py (+ event-study check)
 ================================================================================
 */
 
@@ -214,25 +234,48 @@ drop conn_sd
 
 * _pctile with nq(k) gives the same cutpoints as xtile (3152). Kept as scalars
 * so the sample restriction uses full double precision.
-quietly _pctile totaltreat_pw_n if `s_pool' & year == 2009 & `pos', nq(4)
-scalar c_q1_4 = r(r1)
-scalar c_q2_4 = r(r2)
-scalar c_q3_4 = r(r3)
-quietly _pctile totaltreat_pw_n if `s_pool' & year == 2009 & `pos', nq(3)
-scalar c_t1_3 = r(r1)
-scalar c_t2_3 = r(r2)
-quietly _pctile totaltreat_pw_n if `s_pool' & year == 2009 & `pos', p(80 90)
-scalar c_p80 = r(r1)
-scalar c_p90 = r(r2)
+if "$pcc_set" == "fine" {
+	* Vingtiles p05 ... p95. A cutoff equal to the previous one selects the
+	* same sample, so it is not estimated again: same_as_<q> names the sample
+	* that carries its estimates.
+	quietly _pctile totaltreat_pw_n if `s_pool' & year == 2009 & `pos', nq(20)
+	local quantiles ""
+	local prev ""
+	forvalues k = 1/19 {
+		local q = "p" + string(5*`k', "%02.0f")
+		scalar c_`q' = r(r`k')
+		local quantiles "`quantiles' `q'"
+		local same_as_`q' ""
+		if "`prev'" != "" {
+			if scalar(c_`q') == scalar(c_`prev') {
+				local same_as_`q' = cond("`same_as_`prev''" != "", "`same_as_`prev''", "`prev'")
+			}
+		}
+		local prev "`q'"
+	}
+}
+else {
+	quietly _pctile totaltreat_pw_n if `s_pool' & year == 2009 & `pos', nq(4)
+	scalar c_q1_4 = r(r1)
+	scalar c_q2_4 = r(r2)
+	scalar c_q3_4 = r(r3)
+	quietly _pctile totaltreat_pw_n if `s_pool' & year == 2009 & `pos', nq(3)
+	scalar c_t1_3 = r(r1)
+	scalar c_t2_3 = r(r2)
+	quietly _pctile totaltreat_pw_n if `s_pool' & year == 2009 & `pos', p(80 90)
+	scalar c_p80 = r(r1)
+	scalar c_p90 = r(r2)
+	local quantiles "q1_4 t1_3 q2_4 t2_3 q3_4 p80 p90"
+}
 
 * Estimation order: the three replication columns first (verification gate),
 * then the quantile cutoffs.
-local samples "zero fixed_001 all q1_4 t1_3 q2_4 t2_3 q3_4 p80 p90"
+local samples "zero fixed_001 all `quantiles'"
 
 local cond_zero      "totaltreat_pw_n == 0"
 local cond_fixed_001 "totaltreat_pw_n <= 0.01"
 local cond_all       "1"
-foreach q in q1_4 t1_3 q2_4 t2_3 q3_4 p80 p90 {
+foreach q of local quantiles {
 	local cond_`q' "totaltreat_pw_n <= scalar(c_`q')"
 }
 
@@ -249,7 +292,9 @@ local n_treat_firms = r(N)
 
 tempname fc
 file open `fc' using "$tables/pure_control_cutoff_cutoffs.csv", write replace
-file write `fc' "sample,cutoff_raw,n_ctrl_firms,n_ctrl_positive,share_positive_le,n_at_cutoff,n_untreated_total,n_positive_total,n_treated_firms" _n
+file write `fc' "sample,cutoff_raw,n_ctrl_firms,n_ctrl_positive,share_positive_le,n_at_cutoff,n_untreated_total,n_positive_total,n_treated_firms"
+if "$pcc_set" == "fine" file write `fc' ",same_as"
+file write `fc' _n
 foreach s of local samples {
 	quietly count if `s_pool' & year == 2009 & (`cond_`s'')
 	local nc = r(N)
@@ -263,8 +308,11 @@ foreach s of local samples {
 		quietly count if `s_pool' & year == 2009 & totaltreat_pw_n == scalar(c_`s')
 		local nat = r(N)
 	}
-	file write `fc' "`s'," %20.15g (scalar(c_`s')) ",`nc',`ncp'," %10.6f (`shp') ",`nat',`n_pool',`n_pos',`n_treat_firms'" _n
-	di "  `s': cutoff " %10.6f (scalar(c_`s')) "  control firms `nc' (positive `ncp', " %5.3f (`shp') " of positive)  at cutoff `nat'"
+	file write `fc' "`s'," %20.15g (scalar(c_`s')) ",`nc',`ncp'," %10.6f (`shp') ",`nat',`n_pool',`n_pos',`n_treat_firms'"
+	if "$pcc_set" == "fine" file write `fc' ",`same_as_`s''"
+	file write `fc' _n
+	di "  `s': cutoff " %10.6f (scalar(c_`s')) "  control firms `nc' (positive `ncp', " %5.3f (`shp') " of positive)  at cutoff `nat'" ///
+		cond("`same_as_`s''" != "", "  (same sample as `same_as_`s'')", "")
 }
 file close `fc'
 
@@ -290,6 +338,12 @@ cap erase "$tables/verify_pass.flag"
 local outcomes "lr_remdezr_w lr_remdezr_h_w l_firm_emp numb_clauses"
 
 foreach s of local samples {
+
+	* Tied cutoff (fine set): same sample as an earlier cutoff, already estimated.
+	if "`same_as_`s''" != "" {
+		di _newline "Sample `s': same sample as `same_as_`s'', not re-estimated."
+		continue
+	}
 
 	local s_use "(treat_ultra==0 & `cond_`s'' | treat_ultra==1) & lagos_sample_avg==1 & in_balanced_panel==1"
 
@@ -385,6 +439,50 @@ foreach s of local samples {
 	}
 }
 
+********************************************************************************
+* SECTION 5: WAGE EVENT STUDIES (fine set only)
+********************************************************************************
+
+if "$pcc_set" == "fine" {
+
+	* Tied cutoffs map to the sample that carries their estimates; each
+	* distinct sample is estimated once.
+	local es_samples ""
+	foreach s in zero p05 p10 p20 p50 {
+		local r = cond("`same_as_`s''" != "", "`same_as_`s''", "`s'")
+		local es_samples : list es_samples | r
+	}
+
+	local es_csv "$tables/pure_control_cutoff_es.csv"
+	tempname fe
+	file open `fe' using "`es_csv'", write replace
+	file write `fe' "sample,outcome,year,b,se,pre_pval,n_obs,n_estab" _n
+	file close `fe'
+
+	foreach s of local es_samples {
+		local s_use "(treat_ultra==0 & `cond_`s'' | treat_ultra==1) & lagos_sample_avg==1 & in_balanced_panel==1"
+
+		foreach outcome in lr_remdezr_h_w lr_remdezr_w {
+			local absorb "`base_fe' ib0.`outcome'_pre4#i.year ib0.l_firm_emp_pre4#i.year `extra_year'"
+
+			di as text "  Event study: `outcome' (sample `s')"
+			reghdfe `outcome' i.treat_ultra##ib2011.year if `s_use', ///
+				absorb(`absorb') vce(cluster identificad)
+			local n_obs   = e(N)
+			local n_estab = e(N_clust)
+			testparm 1.treat_ultra#i(2009 2010).year
+			local pre_pval = r(p)
+
+			file open `fe' using "`es_csv'", write append
+			forvalues yr = 2009/2016 {
+				file write `fe' "`s',`outcome',`yr'," %20.15g (_b[1.treat_ultra#`yr'.year]) "," ///
+					%20.15g (_se[1.treat_ultra#`yr'.year]) "," %20.15g (`pre_pval') ",`n_obs',`n_estab'" _n
+			}
+			file close `fe'
+		}
+	}
+}
+
 di _newline "======================================================="
 di "PURE-CONTROL CUTOFF RESULTS"
 di "======================================================="
@@ -394,9 +492,17 @@ di "Finished: `c(current_date)' `c(current_time)'"
 log close
 
 * ── Table and figure ──────────────────────────────────────────────────────────
-shell $python_exe "$programs/analysis/pure_control_cutoff/4270_table_pure_control_cutoff_latex.py" --preview
-shell $python_exe "$programs/analysis/pure_control_cutoff/4280_figure_pure_control_cutoff.py"
-shell $python_exe "$programs/analysis/pure_control_cutoff/4290_latex_figure_pure_control_cutoff.py" --preview
+if "$pcc_set" == "fine" {
+	do "$programs/analysis/pure_control_cutoff/3165_figures_pure_control_cutoff_fine.do"
+	shell $python_exe "$programs/analysis/pure_control_cutoff/4271_table_pure_control_cutoff_deciles_latex.py" --preview
+	shell $python_exe "$programs/analysis/pure_control_cutoff/4281_figure_pure_control_cutoff_fine.py" --preview
+	shell $python_exe "$programs/analysis/pure_control_cutoff/4282_figure_es_pure_control_cutoff.py" --preview
+}
+else {
+	shell $python_exe "$programs/analysis/pure_control_cutoff/4270_table_pure_control_cutoff_latex.py" --preview
+	shell $python_exe "$programs/analysis/pure_control_cutoff/4280_figure_pure_control_cutoff.py"
+	shell $python_exe "$programs/analysis/pure_control_cutoff/4290_latex_figure_pure_control_cutoff.py" --preview
+}
 
 if c(os) == "Unix" shell source "$root/Programs/notify.sh" && ///
-	notify "3162_pure_control_cutoff done" "direct effects by pure-control cutoff complete"
+	notify "3162_pure_control_cutoff done" "direct effects by pure-control cutoff ($pcc_set) complete"

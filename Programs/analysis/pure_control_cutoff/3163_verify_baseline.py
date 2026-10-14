@@ -14,6 +14,11 @@ n_estab (exactly).
 
 Published source: the CSVs behind tab:direct_connectivity_robust,
     Tables/main_results_currentconn/results_direct_panel{A,B,C}_currentconn_wages.csv
+These live on the cluster. Where they are absent (a local copy of the project),
+the 3012 output on the same panel is used instead,
+    Tables/pct_tfpw_cc/results_direct_panel{A,B,C}_tfpw_07_11_pct.csv
+whose Panels A and C reproduce tab:direct_connectivity_robust exactly; the
+report names the source used.
 
 Writes <tables>/verify_baseline.txt always, and <tables>/verify_pass.flag only
 if every comparison matches. Exit code 0 on pass, 1 on fail.
@@ -29,6 +34,7 @@ from pathlib import Path
 
 PROJECT = Path(__file__).resolve().parents[3]
 PUB_DIR = PROJECT / "Tables" / "main_results_currentconn"
+LOCAL_DIR = PROJECT / "Tables" / "pct_tfpw_cc"
 TABLES = Path(sys.argv[1]) if len(sys.argv) > 1 else PROJECT / "Tables" / "pure_control_cutoff"
 
 OUTCOMES = ["lr_remdezr_w", "lr_remdezr_h_w", "l_firm_emp", "numb_clauses"]
@@ -40,9 +46,17 @@ COUNT_ROWS = ["n_obs", "n_estab"]
 TOL = 0.5e-4 + 1e-9
 
 
+def published_path(panel):
+    """Published CSV, or the local 3012 output when the published one is absent."""
+    path = PUB_DIR / f"results_direct_panel{panel}_currentconn_wages.csv"
+    if not path.exists():
+        path = LOCAL_DIR / f"results_direct_panel{panel}_tfpw_07_11_pct.csv"
+    return path
+
+
 def load_published(panel):
     """{(outcome, row_type): float} from the semicolon-delimited published CSV."""
-    path = PUB_DIR / f"results_direct_panel{panel}_currentconn_wages.csv"
+    path = published_path(panel)
     out = {}
     with open(path) as fh:
         next(fh)  # header
@@ -73,7 +87,8 @@ def main():
     ok = True
     for section, panel in PAIRS:
         pub = load_published(panel)
-        lines.append(f"[{section} vs published Panel {panel}]")
+        lines.append(f"[{section} vs published Panel {panel}: "
+                     f"{published_path(panel).relative_to(PROJECT)}]")
         for outcome in OUTCOMES:
             for row in DECIMAL_ROWS + COUNT_ROWS:
                 key_new = (section, outcome, row)

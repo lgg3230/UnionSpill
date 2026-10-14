@@ -1,0 +1,20 @@
+Event-study check: c = 0 series vs 3222 trim_0 direct_A (Tables/trim_firmsize/trim_firmsize_es_coefs.csv)
+
+  ok       lr_remdezr_h_w   2009 b=-0.0036050618 ref=-0.0036050618  se=0.0065187153 ref=0.0065187153
+  ok       lr_remdezr_h_w   2010 b=0.0009229302 ref=0.0009229302  se=0.0055866948 ref=0.0055866948
+  ok       lr_remdezr_h_w   2011 b=0.0000000000 ref=0.0000000000  se=0.0000000000 ref=0.0000000000
+  ok       lr_remdezr_h_w   2012 b=0.0216495412 ref=0.0216495412  se=0.0053859421 ref=0.0053859421
+  ok       lr_remdezr_h_w   2013 b=0.0213590636 ref=0.0213590636  se=0.0062267868 ref=0.0062267868
+  ok       lr_remdezr_h_w   2014 b=0.0296249986 ref=0.0296249986  se=0.0067175632 ref=0.0067175632
+  ok       lr_remdezr_h_w   2015 b=0.0329348313 ref=0.0329348313  se=0.0071699419 ref=0.0071699419
+  ok       lr_remdezr_h_w   2016 b=0.0325462265 ref=0.0325462265  se=0.0077291401 ref=0.0077291401
+  ok       lr_remdezr_w     2009 b=-0.0022770650 ref=-0.0022770650  se=0.0058149165 ref=0.0058149165
+  ok       lr_remdezr_w     2010 b=0.0017351957 ref=0.0017351957  se=0.0046775558 ref=0.0046775558
+  ok       lr_remdezr_w     2011 b=0.0000000000 ref=0.0000000000  se=0.0000000000 ref=0.0000000000
+  ok       lr_remdezr_w     2012 b=0.0240470021 ref=0.0240470021  se=0.0052587826 ref=0.0052587826
+  ok       lr_remdezr_w     2013 b=0.0177396098 ref=0.0177396098  se=0.0057713695 ref=0.0057713695
+  ok       lr_remdezr_w     2014 b=0.0276266230 ref=0.0276266230  se=0.0061670244 ref=0.0061670244
+  ok       lr_remdezr_w     2015 b=0.0308327013 ref=0.0308327013  se=0.0065185824 ref=0.0065185824
+  ok       lr_remdezr_w     2016 b=0.0299283489 ref=0.0299283489  se=0.0071991356 ref=0.0071991356
+
+RESULT: PASS
