@@ -6,6 +6,9 @@
 *     $tables/a8_hw.csv        (partition,col,p90,outcome,b1,se1,b2,se2,bp1,sp1,bp2,sp2,peq,n,firms)
 *     $tables/a6_group_hw.csv  (partition,group,avg_emp,avg_wage,avg_flows,conn)
 *     $tables/a6_partition_hw.csv (partition,pct_both,v_tot,v_wi,v_bw,wi_pct,bw_pct)
+*     $tables/a7_tests_hw.csv  (partition,kind,outcome,b_firm,b_group,diff,se_diff,p,
+*                               n_firm,n_group,clusters) -- A7 "Test: = Firm-level"
+*                               row, from a7_stacktest.do (Referee 3, Oct 2026)
 *
 * FAITHFUL-PORT NOTES (must match R for numbers to line up):
 *   - Bins use Stata type-2 percentiles (_pctile), i.e. R's stata_pctile().
@@ -200,6 +203,10 @@ program define balance_post
     }
 end
 
+* ---- A7 "Test: = Firm-level" stacked test (Referee 3, Oct 2026) ---------------
+* Defines _stacktest_a7 (internal note A7_test_note.pdf, Oct 2026).
+do "$programs/a7_stacktest.do"
+
 ********************************************************************************
 * SECTION 1: BUILD FIRM-LEVEL PANEL (build_firm_panel) -> tempfile FIRM
 ********************************************************************************
@@ -276,6 +283,12 @@ postfile `A6P' str10 partition double(pct_both v_tot v_wi v_bw wi_pct bw_pct) //
     using "`A6Pdta'", replace
 postfile `BAL' str10 exercise str10 partition str12 col str6 outcome ///
     str32 variable str8 sample long(n) double(value) using "`BALdta'", replace
+* A7 test of each group column against the firm-level column (a7_stacktest.do)
+tempname A7T
+tempfile A7Tdta
+postfile `A7T' str10 partition str8 kind str6 outcome ///
+    double(b_firm b_group diff se_diff p) long(n_firm n_group clusters) ///
+    using "`A7Tdta'", replace
 
 local partitions "edu2 gender ten2"
 if "$partitions" != "" local partitions "$partitions"
@@ -452,6 +465,16 @@ foreach p in `partitions' {
 	        }
 	    }
 
+	    * A7 "Test: = Firm-level": stacked test of each group column (2/3/5/6)
+	    * against the firm-level column (1/4); p is the bracketed table entry.
+	    foreach kind in within overall {
+	        foreach oc in wage emp {
+	            _stacktest_a7 "`FIRM'" "`GP'" `kind' `oc'
+	            post `A7T' ("`p'") ("`kind'") ("`oc'") (r(b_firm)) (r(b_group)) ///
+	                (r(diff)) (r(se_diff)) (r(p)) (r(n_firm)) (r(n_group)) (r(G))
+	        }
+	    }
+
     * ------------------------------------------------------------------
     * 4d. Build firm-level group connectivity constants (c1_raw, c2_raw)
     *     and the both-groups firm set, plus the A8 firm-column scales.
@@ -569,6 +592,7 @@ postclose `A8'
 postclose `A6G'
 postclose `A6P'
 postclose `BAL'
+postclose `A7T'
 
 * export the four estimate datasets to CSV (Python builds the LaTeX)
 use `A7dta',  clear
@@ -581,8 +605,10 @@ use `A6Pdta', clear
 export delimited using "$tables/a6_partition_hw`table_suffix'.csv", replace
 use `BALdta', clear
 export delimited using "$tables/singleton_balance_hw`table_suffix'.csv", replace
+use `A7Tdta', clear
+export delimited using "$tables/a7_tests_hw`table_suffix'.csv", replace
 
-di as result "Wrote a7_hw`table_suffix'.csv, a8_hw`table_suffix'.csv, a6_group_hw`table_suffix'.csv, a6_partition_hw`table_suffix'.csv, singleton_balance_hw`table_suffix'.csv to $tables"
+di as result "Wrote a7_hw`table_suffix'.csv, a7_tests_hw`table_suffix'.csv, a8_hw`table_suffix'.csv, a6_group_hw`table_suffix'.csv, a6_partition_hw`table_suffix'.csv, singleton_balance_hw`table_suffix'.csv to $tables"
 
 ********************************************************************************
 * END

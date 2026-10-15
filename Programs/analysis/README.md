@@ -124,7 +124,7 @@ Run the wrapper; read the CSV. Paths relative to the project root. Hourly =
 | Employment decomposition (`tab:turnover`) | `turnover/3081` → `3082` | `Tables/turnover/results_{direct_panelA,spill}_turnover.csv` | `l_total_hours`, `retention_u`, `hiring_rate_u`, `turnover_u` (separation), `quit_rate_u`, `layoff_rate_u` |
 | Workforce composition (`tab:composition`) | `composition/3091` → `3092` | `Tables/composition/results_{direct_panelA,spill}_composition.csv` | `avg_age`, `male_prop`, `white_prop`, `prop_hs_plus` |
 | Group-level connectivity descriptives (`tab:layer_desc_full`) | `layer_connectivity/07_within_firm/3131` → `3132` (hourly); monthly-wage row from `3121` → `3122` | `Tables/layer_connectivity/07_within_firm/a6_group_hw_hlogic.csv`, `a6_partition_hw_hlogic.csv`; monthly wage: `a6_group_hlogic.csv` | |
-| Group-level spillovers (`tab:group_specs`) | same `3131` | `.../a7_hw_hlogic.csv` | `col` ∈ `firm_full`, `within`, `overall`; `outcome` ∈ `wage`, `emp` |
+| Group-level spillovers (`tab:group_specs`) | same `3131` | `.../a7_hw_hlogic.csv`; "Test: = Firm-level" row: `.../a7_tests_hw_hlogic.csv` (from `a7_stacktest.do`) | `col` ∈ `firm_full`, `within`, `overall`; `outcome` ∈ `wage`, `emp`; tests: `kind` × `outcome`, `p` = bracketed $p$-value |
 | Group-specific connectivity (`tab:horse_race`) | same `3131` | `.../a8_hw_hlogic.csv` | rows `col == firm`, `p90 == firm`; `b1`/`b2` = low/high group, `peq` = equality p-value |
 
 The paper's tables were hand-edited in Overleaf (labels, layout, rounding), so

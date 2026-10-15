@@ -6,6 +6,7 @@
 Inputs  (written by _run_within_firm_v2.do and _run_within_firm_hw_v2.do, in
          Tables/layer_connectivity/07_within_firm/):
     a6_group{,_hw}.csv, a6_partition{,_hw}.csv, a7{,_hw}.csv, a8{,_hw}.csv
+    a7_tests_hw.csv (optional; adds the A7 "Test: = Firm-level" row)
 Outputs (same directory):
     t_layerdesc{,_hw}.tex, t_groupspecs{,_hw}.tex, t_horserace{,_hw}.tex
 
@@ -253,7 +254,23 @@ _A7_SPEC = (
 )
 
 
-def make_groupspecs(rows, *, hourly: bool, panels) -> str:
+def fmt_p(row: dict[str, str] | None) -> str:
+    return f"[{as_float(row, 'p'):.3f}]" if row else ""
+
+
+_A7_TEST_NOTE = (
+    r" Test: = Firm-level reports, in brackets, the $p$-value of the test that the "
+    r"Group-Connectivity coefficient equals the firm-level coefficient of column (1) or "
+    r"(4), from a stacked regression of the firm- and group-level samples that interacts "
+    r"the connectivity term and all fixed effects with a sample indicator, with standard "
+    r"errors clustered at the establishment level."
+)
+
+
+def make_groupspecs(rows, *, hourly: bool, panels, tests=None) -> str:
+    # tests: a7_tests{sfx}.csv keyed on (partition, kind, outcome), written by
+    # 3132 via a7_stacktest.do; None (monthly run, or CSV absent) omits the row.
+    tests = tests or {}
     wage_title = "Log Hourly Wages" if hourly else "Log Wages"
     title_suffix = r" (\textbf{log hourly wages})" if hourly else ""
     panel_labels = [label.split(" (", 1)[0].lower() for _, _, label in panels]
@@ -286,6 +303,12 @@ def make_groupspecs(rows, *, hourly: bool, panels) -> str:
             rf" & {fmt_se(fw)} &  &  & {fmt_se(fe)} &  &  \\",
             rf"Group-Connectivity $\times$ Post &  & {fmt_est(ww)} & {fmt_est(ow)} &  & {fmt_est(we)} & {fmt_est(oe)} \\",
             rf" &  & {fmt_se(ww)} & {fmt_se(ow)} &  & {fmt_se(we)} & {fmt_se(oe)} \\",
+        ])
+        if tests:
+            pw, po, pwe, poe = (tests.get((part, k, o)) for o in ("wage", "emp")
+                                for k in ("within", "overall"))
+            out.append(rf"Test: = Firm-level ($p$-value) &  & {fmt_p(pw)} & {fmt_p(po)} &  & {fmt_p(pwe)} & {fmt_p(poe)} \\")
+        out.extend([
             r" &  &  &  &  &  &  \\",
             rf"Pre-treatment mean & {fmt_mean(fw)} & {fmt_mean(ww)} & {fmt_mean(ow)} & {fmt_mean(fe)} & {fmt_mean(we)} & {fmt_mean(oe)} \\",
             rf"Observations & {fmt_int(fw, 'n')} & {fmt_int(ww, 'n')} & {fmt_int(ow, 'n')} & {fmt_int(fe, 'n')} & {fmt_int(we, 'n')} & {fmt_int(oe, 'n')} \\",
@@ -310,7 +333,7 @@ def make_groupspecs(rows, *, hourly: bool, panels) -> str:
             r"\begin{minipage}{\linewidth}\vspace{3pt}"
             r"\scriptsize\textit{Notes:} Hourly-wage counterpart of the group-level spillover "
             rf"table. The firm-level hourly spillover benchmark is {fmt_num(as_float(fw, 'b'))} "
-            rf"with standard error {fmt_num(as_float(fw, 'se'))}. " + _A7_SPEC +
+            rf"with standard error {fmt_num(as_float(fw, 'se'))}. " + _A7_SPEC + (_A7_TEST_NOTE if tests else "") +
             r" Group-level employment columns are reported for completeness but remain "
             r"mechanically division-biased because group employment enters the connectivity "
             r"denominator. Standard errors are clustered by establishment. Hourly wages are "
@@ -328,7 +351,7 @@ def make_groupspecs(rows, *, hourly: bool, panels) -> str:
             r"firm-level Connectivity, replacing total firm employment with group-specific "
             r"employment when normalizing worker flows to directly treated establishments. "
             r"Both measures are scaled so that a value of~1 corresponds to the 90th "
-            r"percentile of the firm-level distribution. " + _A7_SPEC +
+            r"percentile of the firm-level distribution. " + _A7_SPEC + (_A7_TEST_NOTE if tests else "") +
             r" Pre-trend (placebo) reports the coefficient from a placebo regression "
             r"estimated on pre-treatment data only (2009--2010 relative to 2011). "
             r"Pre-treatment mean is the mean of the dependent variable over 2009--2011 in the estimation sample of the corresponding column. "
@@ -442,10 +465,13 @@ def build(out_dir: Path, partitions: list[str]) -> list[Path]:
         a6p = read_list(out_dir / f"a6_partition{sfx}.csv")
         a7 = read_rows(out_dir / f"a7{sfx}.csv", ("partition", "col", "outcome"))
         a8 = read_rows(out_dir / f"a8{sfx}.csv", ("partition", "col", "p90", "outcome"))
+        tests_csv = out_dir / f"a7_tests{sfx}.csv"
+        a7t = (read_rows(tests_csv, ("partition", "kind", "outcome"))
+               if tests_csv.exists() else None)
 
         targets = {
             f"t_layerdesc{sfx}.tex": make_layerdesc(a6g, a6p, hourly=hourly, panels=panels),
-            f"t_groupspecs{sfx}.tex": make_groupspecs(a7, hourly=hourly, panels=panels),
+            f"t_groupspecs{sfx}.tex": make_groupspecs(a7, hourly=hourly, panels=panels, tests=a7t),
             f"t_horserace{sfx}.tex": make_horserace(a8, hourly=hourly, panels=panels),
         }
         for name, body in targets.items():
