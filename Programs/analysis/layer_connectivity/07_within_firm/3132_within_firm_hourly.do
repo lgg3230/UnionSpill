@@ -21,6 +21,46 @@
 
 version 17.0
 
+* ---- Started directly? Run the wrapper instead --------------------------------
+* The globals ($programs, $tables, $rais_aux, ...) come from 3131. When this
+* file is run on its own (e.g. "Run file" in an editor), run 3131, which sets
+* them and then calls this file. 3131 is looked for in the working directory,
+* then under $root, env UNIONSPILL_ROOT, the folders above the working
+* directory, and the root remembered in ~/.unionspill_root.
+if !fileexists(`"$programs/3132_within_firm_hourly.do"') {
+    local _w   "3131_within_firm_hourly.do"
+    local _rel "Programs/analysis/layer_connectivity/07_within_firm"
+    if !fileexists(`"`_w'"') {
+        if `"$root"' == "" global root : env UNIONSPILL_ROOT
+        if `"$root"' == "" {
+            local _d = subinstr(`"`c(pwd)'"', "\", "/", .)
+            while `"`_d'"' != "" & !fileexists(`"`_d'/`_rel'/`_w'"') {
+                local _d = substr(`"`_d'"', 1, max(strrpos(`"`_d'"', "/") - 1, 0))
+            }
+            global root `"`_d'"'
+        }
+        if !fileexists(`"$root/`_rel'/`_w'"') {
+            local _h : env HOME
+            if `"`_h'"' == "" local _h : env USERPROFILE
+            tempname _rf
+            cap file open `_rf' using `"`_h'/.unionspill_root"', read text
+            if !_rc {
+                file read `_rf' _d
+                file close `_rf'
+                global root `"`_d'"'
+            }
+        }
+        local _w `"$root/`_rel'/`_w'"'
+    }
+    if !fileexists(`"`_w'"') {
+        di as error "Run 3131_within_firm_hourly.do: it sets the globals this file needs."
+        exit 601
+    }
+    di as text `"Globals not set: running `_w' (it calls this file)."'
+    do `"`_w'"'
+    exit
+}
+
 ********************************************************************************
 * HELPER PROGRAMS
 ********************************************************************************
@@ -211,7 +251,24 @@ do "$programs/a7_stacktest.do"
 * SECTION 1: BUILD FIRM-LEVEL PANEL (build_firm_panel) -> tempfile FIRM
 ********************************************************************************
 
-import delimited "$rais_aux/totalflows_wide_2007_2011.csv", stringcols(1) clear
+* Read with infile, not import delimited. import delimited parses with
+* multi-threaded Java, which crashes at random (r(5100) or a JVM SIGSEGV) when
+* Stata MP runs embedded in Python -- pystata, as in the VS Code Stata
+* extension. infile has no Java and gives the same data (checked with cf).
+* The header check stops the run if the CSV columns ever change.
+local tfcsv  "$rais_aux/totalflows_wide_2007_2011.csv"
+local tfvars "totalflows_07_08 totalflows_pw_07_08 totalflows_08_09 totalflows_pw_08_09 totalflows_09_10 totalflows_pw_09_10 totalflows_10_11 totalflows_pw_10_11"
+tempname tfh
+file open `tfh' using "`tfcsv'", read text
+file read `tfh' tfhead
+file close `tfh'
+local tfhead = strtrim(subinstr(`"`tfhead'"', char(13), "", .))
+if `"`tfhead'"' != "identificad," + subinstr("`tfvars'", " ", ",", .) {
+    di as error "Unexpected header in `tfcsv':" _n `"`tfhead'"'
+    exit 459
+}
+quietly infile str32 identificad float(`tfvars') using "`tfcsv'" in 2/l, clear
+compress identificad
 tempfile tfwide
 save `tfwide'
 
