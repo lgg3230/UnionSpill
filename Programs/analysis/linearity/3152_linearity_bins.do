@@ -4,22 +4,25 @@
 
 Replaces the linear term Connectivity x Post of the headline spillover DiD
 (3012_pct_tfpw.do PART D) with indicators for connectivity groups x Post. The
-omitted baseline is zero-connectivity firms. Positive connectivity is split
-three ways:
+omitted baseline is zero-connectivity firms. By default positive connectivity
+is split three ways:
     A  2 groups: below vs at-or-above the median
     B  3 groups: terciles (low, medium, high)
     C  4 groups: quartiles
-Cutoffs are computed ONCE, at the firm level (one row per firm, year == 2009),
+$bin_ks overrides the list of breakdowns (3154 sets "4 10": quartiles and
+deciles). Cutoffs are computed ONCE, at the firm level (one row per firm, year == 2009),
 among s_spill firms outside the baseline (default: totaltreat_pw_n > 0), with xtile. Every outcome uses the
 same firm-to-group assignment. Ties at a cutoff follow xtile's rule.
 
 Run through a wrapper that sets the globals:
   3151_linearity_bins.do        baseline = zero connectivity (totaltreat_pw_n == 0)
   3153_linearity_bins_lt01.do   baseline = totaltreat_pw_n < 0.01
+  3154_linearity_bins_deciles.do  zero baseline, quartiles + deciles (_dec)
 BASELINE GLOBALS (optional; both empty = zero-connectivity baseline):
   $base_lt     raw-connectivity threshold: baseline is totaltreat_pw_n < $base_lt,
                groups split the establishments at or above it
   $out_suffix  appended to every output name (e.g. _lt01)
+  $bin_ks      numbers of groups to run (empty = "2 3 4")
 
 SPECIFICATION (per outcome x breakdown), sample and FE identical to 3012:
   reghdfe Y pg1 ... pgk if s_spill,     pg = 1{group g} x Post, g = 1..k
@@ -31,6 +34,13 @@ SPECIFICATION (per outcome x breakdown), sample and FE identical to 3012:
   is the omitted category of the explicit pg dummies.
 Also runs the linear benchmark (c.conn##i.treat_year = 3012) per outcome so the
 implied effect beta_linear x mean connectivity can be compared with each group.
+After each binned regression, p_equal tests that all k group coefficients are
+equal (a flat dose response among exposed firms; k - 1 restrictions).
+Each breakdown also runs the paper's pre-treatment placebo (3012): group x
+1{year < 2011} on 2009-2011 data (clauses: group x 1{cba_period < 2} on periods
+1-2), same fixed effects; p_pre_joint tests that all k placebo coefficients are
+zero. mean_emp is mean pre-treatment employment (2009-2011) of each group's
+establishments in the Post estimation sample.
 
 Data prep (Sections 1-2) is copied verbatim from 3142_linearity_twfe.do, which
 copies 3012.
@@ -64,7 +74,9 @@ else {
 	local base_cond "totaltreat_pw_n < $base_lt"
 }
 local grp_cond "!(`base_cond') & !missing(totaltreat_pw_n)"
-di "Baseline group: `base_cond'   |   grouped: `grp_cond'   |   suffix: '$out_suffix'"
+local ks "$bin_ks"
+if "`ks'" == "" local ks "2 3 4"
+di "Baseline group: `base_cond'   |   grouped: `grp_cond'   |   suffix: '$out_suffix'   |   breakdowns: `ks'"
 
 di "Started: `c(current_date)' `c(current_time)'"
 
@@ -215,7 +227,9 @@ preserve
 	file open `fc' using "$tables/linearity_bins_cutoffs${out_suffix}.csv", write replace
 	file write `fc' "breakdown,cut,cutoff_raw,cutoff_norm" _n
 
-	foreach k in 2 3 4 {
+	local cgvars ""
+	foreach k of local ks {
+		local cgvars "`cgvars' cg`k'"
 		cap drop cg`k'
 		xtile cg`k' = totaltreat_pw_n if `grp_cond', nq(`k')
 		replace cg`k' = 0 if `base_cond'
@@ -232,7 +246,7 @@ preserve
 
 	file close `fc'
 
-	keep identificad cg2 cg3 cg4
+	keep identificad `cgvars'
 	tempfile cgroups
 	save `cgroups'
 restore
@@ -247,8 +261,14 @@ local csv  "$tables/linearity_bins${out_suffix}.csv"
 
 tempname fh
 file open `fh' using "`csv'", write replace
-file write `fh' "outcome,breakdown,group,coef,se,pval,mean_conn,min_conn,max_conn,n_firms_group,n_obs,n_estab,beta_linear,se_linear" _n
+file write `fh' "outcome,breakdown,group,coef,se,pval,mean_conn,min_conn,max_conn,n_firms_group,n_obs,n_estab,beta_linear,se_linear,p_equal,mean_emp,pre_coef,pre_se,pre_pval,p_pre_joint,n_obs_pre" _n
 file close `fh'
+
+* Placebo period indicators (as in 3012)
+cap drop placebo_year
+gen byte placebo_year = (year < 2011)
+cap drop pre_treat_cba
+gen pre_treat_cba = cond(cba_period < 2, 1, 0)
 
 local outcomes "lr_remdezr_w lr_remdezr_h_w l_firm_emp"
 capture confirm variable numb_clauses
@@ -261,11 +281,15 @@ foreach outcome of local outcomes {
 		local tvar "cba_period"
 		local post "post_treat_cba"
 		local samp "`s_spill' & !missing(cba_period)"
+		local pre  "pre_treat_cba"
+		local presamp "`samp' & cba_period <= 2"
 	}
 	else {
 		local tvar "year"
 		local post "treat_year"
 		local samp "`s_spill'"
+		local pre  "placebo_year"
+		local presamp "`samp' & year <= 2011"
 	}
 
 	local absorb_full "identificad i.industry1#i.`tvar' i.mode_base_month#i.`tvar' i.microregion#i.`tvar' ib0.`outcome'_pre4#i.`tvar' ib0.l_firm_emp_pre4#i.`tvar' ib0.totalflows_pw_pre_07_114#i.`tvar'"
@@ -281,7 +305,7 @@ foreach outcome of local outcomes {
 	local se_lin = _se[1.`post'#c.`conn']
 
 	* ── Binned regressions ──────────────────────────────────────────────────
-	foreach k in 2 3 4 {
+	foreach k of local ks {
 
 		di _newline "  -- `outcome' | `k' connectivity groups"
 
@@ -302,6 +326,9 @@ foreach outcome of local outcomes {
 		local n_estab = e(N_clust)
 		local df_r    = e(df_r)
 
+		testparm pg1-pg`k', equal
+		local p_eq = r(p)
+
 		cap drop est_s
 		gen byte est_s = e(sample)
 		cap drop ftag
@@ -309,24 +336,53 @@ foreach outcome of local outcomes {
 
 		forvalues g = 0/`k' {
 			if `g' == 0 {
-				local b  = 0
-				local se = .
-				local p  = .
+				local b`g'  = 0
+				local se`g' = .
+				local p`g'  = .
 			}
 			else {
-				local b  = _b[pg`g']
-				local se = _se[pg`g']
-				local p  = 2 * ttail(`df_r', abs(`b' / `se'))
+				local b`g'  = _b[pg`g']
+				local se`g' = _se[pg`g']
+				local p`g'  = 2 * ttail(`df_r', abs(`b`g'' / `se`g''))
 			}
 			quietly summarize `conn' if ftag == 1 & cg`k' == `g'
-			local nf = r(N)
-			local mc = r(mean)
-			local mn = r(min)
-			local mx = r(max)
+			local nf`g' = r(N)
+			local mc`g' = r(mean)
+			local mn`g' = r(min)
+			local mx`g' = r(max)
+			quietly summarize firm_emp_pre if ftag == 1 & cg`k' == `g'
+			local me`g' = r(mean)
+		}
 
+		* ── Pre-treatment placebo (3012) ──────────────────────────────────
+		forvalues g = 1/`k' {
+			cap drop qg`g'
+			gen byte qg`g' = (cg`k' == `g') * `pre' if !missing(cg`k')
+		}
+		reghdfe `outcome' qg1-qg`k' if `presamp', ///
+			absorb(`absorb_full') vce(cluster identificad)
+		local n_obs_pre = e(N)
+		local df_pre    = e(df_r)
+		testparm qg1-qg`k'
+		local p_pre_joint = r(p)
+
+		forvalues g = 0/`k' {
+			if `g' == 0 {
+				local bq  = 0
+				local seq = .
+				local pq  = .
+			}
+			else {
+				local bq  = _b[qg`g']
+				local seq = _se[qg`g']
+				local pq  = 2 * ttail(`df_pre', abs(`bq' / `seq'))
+			}
 			file open `fh' using "`csv'", write append
-			file write `fh' "`outcome',`k',`g',`b',`se',`p',`mc',`mn',`mx',`nf',`n_obs',`n_estab',`b_lin',`se_lin'" _n
+			file write `fh' "`outcome',`k',`g',`b`g'',`se`g'',`p`g'',`mc`g'',`mn`g'',`mx`g'',`nf`g'',`n_obs',`n_estab',`b_lin',`se_lin',`p_eq',`me`g'',`bq',`seq',`pq',`p_pre_joint',`n_obs_pre'" _n
 			file close `fh'
+		}
+		forvalues g = 1/`k' {
+			drop qg`g'
 		}
 		drop est_s ftag
 		forvalues g = 1/`k' {

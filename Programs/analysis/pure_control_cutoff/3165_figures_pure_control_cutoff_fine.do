@@ -7,12 +7,14 @@ Draws, from the CSVs written by 3162_pure_control_cutoff.do ($pcc_set = fine):
 
   1. Direct effect (Post x Treatment) against the comparison-group
      connectivity cutoff, one figure per outcome and cutoff set:
-       deciles    0, P10 ... P90 (0.01 where it falls), All
-       vingtiles  0, P5 ... P95 (0.01 where it falls), All
+       deciles    0, P10 ... P90, All
+       vingtiles  0, P5 ... P95, All
+     The fixed c = 0.01 sample is estimated for the replication gate but
+     not plotted.
      Each point is the coefficient with its 95% CI; the hollow marker and the
      dashed line are the zero-connectivity baseline (published Panel A).
   2. Wage event studies (log hourly wages, log wages): the c = 0 baseline
-     (hollow) and the P5, P10, P20 and P50 cutoffs overlaid, dodged within
+     (hollow) and the P10, P20 and P50 cutoffs overlaid, dodged within
      each year; 2011 omitted; 95% CIs; dashed line between 2011 and 2012.
 
 A cutoff tied with an earlier one (same_as set in the cutoffs CSV) has no
@@ -93,7 +95,7 @@ foreach set in deciles vingtiles {
 	use `cuts', clear
 	if "`set'" == "deciles" local qre "^p[1-9]0$"      // p10 ... p90
 	else                    local qre "^p[0-9][0-9]$"  // p05 ... p95
-	keep if inlist(sample, "zero", "fixed_001", "all") | regexm(sample, "`qre'")
+	keep if inlist(sample, "zero", "all") | regexm(sample, "`qre'")
 
 	* Tied cutoffs: one point per estimated sample, labels merged.
 	sort est sample
@@ -123,13 +125,28 @@ foreach set in deciles vingtiles {
 		gen double hi = b + 1.96*se
 		gen double lo = b - 1.96*se
 
-		* y axis spans every CI and zero, with labels over the whole range.
+		* y axis: wage outcomes start at 0.01 and clause count at 0.5 (every
+		* CI lies above these floors); log employment spans every CI and zero.
+		* If a CI ever falls below its floor, the axis falls back to zero.
+		local floor = .
+		if inlist("`o'", "lr_remdezr_h_w", "lr_remdezr_w") local floor = 0.01
+		if "`o'" == "numb_clauses"                         local floor = 0.5
 		quietly sum lo, meanonly
-		local ymin = min(r(min), 0)
+		local lomin = r(min)
 		quietly sum hi, meanonly
-		local ymax = max(r(max), 0)
-		_natscale `ymin' `ymax' 5
-		local ylab "`r(min)'(`r(delta)')`r(max)'"
+		local himax = r(max)
+		if !missing(`floor') & `lomin' < `floor' {
+			di as text "  `set' `o': a CI falls below `floor'; y axis starts at zero."
+			local floor = .
+		}
+		if !missing(`floor') {
+			_natscale `floor' `himax' 5
+			local ylab "`floor'(`r(delta)')`r(max)'"
+		}
+		else {
+			_natscale `=min(`lomin', 0)' `=max(`himax', 0)' 5
+			local ylab "`r(min)'(`r(delta)')`r(max)'"
+		}
 
 		twoway ///
 			(rcap hi lo x, lcolor("`blue'") lwidth(medthin)) ///
@@ -150,12 +167,12 @@ foreach set in deciles vingtiles {
 }
 
 ********************************************************************************
-* 3. WAGE EVENT STUDIES (c = 0, P5, P10, P20, P50)
+* 3. WAGE EVENT STUDIES (c = 0, P10, P20, P50; P5 is estimated by 3162 but not plotted)
 ********************************************************************************
 
 * Series: one per estimated sample, baseline first, then by cutoff.
 use `cuts', clear
-keep if inlist(sample, "zero", "p05", "p10", "p20", "p50")
+keep if inlist(sample, "zero", "p10", "p20", "p50")
 replace lab = "" if sample == "zero"
 sort est sample
 by est: replace lab = lab[_n-1] + "/" + lab if _n > 1

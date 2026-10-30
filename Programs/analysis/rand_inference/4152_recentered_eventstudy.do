@@ -12,6 +12,9 @@
 * Output: Graphs/rand_inference/es_{spill,counterfactual}_<outcome>.pdf
 *         (+ paper Figures/Main). Outcome defaults to lr_remdezr_w; set
 *         global rec_outcome to lr_remdezr_h_w for the hourly pair.
+* Reshuffle scheme is caller-overridable (Referee 3, 4153): $rec_mufile and
+* $rec_mu pick the counterfactual exposure, $rec_tag suffixes the PDFs (no
+* paper copy when set), and $rec_csv, if set, gets one row of pooled results.
 ********************************************************************************
 version 17.0
 set more off
@@ -23,7 +26,8 @@ if "$paperfig" == "" global paperfig "$root/UnionSpill-paper/Figures/Main"
 cap mkdir "$graphs"
 
 use "$randdir/spill_frame.dta", clear
-merge m:1 identificad using "$randdir/expected_exposure.dta", keep(master match) nogen
+if "$rec_mufile" == "" global rec_mufile "expected_exposure.dta"
+merge m:1 identificad using "$randdir/$rec_mufile", keep(master match) nogen
 keep if treat_ultra == 0
 
 cap drop treat_year
@@ -39,7 +43,8 @@ if "$rec_outcome" == "" global rec_outcome "lr_remdezr_w"
 local out  "$rec_outcome"
 di as result "[16_recentered] outcome = `out'"
 local conn "totaltreat_pw_norm"
-local mu   "mu_C_ind_month"
+if "$rec_mu" == "" global rec_mu "mu_C_ind_month"
+local mu   "$rec_mu"
 local base_fe "identificad i.industry1#i.year i.mode_base_month#i.year i.microregion#i.year"
 local absorb  "`base_fe' ib0.`out'_pre4#i.year ib0.l_firm_emp_pre4#i.year ib0.totalflows_pw_pre_07_114#i.year"
 
@@ -47,6 +52,8 @@ local absorb  "`base_fe' ib0.`out'_pre4#i.year ib0.l_firm_emp_pre4#i.year ib0.to
 reghdfe `out' c.`conn'##i.treat_year, absorb(`absorb') vce(cluster identificad)
 local b0  = _b[1.treat_year#c.`conn']
 local se0 = _se[1.treat_year#c.`conn']
+local nobs = e(N)
+local nest = e(N_clust)
 
 reghdfe `out' c.`conn'##i.treat_year c.`mu'##i.treat_year, absorb(`absorb') vce(cluster identificad)
 local b1  = _b[1.treat_year#c.`conn']
@@ -65,13 +72,16 @@ local sems = string(`sem', "%5.4f")
 reghdfe `out' c.`conn'##ib2011.year, absorb(`absorb') vce(cluster identificad)
 estimates store es_base
 testparm c.`conn'#i(2009 2010).year
+local pbase_n = r(p)
 local pbase = string(r(p), "%5.3f")
 
 reghdfe `out' c.`conn'##ib2011.year c.`mu'##ib2011.year, absorb(`absorb') vce(cluster identificad)
 estimates store es_rec
 testparm c.`conn'#i(2009 2010).year
+local prec_n = r(p)
 local prec = string(r(p), "%5.3f")
 testparm c.`mu'#i(2009 2010).year
+local pmu_n = r(p)
 local pmu = string(r(p), "%5.3f")
 
 * common vertical scale so the two panels are comparable; square canvas
@@ -94,8 +104,8 @@ coefplot ///
     text(0.0140 1.1 "Main: `b0s' (`se0s')", color(navy) size(small) placement(e)) ///
     text(0.0120 1.1 "Adjusted: `b1s' (`se1s')", color(maroon) size(small) placement(e)) ///
     `sq' name(gSpill, replace)
-graph export "$graphs/es_spill_`out'.pdf", as(pdf) replace
-cap graph export "$paperfig/es_spill_`out'.pdf", as(pdf) replace
+graph export "$graphs/es_spill_`out'$rec_tag.pdf", as(pdf) replace
+if "$rec_tag" == "" cap graph export "$paperfig/es_spill_`out'.pdf", as(pdf) replace
 
 * ── COUNTERFACTUAL exposure panel (subfigure b, right) ───────────────────────
 coefplot (es_rec, msymbol(circle) mcolor(dkgreen) ciopts(recast(rcap) color(dkgreen))), ///
@@ -109,10 +119,18 @@ coefplot (es_rec, msymbol(circle) mcolor(dkgreen) ciopts(recast(rcap) color(dkgr
     graphregion(color(white)) bgcolor(white) legend(off) ///
     text(0.0075 5 "Pooled: `bms' (`sems')", color(dkgreen) size(small) placement(e)) ///
     `sq' name(gExp, replace)
-graph export "$graphs/es_counterfactual_`out'.pdf", as(pdf) replace
-cap graph export "$paperfig/es_counterfactual_`out'.pdf", as(pdf) replace
+graph export "$graphs/es_counterfactual_`out'$rec_tag.pdf", as(pdf) replace
+if "$rec_tag" == "" cap graph export "$paperfig/es_counterfactual_`out'.pdf", as(pdf) replace
 
 di as result "=== es_spill + es_counterfactual PDFs written ==="
 di as result "pooled: main `b0s' (`se0s'); adjusted `b1s' (`se1s'); mu `bms' (`sems')"
 
-if c(os) == "Unix" shell source "$root/Programs/notify.sh" && notify "ES adjusted done" "es_spill + es_counterfactual written"
+* one CSV row per call: outcome,mu,b_main,se_main,b_adj,se_adj,b_mu,se_mu,p_main,p_adj,p_mu,n_obs,n_estab
+if "$rec_csv" != "" {
+	tempname fr
+	file open `fr' using "$rec_csv", write append
+	file write `fr' "`out',`mu',`b0',`se0',`b1',`se1',`bm',`sem',`pbase_n',`prec_n',`pmu_n',`nobs',`nest'" _n
+	file close `fr'
+}
+
+if c(os) == "Unix" & "$rec_csv" == "" shell source "$root/Programs/notify.sh" && notify "ES adjusted done" "es_spill + es_counterfactual written"

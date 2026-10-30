@@ -48,6 +48,9 @@ OUTCOMES = [
 DECILES = [f"p{10 * k:02d}" for k in range(1, 10)]
 VINGTILES = [f"p{5 * k:02d}" for k in range(1, 20)]
 FIXED = ["zero", "fixed_001", "all"]
+# Shown in the exhibits; fixed_001 (c = 0.01) is estimated for the
+# replication gate and kept in the summary CSV, but not plotted or tabulated.
+SHOWN = ["zero", "all"]
 
 
 def _missing(path):
@@ -117,7 +120,7 @@ def points(cuts, quantiles):
     groups = {}
     for q in quantiles:
         groups.setdefault(rep(cuts, q), []).append(q)
-    pts = [(s, s, [s]) for s in FIXED]
+    pts = [(s, s, [s]) for s in SHOWN]
     pts += [(r, "/".join(qlabel(q) for q in members), members)
             for r, members in groups.items()]
     return sorted(pts, key=lambda p: cutoff_value(cuts, p[0]))
@@ -127,11 +130,12 @@ def fmt_count(val):
     return f"{int(float(val)):,}".replace(",", "{,}")
 
 
-def compile_preview(tex_path, out_pdf, figures=(), crop=False):
+def compile_preview(tex_path, out_pdf, figures=(), crop=False, preamble=""):
     """Compile tex_path (a fragment) in a minimal preamble into out_pdf.
 
     `figures` are PDFs copied under FIG_PREFIX so the fragment's paper-style
-    \\includegraphics paths resolve. Uses $PDFLATEX, pdflatex, or tectonic
+    \\includegraphics paths resolve. `preamble` is extra LaTeX added before
+    \\begin{document}. Uses $PDFLATEX, pdflatex, or tectonic
     (the Mac has no pdflatex), whichever is found first. A PNG of the first
     page with content is written next to the PDF when PyMuPDF is available
     (cropped to the text for tables), else with macOS sips, else skipped.
@@ -144,6 +148,7 @@ def compile_preview(tex_path, out_pdf, figures=(), crop=False):
         "% Preview only: stub the table reference that lives in Draft.tex.\n"
         "\\expandafter\\def\\csname r@tab:direct_connectivity_robust\\endcsname{{2}{}}\n"
         "\\pagestyle{empty}\n"
+        + preamble +
         "\\begin{document}\n"
         f"\\input{{{tex_path.name}}}\n"
         "\\end{document}\n"

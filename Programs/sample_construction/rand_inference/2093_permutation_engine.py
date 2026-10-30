@@ -2,7 +2,10 @@
 """
 Randomization inference — permute the IDENTITY of the treated set.
 
-Two modes, four outcomes each, several matching resolutions.
+Two modes, four outcomes each, several matching resolutions: CEM strata
+(none/coarse/medium/fine) or the industry x negotiation-month cells of 2098,
+optionally split by pre-treatment size or wage bins (ind_month[_size|_wage]{4,10,20},
+Referee 3; bins from 2107).
 
   --mode spillover : estimation sample = untreated balanced firms; the regressor
       is connectivity C_i to the treated set. The treated label is permuted among
@@ -23,21 +26,23 @@ Only the point estimate is needed per replication, so we use Frisch-Waugh
 (residualize the outcome on the fixed effects once, residualize each replication's
 regressor, take the slope). p = (1 + #{|b^(r)| >= |b_obs|}) / (R+1).
 """
-import numpy as np, pandas as pd, argparse, time, json
+import os, numpy as np, pandas as pd, argparse, time, json
 from pathlib import Path
 from scipy import sparse
 from pyfixest.estimation.demean_ import demean
 
-ROOT = Path("/gpfs/kellogg/proj/lgg3230/UnionSpill")
+ROOT = Path(os.environ.get("UNIONSPILL_ROOT", "/gpfs/kellogg/proj/lgg3230/UnionSpill"))
 OUT  = ROOT / "Data/rand_inference"
 TAB  = ROOT / "Tables/rand_inference"
+BINS = ["size4", "size10", "size20", "wage4", "wage10", "wage20"]
+CELLS = ["ind_month"] + [f"ind_month_{b}" for b in BINS]
 
 ap = argparse.ArgumentParser()
 ap.add_argument("--mode", choices=["spillover", "direct"], default="spillover")
 ap.add_argument("--R", type=int, default=10000)
 ap.add_argument("--batch", type=int, default=250)
 ap.add_argument("--seed", type=int, default=12345)
-ap.add_argument("--coarseness", choices=["none", "coarse", "medium", "fine"], default="medium")
+ap.add_argument("--coarseness", choices=["none", "coarse", "medium", "fine"] + CELLS, default="medium")
 ap.add_argument("--outcomes", nargs="+",
                 default=["lr_remdezr_w", "lr_remdezr_h_w", "l_firm_emp", "numb_clauses"])
 args = ap.parse_args()
@@ -77,7 +82,15 @@ keys["mbm"]    = keys.mode_base_month.astype("category").cat.codes
 keys["micro"]  = keys.microregion.astype(int)
 RES = {"none": [], "coarse": ["ind2", "size_b", "flow_b"],
        "medium": ["ind2", "micro", "size_b", "flow_b"],
-       "fine": ["ind2", "micro", "mbm", "size_b", "flow_b"]}
+       "fine": ["ind2", "micro", "mbm", "size_b", "flow_b"],
+       "ind_month": ["ind2m", "mbm"], **{f"ind_month_{b}": ["ind2m", "mbm", b] for b in BINS}}
+if args.coarseness in CELLS:   # 2098 cells: 2-digit industry x month, + 2107 bins
+    _istr = keys.industry1.astype("Int64").astype(str)
+    keys["ind2m"] = pd.to_numeric(_istr.str.slice(1, 3), errors="coerce").fillna(-1).astype(int)
+    bins = pd.read_csv(OUT / "firm_bins_pre.csv", dtype={"identificad": str})
+    keys = keys.merge(bins[["identificad"] + BINS], on="identificad", how="left", validate="1:1")
+    for b in BINS:
+        keys[b] = keys[b].fillna(-1).astype(int)
 sc = RES[args.coarseness]
 keys["stratum"] = (keys[sc].astype(str).agg("|".join, axis=1).astype("category").cat.codes
                    if sc else 0)

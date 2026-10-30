@@ -45,6 +45,7 @@ global programs  "$root/Programs"
 
 global base_lt    "0.01"
 global out_suffix "_lt01"
+global bin_ks     ""
 
 do "$root/Programs/analysis/_setup.do"   // Python, output folders, root memory
 

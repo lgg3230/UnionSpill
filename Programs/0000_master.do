@@ -201,6 +201,7 @@ local c_within_firm_hw   = 0
 local c_linearity        = 0      // 3141_linearity_twfe.do -> Tables/linearity/ (added 2026-10-05)
 local c_linearity_bins   = 0      // 3151_linearity_bins.do -> Tables/linearity/linearity_bins.csv
 local c_linearity_lt01   = 0      // 3153_linearity_bins_lt01.do (baseline = connectivity < 0.01) -> *_lt01.csv
+local c_linearity_dec    = 0      // 3154_linearity_bins_deciles.do (zero baseline, quartiles + deciles, equal-effects test) -> *_dec.csv (added 2026-10-25)
 local c_linearity_fd     = 0      // 3171_linearity_fd.do: FD vs TWFE test, same bins, main panel (now the vintage overlay)
 local c_pure_ctrl_cut    = 0      // 3161_pure_control_cutoff.do -> Tables/pure_control_cutoff/ (also writes its table + figure; reads the main panel, now the vintage overlay)
 local c_demo_controls    = 0      // 3181_demo_controls.do: workforce-composition controls, col (4) of tab:rob_logwages (added 2026-10-09)
@@ -208,6 +209,13 @@ local c_conn_margins_es  = 0      // 3201_conn_margins_es.do: Post x 1{conn>0} +
 local c_joint_spec       = 0      // 3211_joint_spec.do: Post x Treatment + Post x conn in one regression vs main specs, table + event studies -> Tables/joint_spec/, Graphs/joint_spec/ (added 2026-10-12)
 local c_trim_firmsize    = 0      // 3221_trim_firmsize.do: main direct (Panel A) + spillover effects trimming 1/2.5/5/10/20% of pre-treatment size at each tail; event-study overlays + tables in one PDF -> Tables/trim_firmsize/, Graphs/trim_firmsize/ (added 2026-10-12)
 local c_trim_top_size    = 0      // 3231_trim_top_size.do: direct (Panel A) + spillover effects after trimming the largest firms within group (cap at the largest zero-connectivity firm; top 5/10/20%); gated baseline -> Tables/trim_top_size/, Graphs/trim_top_size/ (added 2026-10-12)
+local c_trim_sides       = 0      // 3241_trim_sides.do: log hourly wage effects (direct zero-conn, direct all untreated, spillover) after trimming the left/right/both tails at 5/10/20% of pooled size; gated baseline -> Tables/trim_sides/, Graphs/trim_sides/ (added 2026-10-14)
+local c_trim_conn        = 0      // 3291_trim_conn.do: log hourly wage spillover effects after trimming the left/right/both tails at 5/10/20% of connectivity among exposed firms (zero-connectivity firms kept); gated baseline -> Tables/trim_conn/, Graphs/trim_conn/ (added 2026-10-23)
+local c_winsor_conn      = 0      // 3293_winsor_conn.do: as c_trim_conn but winsorizing connectivity at the same cutoffs instead of dropping firms -> Tables/winsor_conn/, Graphs/winsor_conn/ (added 2026-10-23)
+local c_drdid            = 0      // 3251_drdid.do: Sant'Anna-Zhao doubly robust DiD for the main direct and spillover effects vs TWFE benchmarks; R cross-check 3253_drdid_crosscheck.R -> Tables/drdid/, Graphs/drdid/ (added 2026-10-16)
+local c_np_acr           = 0      // 3271_np_acr.do: nonparametric average causal response of connectivity (CGBS 2025; QJE national-health-insurance App. Table C9 approach) vs TWFE; needs c_drdid's firm file -> Tables/drdid/ (added 2026-10-19)
+local c_conn_size        = 0      // 3281_conn_size.do: cross-sectional correlation between connectivity and establishment size, spillover sample -> Tables/conn_descriptives/, Graphs/conn_descriptives/ (added 2026-10-23)
+local c_size_conn_dec    = 0      // 3283_size_by_conn_decile.do: mean pre-treatment size (2009-2011) by connectivity decile (3154 groups), spillover sample -> Tables/conn_descriptives/size_by_conn_decile.csv (added 2026-10-25)
 
 * --- TIER D: estimates -> tables and figures ---------------------------------
 local d_tables           = 0      // the 9 table generators
@@ -220,6 +228,7 @@ local d_fig_recentered   = 0      // both outcomes
 local d_tab_linearity    = 0      // 4240_table_linearity_latex.py (reads c_linearity_fd output, TWFE columns; --source rebuilt reads c_linearity)
 local d_linearity_bins   = 0      // 4250 table + 4260 figures (read c_linearity_bins output)
 local d_linearity_lt01   = 0      // 4250 --baseline lt01 (reads c_linearity_lt01 output)
+local d_linearity_dec    = 0      // 4250 --baseline dec + 4260 --suffix _dec (read c_linearity_dec output)
 
 * --- TIER E: exhibits -> paper ------------------------------------------------
 local e_copy_figures     = 0
@@ -329,6 +338,7 @@ if (`c_within_firm_hw'   ==1) shell cd "$logs" && $stata_exe -b do "../Programs/
 if (`c_linearity'        ==1) shell cd "$logs" && $stata_exe -b do "../Programs/analysis/linearity/3141_linearity_twfe.do"
 if (`c_linearity_bins'   ==1) shell cd "$logs" && $stata_exe -b do "../Programs/analysis/linearity/3151_linearity_bins.do"
 if (`c_linearity_lt01'   ==1) shell cd "$logs" && $stata_exe -b do "../Programs/analysis/linearity/3153_linearity_bins_lt01.do"
+if (`c_linearity_dec'    ==1) shell cd "$logs" && $stata_exe -b do "../Programs/analysis/linearity/3154_linearity_bins_deciles.do"
 if (`c_linearity_fd'     ==1) shell cd "$logs" && $stata_exe -b do "../Programs/analysis/linearity/3171_linearity_fd.do"
 if (`c_pure_ctrl_cut'    ==1) shell cd "$logs" && $stata_exe -b do "../Programs/analysis/pure_control_cutoff/3161_pure_control_cutoff.do"
 if (`c_demo_controls'    ==1) shell cd "$logs" && $stata_exe -b do "../Programs/analysis/robustness/3181_demo_controls.do"
@@ -336,6 +346,13 @@ if (`c_conn_margins_es'  ==1) shell cd "$logs" && $stata_exe -b do "../Programs/
 if (`c_joint_spec'       ==1) shell cd "$logs" && $stata_exe -b do "../Programs/analysis/joint_spec/3211_joint_spec.do"
 if (`c_trim_firmsize'    ==1) shell cd "$logs" && $stata_exe -b do "../Programs/analysis/robustness/3221_trim_firmsize.do"
 if (`c_trim_top_size'    ==1) shell cd "$logs" && $stata_exe -b do "../Programs/analysis/robustness/3231_trim_top_size.do"
+if (`c_trim_sides'       ==1) shell cd "$logs" && $stata_exe -b do "../Programs/analysis/robustness/3241_trim_sides.do"
+if (`c_trim_conn'        ==1) shell cd "$logs" && $stata_exe -b do "../Programs/analysis/robustness/3291_trim_conn.do"
+if (`c_winsor_conn'      ==1) shell cd "$logs" && $stata_exe -b do "../Programs/analysis/robustness/3293_winsor_conn.do"
+if (`c_drdid'            ==1) shell cd "$logs" && $stata_exe -b do "../Programs/analysis/drdid/3251_drdid.do"
+if (`c_np_acr'           ==1) shell cd "$logs" && $stata_exe -b do "../Programs/analysis/drdid/3271_np_acr.do"
+if (`c_conn_size'        ==1) shell cd "$logs" && $stata_exe -b do "../Programs/analysis/conn_descriptives/3281_conn_size.do"
+if (`c_size_conn_dec'    ==1) shell cd "$logs" && $stata_exe -b do "../Programs/analysis/conn_descriptives/3283_size_by_conn_decile.do"
 
 ********************************************************************************
 * TIER D -- tables and figures
@@ -381,6 +398,10 @@ if (`d_linearity_bins' ==1) {
     shell cd "$logs" && $python_exe "$programs/analysis/linearity/4260_figure_linearity_bins.py"
 }
 if (`d_linearity_lt01' ==1) shell cd "$logs" && $python_exe "$programs/analysis/linearity/4250_table_linearity_bins_latex.py" --baseline lt01
+if (`d_linearity_dec'  ==1) {
+    shell cd "$logs" && $python_exe "$programs/analysis/linearity/4250_table_linearity_bins_latex.py" --baseline dec
+    shell cd "$logs" && $python_exe "$programs/analysis/linearity/4260_figure_linearity_bins.py" --suffix _dec
+}
 
 ********************************************************************************
 * TIER E -- copy exhibits into the paper

@@ -67,6 +67,11 @@ CUTOFF SETS ($pcc_set, set by the wrapper):
           (sample,outcome,year,b,se,pre_pval,n_obs,n_estab).
           -> figures: 3165_figures_pure_control_cutoff_fine.do (Stata)
           -> table:   4271_table_pure_control_cutoff_deciles_latex.py
+          -> firm size by group: 3166_firm_size_pure_control_cutoff.do (Stata)
+                      -> 4272_table_pure_control_cutoff_size_latex.py
+          -> stacked tests vs All Untreated + difference figure:
+                      3167_stacked_test_pure_control_cutoff.do (Stata; p-values
+                      feed the decile table) -> 4283_figure_diff_pure_control_cutoff.py
           -> LaTeX figure wrappers: 4281_figure_pure_control_cutoff_fine.py,
                       4282_figure_es_pure_control_cutoff.py (+ event-study check)
 ================================================================================
@@ -494,9 +499,13 @@ log close
 * ── Table and figure ──────────────────────────────────────────────────────────
 if "$pcc_set" == "fine" {
 	do "$programs/analysis/pure_control_cutoff/3165_figures_pure_control_cutoff_fine.do"
+	do "$programs/analysis/pure_control_cutoff/3166_firm_size_pure_control_cutoff.do"
+	shell $python_exe "$programs/analysis/pure_control_cutoff/4272_table_pure_control_cutoff_size_latex.py" --preview
+	do "$programs/analysis/pure_control_cutoff/3167_stacked_test_pure_control_cutoff.do"
 	shell $python_exe "$programs/analysis/pure_control_cutoff/4271_table_pure_control_cutoff_deciles_latex.py" --preview
 	shell $python_exe "$programs/analysis/pure_control_cutoff/4281_figure_pure_control_cutoff_fine.py" --preview
 	shell $python_exe "$programs/analysis/pure_control_cutoff/4282_figure_es_pure_control_cutoff.py" --preview
+	shell $python_exe "$programs/analysis/pure_control_cutoff/4283_figure_diff_pure_control_cutoff.py" --preview
 }
 else {
 	shell $python_exe "$programs/analysis/pure_control_cutoff/4270_table_pure_control_cutoff_latex.py" --preview

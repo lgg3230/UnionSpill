@@ -4,10 +4,10 @@
 =====================================
 LaTeX wrapper and check for the direct-effect event studies of the two wage
 outcomes when the comparison group is widened from zero connectivity to
-untreated establishments with connectivity <= c, for c at P5, P10, P20 and P50
+untreated establishments with connectivity <= c, for c at P10, P20 and P50
 of positive connectivity. The panels (one per outcome, drawn in Stata by
 3165_figures_pure_control_cutoff_fine.do) overlay the zero-connectivity
-baseline (hollow marker, published Panel A event study) and the four cutoffs,
+baseline (hollow marker, published Panel A event study) and the three cutoffs,
 dodged within each year. This script joins them in a 1x2 subfigure whose notes
 give each series' joint pre-trend F-test p-value (2009 = 2010 = 0).
 
@@ -39,7 +39,8 @@ import csv
 from _pcc_fine_common import (FIG_PREFIX, GRAPH_DIR, PROJECT, TAB_DIR,
                               compile_preview, load_cutoffs, load_es, points)
 
-ES_QUANTILES = ["p05", "p10", "p20", "p50"]
+# P5 is estimated by 3162 (it stays in the CSV) but not plotted.
+ES_QUANTILES = ["p10", "p20", "p50"]
 PANELS = [("lr_remdezr_h_w", "Log Hourly Wages", "hw"),
           ("lr_remdezr_w", "Log Wages", "mw")]
 TRIM_ES = PROJECT / "Tables" / "trim_firmsize" / "trim_firmsize_es_coefs.csv"
@@ -99,7 +100,7 @@ def build_tex(es, ser):
         r"connectivity to the directly treated is at most $c$, in raw "
         r"(unnormalized) units. The hollow markers are the main specification "
         r"($c = 0$, Panel~A of Table~\ref{tab:direct_connectivity_robust}); the "
-        r"other series set $c$ at the 5th, 10th, 20th, and 50th percentiles of "
+        r"other series set $c$ at the 10th, 20th, and 50th percentiles of "
         r"connectivity among untreated establishments with positive "
         r"connectivity. Within each year the series are offset horizontally "
         r"for legibility. The directly treated establishments are the same in "

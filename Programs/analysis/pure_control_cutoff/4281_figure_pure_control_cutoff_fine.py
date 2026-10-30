@@ -49,7 +49,6 @@ def notes(cuts, pts, set_name):
             for s, lab, _ in pts if s not in ("zero", "fixed_001", "all")]
     vals = ", ".join(vals[:-1]) + f", and {vals[-1]}"
     any_row = next(iter(cuts.values()))
-    p001 = 100 * float(cuts["fixed_001"]["share_positive_le"])
     tied = [lab for _, lab, members in pts if len(members) > 1]
     ties = ("" if not tied else
             " Cutoffs with the same raw value select the same comparison group "
@@ -65,8 +64,7 @@ def notes(cuts, pts, set_name):
         rf"among the {fmt_count(any_row['n_positive_total'])} untreated "
         r"establishments with positive connectivity (of "
         rf"{fmt_count(any_row['n_untreated_total'])} untreated in the balanced "
-        rf"panel): {vals}. The fixed cutoff $c = 0.01$ falls at the "
-        rf"{p001:.0f}th percentile; All includes every untreated establishment."
+        rf"panel): {vals}. All includes every untreated establishment."
         rf"{ties} The hollow marker and the dashed line mark the main specification "
         r"($c = 0$, Panel~A of Table~\ref{tab:direct_connectivity_robust}); "
         r"All reproduces its Panel~B. Specifications are otherwise identical to "

@@ -55,6 +55,9 @@ Output:
                                            4300_table_conn_margins_latex.py)
   $graphs/es_<outcome>_connpos_<date>.pdf  event study of d0 (Post x 1{conn>0})
   $graphs/es_<outcome>_connlin_<date>.pdf  event study of d1 (Post x conn)
+  $graphs/es_<outcome>_connlin_base_<date>.pdf
+                                           d1 path overlaid on the baseline
+                                           spillover event study (3012 PART D)
   $graphs/conn_margins_es_figure.tex       standalone 4x2 preview figure
 ================================================================================
 */
@@ -181,6 +184,91 @@ program define _es_plot
 		graphregion(color(white)) bgcolor(white) ///
 		ci(95) ciopts(recast(rcap) color(blue)) mcolor(blue) ///
 		text(`ytext' `xt' "`bs' (`ss')", color(blue) size(small) placement(w))
+
+	graph export "$graphs/`file'", as(pdf) replace
+end
+
+* Overlay: d1 path of the saturated model (est) vs the baseline spillover event
+* study without the any-connection term (base), same coefficient names
+* (<level>.<tvar>#c.totaltreat_pw_norm), shifted left/right so the two CIs do
+* not cover each other.
+*   b/se/p:    saturated pooled d1, its SE, d1 pre-trend p
+*   bb/bse/bp: baseline pooled coefficient, its SE, its pre-trend p
+cap program drop _es_overlay
+program define _es_overlay
+	syntax , est(name) base(name) tvar(name) mode(string) suf(string) ///
+		b(real) se(real) p(real) bb(real) bse(real) bp(real) file(string)
+
+	if "`mode'" == "cba" {
+		local levels "1 2 3 4 5 6"
+		local xl  2.5
+		local xt  5.7
+	}
+	else {
+		local levels "2009 2010 2011 2012 2013 2014 2015 2016"
+		local xl  3.75
+		local xt  7.7
+	}
+
+	* Labels and a y range covering both series' CIs (and 0)
+	local labs ""
+	local ymax_ci = 0
+	local ymin_ci = 0
+	foreach l of local levels {
+		if "`mode'" == "cba" {
+			if `l' == 1      local lab "2009"
+			else if `l' == 2 local lab "2010-2012"
+			else             local lab = string(2010 + `l')
+		}
+		else local lab "`l'"
+		local labs `"`labs' `l'.`tvar'`suf' = "`lab'""'
+	}
+	foreach m in `est' `base' {
+		estimates restore `m'
+		foreach l of local levels {
+			local cb = .
+			local cs = .
+			capture {
+				local cb = _b[`l'.`tvar'`suf']
+				local cs = _se[`l'.`tvar'`suf']
+			}
+			if !mi(`cb') & !mi(`cs') {
+				local hi = `cb' + 1.96*`cs'
+				local lo = `cb' - 1.96*`cs'
+				if `hi' > `ymax_ci' local ymax_ci = `hi'
+				if `lo' < `ymin_ci' local ymin_ci = `lo'
+			}
+		}
+	}
+	local yspan = `ymax_ci' - `ymin_ci'
+	if `yspan' <= 0 local yspan = 0.01
+	* Two label lines in a strip below the lowest CI
+	local ylo    = `ymin_ci' - 0.22*`yspan'
+	local yhi    = `ymax_ci' + 0.05*`yspan'
+	local ytext1 = `ymin_ci' - 0.07*`yspan'
+	local ytext2 = `ymin_ci' - 0.15*`yspan'
+
+	local s_b   = strtrim(string(`b',   "%9.4f"))
+	local s_se  = strtrim(string(`se',  "%9.4f"))
+	local s_p   = strtrim(string(`p',   "%9.3f"))
+	local s_bb  = strtrim(string(`bb',  "%9.4f"))
+	local s_bse = strtrim(string(`bse', "%9.4f"))
+	local s_bp  = strtrim(string(`bp',  "%9.3f"))
+
+	coefplot ///
+		(`est', keep(*.`tvar'`suf') label("Including C{sub:i}>0 dummy") ///
+			msymbol(diamond) mcolor(blue) ciopts(recast(rcap) color(blue)) offset(-0.12)) ///
+		(`base', keep(*.`tvar'`suf') label("Main spillover") ///
+			msymbol(circle_hollow) mcolor(gs6) ciopts(recast(rcap) color(gs6)) offset(0.12)), ///
+		coeflabels(`labs') ///
+		vert omitted baselevels yline(0) xline(`xl', lpattern(dash)) ///
+		yscale(range(`ylo' `yhi')) ///
+		ytitle("Dynamic DiD coefficients", size(small)) ///
+		note("Joint pre-trend F-test p-values: including C{sub:i}>0 dummy = `s_p', main = `s_bp'") ///
+		legend(rows(1) size(small) region(lcolor(white))) ///
+		graphregion(color(white)) bgcolor(white) ci(95) ///
+		text(`ytext1' `xt' "Including C{sub:i}>0 dummy: `s_b' (`s_se')", color(blue) size(small) placement(w)) ///
+		text(`ytext2' `xt' "Main: `s_bb' (`s_bse')", color(gs6) size(small) placement(w))
 
 	graph export "$graphs/`file'", as(pdf) replace
 end
@@ -396,6 +484,12 @@ foreach outcome of local outcomes {
 	testparm c.`conn'#i(`prelev').`tvar'
 	local r_pre_pval = r(p)
 
+	* Kept for the overlay plots of Section 4 (baseline vs saturated d1 path)
+	estimates store bench_es_`outcome'
+	local bench_b_`outcome'  = `r_b_post'
+	local bench_se_`outcome' = `r_se_post'
+	local bench_pv_`outcome' = `r_pre_pval'
+
 	local pubs "`pub_`outcome''"
 	forvalues k = 1/8 {
 		local s : word `k' of `stats'
@@ -576,7 +670,12 @@ foreach outcome of local outcomes {
 	_es_plot, est(es_tmp) tvar(`tvar') mode(`mode') suf(#c.`conn') ///
 		b(`b_post_conn') se(`se_post_conn') p(`pval_conn') ///
 		file(es_`outcome'_connlin_`d'.pdf)
+	_es_overlay, est(es_tmp) base(bench_es_`outcome') tvar(`tvar') mode(`mode') ///
+		suf(#c.`conn') b(`b_post_conn') se(`se_post_conn') p(`pval_conn') ///
+		bb(`bench_b_`outcome'') bse(`bench_se_`outcome'') bp(`bench_pv_`outcome'') ///
+		file(es_`outcome'_connlin_base_`d'.pdf)
 	estimates drop es_tmp
+	estimates drop bench_es_`outcome'
 }
 
 di _newline "======================================================="

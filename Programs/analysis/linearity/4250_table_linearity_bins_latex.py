@@ -23,6 +23,16 @@ Usage
     python 4250_table_linearity_bins_latex.py --baseline lt01 --preview
                                     # baseline = raw connectivity < 0.01 (3153);
                                     # outputs carry the suffix _lt01
+    python 4250_table_linearity_bins_latex.py --baseline dec --only 10
+                                    # deciles only, no panel letter
+                                    # (t_linearity_bins_dec_k10.tex)
+    python 4250_table_linearity_bins_latex.py --baseline dec --preview
+                                    # zero baseline, quartiles + deciles (3154);
+                                    # outputs carry the suffix _dec
+
+Panels are built for the breakdowns present in the CSV, lettered in order. When
+the CSV has p_equal (3152 since 2026-10-25), each panel reports the p-value of
+the test that all group coefficients are equal.
 
 Layout follows 4020_table_spill.py / 4240_table_linearity_latex.py: [H] float,
 \\toprule\\toprule, two-line column headers, a (1)..(4) row, minipage notes.
@@ -70,16 +80,52 @@ BASELINES = {
                 "Baseline of Connectivity Below 0.01",
         grouped_title=r"connectivity $\geq$ 0.01",
         grouped_note="with raw connectivity of at least 0.01"),
+    "dec": dict(
+        suffix="_dec", base_lt=None, label="tab:linearity_bins_dec",
+        caption="Spillover Effects by Connectivity Decile",
+        grouped_title="positive connectivity",
+        grouped_note="with positive connectivity"),
 }
 
-PANELS = [
-    (2, "Panel A. Median split of positive connectivity",
-     ["Below median", "Above median"]),
-    (3, "Panel B. Terciles of positive connectivity",
-     ["Low tercile", "Medium tercile", "High tercile"]),
-    (4, "Panel C. Quartiles of positive connectivity",
-     ["First quartile", "Second quartile", "Third quartile", "Fourth quartile"]),
-]
+# breakdown -> (panel title without its letter, row labels, phrase for the notes)
+PANEL_DEFS = {
+    2: ("Median split of positive connectivity",
+        ["Below median", "Above median"], "at the median"),
+    3: ("Terciles of positive connectivity",
+        ["Low tercile", "Medium tercile", "High tercile"], "at terciles"),
+    4: ("Quartiles of positive connectivity",
+        ["First quartile", "Second quartile", "Third quartile", "Fourth quartile"],
+        "at quartiles"),
+    10: ("Deciles of positive connectivity",
+         [f"Decile {g}" for g in range(1, 11)], "at deciles"),
+}
+
+
+def panels_in(data):
+    """[(k, 'Panel A. ...', labels, phrase), ...] for the breakdowns in the CSV."""
+    ks = sorted({k for _, k, _ in data})
+    unknown = [k for k in ks if k not in PANEL_DEFS]
+    if unknown:
+        raise SystemExit(f"No panel definition for breakdown(s) {unknown}.")
+    if len(ks) == 1:  # a single panel carries no letter
+        k = ks[0]
+        return [(k, PANEL_DEFS[k][0], PANEL_DEFS[k][1], PANEL_DEFS[k][2])]
+    return [(k, f"Panel {chr(65 + i)}. {PANEL_DEFS[k][0]}", PANEL_DEFS[k][1],
+             PANEL_DEFS[k][2]) for i, k in enumerate(ks)]
+
+
+def panel_ref(title, panels):
+    """' (Panel A)' for lettered panels, '' for a single unlettered one."""
+    return "" if len(panels) == 1 else f" ({title.split('.')[0]})"
+
+
+def join_and(items):
+    items = list(items)
+    if len(items) == 1:
+        return items[0]
+    if len(items) == 2:
+        return f"{items[0]} and {items[1]}"
+    return ", ".join(items[:-1]) + f", and {items[-1]}"
 
 
 def load_csv(path):
@@ -137,8 +183,7 @@ NOTES = (
     r"omitted group consists of untreated establishments @@BASE@@, so each "
     r"coefficient is the 2012--2016 effect for a group "
     r"relative to them. Groups split establishments @@GROUPED@@ "
-    r"at the median (Panel A), at terciles (Panel B), and at "
-    r"quartiles (Panel C). @@CUTOFFS@@All "
+    r"@@SPLITS@@. @@CUTOFFS@@@@PEQUAL@@All "
     r"specifications include establishment fixed effects and year fixed "
     r"effects interacted with three-digit industry, microregion, and "
     r"negotiation-month indicators and with quartile bins of pre-treatment "
@@ -146,6 +191,12 @@ NOTES = (
     r"substitute CBA-period fixed effects for year fixed effects. Standard "
     r"errors clustered at the establishment level in parentheses. "
     r"*** p$<$0.01, ** p$<$0.05, * p$<$0.10."
+)
+
+
+PEQUAL_NOTE = (
+    r"The equal-group-effects row reports the $p$-value of a Wald test that all "
+    r"group coefficients of an outcome are equal. "
 )
 
 
@@ -161,20 +212,36 @@ def load_cutoffs(path):
     return {k: [v for _, v in sorted(c)] for k, c in cuts.items()}
 
 
-def cutoffs_sentence(cuts):
-    def join(vals):
-        vals = [f"{v:.3f}" for v in vals]
-        if len(vals) == 1:
-            return vals[0]
-        if len(vals) == 2:
-            return f"{vals[0]} and {vals[1]}"
-        return ", ".join(vals[:-1]) + f", and {vals[-1]}"
+def cutoffs_sentence(cuts, panels):
+    parts = [f"{join_and(f'{v:.3f}' for v in cuts[k])}{panel_ref(title, panels)}"
+             for k, title, _, _ in panels]
+    if len(parts) > 1:
+        parts[-1] = "and " + parts[-1]
     return (
         r"In units of normalized connectivity (1 equals the 90th percentile "
         r"among untreated establishments), the cutoffs are "
-        f"{join(cuts[2])} (Panel A); {join(cuts[3])} (Panel B); and "
-        f"{join(cuts[4])} (Panel C). "
+        + "; ".join(parts) + ". "
     )
+
+
+def splits_phrase(panels):
+    return join_and(f"{phrase}{panel_ref(title, panels)}"
+                    for _, title, _, phrase in panels)
+
+
+def means_sentence(data, panels):
+    """Mean normalized connectivity by group (log hourly wage sample); single panel only."""
+    if len(panels) != 1:
+        return ""
+    k = panels[0][0]
+    vals = [f"{float(get(data, 'lr_remdezr_h_w', k, g, 'mean_conn')):.2f}"
+            for g in range(1, k + 1)]
+    return ("Mean normalized connectivity by group, from lowest to highest, is "
+            + join_and(vals) + ". ")
+
+
+def has_pequal(data):
+    return all(r.get("p_equal", "").strip() not in ("", ".") for r in data.values())
 
 
 def base_phrase(variant, cuts_raw):
@@ -209,7 +276,9 @@ def build(data, cuts, variant, cuts_raw):
         col_nums + r"\\",
     ]
 
-    for k, title, labels in PANELS:
+    panels = panels_in(data)
+    pequal = has_pequal(data)
+    for k, title, labels, _ in panels:
         title = title.replace("positive connectivity", variant["grouped_title"])
         lines += [r"\midrule", rf"\multicolumn{{{ncol + 1}}}{{l}}{{\textit{{{title}}}}}\\", r"\midrule"]
         for g, label in enumerate(labels, start=1):
@@ -237,6 +306,12 @@ def build(data, cuts, variant, cuts_raw):
             + "".join(f" & {fmt_count(get(data, o, k, 0, 'n_estab'))}" for o in outcomes)
             + r"\\",
         ]
+        if pequal:
+            lines.append(
+                r"Equal group effects, $p$-value"
+                + "".join(f" & {float(get(data, o, k, 0, 'p_equal')):.3f}" for o in outcomes)
+                + r"\\"
+            )
 
     lines += [
         r"\bottomrule\bottomrule",
@@ -244,7 +319,9 @@ def build(data, cuts, variant, cuts_raw):
         "",
         r"\begin{minipage}{\linewidth}",
         r"\scriptsize\vspace{4pt}",
-        NOTES.replace("@@CUTOFFS@@", cutoffs_sentence(cuts))
+        NOTES.replace("@@CUTOFFS@@", cutoffs_sentence(cuts, panels) + means_sentence(data, panels))
+             .replace("@@SPLITS@@", splits_phrase(panels))
+             .replace("@@PEQUAL@@", PEQUAL_NOTE if pequal else "")
              .replace("@@BASE@@", base_phrase(variant, cuts_raw))
              .replace("@@GROUPED@@", variant["grouped_note"]),
         r"\end{minipage}",
@@ -301,8 +378,11 @@ def compile_preview():
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--baseline", choices=sorted(BASELINES), default="zero",
-                    help="omitted group: zero connectivity (3151) or raw "
-                         "connectivity < 0.01 (3153)")
+                    help="zero connectivity (3151), raw connectivity < 0.01 "
+                         "(3153), or zero connectivity with deciles (3154)")
+    ap.add_argument("--only", type=int, metavar="K",
+                    help="keep only the breakdown with K groups (e.g. 10); "
+                         "the output name gains _k<K>")
     ap.add_argument("--preview", action="store_true",
                     help="also compile a standalone PDF preview of the table")
     args = ap.parse_args()
@@ -312,10 +392,15 @@ def main():
     sfx = variant["suffix"]
     CSV_IN = OUT_DIR / f"linearity_bins{sfx}.csv"
     CUTS_IN = OUT_DIR / f"linearity_bins_cutoffs{sfx}.csv"
-    OUT_TEX = OUT_DIR / f"t_linearity_bins{sfx}.tex"
-    OUT_PDF = OUT_DIR / f"t_linearity_bins{sfx}_preview.pdf"
+    osfx = sfx + (f"_k{args.only}" if args.only else "")
+    OUT_TEX = OUT_DIR / f"t_linearity_bins{osfx}.tex"
+    OUT_PDF = OUT_DIR / f"t_linearity_bins{osfx}_preview.pdf"
 
     data = load_csv(CSV_IN)
+    if args.only:
+        data = {key: r for key, r in data.items() if key[1] == args.only}
+        if not data:
+            raise SystemExit(f"No breakdown with {args.only} groups in {CSV_IN.name}.")
     cuts = load_cutoffs(CUTS_IN)
     with open(CUTS_IN, newline="") as fh:
         cuts_raw = [(float(r["cutoff_raw"]), float(r["cutoff_norm"]))

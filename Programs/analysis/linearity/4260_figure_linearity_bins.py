@@ -24,8 +24,14 @@ Output (each with a .png copy):
 Usage
 -----
     python 4260_figure_linearity_bins.py
+    python 4260_figure_linearity_bins.py --suffix _dec
+        # quartiles + deciles from 3154: reads linearity_bins_dec.csv, writes
+        # Graphs/linearity/linearity_bins_dec_k<k>_<outcome>.pdf
+
+One plot per breakdown present in the CSV.
 """
 
+import argparse
 import csv
 from pathlib import Path
 
@@ -44,11 +50,6 @@ OUT_DIR = PROJECT / "Graphs" / "linearity"
 FONT_DIR = PROJECT / "Programs" / "fonts"
 
 OUTCOMES = ["lr_remdezr_w", "lr_remdezr_h_w", "l_firm_emp", "numb_clauses"]
-PANELS = [
-    (2, "Panel A: Median split"),
-    (3, "Panel B: Terciles"),
-    (4, "Panel C: Quartiles"),
-]
 
 BLUE = "#2166AC"   # group coefficients
 RED = "#B2182B"    # linear specification
@@ -111,7 +112,7 @@ def plot_one(data, outcome, k):
     ax.grid(axis="y", alpha=0.2)
     fig.tight_layout()
 
-    out = OUT_DIR / f"linearity_bins_k{k}_{outcome}.pdf"
+    out = OUT_DIR / f"linearity_bins{SUFFIX}_k{k}_{outcome}.pdf"
     fig.savefig(out, bbox_inches="tight")
     # PNG copy so the figure opens in any editor without a PDF viewer
     fig.savefig(out.with_suffix(".png"), bbox_inches="tight", dpi=200)
@@ -140,10 +141,20 @@ def plot_legend():
     print(f"Wrote {out} (+ .png)")
 
 
+SUFFIX = ""
+
+
 def main():
+    global CSV_IN, SUFFIX
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--suffix", default="",
+                    help="output suffix of the 3152 run, e.g. _lt01 or _dec")
+    SUFFIX = ap.parse_args().suffix
+    CSV_IN = CSV_IN.with_name(f"linearity_bins{SUFFIX}.csv")
+
     data = load_csv(CSV_IN)
     OUT_DIR.mkdir(parents=True, exist_ok=True)
-    for k, _ in PANELS:
+    for k in sorted({k for _, k in data}):
         for outcome in OUTCOMES:
             plot_one(data, outcome, k)
     plot_legend()

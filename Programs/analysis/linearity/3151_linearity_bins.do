@@ -46,6 +46,7 @@ global programs  "$root/Programs"
 * Zero-connectivity baseline: clear the baseline globals 3153 sets.
 global base_lt    ""
 global out_suffix ""
+global bin_ks     ""
 
 do "$root/Programs/analysis/_setup.do"   // Python, output folders, root memory
 
